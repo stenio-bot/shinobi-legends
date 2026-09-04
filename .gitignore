@@ -30,3 +30,4 @@ screenshots/
 
 # Arte de terceiros importada para teste privado (ADR-002): nunca versionar
 assets-src/import/
+assets-src/sprites/terrain/_sheets/

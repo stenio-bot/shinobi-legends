@@ -428,7 +428,7 @@ function StatsBar.reloadCurrentStatsBarDeepInfo()
 end
 
 function StatsBar.onHarmonyChange(localPlayer, harmony, oldHarmony)
-    modules.game_healthcircle.whenMonkHarmonyChange(localPlayer, harmony, oldHarmony)
+    if modules.game_healthcircle then modules.game_healthcircle.whenMonkHarmonyChange(localPlayer, harmony, oldHarmony) end
     local statsBars = StatsBar.getAllStatsBarWithPosition()
     for _, barElement in ipairs(statsBars) do
         local harmonies = barElement:recursiveGetChildById('harmonies')
@@ -451,7 +451,7 @@ function StatsBar.onHarmonyChange(localPlayer, harmony, oldHarmony)
 end
 
 function StatsBar.onSereneChange(localPlayer, serene, oldSerene)
-    modules.game_healthcircle.whenMonkSereneChange(localPlayer, serene, oldSerene)
+    if modules.game_healthcircle then modules.game_healthcircle.whenMonkSereneChange(localPlayer, serene, oldSerene) end
     local statsBars = StatsBar.getAllStatsBarWithPosition()
     for _, barElement in ipairs(statsBars) do
         local sereneIcon = barElement:recursiveGetChildById('serene')
@@ -473,7 +473,7 @@ function StatsBar.onSereneChange(localPlayer, serene, oldSerene)
 end
 
 function StatsBar.onVocationChange(localPlayer, vocation, oldVocation)
-    modules.game_healthcircle.checkMonkVocation()
+    if modules.game_healthcircle then modules.game_healthcircle.checkMonkVocation() end
     local statsBars = StatsBar.getAllStatsBarWithPosition()
     local isMonk = localPlayer:isMonk() and g_game.getFeature(GameVocationMonk)
     for _, barElement in ipairs(statsBars) do
@@ -508,8 +508,7 @@ function constructStatsBar(dimension, placement)
         reloadSkillsTab(statsBar[dimensionOnPlacement].skills, statsBar[dimensionOnPlacement])
         StatsBar.reloadCurrentStatsBarQuickInfo()
 
-        modules.game_healthcircle.setStatsBarOption()
-
+        if modules.game_healthcircle then modules.game_healthcircle.setStatsBarOption() end
         StatsBar.initProficiencyTopBar()
     else
         print("No stats bar found for:", dimensionOnPlacement .. " on constructStatsBar()")
@@ -561,7 +560,7 @@ local function openDropMenu(mousePos)
     menu:addSeparator()
     menu:addOption(tr('Hide Customisable Status Bars'), function()
         StatsBar.hideAll()
-        modules.game_healthcircle.setStatsBarOption("hide")
+        if modules.game_healthcircle then modules.game_healthcircle.setStatsBarOption("hide") end
     end)
 
     menu:display(mousePos)
@@ -684,8 +683,7 @@ end
 function StatsBar.OnGameStart()
     StatsBar.loadSettings()
     StatsBar.reloadCurrentTab()
-    modules.game_healthcircle.setStatsBarOption()
-    
+    if modules.game_healthcircle then modules.game_healthcircle.setStatsBarOption() end
     -- Initialize proficiency topbar widget
     StatsBar.initProficiencyTopBar()
 end

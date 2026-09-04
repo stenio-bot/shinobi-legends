@@ -16,6 +16,7 @@ NTO pode ser redistribuído (ADR-002).
 | `gen_tiles.py` | Desenha os PNGs de `assets-src/sprites/tiles/` (Pillow). |
 | `test_otb_roundtrip.py` | Prova que ler e reescrever o `items.otb` dá o mesmo arquivo, byte a byte. |
 | `art.py` | Pixel art placeholder desenhada por código (Pillow). Nada é copiado de outro jogo. |
+| `gen_terrain.py` | **Terreno** (chão tileável, árvores, paredes, portas, mobiliário) desenhado por código, estilo Tibia 7.x/8.x. Escreve `assets-src/sprites/terrain/`. |
 | `gen_placeholders.py` | Desenha os PNGs em `assets-src/sprites/` e escreve o `manifest.json`. |
 | `build_assets.py` | Lê o manifesto + PNGs + `items.otb` e escreve `Tibia.spr`/`Tibia.dat`. |
 | `dump_dat.py` | Lê um par `.spr`/`.dat`, imprime estatísticas, valida e exporta PNGs. |
@@ -36,6 +37,9 @@ NTO pode ser redistribuído (ADR-002).
 
 # 2b. (opcional) redesenhar os tiles próprios de cenário
 .venv/bin/python tools/spr/gen_tiles.py
+
+# 2c. (opcional) redesenhar o terreno do mapa (grama, cobble, árvores, muros...)
+.venv/bin/python tools/spr/gen_terrain.py
 
 # 3. conferir o resultado
 .venv/bin/python tools/spr/dump_dat.py
@@ -296,3 +300,62 @@ Suporta criaturas de **1×1 a 4×4** (32/64/96/128 px). Criaturas importadas usa
 campos (`src`, `frames`, `crop`, `tiles`, `grow`, `duration`, `rotate`,
 `server_ids`) está em `docs/sistemas/arte-e-sprites.md`, seção
 "Importar folhas de sprites".
+
+
+## Terreno do mapa (`gen_terrain.py` + `overrides/10_terrain.json`)
+
+O `valley.otbm` e feito de itens **vanilla** do `items.otb` (grama 4526–4531,
+cobblestone 19744–19748, arvores 2700–2716, muro 1049–1051, agua 4608...). Sem
+arte propria esses ids caiam nas *rules* de estilo e viravam quadrado chapado.
+
+```bash
+.venv/bin/python tools/spr/gen_terrain.py     # desenha assets-src/sprites/terrain/
+.venv/bin/python tools/spr/build_assets.py
+.venv/bin/python tools/spr/dump_dat.py        # validacao: OK, divergencias=0
+```
+
+O mapeamento server id -> PNG esta em
+**`assets-src/sprites/overrides/10_terrain.json`**. O `build_assets.py` varre
+`assets-src/sprites/overrides/*.json` em ordem alfabetica e aplica cada arquivo
+com o **mesmo esquema do `imports.json`** — o prefixo numerico so define a ordem.
+
+Diferente de `tiles.json`, isto **nao cria item nenhum**: o item ja existe no OTB,
+so a arte muda. E diferente de `assets-src/import/`, a arte aqui e **versionada**
+(desenhada por codigo, ADR-002).
+
+### Campos de `items` aceitos pelo `imports.py`
+
+Entrada simples (1x1, 1 quadro) so troca a folha do item. Qualquer um dos campos
+abaixo faz a entrada virar um **thing de item completo** no manifesto (geometria
+e atributos proprios); como o build aplica os `things` do manifesto **depois** de
+`build_items()`, a arte de regra e substituida.
+
+| Campo | Efeito |
+|---|---|
+| `"tiles": 2` | 64x64 = 2x2 tiles, ancorado no canto **inferior direito** (a arte sobe e vai para a esquerda, como as arvores da Tibia) |
+| `"height": 64` | 1 tile de largura x 2 de altura — paredes/portas sobem 32px acima do tile |
+| `"frames": [...]` + `"duration"` | animacao: `animationPhases > 1` com bloco `Animator` |
+| `"displacement": [x, y]` | atributo `Displacement` do `.dat` |
+| `"crop": [x, y, w, h]` | recorte da origem (herdado do `imports.json`) |
+
+Grupo/flags/luz/`speed` vem do `items.otb` (`build_assets.item_attrs`), entao
+chao continua sendo chao e porta continua sendo porta.
+
+**`FLAG_ANIMATION` manda na contagem de fases** (secao 5 do `FORMATO.md`):
+
+- item **sem** a flag + varios `frames` -> reduzido a 1 fase, com aviso
+  `imports: AVISO: ...` na saida do build;
+- item **com** a flag + 1 unico quadro -> duplicado para 2 fases.
+
+A agua do mapa (`4608`, shallow water) **tem** a flag no `items.otb` — por isso as
+3 fases de onda sao validas e nao foi preciso trocar o id no mapa.
+
+### Estilo
+
+Paleta limitada (4–6 tons), ruido de valor **periodico** em 32px (a emenda entre
+tiles vizinhos some), dither de Bayer 4x4, contorno escuro de 1px nos objetos e
+sombra **opaca** (o `.spr` de 1098 e RGB, nao existe alpha parcial). Todas as
+variantes de um material partem de um campo base comum (`shared_field`), senao o
+campo vira um xadrez de tiles claros e escuros visivel de longe.
+
+`assets-src/sprites/terrain/_sheets/` e **gerado** pelo build; nao edite a mao.

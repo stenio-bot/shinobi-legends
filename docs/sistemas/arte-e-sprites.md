@@ -296,6 +296,215 @@ imagem vai nas 4 direções e nas 3 fases de caminhada.
 .venv/bin/python tools/spr/dump_dat.py          # 4. validacao: OK, divergencias=0
 ```
 
+## Terreno procedural (`gen_terrain.py` + `overrides/10_terrain.json`)
+
+O mapa `valley` usa **itens vanilla** do `items.otb` (grama 4526–4531, cobblestone
+19744–19748, árvores 2700–2716, muro 1049–1051…). Esses ids caem nas *rules* de
+estilo do `manifest.json` e ganhavam um quadrado chapado tingido pela cor de
+minimapa — o mapa inteiro parecia um mosaico de retângulos coloridos. O terreno
+procedural substitui a arte desses ids por pixel art própria, **sem tocar no
+`items.otb`**: o item já existe, só o desenho muda.
+
+```bash
+.venv/bin/python tools/spr/gen_terrain.py     # desenha assets-src/sprites/terrain/*.png
+.venv/bin/python tools/spr/build_assets.py    # compila .spr/.dat
+.venv/bin/python tools/spr/dump_dat.py        # validacao: OK, divergencias=0
+```
+
+- **`tools/spr/gen_terrain.py`** — desenha tudo por código (Pillow). Arte própria,
+  versionada em `assets-src/sprites/terrain/` (ao contrário de `assets-src/import/`,
+  que é material privado fora do git).
+- **`assets-src/sprites/overrides/10_terrain.json`** — liga cada server id vanilla
+  aos PNGs. Fica em `assets-src/sprites/overrides/`, pasta que o `build_assets.py`
+  varre em ordem alfabética aplicando cada arquivo com o **mesmo esquema do
+  `imports.json`** (`tools/spr/imports.py`).
+
+### O que faz "parecer Tibia"
+
+| Técnica | Onde |
+|---|---|
+| Paleta **limitada** (4–6 tons por material), nunca gradiente | `P_GRASS`, `P_DIRT`, `P_COBBLE`, `P_WATER`, `P_LEAF`… |
+| Ruído de valor **tileável** (grade que dá a volta) + dither de Bayer 4×4 | `noise_tile`, `fbm`, `quantize` |
+| Campo **base compartilhado** entre as variantes do mesmo material | `shared_field` |
+| Voronoi com rejunte na fronteira das células | `cobble` |
+| Copa lobulada em 3 tons + sombra opaca no chão | `_canopy`, `_conifer` |
+| Contorno escuro de 1px na silhueta | `outline` |
+
+Duas armadilhas que valem a documentação:
+
+1. **A emenda entre tiles.** O ruído é periódico em 32px e as decorações são
+   desenhadas com *wrap* (`put(..., wrap=True)`); nenhuma borda é pintada no
+   perímetro do tile. Por isso qualquer variante encosta em qualquer outra sem
+   costura visível.
+2. **O xadrez de brilho.** Se cada variante usasse uma semente independente, cada
+   tile teria um brilho médio diferente e o campo viraria um tabuleiro visível de
+   longe — mesmo com as bordas casando. `shared_field` resolve: 55% do valor vem
+   de um campo comum ao material e 45% da semente da variante.
+
+Sombra é **opaca**: o `.spr` de 1098 é RGB, não existe alpha parcial
+(`FORMATO.md` seção 1). As sombras das árvores são elipses de verde escuro.
+
+### Geometria: o que `imports.py` passou a aceitar em `items`
+
+Uma entrada "simples" (1×1, 1 quadro) continua só trocando a folha do item. Com
+qualquer um dos campos abaixo a entrada vira um **thing de item completo** no
+manifesto, com geometria e atributos próprios — o `build_assets.py` aplica os
+`things` do manifesto *depois* de `build_items()`, então a arte de regra é
+substituída:
+
+| Campo | Efeito |
+|---|---|
+| `"tiles": 2` | 64×64 = 2×2 tiles, **ancorado no canto inferior direito** (a arte sobe e vai para a esquerda — é assim que a Tibia desenha árvore grande) |
+| `"height": 64` | 1 tile de largura × 2 de altura: paredes e portas sobem 32px acima do tile |
+| `"frames": [...]` + `"duration"` | animação (`animationPhases > 1` com bloco `Animator`) |
+| `"displacement": [x, y]` | atributo `Displacement` do `.dat` |
+
+Grupo, flags, luz e `speed` **vêm do `items.otb`** — `imports.py` chama
+`build_assets.item_attrs` no item do OTB, então chão continua sendo chão.
+
+**Regra do `FLAG_ANIMATION` (`FORMATO.md` seção 5), aplicada automaticamente:**
+quem manda é o OTB. Se o item **não** tem a flag, mais de um quadro é recusado
+com aviso e reduzido a 1 (senão sobraria um byte no pacote de mapa e o cliente
+daria `getThing: invalid thing id`). Se o item **tem** a flag e só há um quadro,
+ele é duplicado para 2 fases. A água do mapa (`4608`, *shallow water*) **tem** a
+flag no `items.otb`, então as 3 fases de onda são legais — não foi preciso trocar
+o id no mapa.
+
+### Cobertura
+
+| Categoria | Qtd. | Server ids |
+|---|---|---|
+| Grama (variantes) | 6 | 4526–4531 |
+| Terra batida | 3 | 351, 352, 353 |
+| Cobblestone | 5 | 19744–19748 |
+| Piso de pedra clara / madeira | 1 + 1 | 431, 405 |
+| Lama e pântano | 4 | 354, 355, 11145, 19947 |
+| Água rasa (3 fases) | 3 PNGs | 4608 |
+| Árvores (fir, sicômoro, salgueiro, faia, pinheiro alto), 2×2 | 5 | 2700, 2701, 2702, 2707, 2712 |
+| Árvores mortas, 2×2 | 5 | 2709, 2713–2716 |
+| Arbustos | 3 | 2767, 2784, 3986 |
+| Plantas de pântano | 3 | 2771, 2774, 2775 |
+| Paredes de pedra H/V/canto, 32×64 | 3 | 1049, 1050, 1051 |
+| Paredes de madeira H/V/canto + janela, 32×64 | 4 | 5261, 5262, 5263, 5277 |
+| Portas fechadas de pedra e madeira H/V, 32×64 | 4 | 1210, 1213, 5099, 5101 |
+| Tocha de parede (2 fases) / fogueira (2 fases) | 4 PNGs | 2059, 1428 |
+| Placa, cerca, depot, boneco de treino, tenda | 5 | 1440, 1533/1534, 2594, 5787, 7605 |
+
+`assets-src/sprites/terrain/_sheets/` é **gerado** pelo build (as folhas já
+encaixadas na grade de 32px); não edite à mão.
+
+## Extração de screenshots (`extract_screenshot.py` + `overrides/20_screenshot.json`)
+
+Terreno **real**, recortado de screenshots de um cliente Open Tibia de um jogo
+Naruto (material privado do usuário, em `assets-src/import/`, fora do git):
+
+| arquivo em `assets-src/import/` | origem | conteúdo |
+| --- | --- | --- |
+| `screenshot_forest_full.png` | `sprite_0000.png` (PNG sem perdas, 1920×1080) | floresta densa, trilha de terra, clareira, cobra vermelha (boss) |
+| `screenshot_naruto_ot_b.jpg` | `scDBJuV.jpg` | a **mesma** cena em JPG (só referência; a extração usa o PNG) |
+| `screenshot_naruto_ot_a.jpg` | `a0YYar9.jpg` | área submersa com deck de madeira (sem terreno que a gente use hoje) |
+
+### Escala e grade
+
+O cliente **não** desenha 32 px por tile: ele renderiza 21 tiles na largura da
+janela de 1920 px, então cada tile ocupa **1920/21 = 91.43 px** — um zoom de
+2.86× sobre a arte de 32. O período foi achado por autocorrelação da textura de
+chão (`|imagem − imagem deslocada de p|`, vale mais nítido em 91 px nos dois
+eixos, medido separadamente em grama, terra e trilha) e depois arredondado para
+a fração exata `largura/N`. A fase da grade (`offset x=61 y=89`) veio do
+alinhamento das transições grama↔terra, que no Tibia são tiles inteiros de
+borda. Confira sempre olhando `assets-src/import/extracted/screenshot/_grid.png`
+(grade desenhada por cima, com o número da célula).
+
+Como o período é fracionário, **todo recorte é reamostrado com
+`Image.resize(box=...)` em coordenada fracionária**: cortar em pixel inteiro
+acumula 0.43 px por tile e estraga a costura entre tiles.
+
+```
+.venv/bin/python tools/spr/extract_screenshot.py grid      # escala + grade
+.venv/bin/python tools/spr/extract_screenshot.py ground    # chão -> 32x32
+.venv/bin/python tools/spr/extract_screenshot.py objects   # árvores/arbustos com alpha
+.venv/bin/python tools/spr/extract_screenshot.py sheet     # folhas de revisão
+```
+
+### Chão
+
+Cada célula da grade vira uma amostra com cor média e desvio. A classificação é
+por cor média (`grass_light`, `grass_dark`, `dirt`) e o descarte tem **três**
+filtros, porque média e desvio sozinhos não pegam uma copa de árvore por cima do
+chão:
+
+1. distância da cor média à **mediana da classe** (`--tol`);
+2. desvio da célula contra o desvio mediano da classe (`--std-tol`);
+3. **pureza**: fração de pixels dentro de uma bola de cor em volta da mediana
+   (`--purity`, padrão 0.985). É o filtro que joga fora sombra, folhagem e bicho.
+
+Só as células da grade dariam ~27 candidatos de grama, e nesse pouco o filtro é
+obrigado a aceitar tiles com uma folha escura da copa vizinha — que aparece
+repetida no jogo inteiro. Como **o chão repete com o período do tile, qualquer
+janela de um período tirada de área homogênea já é um tile válido e tileable**,
+`--substeps` (padrão 3) amostra também em frações de tile: 185 candidatos, e aí
+dá para exigir pureza ≥ 0.985 e ainda sobrar variante.
+
+O que sobra é reduzido 91→32 com LANCZOS + unsharp leve + quantização em 24
+cores (para voltar ao "pixel art"), deduplicado por hash e ordenado pelo **erro
+de costura** (diferença entre a coluna/linha da borda esquerda e da direita).
+`sheet` monta `_review_ground.png` com cada tile repetido 2×2, que é como se vê
+se a variante é realmente *tileable*.
+
+### Objetos
+
+Alpha por distância de cor sozinho **esburaca a copa**: o brilho das folhas tem
+quase a mesma cor da grama. Então `cut_object` fecha a máscara
+morfologicamente (Max→Min) e só apaga o fundo **conectado à borda** do recorte
+(rotulagem de componentes conexas própria, sem scipy); buraco interno continua
+opaco. Objetos que ficam por cima da copa, e não da grama, usam
+`"bg": "local"` (mediana do anel em volta da caixa).
+
+Como a copa é um recorte de uma massa contínua, a borda da caixa sai reta e o
+sprite fica com cara de quadrado. Para `tiles > 1` a borda é **roída por um
+ruído determinístico** de 3 px, o que devolve uma silhueta de folhagem (o `.spr`
+1098 tem alpha de 1 bit, então suavizar não adiantaria).
+
+A floresta do material é densa: **só uma copa** no screenshot inteiro fica
+isolada o bastante para a varredura automática achar sozinha. Por isso os
+recortes bons são escolhidos à mão em `tools/spr/screenshot_objects.json`
+(célula da grade + ajuste fino em pixels + lado em tiles); a varredura
+automática por caixa deslizante (miolo cheio de "não-chão", anel em volta cheio
+de chão) continua rodando e complementa com arbustos soltos.
+
+### Mapeamento (`assets-src/sprites/overrides/20_screenshot.json`)
+
+O build carrega `assets-src/sprites/overrides/*.json` em ordem de nome, o último
+vence: o `20_screenshot.json` fica **por cima** do `10_terrain.json`
+(procedural). Toda entrada cujo PNG não existir é ignorada com aviso, então numa
+máquina sem o material privado o build cai de volta no terreno procedural.
+
+| ids do mapa (`tools/map/build_valley.py`) | quantos | arte |
+| --- | --- | --- |
+| `GRASS` 4526–4531 | 6 | 6 variantes de grama clara |
+| `DIRT` 351, 352, 353 | 3 | 3 variantes de terra da trilha |
+| `TREES` 2700, 2701, 2702, 2707, 2712 | 5 | 5 copas 2×2 (`"tiles": 2`) |
+| `BUSHES` 2767, 2784, 3986 | 3 | 2 arbustos redondos + 1 com flores |
+
+Também foram extraídos `rock_grey`, `branch_fallen` e `bush_flower_b`, ainda sem
+id no mapa (o `valley.otbm` não usa nenhum item de pedra nem de galho caído —
+confira com `tools/map/otbm.py`, `OtbmMap.read(...).item_count_by_id()`).
+
+### Limitações desta extração
+
+- **Não há grama escura limpa** no material: todo pixel verde escuro do
+  screenshot é copa de árvore, não chão. A classe `grass_dark` sai com zero
+  variantes e os 6 ids de `GRASS` são preenchidos com a família clara, que já
+  varia de tom o suficiente.
+- As copas não são árvores inteiras e sim **recortes 2×2 de uma massa contínua
+  de folhagem**: funcionam para floresta fechada (que é o caso do `valley`), mas
+  uma árvore isolada no meio de um campo fica com o corte reto aparente.
+- Tufos de grama e detalhes finos não sobrevivem ao alpha (cor perto demais da
+  grama) e ficam com aparência de ruído; não foram mapeados.
+- O segundo screenshot (`screenshot_naruto_ot_a.jpg`) é submerso e tem escala
+  diferente; nada dele foi usado.
+
 ## Convenções de arte
 
 - Célula de 32×32, "chão" na linha y=30, fundo transparente.
@@ -338,6 +547,16 @@ imagem vai nas 4 direções e nas 3 fases de caminhada.
   o `addons: 3` do `rogue_ninja` simplesmente não aparece.
 - Itens não têm variação de padrão: chão não tem as 4×4 variações da Tibia e
   pilhas não mudam de sprite conforme a quantidade.
+- O terreno procedural não tem **bordas de transição** (grama→terra, terra→água):
+  cada material termina no limite do tile. Falta um conjunto de itens de borda no
+  mapa (`GROUND_BORDER`) para o encontro ficar suave.
+- Árvores de 2×2 desenham para oeste/norte mas **bloqueiam uma casa só** — em
+  floresta densa a copa de uma cobre o tronco da vizinha; é o comportamento da
+  Tibia, mas exige que o mapa não empilhe árvores em casas adjacentes.
+- A água anima em 3 fases de onda senoidal: o padrão se repete de forma
+  perceptível em lâminas grandes.
+- Não há ponte de madeira: o mapa atual atravessa o rio com piso de pedra (431) e
+  cerca (1533) como guarda-corpo.
 - Itens animados têm as 2 fases exigidas pelo protocolo, mas as duas apontam para
   o mesmo sprite — então nada se mexe de fato. Para animar de verdade, basta dar
   sprites diferentes às duas fases.

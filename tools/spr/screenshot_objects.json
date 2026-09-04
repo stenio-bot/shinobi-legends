@@ -1,0 +1,20 @@
+{
+ "_doc": "Recortes escolhidos a mao em assets-src/import/screenshot_forest_full.png. col/row sao celulas da grade detectada por 'extract_screenshot.py grid'; dx/dy sao ajustes finos em pixels da imagem original (a floresta do material e densa e quase nenhuma copa cai exatamente dentro de um tile). tiles = lado da caixa. 'bg': 'local' usa a mediana do anel em volta como fundo, para objetos que estao POR CIMA da copa e nao da grama. Regenere com: .venv/bin/python tools/spr/extract_screenshot.py objects",
+ "objects": [
+  {"name": "tree_crown_a",  "col": 16, "row": 6, "dx":  50, "dy": -10, "tiles": 2},
+  {"name": "tree_crown_b",  "col": 17, "row": 7, "dx": -15, "dy": -15, "tiles": 2},
+  {"name": "tree_crown_c",  "col": 18, "row": 6, "dx": -35, "dy": -20, "tiles": 2},
+  {"name": "tree_crown_d",  "col": 16, "row": 1, "dx":  15, "dy":  25, "tiles": 2},
+  {"name": "tree_small_e",  "col": 14, "row": 0, "dx": -10, "dy": -30, "tiles": 2},
+  {"name": "branch_fallen", "col":  5, "row": 2, "dx": -45, "dy":   0, "tiles": 2,
+   "bg": "local"},
+  {"name": "bush_round_a",  "col": 17, "row": 0, "dx":   0, "dy": -46, "tiles": 1},
+  {"name": "bush_round_b",  "col": 18, "row": 8, "dx":   0, "dy":  46, "tiles": 1},
+  {"name": "bush_flower_a", "col":  2, "row": 0, "dx":  39, "dy":  42, "tiles": 1,
+   "bg": "local"},
+  {"name": "bush_flower_b", "col":  4, "row": 1, "dx":  45, "dy": -15, "tiles": 1,
+   "bg": "local"},
+  {"name": "rock_grey",     "col":  1, "row": 7, "dx": -10, "dy":   5, "tiles": 1,
+   "bg": "local"}
+ ]
+}

@@ -42,7 +42,7 @@ Module
     - game_attachedeffects
     #- game_paperdolls   # desativado: Shinobi Legends (ADR-005)
     #- game_stash   # desativado: Shinobi Legends (ADR-005)
-    - game_healthcircle
+    #- game_healthcircle   # desativado: arcos de HP/chakra não são Tibia clássico
     #- game_shop   # desativado: Shinobi Legends (ADR-005)
     - game_notifications
     #- game_highscore   # desativado: Shinobi Legends (ADR-005)

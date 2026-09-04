@@ -410,6 +410,14 @@ def main():
     imports_path = os.path.join(ROOT, args.imports)
     if not args.no_imports and os.path.exists(imports_path):
         imp = IMP.apply(manifest, IMP.load(imports_path), ROOT, sheets_dir)
+    # Camadas extras: assets-src/sprites/overrides/*.json (mesmo esquema do imports.json),
+    # aplicadas em ordem de nome de arquivo; a ultima vence. Ex.: 10_terrain.json, 20_screenshot.json.
+    overrides_dir = os.path.join(ROOT, "assets-src", "sprites", "overrides")
+    if not args.no_imports and os.path.isdir(overrides_dir):
+        for fn in sorted(os.listdir(overrides_dir)):
+            if fn.endswith(".json"):
+                IMP.apply(manifest, IMP.load(os.path.join(overrides_dir, fn)), ROOT, sheets_dir)
+                print("override aplicado:", fn)
     out_dir = os.path.join(ROOT, args.out)
     os.makedirs(out_dir, exist_ok=True)
 

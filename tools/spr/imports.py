@@ -14,10 +14,12 @@ Ver docs/sistemas/arte-e-sprites.md, secao "Importar folhas de sprites".
 """
 import json
 import os
+import sys
 
 from PIL import Image
 
 CELL = 32
+FLAG_ANIMATION = 1 << 24        # itemflags_t do items.otb (ver FORMATO.md secao 5)
 MAX_TILES = 4          # o .dat guarda width/height em U8; o cliente aceita ate 4
 DIRECTIONS = 4
 PHASES_IDLE = 1
@@ -71,6 +73,43 @@ def fit(img, tiles, anchor="bottom", upscale_small=False):
     return out
 
 
+def _build_assets():
+    """O modulo build_assets, sem importar em circulo.
+
+    build_assets importa este arquivo no topo; quando ele roda como script o seu
+    nome e ``__main__``. Reaproveitar o modulo ja carregado evita executa-lo duas
+    vezes (e evita duplicar aqui a traducao flags do OTB -> atributos do .dat)."""
+    for name in ("build_assets", "__main__"):
+        mod = sys.modules.get(name)
+        if mod is not None and hasattr(mod, "item_attrs"):
+            return mod
+    import build_assets            # noqa: F401  (fallback: uso fora do build)
+    return build_assets
+
+
+def _dat_attrs(otb_item):
+    """Atributos do .dat do item, no formato do manifesto (["A_GROUND", 100])."""
+    import sprformat as S
+    ba = _build_assets()
+    names = {getattr(S, n): n for n in dir(S) if n.startswith("A_")}
+    return [[names[a]] + list(args) for a, args in ba.item_attrs(otb_item)]
+
+
+_OTB_CACHE = {}
+
+
+def otb_items(manifest, root):
+    """Itens do items.otb BASE (o .vanilla quando existe, igual ao build)."""
+    path = os.path.join(root, manifest["items"]["otb"])
+    if os.path.exists(path + ".vanilla"):
+        path += ".vanilla"
+    got = _OTB_CACHE.get(path)
+    if got is None:
+        from otb import parse_items_otb
+        got = _OTB_CACHE[path] = parse_items_otb(path)[1]
+    return got
+
+
 def scaled(img, factor):
     if factor == 1.0:
         return img.copy()
@@ -92,7 +131,9 @@ class Importer:
         self.sheet_root = sheet_root
         os.makedirs(self.build_dir, exist_ok=True)
         self.missing = []
-        self.applied = {"creatures": 0, "effects": 0, "missiles": 0, "items": 0}
+        self.warnings = []
+        self.applied = {"creatures": 0, "effects": 0, "missiles": 0, "items": 0,
+                        "item_things": 0}
 
     # ---- fontes
     def _open(self, entry, key="src"):
@@ -216,7 +257,7 @@ class Importer:
             "_import": e["src"],
         }
 
-    # ---- icones de item (1x1)
+    # ---- icones de item (1x1, arte solta que so troca o desenho)
     def item(self, e):
         img = self._open(e)
         if img is None:
@@ -225,6 +266,90 @@ class Importer:
         rel = self._save(cell, "item_%s.png" % e["name"])
         self.applied["items"] += 1
         return rel
+
+    # ---- itens com GEOMETRIA propria (multi-tile / parede alta / animados)
+    def item_thing(self, e, otb_item, client_id):
+        """Monta um thing de item completo para o manifesto.
+
+        Aceita, alem de `src`/`crop`:
+
+        ``tiles``          1 ou 2 — largura = altura em tiles, ancorado no canto
+                           INFERIOR DIREITO (o cliente desenha o sprite (w,h) em
+                           ``((width-1-w),(height-1-h))*32``: a arte sobe e vai
+                           para a esquerda, como as arvores da Tibia).
+        ``height``         64 -> 1 tile de largura por 2 de altura (paredes: a
+                           parede sobe 32px acima do tile).
+        ``frames``+``duration``  animacao -> ``animationPhases > 1`` com bloco
+                           Animator. **Regra da secao 5 do FORMATO.md**: quem
+                           manda e a FLAG_ANIMATION do OTB. Sem a flag o item NAO
+                           pode ter mais de 1 fase (sobraria um byte no pacote de
+                           mapa); com a flag ele PRECISA de pelo menos 2.
+        ``displacement``   [x, y] opcional (atributo Displacement do .dat).
+
+        O item ja existe no items.otb: grupo, flags, luz e speed vem de la — aqui
+        so muda a arte e a geometria.
+        """
+        frames = self._frames(e)
+        if frames is None:
+            return None
+
+        if e.get("height") and int(e["height"]) > CELL:
+            w_t, h_t = 1, int(e["height"]) // CELL
+        else:
+            w_t = h_t = int(e.get("tiles", 1))
+        w_px, h_px = w_t * CELL, h_t * CELL
+
+        animated = bool(otb_item["flags"] & FLAG_ANIMATION)
+        if len(frames) > 1 and not animated:
+            self.warnings.append(
+                "%s (server id %s): o OTB nao tem FLAG_ANIMATION, %d fases "
+                "reduzidas a 1 (FORMATO.md secao 5)"
+                % (e["name"], e["server_ids"][0], len(frames)))
+            frames = frames[:1]
+        if animated and len(frames) == 1:
+            frames = frames * 2          # 2 fases obrigatorias; mesmo sprite
+
+        cells = []
+        for f in frames:
+            cell = Image.new("RGBA", (w_px, h_px), (0, 0, 0, 0))
+            f = _binarize(f.convert("RGBA"))
+            if f.size != (w_px, h_px):   # encaixa no canto inferior direito
+                f = _trim(f)
+                s = min(w_px / f.width, h_px / f.height, 1.0)
+                if s < 1.0:
+                    f = f.resize((max(1, round(f.width * s)),
+                                  max(1, round(f.height * s))), Image.LANCZOS)
+                    f = _binarize(f.convert("RGBA"))
+            cell.paste(f, (w_px - f.width, h_px - f.height))
+            cells.append(cell)
+
+        sh = Image.new("RGBA", (w_px, len(cells) * h_px), (0, 0, 0, 0))
+        for i, c in enumerate(cells):
+            sh.paste(c, (0, i * h_px))
+        rel = self._save(sh, "item_%s.png" % e["name"])
+
+        attrs = _dat_attrs(otb_item)
+        disp = e.get("displacement")
+        if disp:
+            attrs.append(["A_DISPLACEMENT", int(disp[0]), int(disp[1])])
+
+        group = {"type": 0, "phases": len(cells)}
+        if len(cells) > 1:
+            dur = int(e.get("duration", 500))
+            group["animation"] = {"async": True, "loop_count": 0, "start_phase": 0,
+                                  "durations": [[dur, dur]] * len(cells)}
+        self.applied["item_things"] += 1
+        return {
+            "category": "item", "id": client_id,
+            "name": e.get("name", "item_%d" % client_id),
+            "width": w_t, "height": h_t,
+            "exact_size": min(255, max(w_px, h_px)),
+            "layers": 1, "pattern_x": 1, "pattern_y": 1, "pattern_z": 1,
+            "frame_groups": [group],
+            "sheets": [rel],
+            "attrs": attrs,
+            "_import": e.get("frames") or e.get("src"),
+        }
 
 
 def apply(manifest, cfg, root, sheet_root):
@@ -251,12 +376,41 @@ def apply(manifest, cfg, root, sheet_root):
                 manifest["things"].append(spec)
 
     ov = manifest["items"]["overrides"]
+    by_sid = None
     for e in cfg.get("items", []):
-        rel = imp.item(e)
-        if rel is None:
+        if not e.get("server_ids"):
+            continue                     # entrada so de comentario ("_g": "...")
+        rich = bool(e.get("tiles", 1) != 1 or e.get("height") or e.get("displacement")
+                    or len(e.get("frames") or [e.get("src")]) > 1)
+        if not rich:
+            rel = imp.item(e)
+            if rel is None:
+                continue
+            for sid in e["server_ids"]:
+                ov[str(sid)] = {"name": e["name"], "sheet": rel, "icon": "import"}
             continue
+
+        # geometria propria: vira um thing de item no manifesto, que o build
+        # aplica DEPOIS de build_items() e portanto substitui a arte de regra.
+        if by_sid is None:
+            by_sid = {it["server_id"]: it for it in otb_items(manifest, root)}
         for sid in e["server_ids"]:
-            ov[str(sid)] = {"name": e["name"], "sheet": rel, "icon": "import"}
+            it = by_sid.get(int(sid))
+            if not it or not it["client_id"]:
+                imp.warnings.append("%s: server id %s nao existe no items.otb"
+                                    % (e.get("name"), sid))
+                continue
+            spec = imp.item_thing(e, it, it["client_id"])
+            if spec is None:
+                break                    # PNG ausente: ja registrado em missing
+            k = ("item", spec["id"])
+            if k in by_key:
+                manifest["things"][by_key[k]] = spec
+            else:
+                by_key[k] = len(manifest["things"])
+                manifest["things"].append(spec)
+    for w in imp.warnings:
+        print("imports: AVISO:", w)
     return imp
 
 

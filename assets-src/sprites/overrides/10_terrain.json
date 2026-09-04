@@ -1,0 +1,85 @@
+{
+ "_doc": "Terreno procedural: liga cada server id VANILLA usado por server/generated/world/valley.otbm aos PNGs de assets-src/sprites/terrain/ (arte propria, desenhada por tools/spr/gen_terrain.py e VERSIONADA). Mesmo esquema do imports.json; aplicado por tools/spr/imports.py dentro do build_assets.py. Entradas simples (1x1, 1 fase) so trocam o desenho; entradas com 'tiles', 'height', 'frames' ou 'displacement' viram um thing de item com geometria propria. O item ja existe no items.otb: grupo, flags, luz e speed vem de la.",
+ "format": 1,
+ "root": "assets-src/sprites/terrain",
+ "build_dir": "assets-src/sprites/terrain/_sheets",
+
+ "items": [
+  {"_g": "======================= CHAO (32x32, tileavel) ======================="},
+  {"name": "grass_0", "src": "grass_0.png", "server_ids": [4526]},
+  {"name": "grass_1", "src": "grass_1.png", "server_ids": [4527]},
+  {"name": "grass_2", "src": "grass_2.png", "server_ids": [4528]},
+  {"name": "grass_3", "src": "grass_3.png", "server_ids": [4529]},
+  {"name": "grass_4", "src": "grass_4.png", "server_ids": [4530]},
+  {"name": "grass_5", "src": "grass_5.png", "server_ids": [4531]},
+
+  {"name": "dirt_0", "src": "dirt_0.png", "server_ids": [351]},
+  {"name": "dirt_1", "src": "dirt_1.png", "server_ids": [352]},
+  {"name": "dirt_2", "src": "dirt_2.png", "server_ids": [353]},
+
+  {"name": "cobble_0", "src": "cobble_0.png", "server_ids": [19744]},
+  {"name": "cobble_1", "src": "cobble_1.png", "server_ids": [19745]},
+  {"name": "cobble_2", "src": "cobble_2.png", "server_ids": [19746]},
+  {"name": "cobble_3", "src": "cobble_3.png", "server_ids": [19747]},
+  {"name": "cobble_4", "src": "cobble_4.png", "server_ids": [19748]},
+
+  {"name": "stone_floor", "src": "stone_floor.png", "server_ids": [431]},
+  {"name": "wood_floor", "src": "wood_floor.png", "server_ids": [405]},
+
+  {"name": "mud_0", "src": "mud_0.png", "server_ids": [354]},
+  {"name": "mud_1", "src": "mud_1.png", "server_ids": [355]},
+  {"name": "mud_2", "src": "mud_2.png", "server_ids": [11145]},
+  {"name": "mud_3", "src": "mud_3.png", "server_ids": [19947]},
+
+  {"_g": "agua rasa: o id 4608 TEM FLAG_ANIMATION no items.otb, entao pode (e precisa) ter mais de uma fase — 3 fases de onda, ver FORMATO.md secao 5",
+   "name": "water", "frames": ["water_0.png", "water_1.png", "water_2.png"],
+   "duration": 420, "server_ids": [4608]},
+
+  {"_g": "==================== ARVORES (64x64 = 2x2 tiles) ===================="},
+  {"name": "tree_fir", "src": "tree_fir.png", "tiles": 2, "server_ids": [2700]},
+  {"name": "tree_sycamore", "src": "tree_sycamore.png", "tiles": 2, "server_ids": [2701]},
+  {"name": "tree_willow", "src": "tree_willow.png", "tiles": 2, "server_ids": [2702]},
+  {"name": "tree_beech", "src": "tree_beech.png", "tiles": 2, "server_ids": [2707]},
+  {"name": "tree_pine", "src": "tree_pine.png", "tiles": 2, "server_ids": [2712]},
+
+  {"name": "dead_tree_0", "src": "dead_tree_0.png", "tiles": 2, "server_ids": [2709]},
+  {"name": "dead_tree_1", "src": "dead_tree_1.png", "tiles": 2, "server_ids": [2713]},
+  {"name": "dead_tree_2", "src": "dead_tree_2.png", "tiles": 2, "server_ids": [2714]},
+  {"name": "dead_tree_3", "src": "dead_tree_3.png", "tiles": 2, "server_ids": [2715]},
+  {"name": "dead_tree_4", "src": "dead_tree_4.png", "tiles": 2, "server_ids": [2716]},
+
+  {"_g": "===================== VEGETACAO BAIXA (1x1) ====================="},
+  {"name": "bush_0", "src": "bush_0.png", "server_ids": [2767]},
+  {"name": "bush_1", "src": "bush_1.png", "server_ids": [2784]},
+  {"name": "bush_2", "src": "bush_2.png", "server_ids": [3986]},
+  {"name": "swamp_0", "src": "swamp_0.png", "server_ids": [2771]},
+  {"name": "swamp_1", "src": "swamp_1.png", "server_ids": [2774]},
+  {"name": "swamp_2", "src": "swamp_2.png", "server_ids": [2775]},
+
+  {"_g": "============= PAREDES E PORTAS (32x64: sobem 32px do tile) ============="},
+  {"name": "stone_wall_h", "src": "stone_wall_h.png", "height": 64, "server_ids": [1049]},
+  {"name": "stone_wall_v", "src": "stone_wall_v.png", "height": 64, "server_ids": [1050]},
+  {"name": "stone_wall_c", "src": "stone_wall_c.png", "height": 64, "server_ids": [1051]},
+  {"name": "wood_wall_h", "src": "wood_wall_h.png", "height": 64, "server_ids": [5261]},
+  {"name": "wood_wall_v", "src": "wood_wall_v.png", "height": 64, "server_ids": [5262]},
+  {"name": "wood_wall_c", "src": "wood_wall_c.png", "height": 64, "server_ids": [5263]},
+  {"name": "wood_window", "src": "wood_wall_window.png", "height": 64, "server_ids": [5277]},
+  {"name": "door_stone_h", "src": "door_stone_h.png", "height": 64, "server_ids": [1210]},
+  {"name": "door_stone_v", "src": "door_stone_v.png", "height": 64, "server_ids": [1213]},
+  {"name": "door_wood_h", "src": "door_wood_h.png", "height": 64, "server_ids": [5099]},
+  {"name": "door_wood_v", "src": "door_wood_v.png", "height": 64, "server_ids": [5101]},
+
+  {"_g": "============================ MOBILIARIO ============================"},
+  {"_g": "tocha de parede: o id 2059 tem FLAG_ANIMATION (2 fases de chama) e a luz vem do proprio OTB",
+   "name": "torch", "frames": ["torch_0.png", "torch_1.png"], "height": 64,
+   "duration": 300, "server_ids": [2059]},
+  {"_g": "fogueira: o id 1428 tambem tem FLAG_ANIMATION",
+   "name": "campfire", "frames": ["campfire_0.png", "campfire_1.png"],
+   "duration": 340, "server_ids": [1428]},
+  {"name": "sign", "src": "sign.png", "server_ids": [1440]},
+  {"name": "fence", "src": "fence.png", "server_ids": [1533, 1534]},
+  {"name": "depot", "src": "depot.png", "server_ids": [2594]},
+  {"name": "dummy", "src": "dummy.png", "height": 64, "server_ids": [5787]},
+  {"name": "tent", "src": "tent.png", "tiles": 2, "server_ids": [7605]}
+ ]
+}

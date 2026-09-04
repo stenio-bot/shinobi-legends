@@ -589,6 +589,7 @@ return {
     distFromCenScrollbar              = {
         value = 0,
         action = function(value, options, controller, panels, extraWidgets)
+            if not modules.game_healthcircle then return end
             local bar = modules.game_healthcircle.optionPanel:recursiveGetChildById('distFromCenScrollbar')
             bar:setText(tr('Distance: %s', bar:recursiveGetChildById('valueBar'):getValue()))
             modules.game_healthcircle.setDistanceFromCenter(bar:recursiveGetChildById('valueBar'):getValue())
@@ -597,6 +598,7 @@ return {
     opacityScrollbar                  = {
         value = 0,
         action = function(value, options, controller, panels, extraWidgets)
+            if not modules.game_healthcircle then return end
             local bar = modules.game_healthcircle.optionPanel:recursiveGetChildById('opacityScrollbar')
             bar:setText(tr('Opacity: %s', bar:recursiveGetChildById('valueBar'):getValue() / 100))
             modules.game_healthcircle.setCircleOpacity(bar:recursiveGetChildById('valueBar'):getValue() / 100)
