@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from PIL import Image  # noqa: E402
 
+import imports as IMP  # noqa: E402
 import sprformat as S  # noqa: E402
 import tiles as T  # noqa: E402
 from otb import parse_items_otb, write_items_otb  # noqa: E402
@@ -388,6 +389,9 @@ def main():
     ap.add_argument("--tiles", default="assets-src/sprites/tiles.json",
                     help="manifesto dos itens NOVOS de cenario")
     ap.add_argument("--allocations", default="assets-src/sprites/allocations.json")
+    ap.add_argument("--imports", default="assets-src/sprites/imports.json",
+                    help="mapeamento da arte importada (assets-src/import/extracted)")
+    ap.add_argument("--no-imports", action="store_true")
     ap.add_argument("--items-xml", default="server/generated/items/items_tiles_naruto.xml")
     ap.add_argument("--out", default="client-otc/data/things/1098")
     ap.add_argument("--no-otb", action="store_true",
@@ -398,6 +402,14 @@ def main():
     with open(manifest_path, encoding="utf-8") as fh:
         manifest = json.load(fh)
     sheets_dir = os.path.join(ROOT, manifest["sheet_root"])
+
+    # ------------------------------------------------- arte importada (imports.json)
+    # Prioridade: import > override do placeholder. Entradas cujo PNG de origem
+    # nao existir (o material fica fora do git) sao puladas com aviso.
+    imp = None
+    imports_path = os.path.join(ROOT, args.imports)
+    if not args.no_imports and os.path.exists(imports_path):
+        imp = IMP.apply(manifest, IMP.load(imports_path), ROOT, sheets_dir)
     out_dir = os.path.join(ROOT, args.out)
     os.makedirs(out_dir, exist_ok=True)
 
@@ -479,6 +491,13 @@ def main():
           % (len(tables[0]), max(tables[0]), len(tables[1]), len(tables[2]), len(tables[3])))
     print("sprites unicos: %d (celulas vazias reaproveitadas: %d)"
           % (len(pool.blobs), pool.empty))
+    if imp is not None:
+        print("imports.json: %d criaturas, %d efeitos, %d missiles, %d icones de item"
+              % (imp.applied["creatures"], imp.applied["effects"],
+                 imp.applied["missiles"], imp.applied["items"]))
+        if imp.missing:
+            print("AVISO: %d recortes de import nao encontrados (entradas ignoradas): %s"
+                  % (len(imp.missing), ", ".join(sorted(set(imp.missing))[:8])))
     print("estilos de item: %s" % sorted(stats["estilos"].items(), key=lambda kv: -kv[1]))
     print("itens com 2 fases (FLAG_ANIMATION do OTB): %d" % stats["itens_animados"])
     if stats["conferencia"]:

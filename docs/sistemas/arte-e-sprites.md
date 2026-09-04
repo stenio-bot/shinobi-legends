@@ -107,6 +107,70 @@ está em `tools/spr/README.md`, seção "Itens NOVOS de cenário".
   reaproveitado — mapas e saves já gravados apontariam para outro item. Apagar um
   tile do `tiles.json` só aposenta o id.
 
+### Fatiando uma folha de prédios (`slice_buildings.py`)
+
+Arte externa (RPG Maker etc.) chega como uma folha grande em
+`assets-src/import/` — pasta de **uso privado, no `.gitignore`**, nada de lá é
+versionado. `tools/spr/slice_buildings.py` transforma a folha em itens:
+
+```bash
+.venv/bin/python tools/spr/slice_buildings.py --align       # só o relatório de grade
+.venv/bin/python tools/spr/slice_buildings.py --components  # só o teste de componentes
+.venv/bin/python tools/spr/slice_buildings.py               # fatia e escreve tudo
+```
+
+1. **Alinhamento.** Testa os 32 deslocamentos possíveis em x e em y e escolhe o que
+   minimiza a soma de pixels opacos **em cima das linhas de grade** — a grade certa é
+   a que corta menos desenho. Para `village_buildings.png` (256x1024) o resultado é
+   offset `(0, 0)`, grade **8 colunas x 32 linhas**. A folha `_grid.png` mostra a
+   grade sobreposta para conferência visual.
+2. **Células.** Recorta 32x32 e descarta as células com menos de 8 pixels opacos.
+3. **Prédios.** O método natural — componentes conexos na grade — **não funciona nesta
+   folha**: os prédios se encostam e as 243 células não-vazias formam **um único**
+   componente. Por isso a segmentação é a tabela `SEGMENTS` do script, feita à mão em
+   cima da folha de revisão. `--components` continua disponível para conferir isso em
+   folhas futuras (se der um componente por prédio, dá para automatizar).
+4. **Dedup.** Células com os mesmos pixels (SHA1 do RGBA) viram **um item só**; a
+   primeira ocorrência define a `key` e as repetições apontam para ela. Nesta folha o
+   ganho foi pequeno (243 células → 242 tiles): o telhado laranja repete a forma mas
+   varia o sombreado pixel a pixel.
+5. **Porta.** Heurística: na **linha de baixo** do prédio, a célula mais central com
+   maior fração de pixels escuros (a abertura). A tabela `SEGMENTS` pode fixar a porta
+   à mão em coordenadas locais.
+
+Saídas:
+
+| Caminho | O quê | Versionado? |
+|---|---|---|
+| `assets-src/import/extracted/buildings/<predio>/<col>_<row>.png` | células para revisão | não |
+| `assets-src/import/extracted/buildings/_review.png` | folha numerada, caixa e porta por prédio | não |
+| `assets-src/sprites/tiles/buildings/<key>.png` | a arte de fato | **sim** |
+| `assets-src/sprites/tiles.json` | um item por célula única (`bld_*`) | **sim** |
+| `assets-src/sprites/buildings.json` | matriz de chaves + porta, por prédio | **sim** |
+
+Grupos escolhidos: corpo do prédio → `wall` (bloqueia, `blocks_projectile`); célula de
+porta → `door` + `walkable: true`; postes, árvores e arbustos → `decoration` bloqueante
+1x1; muros/painéis verdes → `wall`. **Em Tibia tudo do prédio bloqueia menos a porta** —
+não existe "telhado por cima", então nada vira `on_top`. Como não há interior, o NPC de
+uma loja fica na rua, à frente da porta (ver `docs/sistemas/mapas.md`).
+
+### Alocar ids sem construir (`allocate_ids.py`)
+
+`build_assets.py` aloca os ids como efeito colateral de reescrever `items.otb`,
+`Tibia.dat` e `Tibia.spr`. Quando só os **ids** são necessários — por exemplo para
+gerar o mapa antes do build de assets, ou enquanto outra pessoa está rodando
+`build_assets.py` — use:
+
+```bash
+.venv/bin/python tools/spr/allocate_ids.py            # grava allocations.json
+.venv/bin/python tools/spr/allocate_ids.py --dry-run  # só mostra o que faria
+```
+
+Mesma regra sequencial de `tools/spr/tiles.py::allocate` (append-only, 30000/23726).
+Diferença deliberada: **não lê o `items.otb`** — ele pode estar sendo reescrito neste
+instante. Não há risco de colisão porque o OTB vanilla para no server id 26381 e no
+client id 23725.
+
 ### Backup do `items.otb`
 
 A primeira gravação copia o OTB original para
@@ -122,6 +186,115 @@ originais para preservar).
 
 Para voltar ao OTB de fábrica: `cp items.otb.vanilla items.otb` e rode o build
 com `--no-otb`.
+
+## Importar folhas de sprites (`import_sheets.py` + `imports.json`)
+
+Arte de verdade chega como **folhas soltas**: um PNG com dezenas de sprites
+espalhados sobre uma cor de fundo chapada, sem grade. O material fica em
+`assets-src/import/`, que está no **`.gitignore`** (ADR-002: nada de terceiros é
+versionado). O pipeline tem duas metades:
+
+### 1. Extrair (`tools/spr/import_sheets.py`)
+
+```bash
+.venv/bin/python tools/spr/import_sheets.py                 # as folhas padrão
+.venv/bin/python tools/spr/import_sheets.py folha.png --dilate 2 --tol 12
+```
+
+O que faz, em ordem:
+
+1. **Detecta o fundo** = cor RGB mais comum da imagem. O verde `34,177,76`
+   (retângulo de "chroma key" que algumas folhas trazem) é sempre tratado como
+   fundo também, então os sprites de dentro dele saem recortados junto.
+2. Monta a **máscara**: pixel opaco cuja cor esteja a mais de `--tol` por canal do
+   fundo. O `.spr` 1098 é RGB, então o alpha vira binário mesmo.
+3. **Dilata** a máscara (`--dilate`, raio em px) só para calcular a conectividade:
+   junta partes soltas do mesmo sprite (cauda, chama, ponta de arma) sem colar
+   sprites vizinhos. O raio certo é por folha — está em `DEFAULT_SHEETS`:
+   `monsters_sheet` = 1, `npcs_sheet` = 0 (os sprites quase se encostam).
+4. Rotula os **componentes conexos** (8-vizinhos) e descarta o que for menor que
+   `--min-area` / `--min-side` (respingos e os rótulos numéricos da folha).
+5. Grava `assets-src/import/extracted/<folha>/<idx>.png` (só os pixels daquele
+   componente, fundo transparente), um `<folha>.json` com bbox/tamanho de cada um,
+   e a **folha de revisão** `<folha>_contact.png` — cada recorte numerado com o
+   tamanho. **Sempre olhe o contact sheet** antes de mapear: é ele que mostra se
+   um sprite ficou partido (aumente `--dilate`) ou colado no vizinho (diminua).
+
+Limite conhecido: quando dois sprites se **sobrepõem de fato** na folha original
+(dois aldeões encostados, um ninja cuspindo a bola de fogo), nenhum valor de
+`--dilate` separa. Nesses casos use o campo `crop` do `imports.json` para pegar só
+o pedaço que interessa.
+
+### 2. Mapear (`assets-src/sprites/imports.json`)
+
+Arquivo **versionado** (só referencia caminhos dentro de `extracted/`, que podem
+não existir em outra máquina). `tools/spr/imports.py` o aplica **por cima** do
+`manifest.json` durante o `build_assets.py`, com prioridade
+**import > override de placeholder > regra de estilo**. Toda entrada cujo PNG de
+origem não exista é **ignorada com aviso** — em outra máquina o build roda igual e
+cai no placeholder.
+
+```jsonc
+{
+  "root": "assets-src/import/extracted",
+  "build_dir": "assets-src/import/extracted/_sheets",   // folhas montadas
+  "creatures": [
+    {"id": 61, "name": "stone_golem", "src": "monsters_sheet/21.png", "tiles": 4}
+  ],
+  "effects": [
+    {"id": 7, "name": "firearea", "src": "monsters_sheet/35.png",
+     "crop": [0, 46, 60, 60], "grow": [0.45, 0.75, 1.0, 0.9], "duration": 90},
+    {"id": 3, "name": "poff", "frames": ["…/82.png", "…/83.png", "…/84.png"]}
+  ],
+  "missiles": [ {"id": 9, "name": "kunai", "src": "…/46.png", "rotate": -90} ],
+  "items":    [ {"name": "scroll", "src": "…/10.png", "server_ids": [1948, 1949]} ]
+}
+```
+
+| campo | vale para | o que faz |
+|---|---|---|
+| `id` | creature/effect/missile | looktype, `CONST_ME_*` ou `CONST_ANI_*` (`server/tfs/src/const.h`) |
+| `src` / `frames` | todos | recorte(s) em `extracted/`; `frames` viram fases de animação |
+| `crop` | todos | `[x, y, w, h]` dentro do recorte (para separar sprites colados) |
+| `tiles` | creature/effect | lado da caixa em tiles de 32 px (1..4); sem ele, automático |
+| `grow` | effect | gera as fases escalando um único recorte (explosão crescendo) |
+| `duration` | effect | ms por fase |
+| `rotate` | missile | ângulo (graus, 0 = direita) para onde a arte aponta; as 9 direções são geradas girando |
+| `server_ids` | item | ids do TFS (`data/tfs_mapping.json`); o build traduz para clientId pelo `items.otb` |
+
+### Encaixe na grade da Tibia
+
+Cada recorte vira um thing de **1×1 (32 px), 2×2 (64), 3×3 (96) ou 4×4 (128)**.
+O `.dat` guarda `width`/`height` em U8 e o `exactSize` só existe quando algum dos
+dois passa de 1 — `sprformat.py` já fazia isso genericamente, então 3×3 e 4×4
+saíram de graça (o golem de pedra é 4×4 e a raposa 3×3, ambos testados no cliente).
+
+- `auto_tiles`: cabe no tile de baixo enquanto o lado maior for ≤ `tiles*32*1.45`;
+  acima disso sobe um tamanho. O recorte é reduzido com LANCZOS e o alpha volta a
+  ser binário (`>= 128`).
+- **Criaturas**: ancoradas embaixo e centralizadas na horizontal — é assim que o
+  Tibia desenha (o tile do bicho é o canto inferior direito da caixa).
+- **Efeitos/missiles/ícones**: centralizados nos dois eixos. Ícone de item menor
+  que metade do tile é ampliado 2× com NEAREST.
+
+### Criaturas importadas usam `layers = 1`
+
+O placeholder tem 2 camadas (base + template de cores de outfit). A arte
+importada já vem colorida, então vai com **`layers = 1`**: o cliente só aplica
+`head/body/legs/feet` quando `layers == 2`, logo os valores do `tfs_mapping.json`
+passam a ser ignorados nesses looktypes. Consequência direta: **monstros que
+compartilham looktype ficam idênticos** (ex.: `bandit` e `bandit_archer` são os
+dois o 129). Como não há direções nem quadros de andar no material, a mesma
+imagem vai nas 4 direções e nas 3 fases de caminhada.
+
+### Receita completa
+
+```bash
+.venv/bin/python tools/spr/import_sheets.py     # 1. recortar + folha de revisão
+# 2. olhar assets-src/import/extracted/<folha>_contact.png e editar imports.json
+.venv/bin/python tools/spr/build_assets.py      # 3. compilar .spr/.dat
+.venv/bin/python tools/spr/dump_dat.py          # 4. validacao: OK, divergencias=0
+```
 
 ## Convenções de arte
 
@@ -180,3 +353,12 @@ com `--no-otb`.
   as 4×4 variações de chão que o RME espera. Cada variação é um item à parte.
 - `tiles.json` não gera `items.otbm`/`materials.xml` para o editor de mapas: por
   ora os itens novos são colocados por script/GM (`/i <serverId>`), não pelo RME.
+- Sprite importado que compartilha looktype com outro monstro/NPC fica idêntico a
+  ele: com `layers = 1` as cores de outfit do `tfs_mapping.json` não se aplicam.
+- A arte importada não tem direções nem quadros de andar: as 4 direções e as 3
+  fases de caminhada usam a mesma imagem (o bicho "desliza").
+- Sprites que se sobrepõem na folha original não são separáveis por componente
+  conexo; só com `crop` manual no `imports.json`.
+- Recortes maiores que 128 px são reduzidos para caber em 4×4 (o `.dat` não vai
+  além disso na prática); recortes entre 32 e 45 px são reduzidos para 1×1, o que
+  perde um pouco de nitidez nos humanoides.

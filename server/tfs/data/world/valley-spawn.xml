@@ -101,13 +101,13 @@
 	<spawn centerx="1165" centery="1060" centerz="7" radius="1">
 		<monster name="Sapo Ancião" x="0" y="0" z="7" spawntime="3600"/>
 	</spawn>
-	<spawn centerx="1016" centery="1041" centerz="7" radius="1">
+	<spawn centerx="1015" centery="1044" centerz="7" radius="1">
 		<npc name="Ichiro, o Mercador" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
-	<spawn centerx="1042" centery="1041" centerz="7" radius="1">
+	<spawn centerx="1042" centery="1045" centerz="7" radius="1">
 		<npc name="Mestre Hayato" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
-	<spawn centerx="1042" centery="1049" centerz="7" radius="1">
+	<spawn centerx="1041" centery="1052" centerz="7" radius="1">
 		<npc name="Capitã Rin" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1133" centery="1057" centerz="7" radius="1">

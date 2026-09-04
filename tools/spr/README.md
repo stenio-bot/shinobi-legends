@@ -19,10 +19,15 @@ NTO pode ser redistribuído (ADR-002).
 | `gen_placeholders.py` | Desenha os PNGs em `assets-src/sprites/` e escreve o `manifest.json`. |
 | `build_assets.py` | Lê o manifesto + PNGs + `items.otb` e escreve `Tibia.spr`/`Tibia.dat`. |
 | `dump_dat.py` | Lê um par `.spr`/`.dat`, imprime estatísticas, valida e exporta PNGs. |
+| `import_sheets.py` | Recorta sprites soltos de uma folha PNG (componentes conexos) + folha de revisão. |
+| `imports.py` | Aplica `assets-src/sprites/imports.json` por cima do manifesto (arte importada). |
 
 ## Uso
 
 ```bash
+# 0. (opcional) recortar as folhas de sprites do usuário em assets-src/import/
+.venv/bin/python tools/spr/import_sheets.py
+
 # 1. (re)desenhar os placeholders e regravar o manifesto
 .venv/bin/python tools/spr/gen_placeholders.py
 
@@ -46,6 +51,7 @@ Opções úteis:
 - `build_assets.py --manifest <caminho> --out <pasta>` — gerar em outro lugar.
 - `build_assets.py --no-otb` — não reescrever o `items.otb` (só `.spr`/`.dat`).
 - `build_assets.py --tiles <caminho>` — outro manifesto de tiles.
+- `build_assets.py --no-imports` — ignorar o `imports.json` (só placeholders).
 - `dump_dat.py --dir <pasta>` — inspecionar outro par de arquivos.
 
 ## Manifesto (`assets-src/sprites/manifest.json`)
@@ -251,3 +257,42 @@ rodar o build duas vezes dá exatamente o mesmo arquivo, e nenhum tile duplica.
 
 Para voltar ao OTB de fábrica: `cp items.otb.vanilla items.otb` e rode o build
 com `--no-otb`.
+
+
+## Arte importada (`assets-src/sprites/imports.json`)
+
+Folhas de sprites reais do usuário ficam em `assets-src/import/` — pasta **no
+`.gitignore`**, nada dali é versionado (ADR-002). O caminho é:
+
+```bash
+# 1. recorta cada sprite da folha e gera a folha de revisão numerada
+.venv/bin/python tools/spr/import_sheets.py
+#    -> assets-src/import/extracted/<folha>/<idx>.png
+#    -> assets-src/import/extracted/<folha>_contact.png   <- CONFIRA ESTA
+#    -> assets-src/import/extracted/<folha>.json
+
+# 2. edite assets-src/sprites/imports.json ligando <idx> -> looktype/efeito/item
+# 3. compile normalmente
+.venv/bin/python tools/spr/build_assets.py
+.venv/bin/python tools/spr/dump_dat.py
+```
+
+`import_sheets.py` detecta o fundo (cor mais comum + o verde `34,177,76` dos
+retângulos de chroma key), dilata a máscara por `--dilate` px só para juntar
+partes soltas do mesmo sprite, rotula os componentes conexos e recorta cada um
+com alpha. O raio de dilatação é **por folha** (`DEFAULT_SHEETS`): 1 no
+`monsters_sheet`, 0 no `npcs_sheet`. Se um sprite sair partido, aumente; se dois
+colarem, diminua — e olhe a folha de revisão de novo.
+
+`imports.json` é **versionado** e só cita caminhos dentro de `extracted/`. O
+`imports.py` o aplica por cima do `manifest.json` no build, com prioridade
+**import > override de placeholder > regra de estilo**, e **ignora com aviso**
+toda entrada cujo PNG não exista — numa máquina sem o material o build roda igual
+e cai no placeholder.
+
+Suporta criaturas de **1×1 a 4×4** (32/64/96/128 px). Criaturas importadas usam
+`layers = 1` (a arte já vem colorida; o cliente só aplica as cores de outfit com
+`layers = 2`), a mesma imagem nas 4 direções e nas fases de andar. O formato dos
+campos (`src`, `frames`, `crop`, `tiles`, `grow`, `duration`, `rotate`,
+`server_ids`) está em `docs/sistemas/arte-e-sprites.md`, seção
+"Importar folhas de sprites".

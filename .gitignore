@@ -27,3 +27,6 @@ node_modules/
 screenshot_marco*.png
 client-otc/OTClient.app/
 screenshots/
+
+# Arte de terceiros importada para teste privado (ADR-002): nunca versionar
+assets-src/import/

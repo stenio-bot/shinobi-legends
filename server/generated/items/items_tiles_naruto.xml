@@ -29,3 +29,738 @@
 <item id="30007" name="cerca de bambu">  <!-- bamboo_fence (wall, clientId 23733) -->
 	<attribute key="description" value="Colmos de bambu amarrados com corda."/>
 </item>
+<item id="30008" name="torre do líder">  <!-- bld_tower_0_0 (wall, clientId 23734) -->
+	<attribute key="description" value="Torre do Líder (peça 0,0)."/>
+</item>
+<item id="30009" name="torre do líder">  <!-- bld_tower_1_0 (wall, clientId 23735) -->
+	<attribute key="description" value="Torre do Líder (peça 1,0)."/>
+</item>
+<item id="30010" name="torre do líder">  <!-- bld_tower_2_0 (wall, clientId 23736) -->
+	<attribute key="description" value="Torre do Líder (peça 2,0)."/>
+</item>
+<item id="30011" name="torre do líder">  <!-- bld_tower_3_0 (wall, clientId 23737) -->
+	<attribute key="description" value="Torre do Líder (peça 3,0)."/>
+</item>
+<item id="30012" name="torre do líder">  <!-- bld_tower_4_0 (wall, clientId 23738) -->
+	<attribute key="description" value="Torre do Líder (peça 4,0)."/>
+</item>
+<item id="30013" name="torre do líder">  <!-- bld_tower_0_1 (wall, clientId 23739) -->
+	<attribute key="description" value="Torre do Líder (peça 0,1)."/>
+</item>
+<item id="30014" name="torre do líder">  <!-- bld_tower_1_1 (wall, clientId 23740) -->
+	<attribute key="description" value="Torre do Líder (peça 1,1)."/>
+</item>
+<item id="30015" name="torre do líder">  <!-- bld_tower_2_1 (wall, clientId 23741) -->
+	<attribute key="description" value="Torre do Líder (peça 2,1)."/>
+</item>
+<item id="30016" name="torre do líder">  <!-- bld_tower_3_1 (wall, clientId 23742) -->
+	<attribute key="description" value="Torre do Líder (peça 3,1)."/>
+</item>
+<item id="30017" name="torre do líder">  <!-- bld_tower_4_1 (wall, clientId 23743) -->
+	<attribute key="description" value="Torre do Líder (peça 4,1)."/>
+</item>
+<item id="30018" name="torre do líder">  <!-- bld_tower_0_2 (wall, clientId 23744) -->
+	<attribute key="description" value="Torre do Líder (peça 0,2)."/>
+</item>
+<item id="30019" name="torre do líder">  <!-- bld_tower_1_2 (wall, clientId 23745) -->
+	<attribute key="description" value="Torre do Líder (peça 1,2)."/>
+</item>
+<item id="30020" name="torre do líder">  <!-- bld_tower_2_2 (wall, clientId 23746) -->
+	<attribute key="description" value="Torre do Líder (peça 2,2)."/>
+</item>
+<item id="30021" name="torre do líder">  <!-- bld_tower_3_2 (wall, clientId 23747) -->
+	<attribute key="description" value="Torre do Líder (peça 3,2)."/>
+</item>
+<item id="30022" name="torre do líder">  <!-- bld_tower_4_2 (wall, clientId 23748) -->
+	<attribute key="description" value="Torre do Líder (peça 4,2)."/>
+</item>
+<item id="30023" name="torre do líder">  <!-- bld_tower_0_3 (wall, clientId 23749) -->
+	<attribute key="description" value="Torre do Líder (peça 0,3)."/>
+</item>
+<item id="30024" name="torre do líder">  <!-- bld_tower_1_3 (wall, clientId 23750) -->
+	<attribute key="description" value="Torre do Líder (peça 1,3)."/>
+</item>
+<item id="30025" name="torre do líder">  <!-- bld_tower_2_3 (wall, clientId 23751) -->
+	<attribute key="description" value="Torre do Líder (peça 2,3)."/>
+</item>
+<item id="30026" name="torre do líder">  <!-- bld_tower_3_3 (wall, clientId 23752) -->
+	<attribute key="description" value="Torre do Líder (peça 3,3)."/>
+</item>
+<item id="30027" name="torre do líder">  <!-- bld_tower_4_3 (wall, clientId 23753) -->
+	<attribute key="description" value="Torre do Líder (peça 4,3)."/>
+</item>
+<item id="30028" name="torre do líder">  <!-- bld_tower_0_4 (wall, clientId 23754) -->
+	<attribute key="description" value="Torre do Líder (peça 0,4)."/>
+</item>
+<item id="30029" name="torre do líder">  <!-- bld_tower_1_4 (wall, clientId 23755) -->
+	<attribute key="description" value="Torre do Líder (peça 1,4)."/>
+</item>
+<item id="30030" name="torre do líder">  <!-- bld_tower_2_4 (wall, clientId 23756) -->
+	<attribute key="description" value="Torre do Líder (peça 2,4)."/>
+</item>
+<item id="30031" name="torre do líder">  <!-- bld_tower_3_4 (wall, clientId 23757) -->
+	<attribute key="description" value="Torre do Líder (peça 3,4)."/>
+</item>
+<item id="30032" name="torre do líder">  <!-- bld_tower_4_4 (wall, clientId 23758) -->
+	<attribute key="description" value="Torre do Líder (peça 4,4)."/>
+</item>
+<item id="30033" name="torre do líder">  <!-- bld_tower_0_5 (wall, clientId 23759) -->
+	<attribute key="description" value="Torre do Líder (peça 0,5)."/>
+</item>
+<item id="30034" name="torre do líder">  <!-- bld_tower_1_5 (wall, clientId 23760) -->
+	<attribute key="description" value="Torre do Líder (peça 1,5)."/>
+</item>
+<item id="30035" name="porta de torre do líder">  <!-- bld_tower_2_5 (door, clientId 23761) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Torre do Líder."/>
+</item>
+<item id="30036" name="torre do líder">  <!-- bld_tower_3_5 (wall, clientId 23762) -->
+	<attribute key="description" value="Torre do Líder (peça 3,5)."/>
+</item>
+<item id="30037" name="torre do líder">  <!-- bld_tower_4_5 (wall, clientId 23763) -->
+	<attribute key="description" value="Torre do Líder (peça 4,5)."/>
+</item>
+<item id="30038" name="loja azul">  <!-- bld_blue_shop_0_0 (wall, clientId 23764) -->
+	<attribute key="description" value="Loja Azul (peça 0,0)."/>
+</item>
+<item id="30039" name="loja azul">  <!-- bld_blue_shop_1_0 (wall, clientId 23765) -->
+	<attribute key="description" value="Loja Azul (peça 1,0)."/>
+</item>
+<item id="30040" name="loja azul">  <!-- bld_blue_shop_2_0 (wall, clientId 23766) -->
+	<attribute key="description" value="Loja Azul (peça 2,0)."/>
+</item>
+<item id="30041" name="loja azul">  <!-- bld_blue_shop_0_1 (wall, clientId 23767) -->
+	<attribute key="description" value="Loja Azul (peça 0,1)."/>
+</item>
+<item id="30042" name="loja azul">  <!-- bld_blue_shop_1_1 (wall, clientId 23768) -->
+	<attribute key="description" value="Loja Azul (peça 1,1)."/>
+</item>
+<item id="30043" name="loja azul">  <!-- bld_blue_shop_2_1 (wall, clientId 23769) -->
+	<attribute key="description" value="Loja Azul (peça 2,1)."/>
+</item>
+<item id="30044" name="loja azul">  <!-- bld_blue_shop_0_2 (wall, clientId 23770) -->
+	<attribute key="description" value="Loja Azul (peça 0,2)."/>
+</item>
+<item id="30045" name="loja azul">  <!-- bld_blue_shop_1_2 (wall, clientId 23771) -->
+	<attribute key="description" value="Loja Azul (peça 1,2)."/>
+</item>
+<item id="30046" name="loja azul">  <!-- bld_blue_shop_2_2 (wall, clientId 23772) -->
+	<attribute key="description" value="Loja Azul (peça 2,2)."/>
+</item>
+<item id="30047" name="loja azul">  <!-- bld_blue_shop_0_3 (wall, clientId 23773) -->
+	<attribute key="description" value="Loja Azul (peça 0,3)."/>
+</item>
+<item id="30048" name="porta de loja azul">  <!-- bld_blue_shop_1_3 (door, clientId 23774) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Loja Azul."/>
+</item>
+<item id="30049" name="loja azul">  <!-- bld_blue_shop_2_3 (wall, clientId 23775) -->
+	<attribute key="description" value="Loja Azul (peça 2,3)."/>
+</item>
+<item id="30050" name="tufo de grama">  <!-- bld_grass_patch_0_0 (decoration, clientId 23776) -->
+	<attribute key="description" value="Tufo de Grama."/>
+</item>
+<item id="30051" name="arbustos">  <!-- bld_bushes_0_0 (decoration, clientId 23777) -->
+	<attribute key="description" value="Arbustos (peça 0,0)."/>
+</item>
+<item id="30052" name="arbustos">  <!-- bld_bushes_1_0 (decoration, clientId 23778) -->
+	<attribute key="description" value="Arbustos (peça 1,0)."/>
+</item>
+<item id="30053" name="arbustos">  <!-- bld_bushes_2_0 (decoration, clientId 23779) -->
+	<attribute key="description" value="Arbustos (peça 2,0)."/>
+</item>
+<item id="30054" name="newbie shop">  <!-- bld_newbie_shop_0_0 (wall, clientId 23780) -->
+	<attribute key="description" value="Newbie Shop (peça 0,0)."/>
+</item>
+<item id="30055" name="newbie shop">  <!-- bld_newbie_shop_1_0 (wall, clientId 23781) -->
+	<attribute key="description" value="Newbie Shop (peça 1,0)."/>
+</item>
+<item id="30056" name="newbie shop">  <!-- bld_newbie_shop_2_0 (wall, clientId 23782) -->
+	<attribute key="description" value="Newbie Shop (peça 2,0)."/>
+</item>
+<item id="30057" name="newbie shop">  <!-- bld_newbie_shop_3_0 (wall, clientId 23783) -->
+	<attribute key="description" value="Newbie Shop (peça 3,0)."/>
+</item>
+<item id="30058" name="newbie shop">  <!-- bld_newbie_shop_0_1 (wall, clientId 23784) -->
+	<attribute key="description" value="Newbie Shop (peça 0,1)."/>
+</item>
+<item id="30059" name="newbie shop">  <!-- bld_newbie_shop_1_1 (wall, clientId 23785) -->
+	<attribute key="description" value="Newbie Shop (peça 1,1)."/>
+</item>
+<item id="30060" name="newbie shop">  <!-- bld_newbie_shop_2_1 (wall, clientId 23786) -->
+	<attribute key="description" value="Newbie Shop (peça 2,1)."/>
+</item>
+<item id="30061" name="newbie shop">  <!-- bld_newbie_shop_3_1 (wall, clientId 23787) -->
+	<attribute key="description" value="Newbie Shop (peça 3,1)."/>
+</item>
+<item id="30062" name="newbie shop">  <!-- bld_newbie_shop_0_2 (wall, clientId 23788) -->
+	<attribute key="description" value="Newbie Shop (peça 0,2)."/>
+</item>
+<item id="30063" name="newbie shop">  <!-- bld_newbie_shop_1_2 (wall, clientId 23789) -->
+	<attribute key="description" value="Newbie Shop (peça 1,2)."/>
+</item>
+<item id="30064" name="newbie shop">  <!-- bld_newbie_shop_2_2 (wall, clientId 23790) -->
+	<attribute key="description" value="Newbie Shop (peça 2,2)."/>
+</item>
+<item id="30065" name="newbie shop">  <!-- bld_newbie_shop_3_2 (wall, clientId 23791) -->
+	<attribute key="description" value="Newbie Shop (peça 3,2)."/>
+</item>
+<item id="30066" name="newbie shop">  <!-- bld_newbie_shop_0_3 (wall, clientId 23792) -->
+	<attribute key="description" value="Newbie Shop (peça 0,3)."/>
+</item>
+<item id="30067" name="porta de newbie shop">  <!-- bld_newbie_shop_1_3 (door, clientId 23793) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Newbie Shop."/>
+</item>
+<item id="30068" name="newbie shop">  <!-- bld_newbie_shop_2_3 (wall, clientId 23794) -->
+	<attribute key="description" value="Newbie Shop (peça 2,3)."/>
+</item>
+<item id="30069" name="newbie shop">  <!-- bld_newbie_shop_3_3 (wall, clientId 23795) -->
+	<attribute key="description" value="Newbie Shop (peça 3,3)."/>
+</item>
+<item id="30070" name="barraca de lámen">  <!-- bld_ramen_shop_0_0 (wall, clientId 23796) -->
+	<attribute key="description" value="Barraca de Lámen (peça 0,0)."/>
+</item>
+<item id="30071" name="barraca de lámen">  <!-- bld_ramen_shop_1_0 (wall, clientId 23797) -->
+	<attribute key="description" value="Barraca de Lámen (peça 1,0)."/>
+</item>
+<item id="30072" name="barraca de lámen">  <!-- bld_ramen_shop_2_0 (wall, clientId 23798) -->
+	<attribute key="description" value="Barraca de Lámen (peça 2,0)."/>
+</item>
+<item id="30073" name="barraca de lámen">  <!-- bld_ramen_shop_3_0 (wall, clientId 23799) -->
+	<attribute key="description" value="Barraca de Lámen (peça 3,0)."/>
+</item>
+<item id="30074" name="barraca de lámen">  <!-- bld_ramen_shop_0_1 (wall, clientId 23800) -->
+	<attribute key="description" value="Barraca de Lámen (peça 0,1)."/>
+</item>
+<item id="30075" name="barraca de lámen">  <!-- bld_ramen_shop_1_1 (wall, clientId 23801) -->
+	<attribute key="description" value="Barraca de Lámen (peça 1,1)."/>
+</item>
+<item id="30076" name="barraca de lámen">  <!-- bld_ramen_shop_2_1 (wall, clientId 23802) -->
+	<attribute key="description" value="Barraca de Lámen (peça 2,1)."/>
+</item>
+<item id="30077" name="barraca de lámen">  <!-- bld_ramen_shop_3_1 (wall, clientId 23803) -->
+	<attribute key="description" value="Barraca de Lámen (peça 3,1)."/>
+</item>
+<item id="30078" name="barraca de lámen">  <!-- bld_ramen_shop_0_2 (wall, clientId 23804) -->
+	<attribute key="description" value="Barraca de Lámen (peça 0,2)."/>
+</item>
+<item id="30079" name="barraca de lámen">  <!-- bld_ramen_shop_1_2 (wall, clientId 23805) -->
+	<attribute key="description" value="Barraca de Lámen (peça 1,2)."/>
+</item>
+<item id="30080" name="barraca de lámen">  <!-- bld_ramen_shop_2_2 (wall, clientId 23806) -->
+	<attribute key="description" value="Barraca de Lámen (peça 2,2)."/>
+</item>
+<item id="30081" name="barraca de lámen">  <!-- bld_ramen_shop_3_2 (wall, clientId 23807) -->
+	<attribute key="description" value="Barraca de Lámen (peça 3,2)."/>
+</item>
+<item id="30082" name="barraca de lámen">  <!-- bld_ramen_shop_0_3 (wall, clientId 23808) -->
+	<attribute key="description" value="Barraca de Lámen (peça 0,3)."/>
+</item>
+<item id="30083" name="barraca de lámen">  <!-- bld_ramen_shop_1_3 (wall, clientId 23809) -->
+	<attribute key="description" value="Barraca de Lámen (peça 1,3)."/>
+</item>
+<item id="30084" name="barraca de lámen">  <!-- bld_ramen_shop_2_3 (wall, clientId 23810) -->
+	<attribute key="description" value="Barraca de Lámen (peça 2,3)."/>
+</item>
+<item id="30085" name="barraca de lámen">  <!-- bld_ramen_shop_3_3 (wall, clientId 23811) -->
+	<attribute key="description" value="Barraca de Lámen (peça 3,3)."/>
+</item>
+<item id="30086" name="barraca de lámen">  <!-- bld_ramen_shop_0_4 (wall, clientId 23812) -->
+	<attribute key="description" value="Barraca de Lámen (peça 0,4)."/>
+</item>
+<item id="30087" name="barraca de lámen">  <!-- bld_ramen_shop_1_4 (wall, clientId 23813) -->
+	<attribute key="description" value="Barraca de Lámen (peça 1,4)."/>
+</item>
+<item id="30088" name="porta de barraca de lámen">  <!-- bld_ramen_shop_2_4 (door, clientId 23814) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Barraca de Lámen."/>
+</item>
+<item id="30089" name="barraca de lámen">  <!-- bld_ramen_shop_3_4 (wall, clientId 23815) -->
+	<attribute key="description" value="Barraca de Lámen (peça 3,4)."/>
+</item>
+<item id="30090" name="casa de telhado azul">  <!-- bld_blue_house_0_0 (wall, clientId 23816) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 0,0)."/>
+</item>
+<item id="30091" name="casa de telhado azul">  <!-- bld_blue_house_1_0 (wall, clientId 23817) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 1,0)."/>
+</item>
+<item id="30092" name="casa de telhado azul">  <!-- bld_blue_house_2_0 (wall, clientId 23818) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 2,0)."/>
+</item>
+<item id="30093" name="casa de telhado azul">  <!-- bld_blue_house_0_1 (wall, clientId 23819) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 0,1)."/>
+</item>
+<item id="30094" name="casa de telhado azul">  <!-- bld_blue_house_1_1 (wall, clientId 23820) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 1,1)."/>
+</item>
+<item id="30095" name="casa de telhado azul">  <!-- bld_blue_house_2_1 (wall, clientId 23821) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 2,1)."/>
+</item>
+<item id="30096" name="casa de telhado azul">  <!-- bld_blue_house_0_2 (wall, clientId 23822) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 0,2)."/>
+</item>
+<item id="30097" name="casa de telhado azul">  <!-- bld_blue_house_1_2 (wall, clientId 23823) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 1,2)."/>
+</item>
+<item id="30098" name="casa de telhado azul">  <!-- bld_blue_house_2_2 (wall, clientId 23824) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 2,2)."/>
+</item>
+<item id="30099" name="casa de telhado azul">  <!-- bld_blue_house_0_3 (wall, clientId 23825) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 0,3)."/>
+</item>
+<item id="30100" name="porta de casa de telhado azul">  <!-- bld_blue_house_1_3 (door, clientId 23826) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Casa de Telhado Azul."/>
+</item>
+<item id="30101" name="casa de telhado azul">  <!-- bld_blue_house_2_3 (wall, clientId 23827) -->
+	<attribute key="description" value="Casa de Telhado Azul (peça 2,3)."/>
+</item>
+<item id="30102" name="árvore da vila">  <!-- bld_tree_0_0 (decoration, clientId 23828) -->
+	<attribute key="description" value="Árvore da Vila (peça 0,0)."/>
+</item>
+<item id="30103" name="árvore da vila">  <!-- bld_tree_1_0 (decoration, clientId 23829) -->
+	<attribute key="description" value="Árvore da Vila (peça 1,0)."/>
+</item>
+<item id="30104" name="árvore da vila">  <!-- bld_tree_2_0 (decoration, clientId 23830) -->
+	<attribute key="description" value="Árvore da Vila (peça 2,0)."/>
+</item>
+<item id="30105" name="prisão">  <!-- bld_prison_0_0 (wall, clientId 23831) -->
+	<attribute key="description" value="Prisão (peça 0,0)."/>
+</item>
+<item id="30106" name="prisão">  <!-- bld_prison_1_0 (wall, clientId 23832) -->
+	<attribute key="description" value="Prisão (peça 1,0)."/>
+</item>
+<item id="30107" name="prisão">  <!-- bld_prison_2_0 (wall, clientId 23833) -->
+	<attribute key="description" value="Prisão (peça 2,0)."/>
+</item>
+<item id="30108" name="prisão">  <!-- bld_prison_3_0 (wall, clientId 23834) -->
+	<attribute key="description" value="Prisão (peça 3,0)."/>
+</item>
+<item id="30109" name="prisão">  <!-- bld_prison_0_1 (wall, clientId 23835) -->
+	<attribute key="description" value="Prisão (peça 0,1)."/>
+</item>
+<item id="30110" name="prisão">  <!-- bld_prison_1_1 (wall, clientId 23836) -->
+	<attribute key="description" value="Prisão (peça 1,1)."/>
+</item>
+<item id="30111" name="prisão">  <!-- bld_prison_2_1 (wall, clientId 23837) -->
+	<attribute key="description" value="Prisão (peça 2,1)."/>
+</item>
+<item id="30112" name="prisão">  <!-- bld_prison_3_1 (wall, clientId 23838) -->
+	<attribute key="description" value="Prisão (peça 3,1)."/>
+</item>
+<item id="30113" name="prisão">  <!-- bld_prison_0_2 (wall, clientId 23839) -->
+	<attribute key="description" value="Prisão (peça 0,2)."/>
+</item>
+<item id="30114" name="prisão">  <!-- bld_prison_1_2 (wall, clientId 23840) -->
+	<attribute key="description" value="Prisão (peça 1,2)."/>
+</item>
+<item id="30115" name="prisão">  <!-- bld_prison_2_2 (wall, clientId 23841) -->
+	<attribute key="description" value="Prisão (peça 2,2)."/>
+</item>
+<item id="30116" name="prisão">  <!-- bld_prison_3_2 (wall, clientId 23842) -->
+	<attribute key="description" value="Prisão (peça 3,2)."/>
+</item>
+<item id="30117" name="prisão">  <!-- bld_prison_0_3 (wall, clientId 23843) -->
+	<attribute key="description" value="Prisão (peça 0,3)."/>
+</item>
+<item id="30118" name="porta de prisão">  <!-- bld_prison_1_3 (door, clientId 23844) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Prisão."/>
+</item>
+<item id="30119" name="prisão">  <!-- bld_prison_2_3 (wall, clientId 23845) -->
+	<attribute key="description" value="Prisão (peça 2,3)."/>
+</item>
+<item id="30120" name="prisão">  <!-- bld_prison_3_3 (wall, clientId 23846) -->
+	<attribute key="description" value="Prisão (peça 3,3)."/>
+</item>
+<item id="30121" name="poste de luz">  <!-- bld_lamp_post_0_0 (decoration, clientId 23847) -->
+	<attribute key="description" value="Poste de Luz (peça 0,0)."/>
+</item>
+<item id="30122" name="poste de luz">  <!-- bld_lamp_post_0_1 (decoration, clientId 23848) -->
+	<attribute key="description" value="Poste de Luz (peça 0,1)."/>
+</item>
+<item id="30123" name="poste de luz">  <!-- bld_lamp_post_0_2 (decoration, clientId 23849) -->
+	<attribute key="description" value="Poste de Luz (peça 0,2)."/>
+</item>
+<item id="30124" name="poste de luz">  <!-- bld_lamp_post_0_3 (decoration, clientId 23850) -->
+	<attribute key="description" value="Poste de Luz (peça 0,3)."/>
+</item>
+<item id="30125" name="casa do painel verde">  <!-- bld_house_green_0_0 (wall, clientId 23851) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 0,0)."/>
+</item>
+<item id="30126" name="casa do painel verde">  <!-- bld_house_green_1_0 (wall, clientId 23852) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 1,0)."/>
+</item>
+<item id="30127" name="casa do painel verde">  <!-- bld_house_green_2_0 (wall, clientId 23853) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 2,0)."/>
+</item>
+<item id="30128" name="casa do painel verde">  <!-- bld_house_green_3_0 (wall, clientId 23854) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 3,0)."/>
+</item>
+<item id="30129" name="casa do painel verde">  <!-- bld_house_green_0_1 (wall, clientId 23855) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 0,1)."/>
+</item>
+<item id="30130" name="casa do painel verde">  <!-- bld_house_green_1_1 (wall, clientId 23856) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 1,1)."/>
+</item>
+<item id="30131" name="casa do painel verde">  <!-- bld_house_green_2_1 (wall, clientId 23857) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 2,1)."/>
+</item>
+<item id="30132" name="casa do painel verde">  <!-- bld_house_green_3_1 (wall, clientId 23858) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 3,1)."/>
+</item>
+<item id="30133" name="casa do painel verde">  <!-- bld_house_green_0_2 (wall, clientId 23859) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 0,2)."/>
+</item>
+<item id="30134" name="casa do painel verde">  <!-- bld_house_green_1_2 (wall, clientId 23860) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 1,2)."/>
+</item>
+<item id="30135" name="casa do painel verde">  <!-- bld_house_green_2_2 (wall, clientId 23861) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 2,2)."/>
+</item>
+<item id="30136" name="casa do painel verde">  <!-- bld_house_green_3_2 (wall, clientId 23862) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 3,2)."/>
+</item>
+<item id="30137" name="casa do painel verde">  <!-- bld_house_green_0_3 (wall, clientId 23863) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 0,3)."/>
+</item>
+<item id="30138" name="porta de casa do painel verde">  <!-- bld_house_green_1_3 (door, clientId 23864) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Casa do Painel Verde."/>
+</item>
+<item id="30139" name="casa do painel verde">  <!-- bld_house_green_2_3 (wall, clientId 23865) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 2,3)."/>
+</item>
+<item id="30140" name="casa do painel verde">  <!-- bld_house_green_3_3 (wall, clientId 23866) -->
+	<attribute key="description" value="Casa do Painel Verde (peça 3,3)."/>
+</item>
+<item id="30141" name="vão escuro">  <!-- bld_dark_panel_0_0 (wall, clientId 23867) -->
+	<attribute key="description" value="Vão Escuro (peça 0,0)."/>
+</item>
+<item id="30142" name="telhado laranja">  <!-- bld_roof_orange_0_0 (wall, clientId 23868) -->
+	<attribute key="description" value="Telhado Laranja (peça 0,0)."/>
+</item>
+<item id="30143" name="telhado laranja">  <!-- bld_roof_orange_1_0 (wall, clientId 23869) -->
+	<attribute key="description" value="Telhado Laranja (peça 1,0)."/>
+</item>
+<item id="30144" name="telhado laranja">  <!-- bld_roof_orange_2_0 (wall, clientId 23870) -->
+	<attribute key="description" value="Telhado Laranja (peça 2,0)."/>
+</item>
+<item id="30145" name="telhado laranja">  <!-- bld_roof_orange_0_1 (wall, clientId 23871) -->
+	<attribute key="description" value="Telhado Laranja (peça 0,1)."/>
+</item>
+<item id="30146" name="telhado laranja">  <!-- bld_roof_orange_1_1 (wall, clientId 23872) -->
+	<attribute key="description" value="Telhado Laranja (peça 1,1)."/>
+</item>
+<item id="30147" name="telhado laranja">  <!-- bld_roof_orange_2_1 (wall, clientId 23873) -->
+	<attribute key="description" value="Telhado Laranja (peça 2,1)."/>
+</item>
+<item id="30148" name="telhado laranja">  <!-- bld_roof_orange_0_2 (wall, clientId 23874) -->
+	<attribute key="description" value="Telhado Laranja (peça 0,2)."/>
+</item>
+<item id="30149" name="telhado laranja">  <!-- bld_roof_orange_1_2 (wall, clientId 23875) -->
+	<attribute key="description" value="Telhado Laranja (peça 1,2)."/>
+</item>
+<item id="30150" name="telhado laranja">  <!-- bld_roof_orange_2_2 (wall, clientId 23876) -->
+	<attribute key="description" value="Telhado Laranja (peça 2,2)."/>
+</item>
+<item id="30151" name="telhado laranja">  <!-- bld_roof_orange_0_3 (wall, clientId 23877) -->
+	<attribute key="description" value="Telhado Laranja (peça 0,3)."/>
+</item>
+<item id="30152" name="telhado laranja">  <!-- bld_roof_orange_1_3 (wall, clientId 23878) -->
+	<attribute key="description" value="Telhado Laranja (peça 1,3)."/>
+</item>
+<item id="30153" name="telhado laranja">  <!-- bld_roof_orange_2_3 (wall, clientId 23879) -->
+	<attribute key="description" value="Telhado Laranja (peça 2,3)."/>
+</item>
+<item id="30154" name="taverna">  <!-- bld_tavern_0_0 (wall, clientId 23880) -->
+	<attribute key="description" value="Taverna (peça 0,0)."/>
+</item>
+<item id="30155" name="taverna">  <!-- bld_tavern_1_0 (wall, clientId 23881) -->
+	<attribute key="description" value="Taverna (peça 1,0)."/>
+</item>
+<item id="30156" name="taverna">  <!-- bld_tavern_2_0 (wall, clientId 23882) -->
+	<attribute key="description" value="Taverna (peça 2,0)."/>
+</item>
+<item id="30157" name="taverna">  <!-- bld_tavern_3_0 (wall, clientId 23883) -->
+	<attribute key="description" value="Taverna (peça 3,0)."/>
+</item>
+<item id="30158" name="taverna">  <!-- bld_tavern_4_0 (wall, clientId 23884) -->
+	<attribute key="description" value="Taverna (peça 4,0)."/>
+</item>
+<item id="30159" name="taverna">  <!-- bld_tavern_0_1 (wall, clientId 23885) -->
+	<attribute key="description" value="Taverna (peça 0,1)."/>
+</item>
+<item id="30160" name="taverna">  <!-- bld_tavern_1_1 (wall, clientId 23886) -->
+	<attribute key="description" value="Taverna (peça 1,1)."/>
+</item>
+<item id="30161" name="taverna">  <!-- bld_tavern_2_1 (wall, clientId 23887) -->
+	<attribute key="description" value="Taverna (peça 2,1)."/>
+</item>
+<item id="30162" name="taverna">  <!-- bld_tavern_3_1 (wall, clientId 23888) -->
+	<attribute key="description" value="Taverna (peça 3,1)."/>
+</item>
+<item id="30163" name="taverna">  <!-- bld_tavern_4_1 (wall, clientId 23889) -->
+	<attribute key="description" value="Taverna (peça 4,1)."/>
+</item>
+<item id="30164" name="taverna">  <!-- bld_tavern_0_2 (wall, clientId 23890) -->
+	<attribute key="description" value="Taverna (peça 0,2)."/>
+</item>
+<item id="30165" name="taverna">  <!-- bld_tavern_1_2 (wall, clientId 23891) -->
+	<attribute key="description" value="Taverna (peça 1,2)."/>
+</item>
+<item id="30166" name="taverna">  <!-- bld_tavern_2_2 (wall, clientId 23892) -->
+	<attribute key="description" value="Taverna (peça 2,2)."/>
+</item>
+<item id="30167" name="taverna">  <!-- bld_tavern_3_2 (wall, clientId 23893) -->
+	<attribute key="description" value="Taverna (peça 3,2)."/>
+</item>
+<item id="30168" name="taverna">  <!-- bld_tavern_4_2 (wall, clientId 23894) -->
+	<attribute key="description" value="Taverna (peça 4,2)."/>
+</item>
+<item id="30169" name="taverna">  <!-- bld_tavern_0_3 (wall, clientId 23895) -->
+	<attribute key="description" value="Taverna (peça 0,3)."/>
+</item>
+<item id="30170" name="taverna">  <!-- bld_tavern_1_3 (wall, clientId 23896) -->
+	<attribute key="description" value="Taverna (peça 1,3)."/>
+</item>
+<item id="30171" name="taverna">  <!-- bld_tavern_2_3 (wall, clientId 23897) -->
+	<attribute key="description" value="Taverna (peça 2,3)."/>
+</item>
+<item id="30172" name="taverna">  <!-- bld_tavern_3_3 (wall, clientId 23898) -->
+	<attribute key="description" value="Taverna (peça 3,3)."/>
+</item>
+<item id="30173" name="taverna">  <!-- bld_tavern_4_3 (wall, clientId 23899) -->
+	<attribute key="description" value="Taverna (peça 4,3)."/>
+</item>
+<item id="30174" name="taverna">  <!-- bld_tavern_0_4 (wall, clientId 23900) -->
+	<attribute key="description" value="Taverna (peça 0,4)."/>
+</item>
+<item id="30175" name="taverna">  <!-- bld_tavern_1_4 (wall, clientId 23901) -->
+	<attribute key="description" value="Taverna (peça 1,4)."/>
+</item>
+<item id="30176" name="porta de taverna">  <!-- bld_tavern_2_4 (door, clientId 23902) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Taverna."/>
+</item>
+<item id="30177" name="taverna">  <!-- bld_tavern_3_4 (wall, clientId 23903) -->
+	<attribute key="description" value="Taverna (peça 3,4)."/>
+</item>
+<item id="30178" name="taverna">  <!-- bld_tavern_4_4 (wall, clientId 23904) -->
+	<attribute key="description" value="Taverna (peça 4,4)."/>
+</item>
+<item id="30179" name="muro leste">  <!-- bld_gate_east_0_0 (wall, clientId 23905) -->
+	<attribute key="description" value="Muro Leste (peça 0,0)."/>
+</item>
+<item id="30180" name="muro leste">  <!-- bld_gate_east_1_0 (wall, clientId 23906) -->
+	<attribute key="description" value="Muro Leste (peça 1,0)."/>
+</item>
+<item id="30181" name="muro leste">  <!-- bld_gate_east_2_0 (wall, clientId 23907) -->
+	<attribute key="description" value="Muro Leste (peça 2,0)."/>
+</item>
+<item id="30182" name="muro leste">  <!-- bld_gate_east_0_1 (wall, clientId 23908) -->
+	<attribute key="description" value="Muro Leste (peça 0,1)."/>
+</item>
+<item id="30183" name="muro leste">  <!-- bld_gate_east_1_1 (wall, clientId 23909) -->
+	<attribute key="description" value="Muro Leste (peça 1,1)."/>
+</item>
+<item id="30184" name="muro leste">  <!-- bld_gate_east_2_1 (wall, clientId 23910) -->
+	<attribute key="description" value="Muro Leste (peça 2,1)."/>
+</item>
+<item id="30185" name="muro leste">  <!-- bld_gate_east_0_2 (wall, clientId 23911) -->
+	<attribute key="description" value="Muro Leste (peça 0,2)."/>
+</item>
+<item id="30186" name="muro leste">  <!-- bld_gate_east_1_2 (wall, clientId 23912) -->
+	<attribute key="description" value="Muro Leste (peça 1,2)."/>
+</item>
+<item id="30187" name="muro leste">  <!-- bld_gate_east_2_2 (wall, clientId 23913) -->
+	<attribute key="description" value="Muro Leste (peça 2,2)."/>
+</item>
+<item id="30188" name="muro leste">  <!-- bld_gate_east_0_3 (wall, clientId 23914) -->
+	<attribute key="description" value="Muro Leste (peça 0,3)."/>
+</item>
+<item id="30189" name="muro leste">  <!-- bld_gate_east_1_3 (wall, clientId 23915) -->
+	<attribute key="description" value="Muro Leste (peça 1,3)."/>
+</item>
+<item id="30190" name="muro leste">  <!-- bld_gate_east_2_3 (wall, clientId 23916) -->
+	<attribute key="description" value="Muro Leste (peça 2,3)."/>
+</item>
+<item id="30191" name="muro leste">  <!-- bld_gate_east_0_4 (wall, clientId 23917) -->
+	<attribute key="description" value="Muro Leste (peça 0,4)."/>
+</item>
+<item id="30192" name="muro leste">  <!-- bld_gate_east_1_4 (wall, clientId 23918) -->
+	<attribute key="description" value="Muro Leste (peça 1,4)."/>
+</item>
+<item id="30193" name="casa grande de doces">  <!-- bld_big_house_0_0 (wall, clientId 23919) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,0)."/>
+</item>
+<item id="30194" name="casa grande de doces">  <!-- bld_big_house_1_0 (wall, clientId 23920) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 1,0)."/>
+</item>
+<item id="30195" name="casa grande de doces">  <!-- bld_big_house_2_0 (wall, clientId 23921) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,0)."/>
+</item>
+<item id="30196" name="casa grande de doces">  <!-- bld_big_house_3_0 (wall, clientId 23922) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,0)."/>
+</item>
+<item id="30197" name="casa grande de doces">  <!-- bld_big_house_0_1 (wall, clientId 23923) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,1)."/>
+</item>
+<item id="30198" name="casa grande de doces">  <!-- bld_big_house_1_1 (wall, clientId 23924) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 1,1)."/>
+</item>
+<item id="30199" name="casa grande de doces">  <!-- bld_big_house_2_1 (wall, clientId 23925) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,1)."/>
+</item>
+<item id="30200" name="casa grande de doces">  <!-- bld_big_house_3_1 (wall, clientId 23926) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,1)."/>
+</item>
+<item id="30201" name="casa grande de doces">  <!-- bld_big_house_4_1 (wall, clientId 23927) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 4,1)."/>
+</item>
+<item id="30202" name="casa grande de doces">  <!-- bld_big_house_0_2 (wall, clientId 23928) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,2)."/>
+</item>
+<item id="30203" name="casa grande de doces">  <!-- bld_big_house_1_2 (wall, clientId 23929) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 1,2)."/>
+</item>
+<item id="30204" name="casa grande de doces">  <!-- bld_big_house_2_2 (wall, clientId 23930) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,2)."/>
+</item>
+<item id="30205" name="casa grande de doces">  <!-- bld_big_house_3_2 (wall, clientId 23931) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,2)."/>
+</item>
+<item id="30206" name="casa grande de doces">  <!-- bld_big_house_4_2 (wall, clientId 23932) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 4,2)."/>
+</item>
+<item id="30207" name="casa grande de doces">  <!-- bld_big_house_0_3 (wall, clientId 23933) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,3)."/>
+</item>
+<item id="30208" name="casa grande de doces">  <!-- bld_big_house_1_3 (wall, clientId 23934) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 1,3)."/>
+</item>
+<item id="30209" name="casa grande de doces">  <!-- bld_big_house_2_3 (wall, clientId 23935) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,3)."/>
+</item>
+<item id="30210" name="casa grande de doces">  <!-- bld_big_house_3_3 (wall, clientId 23936) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,3)."/>
+</item>
+<item id="30211" name="casa grande de doces">  <!-- bld_big_house_4_3 (wall, clientId 23937) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 4,3)."/>
+</item>
+<item id="30212" name="casa grande de doces">  <!-- bld_big_house_0_4 (wall, clientId 23938) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,4)."/>
+</item>
+<item id="30213" name="casa grande de doces">  <!-- bld_big_house_1_4 (wall, clientId 23939) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 1,4)."/>
+</item>
+<item id="30214" name="casa grande de doces">  <!-- bld_big_house_2_4 (wall, clientId 23940) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,4)."/>
+</item>
+<item id="30215" name="casa grande de doces">  <!-- bld_big_house_3_4 (wall, clientId 23941) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,4)."/>
+</item>
+<item id="30216" name="casa grande de doces">  <!-- bld_big_house_4_4 (wall, clientId 23942) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 4,4)."/>
+</item>
+<item id="30217" name="casa grande de doces">  <!-- bld_big_house_0_5 (wall, clientId 23943) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 0,5)."/>
+</item>
+<item id="30218" name="porta de casa grande de doces">  <!-- bld_big_house_1_5 (door, clientId 23944) -->
+	<attribute key="type" value="door"/>
+	<attribute key="description" value="Entrada de Casa Grande de Doces."/>
+</item>
+<item id="30219" name="casa grande de doces">  <!-- bld_big_house_2_5 (wall, clientId 23945) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 2,5)."/>
+</item>
+<item id="30220" name="casa grande de doces">  <!-- bld_big_house_3_5 (wall, clientId 23946) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 3,5)."/>
+</item>
+<item id="30221" name="casa grande de doces">  <!-- bld_big_house_4_5 (wall, clientId 23947) -->
+	<attribute key="description" value="Casa Grande de Doces (peça 4,5)."/>
+</item>
+<item id="30222" name="painel verde a">  <!-- bld_green_gate_a_0_0 (wall, clientId 23948) -->
+	<attribute key="description" value="Painel Verde A (peça 0,0)."/>
+</item>
+<item id="30223" name="painel verde a">  <!-- bld_green_gate_a_1_0 (wall, clientId 23949) -->
+	<attribute key="description" value="Painel Verde A (peça 1,0)."/>
+</item>
+<item id="30224" name="painel verde a">  <!-- bld_green_gate_a_0_1 (wall, clientId 23950) -->
+	<attribute key="description" value="Painel Verde A (peça 0,1)."/>
+</item>
+<item id="30225" name="painel verde a">  <!-- bld_green_gate_a_1_1 (wall, clientId 23951) -->
+	<attribute key="description" value="Painel Verde A (peça 1,1)."/>
+</item>
+<item id="30226" name="painel verde a">  <!-- bld_green_gate_a_0_2 (wall, clientId 23952) -->
+	<attribute key="description" value="Painel Verde A (peça 0,2)."/>
+</item>
+<item id="30227" name="muro leste com telhado">  <!-- bld_shop_east_0_0 (wall, clientId 23953) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 0,0)."/>
+</item>
+<item id="30228" name="muro leste com telhado">  <!-- bld_shop_east_1_0 (wall, clientId 23954) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 1,0)."/>
+</item>
+<item id="30229" name="muro leste com telhado">  <!-- bld_shop_east_2_0 (wall, clientId 23955) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 2,0)."/>
+</item>
+<item id="30230" name="muro leste com telhado">  <!-- bld_shop_east_0_1 (wall, clientId 23956) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 0,1)."/>
+</item>
+<item id="30231" name="muro leste com telhado">  <!-- bld_shop_east_1_1 (wall, clientId 23957) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 1,1)."/>
+</item>
+<item id="30232" name="muro leste com telhado">  <!-- bld_shop_east_2_1 (wall, clientId 23958) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 2,1)."/>
+</item>
+<item id="30233" name="muro leste com telhado">  <!-- bld_shop_east_0_2 (wall, clientId 23959) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 0,2)."/>
+</item>
+<item id="30234" name="muro leste com telhado">  <!-- bld_shop_east_1_2 (wall, clientId 23960) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 1,2)."/>
+</item>
+<item id="30235" name="muro leste com telhado">  <!-- bld_shop_east_2_2 (wall, clientId 23961) -->
+	<attribute key="description" value="Muro Leste com Telhado (peça 2,2)."/>
+</item>
+<item id="30236" name="moita grande">  <!-- bld_big_bush_0_0 (decoration, clientId 23962) -->
+	<attribute key="description" value="Moita Grande (peça 0,0)."/>
+</item>
+<item id="30237" name="moita grande">  <!-- bld_big_bush_1_0 (decoration, clientId 23963) -->
+	<attribute key="description" value="Moita Grande (peça 1,0)."/>
+</item>
+<item id="30238" name="moita grande">  <!-- bld_big_bush_2_0 (decoration, clientId 23964) -->
+	<attribute key="description" value="Moita Grande (peça 2,0)."/>
+</item>
+<item id="30239" name="moita grande">  <!-- bld_big_bush_0_1 (decoration, clientId 23965) -->
+	<attribute key="description" value="Moita Grande (peça 0,1)."/>
+</item>
+<item id="30240" name="moita grande">  <!-- bld_big_bush_1_1 (decoration, clientId 23966) -->
+	<attribute key="description" value="Moita Grande (peça 1,1)."/>
+</item>
+<item id="30241" name="moita grande">  <!-- bld_big_bush_2_1 (decoration, clientId 23967) -->
+	<attribute key="description" value="Moita Grande (peça 2,1)."/>
+</item>
+<item id="30242" name="painel verde b">  <!-- bld_green_gate_b_0_0 (wall, clientId 23968) -->
+	<attribute key="description" value="Painel Verde B (peça 0,0)."/>
+</item>
+<item id="30243" name="painel verde b">  <!-- bld_green_gate_b_1_0 (wall, clientId 23969) -->
+	<attribute key="description" value="Painel Verde B (peça 1,0)."/>
+</item>
+<item id="30244" name="painel verde b">  <!-- bld_green_gate_b_0_1 (wall, clientId 23970) -->
+	<attribute key="description" value="Painel Verde B (peça 0,1)."/>
+</item>
+<item id="30245" name="painel verde b">  <!-- bld_green_gate_b_1_1 (wall, clientId 23971) -->
+	<attribute key="description" value="Painel Verde B (peça 1,1)."/>
+</item>
+<item id="30246" name="painel verde c">  <!-- bld_green_gate_c_0_0 (wall, clientId 23972) -->
+	<attribute key="description" value="Painel Verde C (peça 0,0)."/>
+</item>
+<item id="30247" name="painel verde c">  <!-- bld_green_gate_c_1_0 (wall, clientId 23973) -->
+	<attribute key="description" value="Painel Verde C (peça 1,0)."/>
+</item>
+<item id="30248" name="painel verde c">  <!-- bld_green_gate_c_0_1 (wall, clientId 23974) -->
+	<attribute key="description" value="Painel Verde C (peça 0,1)."/>
+</item>
+<item id="30249" name="painel verde c">  <!-- bld_green_gate_c_1_1 (wall, clientId 23975) -->
+	<attribute key="description" value="Painel Verde C (peça 1,1)."/>
+</item>

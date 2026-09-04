@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 """Gerador do mapa "Vale da Folha" (valley.otbm) no estilo Tibia clássico.
 
-Usa SOMENTE itens vanilla do items.otb/items.xml do TFS 1.4.2.
+Usa itens vanilla do items.otb/items.xml do TFS 1.4.2 MAIS os tiles próprios de
+`assets-src/sprites/tiles.json` (prédios importados, ids >= 30000). Esses últimos
+só existem no items.otb depois de `tools/spr/build_assets.py`; até lá o gerador
+valida contra as flags declaradas em tiles.json e avisa na saída.
 
 Saída (em server/generated/world/):
     valley.otbm        mapa 1024x1024, conteúdo no andar 7
@@ -15,6 +18,13 @@ Rode com:
 O build FALHA se algum item usado não existir no items.otb, se algum chão não
 for do grupo "ground" ou se algum spawn/NPC/templo não for alcançável a pé a
 partir do templo (BFS sobre tiles caminháveis).
+
+Ordem correta ao mexer nos prédios importados:
+    .venv/bin/python tools/spr/slice_buildings.py   # fatia a folha
+    .venv/bin/python tools/spr/allocate_ids.py      # aloca os ids
+    .venv/bin/python tools/map/build_valley.py      # gera o mapa
+    .venv/bin/python tools/spr/build_assets.py      # grava items.otb/.dat/.spr
+    tools/install_generated.sh                      # instala no servidor
 """
 
 from __future__ import annotations
@@ -26,13 +36,19 @@ from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import json
+
 from otbm import (Item, OtbmMap, TILEFLAG_NOLOGOUT, TILEFLAG_PROTECTIONZONE)
-from items_otb import load_items_otb
+from items_otb import ItemType, load_items_otb, FLAG_BLOCK_SOLID, ITEM_GROUP_GROUND
 from spawn_xml import SpawnFile, write_empty_house_file
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 ITEMS_OTB = os.path.join(ROOT, "server", "tfs", "data", "items", "items.otb")
 OUT_DIR = os.path.join(ROOT, "server", "generated", "world")
+SPRITES = os.path.join(ROOT, "assets-src", "sprites")
+TILES_JSON = os.path.join(SPRITES, "tiles.json")
+ALLOC_JSON = os.path.join(SPRITES, "allocations.json")
+BUILDINGS_JSON = os.path.join(SPRITES, "buildings.json")
 
 SEED = 1337
 # O conteúdo vai de (1000,1000) a (1199,1119); um mapa 1024x1024 não comportaria
@@ -255,13 +271,77 @@ class Builder:
                     self.clear_items(x, y0 + dy)
 
 
+# ------------------------------------------------- prédios importados (tiles.json)
+# Os tiles bld_* vêm de tools/spr/slice_buildings.py. Os server ids saem de
+# assets-src/sprites/allocations.json e SÓ existem no items.otb depois de
+# `.venv/bin/python tools/spr/build_assets.py` — por isso a validação de "id
+# existe no OTB" é relaxada para ids >= 30000 que estejam em allocations.json
+# (ver `synthetic_types`), com aviso na saída.
+
+MIN_NEW_SERVER_ID = 30000
+
+
+def load_imported():
+    """Devolve (templates, sid_por_key, tipos_sinteticos)."""
+    with open(BUILDINGS_JSON, encoding="utf-8") as fh:
+        tpls = json.load(fh)["buildings"]
+    with open(ALLOC_JSON, encoding="utf-8") as fh:
+        alloc = json.load(fh)["by_key"]
+    with open(TILES_JSON, encoding="utf-8") as fh:
+        specs = {t["key"]: t for t in json.load(fh)["tiles"]}
+
+    sid = {}
+    types = {}
+    for key, spec in specs.items():
+        e = alloc.get(key)
+        if e is None:
+            continue
+        s_id = e["server_id"]
+        sid[key] = s_id
+        if s_id < MIN_NEW_SERVER_ID:
+            continue
+        fl = spec.get("flags") or {}
+        flags = 0 if fl.get("walkable", True) else FLAG_BLOCK_SOLID
+        group = ITEM_GROUP_GROUND if spec["group"] == "ground" else 0
+        types[s_id] = ItemType(s_id, e["client_id"], group, flags)
+    return tpls, sid, types
+
+
+def stamp_building(b, tpls, sid, key, x, y, ground=None):
+    """Estampa o template ``key`` com o canto INFERIOR ESQUERDO em (x, y).
+
+    A matriz de ``buildings.json`` é linhas x colunas do topo para a base, então
+    a célula (col, row) cai em (x + col, y - (altura - 1 - row)).
+    Limpa os itens de todo o retângulo e, se ``ground`` for dado, troca o chão.
+    Devolve a posição absoluta da porta (ou None).
+    """
+    tpl = tpls[key]
+    h, w = tpl["height"], tpl["width"]
+    for row in range(h):
+        for col in range(w):
+            px, py = x + col, y - (h - 1 - row)
+            b.clear_items(px, py)
+            if ground is not None:
+                b.ground(px, py, ground)
+    for row in range(h):
+        for col in range(w):
+            tk = tpl["grid"][row][col]
+            if tk is None:
+                continue
+            b.put(x + col, y - (h - 1 - row), sid[tk])
+    if not tpl["door"]:
+        return None
+    dc, dr = tpl["door"]
+    return (x + dc, y - (h - 1 - dr))
+
+
 # --------------------------------------------------------------- construção
 
 def in_village(x, y):
     return V_X0 <= x <= V_X1 and V_Y0 <= y <= V_Y1
 
 
-def build():
+def build(tpls, sid):
     b = Builder()
     rng = b.rng
     b.protect(V_X0, V_Y0, V_X1, V_Y1)                              # vila
@@ -386,30 +466,47 @@ def build():
     b.put(PLAZA[0] + 2, PLAZA[3] - 1, DEPOT, depot_id=1)
     b.put(PLAZA[0] + 1, PLAZA[3] - 1, SIGN, text="Deposito da Vila")
 
-    # lojas e casas (parede de madeira, chão de madeira, porta)
-    shops = [
-        ("Ichiro, o Mercador", 1013, 1038, 1019, 1043, (1016, 1043), (1016, 1041)),
-        ("Mestre Hayato", 1039, 1038, 1045, 1043, (1042, 1043), (1042, 1041)),
-        ("Capitã Rin", 1039, 1046, 1045, 1051, (1042, 1051), (1042, 1049)),
-    ]
+    # --- prédios importados (village_buildings.png) ---------------------
+    # Substituem as casas/lojas de parede de madeira vanilla. São FACHADAS:
+    # tudo bloqueia menos a porta, e não há interior — por isso os NPCs de loja
+    # ficam na RUA, um tile à frente da porta.
     npcs = []
-    for (name, x0, y0, x1, y1, door, npc_pos) in shops:
-        b.building(x0, y0, x1, y1, WOOD_FLOOR, wood=True, doors=[door],
-                   windows=[(x0 + 2, y0), (x1 - 2, y0)])
-        b.put(door[0] - 1, door[1] + 1, TORCH)
-        npcs.append((name, npc_pos))
 
-    houses = [
-        (1013, 1058, 1019, 1063, (1016, 1058)),
-        (1021, 1058, 1027, 1063, (1024, 1058)),
-        (1032, 1058, 1038, 1063, (1035, 1058)),
-        (1040, 1058, 1046, 1063, (1043, 1058)),
-        (1013, 1032, 1019, 1036, (1016, 1036)),
-        (1039, 1032, 1045, 1036, (1042, 1036)),
-    ]
-    for (x0, y0, x1, y1, door) in houses:
-        b.building(x0, y0, x1, y1, WOOD_FLOOR, wood=True, doors=[door],
-                   windows=[(x0 + 2, y1), (x1 - 2, y1)])
+    # torre do líder ao norte da praça (o templo continua sendo a PZ)
+    tower_door = stamp_building(b, tpls, sid, "tower", 1027, 1036)
+    b.put(1026, 1036, sid["bld_grass_patch_0_0"])
+    b.put(1032, 1036, sid["bld_grass_patch_0_0"])
+
+    # casas do anel norte
+    stamp_building(b, tpls, sid, "big_house", 1013, 1036, ground=DIRT)
+    stamp_building(b, tpls, sid, "house_green", 1040, 1036, ground=DIRT)
+
+    # lojas com NPC (nome, template, x, y do canto inferior esquerdo)
+    for (name, tpl_key, sx, sy) in [
+            ("Ichiro, o Mercador", "newbie_shop", 1014, 1043),
+            ("Mestre Hayato", "ramen_shop", 1040, 1044),
+            ("Capitã Rin", "blue_shop", 1040, 1051)]:
+        door = stamp_building(b, tpls, sid, tpl_key, sx, sy, ground=DIRT)
+        b.clear_items(door[0], door[1] + 1)
+        b.put(door[0] - 1, door[1] + 1, TORCH)
+        npcs.append((name, (door[0], door[1] + 1)))
+
+    # taverna, prisão e casas do anel sul
+    stamp_building(b, tpls, sid, "prison", 1013, 1063, ground=DIRT)
+    stamp_building(b, tpls, sid, "blue_house", 1021, 1063, ground=DIRT)
+    stamp_building(b, tpls, sid, "tavern", 1032, 1063, ground=DIRT)
+    stamp_building(b, tpls, sid, "roof_orange", 1037, 1063, ground=DIRT)
+    stamp_building(b, tpls, sid, "blue_house", 1041, 1063, ground=DIRT)
+
+    # postes e vegetação importada
+    stamp_building(b, tpls, sid, "lamp_post", 1021, 1053)
+    stamp_building(b, tpls, sid, "lamp_post", 1037, 1053)
+    stamp_building(b, tpls, sid, "tree", 1017, 1045)
+    stamp_building(b, tpls, sid, "bushes", 1022, 1053)
+    stamp_building(b, tpls, sid, "bushes", 1034, 1053)
+    stamp_building(b, tpls, sid, "bushes", 1025, 1067)
+
+    b.notes.append("porta da torre do lider em %r" % (tower_door,))
 
     # campo de treino
     b.fill(1013, 1046, 1020, 1052, DIRT)
@@ -429,6 +526,13 @@ def build():
             if not b.cells[(x, y)].items:
                 b.put(x, y, TORCH)
 
+    # 6b. muros e moitas importados fora do portão sul --------------------
+    stamp_building(b, tpls, sid, "green_gate_b", 1023, 1073)
+    stamp_building(b, tpls, sid, "green_gate_c", 1034, 1073)
+    stamp_building(b, tpls, sid, "big_bush", 1019, 1074)
+    stamp_building(b, tpls, sid, "gate_east", 1038, 1074)
+    stamp_building(b, tpls, sid, "green_gate_a", 1015, 1078)
+
     # 7. hub de NPCs na entrada da Floresta da Morte ----------------------
     b.clear_rect(HUB[0] - 1, HUB[1] - 1, HUB[2] + 1, HUB[3] + 1)
     b.fill(HUB[0], HUB[1], HUB[2], HUB[3], STONE_FLOOR)
@@ -437,6 +541,7 @@ def build():
     b.put(HUB[0] + 1, HUB[1] + 1, SIGN,
           text="Floresta da Morte - viajante, volte enquanto pode")
     b.put(HUB[0] + 2, HUB[3] - 1, CAMPFIRE)
+    stamp_building(b, tpls, sid, "shop_east", 1132, 1062, ground=STONE_FLOOR)
     npcs.append(("Velha Sumi", (HUB[0] + 2, HUB[1] + 2)))
     npcs.append(("Rastreador Goro", (HUB[0] + 4, HUB[1] + 3)))
 
@@ -700,7 +805,23 @@ def to_otbm(b):
 
 def main():
     types = load_items_otb(ITEMS_OTB)
-    b, npcs = build()
+    tpls, sid, novos = load_imported()
+
+    # RELAXAMENTO EXPLÍCITO: os tiles importados só entram no items.otb quando
+    # `tools/spr/build_assets.py` roda. Até lá, aceitamos os ids >= 30000 que
+    # estejam em allocations.json, usando as flags declaradas em tiles.json.
+    ausentes = sorted(k for k in novos if k not in types)
+    if ausentes:
+        print("AVISO: %d server ids de tiles novos ainda NAO existem no items.otb"
+              % len(ausentes))
+        print("       faixa %d..%d — validando com as flags de tiles.json."
+              % (ausentes[0], ausentes[-1]))
+        print("       RODE `.venv/bin/python tools/spr/build_assets.py` ANTES de")
+        print("       instalar este mapa, senao o TFS recusa os itens.")
+        for k in ausentes:
+            types[k] = novos[k]
+
+    b, npcs = build(tpls, sid)
     carve_clearings(b)
     connect_clearings(b)
     sf = build_spawns(b, npcs)

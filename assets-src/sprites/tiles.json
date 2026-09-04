@@ -8,93 +8,5003 @@
   "_doc_flags": "flags de alto nivel: walkable (default true), blocks_projectile, blocks_pathfind (default = !walkable), on_top (+top_order 1..3), pickupable, stackable, movable, has_height, useable, readable, rotatable, hangable, vertical, horizontal, force_use, look_through, cannot_decay. 'otb_flags' aceita nomes crus de itemflags_t como escape hatch.",
   "_doc_frames": "frames = um PNG por fase de animacao, cada um com width*32 x height*32 px. 2+ frames ligam FLAG_ANIMATION no OTB e 2+ animationPhases no .dat (os dois PRECISAM casar, ver docs/sistemas/arte-e-sprites.md).",
   "_doc_size": "size = [largura, altura] em TILES do sprite. Um item 2x1 ainda ocupa UMA casa no servidor; o desenho so se estende para o oeste/norte.",
-
   "tiles": [
     {
       "key": "tatami_floor",
       "name": "chão de tatame",
       "group": "ground",
       "speed": 100,
-      "minimap_rgb": [196, 184, 126],
-      "frames": ["tiles/tatami_floor.png"],
-      "flags": { "walkable": true },
-      "xml": { "description": "Esteira de palha traçada, macia sob os pés." }
+      "minimap_rgb": [
+        196,
+        184,
+        126
+      ],
+      "frames": [
+        "tiles/tatami_floor.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Esteira de palha traçada, macia sob os pés."
+      }
     },
     {
       "key": "village_dirt",
       "name": "terra batida",
       "group": "ground",
       "speed": 110,
-      "minimap_rgb": [146, 118, 88],
-      "frames": ["tiles/village_dirt.png"],
-      "flags": { "walkable": true },
-      "xml": { "description": "Caminho de terra pisada da vila." }
+      "minimap_rgb": [
+        146,
+        118,
+        88
+      ],
+      "frames": [
+        "tiles/village_dirt.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Caminho de terra pisada da vila."
+      }
     },
     {
       "key": "wood_wall_v",
       "name": "parede de madeira",
       "group": "wall",
-      "frames": ["tiles/wood_wall_v.png"],
+      "frames": [
+        "tiles/wood_wall_v.png"
+      ],
       "flags": {
-        "walkable": false, "blocks_projectile": true, "has_height": false,
+        "walkable": false,
+        "blocks_projectile": true,
+        "has_height": false,
         "movable": false
       },
-      "xml": { "description": "Parede de tábuas, orientação norte-sul." }
+      "xml": {
+        "description": "Parede de tábuas, orientação norte-sul."
+      }
     },
     {
       "key": "wood_wall_h",
       "name": "parede de madeira",
       "group": "wall",
-      "frames": ["tiles/wood_wall_h.png"],
+      "frames": [
+        "tiles/wood_wall_h.png"
+      ],
       "flags": {
-        "walkable": false, "blocks_projectile": true, "has_height": false,
+        "walkable": false,
+        "blocks_projectile": true,
+        "has_height": false,
         "movable": false
       },
-      "xml": { "description": "Parede de tábuas, orientação leste-oeste." }
+      "xml": {
+        "description": "Parede de tábuas, orientação leste-oeste."
+      }
     },
     {
       "key": "torii_gate",
       "name": "portão torii",
       "group": "decoration",
-      "size": [2, 1],
-      "frames": ["tiles/torii_gate.png"],
-      "flags": { "walkable": true, "movable": false },
-      "xml": { "description": "Portão vermelho que marca a entrada da vila." }
+      "size": [
+        2,
+        1
+      ],
+      "frames": [
+        "tiles/torii_gate.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Portão vermelho que marca a entrada da vila."
+      }
     },
     {
       "key": "wood_sign",
       "name": "placa de madeira",
       "group": "furniture",
-      "frames": ["tiles/wood_sign.png"],
+      "frames": [
+        "tiles/wood_sign.png"
+      ],
       "flags": {
-        "walkable": false, "movable": false, "readable": true,
-        "allow_dist_read": true, "has_height": true
+        "walkable": false,
+        "movable": false,
+        "readable": true,
+        "allow_dist_read": true,
+        "has_height": true
       },
       "elevation": 6,
-      "xml": { "description": "Uma placa esculpida à mão." }
+      "xml": {
+        "description": "Uma placa esculpida à mão."
+      }
     },
     {
       "key": "paper_lantern",
       "name": "lanterna de papel",
       "group": "decoration",
-      "frames": ["tiles/paper_lantern_0.png", "tiles/paper_lantern_1.png"],
-      "animation": { "durations": [[600, 600], [420, 420]] },
-      "light": { "level": 7, "r": 255, "g": 204, "b": 102 },
-      "flags": { "walkable": false, "movable": false, "has_height": true },
+      "frames": [
+        "tiles/paper_lantern_0.png",
+        "tiles/paper_lantern_1.png"
+      ],
+      "animation": {
+        "durations": [
+          [
+            600,
+            600
+          ],
+          [
+            420,
+            420
+          ]
+        ]
+      },
+      "light": {
+        "level": 7,
+        "r": 255,
+        "g": 204,
+        "b": 102
+      },
+      "flags": {
+        "walkable": false,
+        "movable": false,
+        "has_height": true
+      },
       "elevation": 8,
-      "xml": { "description": "Chochin acesa; oscila devagar." }
+      "xml": {
+        "description": "Chochin acesa; oscila devagar."
+      }
     },
     {
       "key": "bamboo_fence",
       "name": "cerca de bambu",
       "group": "wall",
-      "frames": ["tiles/bamboo_fence.png"],
+      "frames": [
+        "tiles/bamboo_fence.png"
+      ],
       "flags": {
-        "walkable": false, "blocks_projectile": false, "has_height": true,
+        "walkable": false,
+        "blocks_projectile": false,
+        "has_height": true,
         "movable": false
       },
       "elevation": 12,
-      "xml": { "description": "Colmos de bambu amarrados com corda." }
+      "xml": {
+        "description": "Colmos de bambu amarrados com corda."
+      }
+    },
+    {
+      "key": "bld_tower_0_0",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_tower_1_0",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_tower_2_0",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_tower_3_0",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_tower_4_0",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,0)."
+      }
+    },
+    {
+      "key": "bld_tower_0_1",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_tower_1_1",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_tower_2_1",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_tower_3_1",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_tower_4_1",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,1)."
+      }
+    },
+    {
+      "key": "bld_tower_0_2",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_tower_1_2",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_tower_2_2",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_tower_3_2",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_tower_4_2",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,2)."
+      }
+    },
+    {
+      "key": "bld_tower_0_3",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_tower_1_3",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_tower_2_3",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_tower_3_3",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_tower_4_3",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,3)."
+      }
+    },
+    {
+      "key": "bld_tower_0_4",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,4)."
+      }
+    },
+    {
+      "key": "bld_tower_1_4",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,4)."
+      }
+    },
+    {
+      "key": "bld_tower_2_4",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 2,4)."
+      }
+    },
+    {
+      "key": "bld_tower_3_4",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,4)."
+      }
+    },
+    {
+      "key": "bld_tower_4_4",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,4)."
+      }
+    },
+    {
+      "key": "bld_tower_0_5",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_0_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 0,5)."
+      }
+    },
+    {
+      "key": "bld_tower_1_5",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_1_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 1,5)."
+      }
+    },
+    {
+      "key": "bld_tower_2_5",
+      "name": "porta de torre do líder",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_2_5.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Torre do Líder."
+      }
+    },
+    {
+      "key": "bld_tower_3_5",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_3_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 3,5)."
+      }
+    },
+    {
+      "key": "bld_tower_4_5",
+      "name": "torre do líder",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tower_4_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Torre do Líder (peça 4,5)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_0_0",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_1_0",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_2_0",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_0_1",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_1_1",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_2_1",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_0_2",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_1_2",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_2_2",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_0_3",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_blue_shop_1_3",
+      "name": "porta de loja azul",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_1_3.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Loja Azul."
+      }
+    },
+    {
+      "key": "bld_blue_shop_2_3",
+      "name": "loja azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_shop_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Loja Azul (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_grass_patch_0_0",
+      "name": "tufo de grama",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_grass_patch_0_0.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Tufo de Grama."
+      }
+    },
+    {
+      "key": "bld_bushes_0_0",
+      "name": "arbustos",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_bushes_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Arbustos (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_bushes_1_0",
+      "name": "arbustos",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_bushes_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Arbustos (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_bushes_2_0",
+      "name": "arbustos",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_bushes_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Arbustos (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_0_0",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_1_0",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_2_0",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_3_0",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_0_1",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_1_1",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_2_1",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_3_1",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_0_2",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_1_2",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_2_2",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_3_2",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_0_3",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_1_3",
+      "name": "porta de newbie shop",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_1_3.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Newbie Shop."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_2_3",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_newbie_shop_3_3",
+      "name": "newbie shop",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_newbie_shop_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Newbie Shop (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_0_0",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_1_0",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_2_0",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_3_0",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_0_1",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_1_1",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_2_1",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_3_1",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_0_2",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_1_2",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_2_2",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_3_2",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_0_3",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_1_3",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_2_3",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_3_3",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_0_4",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_0_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 0,4)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_1_4",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_1_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 1,4)."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_2_4",
+      "name": "porta de barraca de lámen",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_2_4.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Barraca de Lámen."
+      }
+    },
+    {
+      "key": "bld_ramen_shop_3_4",
+      "name": "barraca de lámen",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_ramen_shop_3_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Barraca de Lámen (peça 3,4)."
+      }
+    },
+    {
+      "key": "bld_blue_house_0_0",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_blue_house_1_0",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_blue_house_2_0",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_blue_house_0_1",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_blue_house_1_1",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_blue_house_2_1",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_blue_house_0_2",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_blue_house_1_2",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_blue_house_2_2",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_blue_house_0_3",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_blue_house_1_3",
+      "name": "porta de casa de telhado azul",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_1_3.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Casa de Telhado Azul."
+      }
+    },
+    {
+      "key": "bld_blue_house_2_3",
+      "name": "casa de telhado azul",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_blue_house_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa de Telhado Azul (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_tree_0_0",
+      "name": "árvore da vila",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tree_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Árvore da Vila (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_tree_1_0",
+      "name": "árvore da vila",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tree_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Árvore da Vila (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_tree_2_0",
+      "name": "árvore da vila",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tree_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Árvore da Vila (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_prison_0_0",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_prison_1_0",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_prison_2_0",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_prison_3_0",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_prison_0_1",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_prison_1_1",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_prison_2_1",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_prison_3_1",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_prison_0_2",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_prison_1_2",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_prison_2_2",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_prison_3_2",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_prison_0_3",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_prison_1_3",
+      "name": "porta de prisão",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_1_3.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Prisão."
+      }
+    },
+    {
+      "key": "bld_prison_2_3",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_prison_3_3",
+      "name": "prisão",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_prison_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Prisão (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_lamp_post_0_0",
+      "name": "poste de luz",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_lamp_post_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Poste de Luz (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_lamp_post_0_1",
+      "name": "poste de luz",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_lamp_post_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Poste de Luz (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_lamp_post_0_2",
+      "name": "poste de luz",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_lamp_post_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Poste de Luz (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_lamp_post_0_3",
+      "name": "poste de luz",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_lamp_post_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Poste de Luz (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_house_green_0_0",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_house_green_1_0",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_house_green_2_0",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_house_green_3_0",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_house_green_0_1",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_house_green_1_1",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_house_green_2_1",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_house_green_3_1",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_house_green_0_2",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_house_green_1_2",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_house_green_2_2",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_house_green_3_2",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_house_green_0_3",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_house_green_1_3",
+      "name": "porta de casa do painel verde",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_1_3.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Casa do Painel Verde."
+      }
+    },
+    {
+      "key": "bld_house_green_2_3",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_house_green_3_3",
+      "name": "casa do painel verde",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_house_green_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa do Painel Verde (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_dark_panel_0_0",
+      "name": "vão escuro",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_dark_panel_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Vão Escuro (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_0_0",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_1_0",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_2_0",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_0_1",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_1_1",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_2_1",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_0_2",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_1_2",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_2_2",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_0_3",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_1_3",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_roof_orange_2_3",
+      "name": "telhado laranja",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_roof_orange_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Telhado Laranja (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_0_0",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_tavern_1_0",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_tavern_2_0",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_tavern_3_0",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_tavern_4_0",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_4_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 4,0)."
+      }
+    },
+    {
+      "key": "bld_tavern_0_1",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_tavern_1_1",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_tavern_2_1",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_tavern_3_1",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_tavern_4_1",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_4_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 4,1)."
+      }
+    },
+    {
+      "key": "bld_tavern_0_2",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_tavern_1_2",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_tavern_2_2",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_tavern_3_2",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_tavern_4_2",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_4_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 4,2)."
+      }
+    },
+    {
+      "key": "bld_tavern_0_3",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_1_3",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_2_3",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_3_3",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_4_3",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_4_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 4,3)."
+      }
+    },
+    {
+      "key": "bld_tavern_0_4",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_0_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 0,4)."
+      }
+    },
+    {
+      "key": "bld_tavern_1_4",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_1_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 1,4)."
+      }
+    },
+    {
+      "key": "bld_tavern_2_4",
+      "name": "porta de taverna",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_2_4.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Taverna."
+      }
+    },
+    {
+      "key": "bld_tavern_3_4",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_3_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 3,4)."
+      }
+    },
+    {
+      "key": "bld_tavern_4_4",
+      "name": "taverna",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_tavern_4_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Taverna (peça 4,4)."
+      }
+    },
+    {
+      "key": "bld_gate_east_0_0",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_gate_east_1_0",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_gate_east_2_0",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_gate_east_0_1",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_gate_east_1_1",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_gate_east_2_1",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_gate_east_0_2",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_gate_east_1_2",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_gate_east_2_2",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_gate_east_0_3",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_gate_east_1_3",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_gate_east_2_3",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_gate_east_0_4",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_0_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 0,4)."
+      }
+    },
+    {
+      "key": "bld_gate_east_1_4",
+      "name": "muro leste",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_gate_east_1_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste (peça 1,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_0",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_0",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_big_house_2_0",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_0",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,0)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_1",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_1",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_big_house_2_1",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_1",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,1)."
+      }
+    },
+    {
+      "key": "bld_big_house_4_1",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_4_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 4,1)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_2",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_2",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_big_house_2_2",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_2",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,2)."
+      }
+    },
+    {
+      "key": "bld_big_house_4_2",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_4_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 4,2)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_3",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,3)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_3",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 1,3)."
+      }
+    },
+    {
+      "key": "bld_big_house_2_3",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,3)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_3",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,3)."
+      }
+    },
+    {
+      "key": "bld_big_house_4_3",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_4_3.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 4,3)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_4",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_4",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 1,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_2_4",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_4",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_4_4",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_4_4.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 4,4)."
+      }
+    },
+    {
+      "key": "bld_big_house_0_5",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_0_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 0,5)."
+      }
+    },
+    {
+      "key": "bld_big_house_1_5",
+      "name": "porta de casa grande de doces",
+      "group": "door",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_1_5.png"
+      ],
+      "flags": {
+        "walkable": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Entrada de Casa Grande de Doces."
+      }
+    },
+    {
+      "key": "bld_big_house_2_5",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_2_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 2,5)."
+      }
+    },
+    {
+      "key": "bld_big_house_3_5",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_3_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 3,5)."
+      }
+    },
+    {
+      "key": "bld_big_house_4_5",
+      "name": "casa grande de doces",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_house_4_5.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Casa Grande de Doces (peça 4,5)."
+      }
+    },
+    {
+      "key": "bld_green_gate_a_0_0",
+      "name": "painel verde a",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_a_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde A (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_a_1_0",
+      "name": "painel verde a",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_a_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde A (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_a_0_1",
+      "name": "painel verde a",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_a_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde A (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_a_1_1",
+      "name": "painel verde a",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_a_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde A (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_a_0_2",
+      "name": "painel verde a",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_a_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde A (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_shop_east_0_0",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_shop_east_1_0",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_shop_east_2_0",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_shop_east_0_1",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_shop_east_1_1",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_shop_east_2_1",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_shop_east_0_2",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_0_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 0,2)."
+      }
+    },
+    {
+      "key": "bld_shop_east_1_2",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_1_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 1,2)."
+      }
+    },
+    {
+      "key": "bld_shop_east_2_2",
+      "name": "muro leste com telhado",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_shop_east_2_2.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Muro Leste com Telhado (peça 2,2)."
+      }
+    },
+    {
+      "key": "bld_big_bush_0_0",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_big_bush_1_0",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_big_bush_2_0",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_2_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 2,0)."
+      }
+    },
+    {
+      "key": "bld_big_bush_0_1",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_big_bush_1_1",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_big_bush_2_1",
+      "name": "moita grande",
+      "group": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_big_bush_2_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": false,
+        "movable": false
+      },
+      "xml": {
+        "description": "Moita Grande (peça 2,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_b_0_0",
+      "name": "painel verde b",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_b_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde B (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_b_1_0",
+      "name": "painel verde b",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_b_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde B (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_b_0_1",
+      "name": "painel verde b",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_b_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde B (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_b_1_1",
+      "name": "painel verde b",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_b_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde B (peça 1,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_c_0_0",
+      "name": "painel verde c",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_c_0_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde C (peça 0,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_c_1_0",
+      "name": "painel verde c",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_c_1_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde C (peça 1,0)."
+      }
+    },
+    {
+      "key": "bld_green_gate_c_0_1",
+      "name": "painel verde c",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_c_0_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde C (peça 0,1)."
+      }
+    },
+    {
+      "key": "bld_green_gate_c_1_1",
+      "name": "painel verde c",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "tiles/buildings/bld_green_gate_c_1_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Painel Verde C (peça 1,1)."
+      }
     }
-  ]
+  ],
+  "_doc_buildings": "As chaves bld_* sao geradas por tools/spr/slice_buildings.py a partir de assets-src/import/village_buildings.png (material privado, nao versionado). Nao edite a mao: rode o slicer de novo. A arte fica em assets-src/sprites/tiles/buildings/ e os templates em buildings.json."
 }

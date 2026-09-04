@@ -1,8 +1,8 @@
 {
   "format": 1,
   "_doc": "Alocacao PERMANENTE de ids para os tiles de assets-src/sprites/tiles.json. Nunca edite nem apague uma entrada: o id ficaria orfao em mapas e saves ja gravados. Gerado por tools/spr/build_assets.py.",
-  "next_server_id": 30008,
-  "next_client_id": 23734,
+  "next_server_id": 30250,
+  "next_client_id": 23976,
   "by_key": {
     "tatami_floor": {
       "server_id": 30000,
@@ -35,6 +35,974 @@
     "bamboo_fence": {
       "server_id": 30007,
       "client_id": 23733
+    },
+    "bld_tower_0_0": {
+      "server_id": 30008,
+      "client_id": 23734
+    },
+    "bld_tower_1_0": {
+      "server_id": 30009,
+      "client_id": 23735
+    },
+    "bld_tower_2_0": {
+      "server_id": 30010,
+      "client_id": 23736
+    },
+    "bld_tower_3_0": {
+      "server_id": 30011,
+      "client_id": 23737
+    },
+    "bld_tower_4_0": {
+      "server_id": 30012,
+      "client_id": 23738
+    },
+    "bld_tower_0_1": {
+      "server_id": 30013,
+      "client_id": 23739
+    },
+    "bld_tower_1_1": {
+      "server_id": 30014,
+      "client_id": 23740
+    },
+    "bld_tower_2_1": {
+      "server_id": 30015,
+      "client_id": 23741
+    },
+    "bld_tower_3_1": {
+      "server_id": 30016,
+      "client_id": 23742
+    },
+    "bld_tower_4_1": {
+      "server_id": 30017,
+      "client_id": 23743
+    },
+    "bld_tower_0_2": {
+      "server_id": 30018,
+      "client_id": 23744
+    },
+    "bld_tower_1_2": {
+      "server_id": 30019,
+      "client_id": 23745
+    },
+    "bld_tower_2_2": {
+      "server_id": 30020,
+      "client_id": 23746
+    },
+    "bld_tower_3_2": {
+      "server_id": 30021,
+      "client_id": 23747
+    },
+    "bld_tower_4_2": {
+      "server_id": 30022,
+      "client_id": 23748
+    },
+    "bld_tower_0_3": {
+      "server_id": 30023,
+      "client_id": 23749
+    },
+    "bld_tower_1_3": {
+      "server_id": 30024,
+      "client_id": 23750
+    },
+    "bld_tower_2_3": {
+      "server_id": 30025,
+      "client_id": 23751
+    },
+    "bld_tower_3_3": {
+      "server_id": 30026,
+      "client_id": 23752
+    },
+    "bld_tower_4_3": {
+      "server_id": 30027,
+      "client_id": 23753
+    },
+    "bld_tower_0_4": {
+      "server_id": 30028,
+      "client_id": 23754
+    },
+    "bld_tower_1_4": {
+      "server_id": 30029,
+      "client_id": 23755
+    },
+    "bld_tower_2_4": {
+      "server_id": 30030,
+      "client_id": 23756
+    },
+    "bld_tower_3_4": {
+      "server_id": 30031,
+      "client_id": 23757
+    },
+    "bld_tower_4_4": {
+      "server_id": 30032,
+      "client_id": 23758
+    },
+    "bld_tower_0_5": {
+      "server_id": 30033,
+      "client_id": 23759
+    },
+    "bld_tower_1_5": {
+      "server_id": 30034,
+      "client_id": 23760
+    },
+    "bld_tower_2_5": {
+      "server_id": 30035,
+      "client_id": 23761
+    },
+    "bld_tower_3_5": {
+      "server_id": 30036,
+      "client_id": 23762
+    },
+    "bld_tower_4_5": {
+      "server_id": 30037,
+      "client_id": 23763
+    },
+    "bld_blue_shop_0_0": {
+      "server_id": 30038,
+      "client_id": 23764
+    },
+    "bld_blue_shop_1_0": {
+      "server_id": 30039,
+      "client_id": 23765
+    },
+    "bld_blue_shop_2_0": {
+      "server_id": 30040,
+      "client_id": 23766
+    },
+    "bld_blue_shop_0_1": {
+      "server_id": 30041,
+      "client_id": 23767
+    },
+    "bld_blue_shop_1_1": {
+      "server_id": 30042,
+      "client_id": 23768
+    },
+    "bld_blue_shop_2_1": {
+      "server_id": 30043,
+      "client_id": 23769
+    },
+    "bld_blue_shop_0_2": {
+      "server_id": 30044,
+      "client_id": 23770
+    },
+    "bld_blue_shop_1_2": {
+      "server_id": 30045,
+      "client_id": 23771
+    },
+    "bld_blue_shop_2_2": {
+      "server_id": 30046,
+      "client_id": 23772
+    },
+    "bld_blue_shop_0_3": {
+      "server_id": 30047,
+      "client_id": 23773
+    },
+    "bld_blue_shop_1_3": {
+      "server_id": 30048,
+      "client_id": 23774
+    },
+    "bld_blue_shop_2_3": {
+      "server_id": 30049,
+      "client_id": 23775
+    },
+    "bld_grass_patch_0_0": {
+      "server_id": 30050,
+      "client_id": 23776
+    },
+    "bld_bushes_0_0": {
+      "server_id": 30051,
+      "client_id": 23777
+    },
+    "bld_bushes_1_0": {
+      "server_id": 30052,
+      "client_id": 23778
+    },
+    "bld_bushes_2_0": {
+      "server_id": 30053,
+      "client_id": 23779
+    },
+    "bld_newbie_shop_0_0": {
+      "server_id": 30054,
+      "client_id": 23780
+    },
+    "bld_newbie_shop_1_0": {
+      "server_id": 30055,
+      "client_id": 23781
+    },
+    "bld_newbie_shop_2_0": {
+      "server_id": 30056,
+      "client_id": 23782
+    },
+    "bld_newbie_shop_3_0": {
+      "server_id": 30057,
+      "client_id": 23783
+    },
+    "bld_newbie_shop_0_1": {
+      "server_id": 30058,
+      "client_id": 23784
+    },
+    "bld_newbie_shop_1_1": {
+      "server_id": 30059,
+      "client_id": 23785
+    },
+    "bld_newbie_shop_2_1": {
+      "server_id": 30060,
+      "client_id": 23786
+    },
+    "bld_newbie_shop_3_1": {
+      "server_id": 30061,
+      "client_id": 23787
+    },
+    "bld_newbie_shop_0_2": {
+      "server_id": 30062,
+      "client_id": 23788
+    },
+    "bld_newbie_shop_1_2": {
+      "server_id": 30063,
+      "client_id": 23789
+    },
+    "bld_newbie_shop_2_2": {
+      "server_id": 30064,
+      "client_id": 23790
+    },
+    "bld_newbie_shop_3_2": {
+      "server_id": 30065,
+      "client_id": 23791
+    },
+    "bld_newbie_shop_0_3": {
+      "server_id": 30066,
+      "client_id": 23792
+    },
+    "bld_newbie_shop_1_3": {
+      "server_id": 30067,
+      "client_id": 23793
+    },
+    "bld_newbie_shop_2_3": {
+      "server_id": 30068,
+      "client_id": 23794
+    },
+    "bld_newbie_shop_3_3": {
+      "server_id": 30069,
+      "client_id": 23795
+    },
+    "bld_ramen_shop_0_0": {
+      "server_id": 30070,
+      "client_id": 23796
+    },
+    "bld_ramen_shop_1_0": {
+      "server_id": 30071,
+      "client_id": 23797
+    },
+    "bld_ramen_shop_2_0": {
+      "server_id": 30072,
+      "client_id": 23798
+    },
+    "bld_ramen_shop_3_0": {
+      "server_id": 30073,
+      "client_id": 23799
+    },
+    "bld_ramen_shop_0_1": {
+      "server_id": 30074,
+      "client_id": 23800
+    },
+    "bld_ramen_shop_1_1": {
+      "server_id": 30075,
+      "client_id": 23801
+    },
+    "bld_ramen_shop_2_1": {
+      "server_id": 30076,
+      "client_id": 23802
+    },
+    "bld_ramen_shop_3_1": {
+      "server_id": 30077,
+      "client_id": 23803
+    },
+    "bld_ramen_shop_0_2": {
+      "server_id": 30078,
+      "client_id": 23804
+    },
+    "bld_ramen_shop_1_2": {
+      "server_id": 30079,
+      "client_id": 23805
+    },
+    "bld_ramen_shop_2_2": {
+      "server_id": 30080,
+      "client_id": 23806
+    },
+    "bld_ramen_shop_3_2": {
+      "server_id": 30081,
+      "client_id": 23807
+    },
+    "bld_ramen_shop_0_3": {
+      "server_id": 30082,
+      "client_id": 23808
+    },
+    "bld_ramen_shop_1_3": {
+      "server_id": 30083,
+      "client_id": 23809
+    },
+    "bld_ramen_shop_2_3": {
+      "server_id": 30084,
+      "client_id": 23810
+    },
+    "bld_ramen_shop_3_3": {
+      "server_id": 30085,
+      "client_id": 23811
+    },
+    "bld_ramen_shop_0_4": {
+      "server_id": 30086,
+      "client_id": 23812
+    },
+    "bld_ramen_shop_1_4": {
+      "server_id": 30087,
+      "client_id": 23813
+    },
+    "bld_ramen_shop_2_4": {
+      "server_id": 30088,
+      "client_id": 23814
+    },
+    "bld_ramen_shop_3_4": {
+      "server_id": 30089,
+      "client_id": 23815
+    },
+    "bld_blue_house_0_0": {
+      "server_id": 30090,
+      "client_id": 23816
+    },
+    "bld_blue_house_1_0": {
+      "server_id": 30091,
+      "client_id": 23817
+    },
+    "bld_blue_house_2_0": {
+      "server_id": 30092,
+      "client_id": 23818
+    },
+    "bld_blue_house_0_1": {
+      "server_id": 30093,
+      "client_id": 23819
+    },
+    "bld_blue_house_1_1": {
+      "server_id": 30094,
+      "client_id": 23820
+    },
+    "bld_blue_house_2_1": {
+      "server_id": 30095,
+      "client_id": 23821
+    },
+    "bld_blue_house_0_2": {
+      "server_id": 30096,
+      "client_id": 23822
+    },
+    "bld_blue_house_1_2": {
+      "server_id": 30097,
+      "client_id": 23823
+    },
+    "bld_blue_house_2_2": {
+      "server_id": 30098,
+      "client_id": 23824
+    },
+    "bld_blue_house_0_3": {
+      "server_id": 30099,
+      "client_id": 23825
+    },
+    "bld_blue_house_1_3": {
+      "server_id": 30100,
+      "client_id": 23826
+    },
+    "bld_blue_house_2_3": {
+      "server_id": 30101,
+      "client_id": 23827
+    },
+    "bld_tree_0_0": {
+      "server_id": 30102,
+      "client_id": 23828
+    },
+    "bld_tree_1_0": {
+      "server_id": 30103,
+      "client_id": 23829
+    },
+    "bld_tree_2_0": {
+      "server_id": 30104,
+      "client_id": 23830
+    },
+    "bld_prison_0_0": {
+      "server_id": 30105,
+      "client_id": 23831
+    },
+    "bld_prison_1_0": {
+      "server_id": 30106,
+      "client_id": 23832
+    },
+    "bld_prison_2_0": {
+      "server_id": 30107,
+      "client_id": 23833
+    },
+    "bld_prison_3_0": {
+      "server_id": 30108,
+      "client_id": 23834
+    },
+    "bld_prison_0_1": {
+      "server_id": 30109,
+      "client_id": 23835
+    },
+    "bld_prison_1_1": {
+      "server_id": 30110,
+      "client_id": 23836
+    },
+    "bld_prison_2_1": {
+      "server_id": 30111,
+      "client_id": 23837
+    },
+    "bld_prison_3_1": {
+      "server_id": 30112,
+      "client_id": 23838
+    },
+    "bld_prison_0_2": {
+      "server_id": 30113,
+      "client_id": 23839
+    },
+    "bld_prison_1_2": {
+      "server_id": 30114,
+      "client_id": 23840
+    },
+    "bld_prison_2_2": {
+      "server_id": 30115,
+      "client_id": 23841
+    },
+    "bld_prison_3_2": {
+      "server_id": 30116,
+      "client_id": 23842
+    },
+    "bld_prison_0_3": {
+      "server_id": 30117,
+      "client_id": 23843
+    },
+    "bld_prison_1_3": {
+      "server_id": 30118,
+      "client_id": 23844
+    },
+    "bld_prison_2_3": {
+      "server_id": 30119,
+      "client_id": 23845
+    },
+    "bld_prison_3_3": {
+      "server_id": 30120,
+      "client_id": 23846
+    },
+    "bld_lamp_post_0_0": {
+      "server_id": 30121,
+      "client_id": 23847
+    },
+    "bld_lamp_post_0_1": {
+      "server_id": 30122,
+      "client_id": 23848
+    },
+    "bld_lamp_post_0_2": {
+      "server_id": 30123,
+      "client_id": 23849
+    },
+    "bld_lamp_post_0_3": {
+      "server_id": 30124,
+      "client_id": 23850
+    },
+    "bld_house_green_0_0": {
+      "server_id": 30125,
+      "client_id": 23851
+    },
+    "bld_house_green_1_0": {
+      "server_id": 30126,
+      "client_id": 23852
+    },
+    "bld_house_green_2_0": {
+      "server_id": 30127,
+      "client_id": 23853
+    },
+    "bld_house_green_3_0": {
+      "server_id": 30128,
+      "client_id": 23854
+    },
+    "bld_house_green_0_1": {
+      "server_id": 30129,
+      "client_id": 23855
+    },
+    "bld_house_green_1_1": {
+      "server_id": 30130,
+      "client_id": 23856
+    },
+    "bld_house_green_2_1": {
+      "server_id": 30131,
+      "client_id": 23857
+    },
+    "bld_house_green_3_1": {
+      "server_id": 30132,
+      "client_id": 23858
+    },
+    "bld_house_green_0_2": {
+      "server_id": 30133,
+      "client_id": 23859
+    },
+    "bld_house_green_1_2": {
+      "server_id": 30134,
+      "client_id": 23860
+    },
+    "bld_house_green_2_2": {
+      "server_id": 30135,
+      "client_id": 23861
+    },
+    "bld_house_green_3_2": {
+      "server_id": 30136,
+      "client_id": 23862
+    },
+    "bld_house_green_0_3": {
+      "server_id": 30137,
+      "client_id": 23863
+    },
+    "bld_house_green_1_3": {
+      "server_id": 30138,
+      "client_id": 23864
+    },
+    "bld_house_green_2_3": {
+      "server_id": 30139,
+      "client_id": 23865
+    },
+    "bld_house_green_3_3": {
+      "server_id": 30140,
+      "client_id": 23866
+    },
+    "bld_dark_panel_0_0": {
+      "server_id": 30141,
+      "client_id": 23867
+    },
+    "bld_roof_orange_0_0": {
+      "server_id": 30142,
+      "client_id": 23868
+    },
+    "bld_roof_orange_1_0": {
+      "server_id": 30143,
+      "client_id": 23869
+    },
+    "bld_roof_orange_2_0": {
+      "server_id": 30144,
+      "client_id": 23870
+    },
+    "bld_roof_orange_0_1": {
+      "server_id": 30145,
+      "client_id": 23871
+    },
+    "bld_roof_orange_1_1": {
+      "server_id": 30146,
+      "client_id": 23872
+    },
+    "bld_roof_orange_2_1": {
+      "server_id": 30147,
+      "client_id": 23873
+    },
+    "bld_roof_orange_0_2": {
+      "server_id": 30148,
+      "client_id": 23874
+    },
+    "bld_roof_orange_1_2": {
+      "server_id": 30149,
+      "client_id": 23875
+    },
+    "bld_roof_orange_2_2": {
+      "server_id": 30150,
+      "client_id": 23876
+    },
+    "bld_roof_orange_0_3": {
+      "server_id": 30151,
+      "client_id": 23877
+    },
+    "bld_roof_orange_1_3": {
+      "server_id": 30152,
+      "client_id": 23878
+    },
+    "bld_roof_orange_2_3": {
+      "server_id": 30153,
+      "client_id": 23879
+    },
+    "bld_tavern_0_0": {
+      "server_id": 30154,
+      "client_id": 23880
+    },
+    "bld_tavern_1_0": {
+      "server_id": 30155,
+      "client_id": 23881
+    },
+    "bld_tavern_2_0": {
+      "server_id": 30156,
+      "client_id": 23882
+    },
+    "bld_tavern_3_0": {
+      "server_id": 30157,
+      "client_id": 23883
+    },
+    "bld_tavern_4_0": {
+      "server_id": 30158,
+      "client_id": 23884
+    },
+    "bld_tavern_0_1": {
+      "server_id": 30159,
+      "client_id": 23885
+    },
+    "bld_tavern_1_1": {
+      "server_id": 30160,
+      "client_id": 23886
+    },
+    "bld_tavern_2_1": {
+      "server_id": 30161,
+      "client_id": 23887
+    },
+    "bld_tavern_3_1": {
+      "server_id": 30162,
+      "client_id": 23888
+    },
+    "bld_tavern_4_1": {
+      "server_id": 30163,
+      "client_id": 23889
+    },
+    "bld_tavern_0_2": {
+      "server_id": 30164,
+      "client_id": 23890
+    },
+    "bld_tavern_1_2": {
+      "server_id": 30165,
+      "client_id": 23891
+    },
+    "bld_tavern_2_2": {
+      "server_id": 30166,
+      "client_id": 23892
+    },
+    "bld_tavern_3_2": {
+      "server_id": 30167,
+      "client_id": 23893
+    },
+    "bld_tavern_4_2": {
+      "server_id": 30168,
+      "client_id": 23894
+    },
+    "bld_tavern_0_3": {
+      "server_id": 30169,
+      "client_id": 23895
+    },
+    "bld_tavern_1_3": {
+      "server_id": 30170,
+      "client_id": 23896
+    },
+    "bld_tavern_2_3": {
+      "server_id": 30171,
+      "client_id": 23897
+    },
+    "bld_tavern_3_3": {
+      "server_id": 30172,
+      "client_id": 23898
+    },
+    "bld_tavern_4_3": {
+      "server_id": 30173,
+      "client_id": 23899
+    },
+    "bld_tavern_0_4": {
+      "server_id": 30174,
+      "client_id": 23900
+    },
+    "bld_tavern_1_4": {
+      "server_id": 30175,
+      "client_id": 23901
+    },
+    "bld_tavern_2_4": {
+      "server_id": 30176,
+      "client_id": 23902
+    },
+    "bld_tavern_3_4": {
+      "server_id": 30177,
+      "client_id": 23903
+    },
+    "bld_tavern_4_4": {
+      "server_id": 30178,
+      "client_id": 23904
+    },
+    "bld_gate_east_0_0": {
+      "server_id": 30179,
+      "client_id": 23905
+    },
+    "bld_gate_east_1_0": {
+      "server_id": 30180,
+      "client_id": 23906
+    },
+    "bld_gate_east_2_0": {
+      "server_id": 30181,
+      "client_id": 23907
+    },
+    "bld_gate_east_0_1": {
+      "server_id": 30182,
+      "client_id": 23908
+    },
+    "bld_gate_east_1_1": {
+      "server_id": 30183,
+      "client_id": 23909
+    },
+    "bld_gate_east_2_1": {
+      "server_id": 30184,
+      "client_id": 23910
+    },
+    "bld_gate_east_0_2": {
+      "server_id": 30185,
+      "client_id": 23911
+    },
+    "bld_gate_east_1_2": {
+      "server_id": 30186,
+      "client_id": 23912
+    },
+    "bld_gate_east_2_2": {
+      "server_id": 30187,
+      "client_id": 23913
+    },
+    "bld_gate_east_0_3": {
+      "server_id": 30188,
+      "client_id": 23914
+    },
+    "bld_gate_east_1_3": {
+      "server_id": 30189,
+      "client_id": 23915
+    },
+    "bld_gate_east_2_3": {
+      "server_id": 30190,
+      "client_id": 23916
+    },
+    "bld_gate_east_0_4": {
+      "server_id": 30191,
+      "client_id": 23917
+    },
+    "bld_gate_east_1_4": {
+      "server_id": 30192,
+      "client_id": 23918
+    },
+    "bld_big_house_0_0": {
+      "server_id": 30193,
+      "client_id": 23919
+    },
+    "bld_big_house_1_0": {
+      "server_id": 30194,
+      "client_id": 23920
+    },
+    "bld_big_house_2_0": {
+      "server_id": 30195,
+      "client_id": 23921
+    },
+    "bld_big_house_3_0": {
+      "server_id": 30196,
+      "client_id": 23922
+    },
+    "bld_big_house_0_1": {
+      "server_id": 30197,
+      "client_id": 23923
+    },
+    "bld_big_house_1_1": {
+      "server_id": 30198,
+      "client_id": 23924
+    },
+    "bld_big_house_2_1": {
+      "server_id": 30199,
+      "client_id": 23925
+    },
+    "bld_big_house_3_1": {
+      "server_id": 30200,
+      "client_id": 23926
+    },
+    "bld_big_house_4_1": {
+      "server_id": 30201,
+      "client_id": 23927
+    },
+    "bld_big_house_0_2": {
+      "server_id": 30202,
+      "client_id": 23928
+    },
+    "bld_big_house_1_2": {
+      "server_id": 30203,
+      "client_id": 23929
+    },
+    "bld_big_house_2_2": {
+      "server_id": 30204,
+      "client_id": 23930
+    },
+    "bld_big_house_3_2": {
+      "server_id": 30205,
+      "client_id": 23931
+    },
+    "bld_big_house_4_2": {
+      "server_id": 30206,
+      "client_id": 23932
+    },
+    "bld_big_house_0_3": {
+      "server_id": 30207,
+      "client_id": 23933
+    },
+    "bld_big_house_1_3": {
+      "server_id": 30208,
+      "client_id": 23934
+    },
+    "bld_big_house_2_3": {
+      "server_id": 30209,
+      "client_id": 23935
+    },
+    "bld_big_house_3_3": {
+      "server_id": 30210,
+      "client_id": 23936
+    },
+    "bld_big_house_4_3": {
+      "server_id": 30211,
+      "client_id": 23937
+    },
+    "bld_big_house_0_4": {
+      "server_id": 30212,
+      "client_id": 23938
+    },
+    "bld_big_house_1_4": {
+      "server_id": 30213,
+      "client_id": 23939
+    },
+    "bld_big_house_2_4": {
+      "server_id": 30214,
+      "client_id": 23940
+    },
+    "bld_big_house_3_4": {
+      "server_id": 30215,
+      "client_id": 23941
+    },
+    "bld_big_house_4_4": {
+      "server_id": 30216,
+      "client_id": 23942
+    },
+    "bld_big_house_0_5": {
+      "server_id": 30217,
+      "client_id": 23943
+    },
+    "bld_big_house_1_5": {
+      "server_id": 30218,
+      "client_id": 23944
+    },
+    "bld_big_house_2_5": {
+      "server_id": 30219,
+      "client_id": 23945
+    },
+    "bld_big_house_3_5": {
+      "server_id": 30220,
+      "client_id": 23946
+    },
+    "bld_big_house_4_5": {
+      "server_id": 30221,
+      "client_id": 23947
+    },
+    "bld_green_gate_a_0_0": {
+      "server_id": 30222,
+      "client_id": 23948
+    },
+    "bld_green_gate_a_1_0": {
+      "server_id": 30223,
+      "client_id": 23949
+    },
+    "bld_green_gate_a_0_1": {
+      "server_id": 30224,
+      "client_id": 23950
+    },
+    "bld_green_gate_a_1_1": {
+      "server_id": 30225,
+      "client_id": 23951
+    },
+    "bld_green_gate_a_0_2": {
+      "server_id": 30226,
+      "client_id": 23952
+    },
+    "bld_shop_east_0_0": {
+      "server_id": 30227,
+      "client_id": 23953
+    },
+    "bld_shop_east_1_0": {
+      "server_id": 30228,
+      "client_id": 23954
+    },
+    "bld_shop_east_2_0": {
+      "server_id": 30229,
+      "client_id": 23955
+    },
+    "bld_shop_east_0_1": {
+      "server_id": 30230,
+      "client_id": 23956
+    },
+    "bld_shop_east_1_1": {
+      "server_id": 30231,
+      "client_id": 23957
+    },
+    "bld_shop_east_2_1": {
+      "server_id": 30232,
+      "client_id": 23958
+    },
+    "bld_shop_east_0_2": {
+      "server_id": 30233,
+      "client_id": 23959
+    },
+    "bld_shop_east_1_2": {
+      "server_id": 30234,
+      "client_id": 23960
+    },
+    "bld_shop_east_2_2": {
+      "server_id": 30235,
+      "client_id": 23961
+    },
+    "bld_big_bush_0_0": {
+      "server_id": 30236,
+      "client_id": 23962
+    },
+    "bld_big_bush_1_0": {
+      "server_id": 30237,
+      "client_id": 23963
+    },
+    "bld_big_bush_2_0": {
+      "server_id": 30238,
+      "client_id": 23964
+    },
+    "bld_big_bush_0_1": {
+      "server_id": 30239,
+      "client_id": 23965
+    },
+    "bld_big_bush_1_1": {
+      "server_id": 30240,
+      "client_id": 23966
+    },
+    "bld_big_bush_2_1": {
+      "server_id": 30241,
+      "client_id": 23967
+    },
+    "bld_green_gate_b_0_0": {
+      "server_id": 30242,
+      "client_id": 23968
+    },
+    "bld_green_gate_b_1_0": {
+      "server_id": 30243,
+      "client_id": 23969
+    },
+    "bld_green_gate_b_0_1": {
+      "server_id": 30244,
+      "client_id": 23970
+    },
+    "bld_green_gate_b_1_1": {
+      "server_id": 30245,
+      "client_id": 23971
+    },
+    "bld_green_gate_c_0_0": {
+      "server_id": 30246,
+      "client_id": 23972
+    },
+    "bld_green_gate_c_1_0": {
+      "server_id": 30247,
+      "client_id": 23973
+    },
+    "bld_green_gate_c_0_1": {
+      "server_id": 30248,
+      "client_id": 23974
+    },
+    "bld_green_gate_c_1_1": {
+      "server_id": 30249,
+      "client_id": 23975
     }
   }
 }

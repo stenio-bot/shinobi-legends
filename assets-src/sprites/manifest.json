@@ -355,6 +355,11 @@
     "sheet": "items/own/scroll_bunshin.png",
     "icon": "scroll"
    },
+   "1956": {
+    "name": "scroll_doku_kiri",
+    "sheet": "items/own/scroll_doku_kiri.png",
+    "icon": "scroll"
+   },
    "5952": {
     "name": "scroll_doton_colapso",
     "sheet": "items/own/scroll_doton_colapso.png",
@@ -499,6 +504,11 @@
     "name": "vest_toad",
     "sheet": "items/own/vest_toad.png",
     "icon": "cloth"
+   },
+   "5895": {
+    "name": "white_serpent_fang",
+    "sheet": "items/own/white_serpent_fang.png",
+    "icon": "fang"
    },
    "7367": {
     "name": "windblade_shuriken",
@@ -6411,7 +6421,7 @@
   {
    "category": "creature",
    "id": 132,
-   "name": "generic_132",
+   "name": "snake_132",
    "width": 1,
    "height": 1,
    "exact_size": 32,
@@ -6449,8 +6459,8 @@
     }
    ],
    "sheets": [
-    "creatures/generic_0_l0.png",
-    "creatures/generic_0_l1.png"
+    "creatures/look_132_l0.png",
+    "creatures/look_132_l1.png"
    ]
   },
   {

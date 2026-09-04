@@ -57,12 +57,15 @@ na faixa **x 1000–1199, y 1000–1119** (200x120 = 24.000 tiles).
 | Portão sul | 1028–1030, 1069 |
 | Rua norte-sul (cobblestone) | x 1028–1030 |
 | Rua leste-oeste (cobblestone) | y 1054–1056 |
-| Loja do Ichiro, o Mercador | 1013,1038 – 1019,1043 (NPC em 1016,1041) |
-| Loja do Mestre Hayato (pergaminhos) | 1039,1038 – 1045,1043 (NPC em 1042,1041) |
-| Casa da Capitã Rin (missões) | 1039,1046 – 1045,1051 (NPC em 1042,1049) |
+| Torre do Líder (prédio importado) | 1027,1031 – 1031,1036, porta em 1029,1036 |
+| Loja do Ichiro, o Mercador (`newbie_shop`) | 1014,1040 – 1017,1043 (NPC na rua, 1015,1044) |
+| Loja do Mestre Hayato (`ramen_shop`) | 1040,1040 – 1043,1044 (NPC na rua, 1042,1045) |
+| Casa da Capitã Rin (`blue_shop`) | 1040,1048 – 1042,1051 (NPC na rua, 1041,1052) |
+| Prisão | 1013,1060 – 1016,1063, porta em 1014,1063 |
+| Taverna | 1032,1059 – 1036,1063, porta em 1034,1063 |
 | Campo de treino (6 training dummies) | 1013,1046 – 1020,1052 |
 | Depósito (depot chest) | 1024, 1051 |
-| Casas de moradores (6, parede de madeira) | y 1032–1036 e y 1058–1063 |
+| Casas de moradores (prédios importados) | y 1031–1036 e y 1059–1063 |
 | Rio (norte-sul, intransponível) | x 1125–1129 |
 | **Ponte de pedra** (com parapeitos) | x 1124–1130, y 1058–1061 |
 | Hub de NPCs do pântano | 1131,1055 – 1139,1064 |
@@ -74,6 +77,68 @@ na faixa **x 1000–1199, y 1000–1119** (200x120 = 24.000 tiles).
 
 Waypoints gravados no OTBM: `Templo`, `Praca`, `Portao Sul`, `Ponte`, `Torre`,
 `Acampamento`, `Hub Pantano`.
+
+### Prédios importados
+
+As casas e lojas de **parede de madeira vanilla** (`b.building(...)`, ids 5261–5277)
+foram substituídas por prédios recortados de `assets-src/import/village_buildings.png`
+(material de referência privado, no `.gitignore`). O recorte é
+`tools/spr/slice_buildings.py`; os templates ficam em
+**`assets-src/sprites/buildings.json`** e cada célula 32x32 é um **item novo**
+(`bld_*` em `assets-src/sprites/tiles.json`, server ids **30008–30249**).
+
+**São fachadas, não interiores.** Em Tibia tudo do prédio bloqueia; só a célula de
+porta é caminhável (`group: "door"`, `walkable: true`), e ela não leva a lugar
+nenhum. Por isso os NPCs de loja ficam **na rua**, um tile à frente da porta — antes
+eles ficavam dentro do prédio, atrás de uma porta de madeira.
+
+`tools/map/build_valley.py` estampa com:
+
+```python
+stamp_building(b, tpls, sid, "tavern", 1032, 1063, ground=DIRT)
+```
+
+O ponto `(x, y)` é o **canto inferior esquerdo**: a célula `(col, row)` da matriz do
+template cai em `(x + col, y - (altura - 1 - row))`. A função limpa os itens do
+retângulo inteiro, troca o chão se `ground` for dado, empilha os itens e devolve a
+posição absoluta da porta.
+
+| Template | Tamanho (col x lin) | Onde | Porta |
+|---|---|---|---|
+| `tower` (Torre do Líder) | 5x6 | 1027,1036 — ao norte da praça | 1029,1036 |
+| `big_house` | 5x6 | 1013,1036 | 1014,1036 |
+| `house_green` | 4x4 | 1040,1036 | 1041,1036 |
+| `newbie_shop` (Ichiro) | 4x4 | 1014,1043 | 1015,1043 |
+| `ramen_shop` (Hayato) | 4x5 | 1040,1044 | 1042,1044 |
+| `blue_shop` (Rin) | 3x4 | 1040,1051 | 1041,1051 |
+| `prison` | 4x4 | 1013,1063 | 1014,1063 |
+| `blue_house` | 3x4 | 1021,1063 e 1041,1063 | col 1 da base |
+| `tavern` | 5x5 | 1032,1063 | 1034,1063 |
+| `roof_orange` | 3x4 | 1037,1063 (galpão) | — |
+| `lamp_post` | 1x4 | 1021,1053 e 1037,1053 | — |
+| `tree` / `bushes` / `big_bush` / `grass_patch` | 1–3 tiles | praça, campo de treino, fora do portão | — |
+| `green_gate_a/b/c`, `gate_east` | muros verdes | fora do portão sul | — |
+| `shop_east` | 3x3 | 1132,1062 (hub do pântano) | — |
+
+O **templo continua sendo a PZ** e a posição da town — a torre foi colocada ao lado
+(ao norte da praça), sem tocar no templo nem no `flag_rect` de proteção.
+
+Ordem obrigatória ao mexer nesses prédios:
+
+```bash
+.venv/bin/python tools/spr/slice_buildings.py   # fatia a folha, escreve tiles.json/buildings.json
+.venv/bin/python tools/spr/allocate_ids.py      # aloca server/client ids (NÃO toca no OTB)
+.venv/bin/python tools/map/build_valley.py      # gera o mapa com esses ids
+.venv/bin/python tools/spr/build_assets.py      # grava items.otb + Tibia.dat/.spr + items.xml
+tools/install_generated.sh                      # instala no servidor
+```
+
+> **Aviso do gerador.** Enquanto os ids novos não estiverem no `items.otb`, o
+> `build_valley.py` imprime `AVISO: N server ids de tiles novos ainda NAO existem no
+> items.otb` e valida esses ids (>= 30000, presentes em `allocations.json`) usando as
+> flags declaradas em `tiles.json`. Isso é deliberado, para o mapa poder ser gerado
+> antes do build de assets. **Instalar o mapa sem rodar `build_assets.py` faz o TFS
+> recusar os itens.**
 
 ### Zonas
 
@@ -113,7 +178,8 @@ e 3600 s para bosses.
 
 O build **falha** (exit 1, nada é gravado) se:
 
-- algum id usado não existir no `items.otb`;
+- algum id usado não existir no `items.otb` **nem** em `allocations.json` com id
+  >= 30000 (esse é o relaxamento descrito em "Prédios importados");
 - algum chão não for do grupo `ground`;
 - o templo, algum centro de spawn, alguma criatura ou algum NPC não for alcançável a
   pé a partir do templo (BFS de 4 vizinhos sobre tiles caminháveis — portas contam
