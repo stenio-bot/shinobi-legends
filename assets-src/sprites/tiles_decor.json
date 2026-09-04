@@ -1,0 +1,506 @@
+{
+  "_doc": "Itens NOVOS de DECORACAO de cenario (ponte, pedras, flores, mobiliario de acampamento/vila). Mesmo esquema de assets-src/sprites/tiles.json (ver tools/spr/README.md secao 'Itens NOVOS de cenario'). Arquivo SEPARADO: o coordenador mescla estas entradas dentro de tiles.json e roda tools/spr/allocate_ids.py (que so le tiles.json). Por isso as entradas aqui NAO tem server_id/client_id -- ganham id so depois de mescladas.",
+  "format": 1,
+  "sheet_root": "assets-src/sprites",
+  "_doc_grupo": "group: ground|wall|door|decoration|furniture|container (ver GROUP_TO_OTB em tools/spr/tiles.py)",
+  "_doc_flags": "flags de alto nivel -> itemflags_t, ver tools/spr/README.md",
+  "tiles": [
+    {
+      "key": "bridge_wood_center",
+      "name": "tábua da ponte",
+      "group": "ground",
+      "speed": 100,
+      "minimap_rgb": [
+        144,
+        108,
+        68
+      ],
+      "frames": [
+        "terrain/decor/bridge_center.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Tábuas firmes de uma ponte de madeira."
+      }
+    },
+    {
+      "key": "bridge_wood_head_west",
+      "name": "cabeceira oeste da ponte",
+      "group": "ground",
+      "speed": 100,
+      "minimap_rgb": [
+        120,
+        88,
+        52
+      ],
+      "frames": [
+        "terrain/decor/bridge_head_west.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Onde a ponte de madeira encosta na margem oeste."
+      }
+    },
+    {
+      "key": "bridge_wood_head_east",
+      "name": "cabeceira leste da ponte",
+      "group": "ground",
+      "speed": 100,
+      "minimap_rgb": [
+        120,
+        88,
+        52
+      ],
+      "frames": [
+        "terrain/decor/bridge_head_east.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Onde a ponte de madeira encosta na margem leste."
+      }
+    },
+    {
+      "key": "bridge_wood_rail_north",
+      "name": "corrimão da ponte (norte)",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "terrain/decor/bridge_rail_north.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Corrimão de madeira do lado norte da ponte."
+      }
+    },
+    {
+      "key": "bridge_wood_rail_south",
+      "name": "corrimão da ponte (sul)",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "terrain/decor/bridge_rail_south.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Corrimão de madeira do lado sul da ponte."
+      }
+    },
+    {
+      "key": "rock_small",
+      "name": "pedra pequena",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stone_small.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma pedra pequena, meio afundada na terra."
+      }
+    },
+    {
+      "key": "rock_medium",
+      "name": "pedra média",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stone_medium.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma pedra de bom tamanho."
+      }
+    },
+    {
+      "key": "rock_large",
+      "name": "pedregulho",
+      "group": "decoration",
+      "size": [
+        2,
+        2
+      ],
+      "frames": [
+        "terrain/decor/stone_large.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true,
+        "blocks_projectile": true
+      },
+      "xml": {
+        "description": "Um pedregulho grande demais para mover."
+      }
+    },
+    {
+      "key": "tree_stump_0",
+      "name": "toco de árvore",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stump_0.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "O que sobrou de uma árvore derrubada."
+      }
+    },
+    {
+      "key": "tree_stump_1",
+      "name": "toco de árvore rachado",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stump_1.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Um toco velho, com uma lasca quebrada na lateral."
+      }
+    },
+    {
+      "key": "wildflower_yellow",
+      "name": "florzinha amarela",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/flower_0.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma florzinha silvestre amarela."
+      }
+    },
+    {
+      "key": "wildflower_pink",
+      "name": "florzinha rosa",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/flower_1.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma florzinha silvestre rosa."
+      }
+    },
+    {
+      "key": "wildflower_white",
+      "name": "florzinha branca",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/flower_2.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma florzinha silvestre branca."
+      }
+    },
+    {
+      "key": "tall_grass_0",
+      "name": "tufo de grama alta",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/tuft_0.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um tufo de grama alta, balançando ao vento."
+      }
+    },
+    {
+      "key": "tall_grass_1",
+      "name": "tufo de grama alta",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/tuft_1.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um tufo de grama alta, balançando ao vento."
+      }
+    },
+    {
+      "key": "tall_grass_2",
+      "name": "tufo de grama alta",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/tuft_2.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um tufo de grama alta, balançando ao vento."
+      }
+    },
+    {
+      "key": "mushroom_red",
+      "name": "cogumelo vermelho",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/mushroom_0.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um cogumelo vermelho de pintas brancas. Melhor não comer."
+      }
+    },
+    {
+      "key": "mushroom_brown",
+      "name": "cogumelo castanho",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/mushroom_1.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um cogumelo castanho comum."
+      }
+    },
+    {
+      "key": "fallen_branch",
+      "name": "galho caído",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/branch_0.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Um galho seco, caído no chão."
+      }
+    },
+    {
+      "key": "small_puddle",
+      "name": "poça d'água",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/puddle_small.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma poça d'água rasa, deixada pela última chuva."
+      }
+    },
+    {
+      "key": "street_torch",
+      "name": "tocha de rua",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/torch_pole_0.png",
+        "terrain/decor/torch_pole_1.png"
+      ],
+      "animation": {
+        "durations": [
+          [
+            500,
+            500
+          ],
+          [
+            420,
+            420
+          ]
+        ]
+      },
+      "light": {
+        "level": 7,
+        "r": 255,
+        "g": 178,
+        "b": 90
+      },
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Uma tocha de rua num poste, sempre acesa."
+      }
+    },
+    {
+      "key": "signpost_trail",
+      "name": "placa de trilha",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/signpost_trail.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Uma placa de madeira apontando o caminho."
+      }
+    },
+    {
+      "key": "wood_barrel",
+      "name": "barril",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/barril.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Um barril de madeira, fechado."
+      }
+    },
+    {
+      "key": "wood_crate",
+      "name": "caixote",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/caixote.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "has_height": true
+      },
+      "xml": {
+        "description": "Um caixote de madeira empilhável."
+      }
+    },
+    {
+      "key": "wood_fence_h",
+      "name": "cerca de madeira",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "terrain/decor/fence_wood_h.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Uma cerca de madeira leste-oeste."
+      }
+    },
+    {
+      "key": "wood_fence_v",
+      "name": "cerca de madeira",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "terrain/decor/fence_wood_v.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "Uma cerca de madeira norte-sul."
+      }
+    },
+    {
+      "key": "wood_fence_corner",
+      "name": "cerca de madeira (canto)",
+      "group": "wall",
+      "size": [
+        1,
+        1
+      ],
+      "frames": [
+        "terrain/decor/fence_wood_c.png"
+      ],
+      "flags": {
+        "walkable": false,
+        "blocks_projectile": true,
+        "movable": false
+      },
+      "xml": {
+        "description": "O canto de uma cerca de madeira."
+      }
+    },
+    {
+      "key": "stepping_stone_0",
+      "name": "pedra do caminho",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stepping_stone_0.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma pedra solta, parte de uma trilha."
+      }
+    },
+    {
+      "key": "stepping_stone_1",
+      "name": "pedra do caminho",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stepping_stone_1.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma pedra solta, parte de uma trilha."
+      }
+    },
+    {
+      "key": "stepping_stone_2",
+      "name": "pedra do caminho",
+      "group": "decoration",
+      "frames": [
+        "terrain/decor/stepping_stone_2.png"
+      ],
+      "flags": {
+        "walkable": true
+      },
+      "xml": {
+        "description": "Uma pedra solta, parte de uma trilha."
+      }
+    }
+  ]
+}

@@ -764,3 +764,237 @@
 <item id="30249" name="painel verde c">  <!-- bld_green_gate_c_1_1 (wall, clientId 23975) -->
 	<attribute key="description" value="Painel Verde C (peça 1,1)."/>
 </item>
+<item id="30250" name="borda grama/terra (n)">  <!-- border_grass_dirt_n (decoration, clientId 23976) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (norte)."/>
+</item>
+<item id="30251" name="borda grama/terra (s)">  <!-- border_grass_dirt_s (decoration, clientId 23977) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (sul)."/>
+</item>
+<item id="30252" name="borda grama/terra (e)">  <!-- border_grass_dirt_e (decoration, clientId 23978) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (leste)."/>
+</item>
+<item id="30253" name="borda grama/terra (w)">  <!-- border_grass_dirt_w (decoration, clientId 23979) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (oeste)."/>
+</item>
+<item id="30254" name="borda grama/terra (cnw)">  <!-- border_grass_dirt_cnw (decoration, clientId 23980) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo noroeste)."/>
+</item>
+<item id="30255" name="borda grama/terra (cne)">  <!-- border_grass_dirt_cne (decoration, clientId 23981) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo nordeste)."/>
+</item>
+<item id="30256" name="borda grama/terra (csw)">  <!-- border_grass_dirt_csw (decoration, clientId 23982) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo sudoeste)."/>
+</item>
+<item id="30257" name="borda grama/terra (cse)">  <!-- border_grass_dirt_cse (decoration, clientId 23983) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo sudeste)."/>
+</item>
+<item id="30258" name="borda grama/terra (icnw)">  <!-- border_grass_dirt_icnw (decoration, clientId 23984) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno noroeste)."/>
+</item>
+<item id="30259" name="borda grama/terra (icne)">  <!-- border_grass_dirt_icne (decoration, clientId 23985) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno nordeste)."/>
+</item>
+<item id="30260" name="borda grama/terra (icsw)">  <!-- border_grass_dirt_icsw (decoration, clientId 23986) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudoeste)."/>
+</item>
+<item id="30261" name="borda grama/terra (icse)">  <!-- border_grass_dirt_icse (decoration, clientId 23987) -->
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30262" name="borda grama/agua (n)">  <!-- border_grass_water_n (decoration, clientId 23988) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (norte)."/>
+</item>
+<item id="30263" name="borda grama/agua (s)">  <!-- border_grass_water_s (decoration, clientId 23989) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (sul)."/>
+</item>
+<item id="30264" name="borda grama/agua (e)">  <!-- border_grass_water_e (decoration, clientId 23990) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (leste)."/>
+</item>
+<item id="30265" name="borda grama/agua (w)">  <!-- border_grass_water_w (decoration, clientId 23991) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (oeste)."/>
+</item>
+<item id="30266" name="borda grama/agua (cnw)">  <!-- border_grass_water_cnw (decoration, clientId 23992) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo noroeste)."/>
+</item>
+<item id="30267" name="borda grama/agua (cne)">  <!-- border_grass_water_cne (decoration, clientId 23993) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo nordeste)."/>
+</item>
+<item id="30268" name="borda grama/agua (csw)">  <!-- border_grass_water_csw (decoration, clientId 23994) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo sudoeste)."/>
+</item>
+<item id="30269" name="borda grama/agua (cse)">  <!-- border_grass_water_cse (decoration, clientId 23995) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo sudeste)."/>
+</item>
+<item id="30270" name="borda grama/agua (icnw)">  <!-- border_grass_water_icnw (decoration, clientId 23996) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno noroeste)."/>
+</item>
+<item id="30271" name="borda grama/agua (icne)">  <!-- border_grass_water_icne (decoration, clientId 23997) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno nordeste)."/>
+</item>
+<item id="30272" name="borda grama/agua (icsw)">  <!-- border_grass_water_icsw (decoration, clientId 23998) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudoeste)."/>
+</item>
+<item id="30273" name="borda grama/agua (icse)">  <!-- border_grass_water_icse (decoration, clientId 23999) -->
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudeste)."/>
+</item>
+<item id="30274" name="borda grama/lama (n)">  <!-- border_grass_mud_n (decoration, clientId 24000) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (norte)."/>
+</item>
+<item id="30275" name="borda grama/lama (s)">  <!-- border_grass_mud_s (decoration, clientId 24001) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (sul)."/>
+</item>
+<item id="30276" name="borda grama/lama (e)">  <!-- border_grass_mud_e (decoration, clientId 24002) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (leste)."/>
+</item>
+<item id="30277" name="borda grama/lama (w)">  <!-- border_grass_mud_w (decoration, clientId 24003) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (oeste)."/>
+</item>
+<item id="30278" name="borda grama/lama (cnw)">  <!-- border_grass_mud_cnw (decoration, clientId 24004) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo noroeste)."/>
+</item>
+<item id="30279" name="borda grama/lama (cne)">  <!-- border_grass_mud_cne (decoration, clientId 24005) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo nordeste)."/>
+</item>
+<item id="30280" name="borda grama/lama (csw)">  <!-- border_grass_mud_csw (decoration, clientId 24006) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo sudoeste)."/>
+</item>
+<item id="30281" name="borda grama/lama (cse)">  <!-- border_grass_mud_cse (decoration, clientId 24007) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo sudeste)."/>
+</item>
+<item id="30282" name="borda grama/lama (icnw)">  <!-- border_grass_mud_icnw (decoration, clientId 24008) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno noroeste)."/>
+</item>
+<item id="30283" name="borda grama/lama (icne)">  <!-- border_grass_mud_icne (decoration, clientId 24009) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno nordeste)."/>
+</item>
+<item id="30284" name="borda grama/lama (icsw)">  <!-- border_grass_mud_icsw (decoration, clientId 24010) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudoeste)."/>
+</item>
+<item id="30285" name="borda grama/lama (icse)">  <!-- border_grass_mud_icse (decoration, clientId 24011) -->
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudeste)."/>
+</item>
+<item id="30286" name="borda cobblestone/terra (n)">  <!-- border_cobble_dirt_n (decoration, clientId 24012) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (norte)."/>
+</item>
+<item id="30287" name="borda cobblestone/terra (s)">  <!-- border_cobble_dirt_s (decoration, clientId 24013) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (sul)."/>
+</item>
+<item id="30288" name="borda cobblestone/terra (e)">  <!-- border_cobble_dirt_e (decoration, clientId 24014) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (leste)."/>
+</item>
+<item id="30289" name="borda cobblestone/terra (w)">  <!-- border_cobble_dirt_w (decoration, clientId 24015) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (oeste)."/>
+</item>
+<item id="30290" name="borda cobblestone/terra (cnw)">  <!-- border_cobble_dirt_cnw (decoration, clientId 24016) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo noroeste)."/>
+</item>
+<item id="30291" name="borda cobblestone/terra (cne)">  <!-- border_cobble_dirt_cne (decoration, clientId 24017) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo nordeste)."/>
+</item>
+<item id="30292" name="borda cobblestone/terra (csw)">  <!-- border_cobble_dirt_csw (decoration, clientId 24018) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo sudoeste)."/>
+</item>
+<item id="30293" name="borda cobblestone/terra (cse)">  <!-- border_cobble_dirt_cse (decoration, clientId 24019) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo sudeste)."/>
+</item>
+<item id="30294" name="borda cobblestone/terra (icnw)">  <!-- border_cobble_dirt_icnw (decoration, clientId 24020) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno noroeste)."/>
+</item>
+<item id="30295" name="borda cobblestone/terra (icne)">  <!-- border_cobble_dirt_icne (decoration, clientId 24021) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno nordeste)."/>
+</item>
+<item id="30296" name="borda cobblestone/terra (icsw)">  <!-- border_cobble_dirt_icsw (decoration, clientId 24022) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudoeste)."/>
+</item>
+<item id="30297" name="borda cobblestone/terra (icse)">  <!-- border_cobble_dirt_icse (decoration, clientId 24023) -->
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30298" name="tábua da ponte">  <!-- bridge_wood_center (ground, clientId 24024) -->
+	<attribute key="description" value="Tábuas firmes de uma ponte de madeira."/>
+</item>
+<item id="30299" name="cabeceira oeste da ponte">  <!-- bridge_wood_head_west (ground, clientId 24025) -->
+	<attribute key="description" value="Onde a ponte de madeira encosta na margem oeste."/>
+</item>
+<item id="30300" name="cabeceira leste da ponte">  <!-- bridge_wood_head_east (ground, clientId 24026) -->
+	<attribute key="description" value="Onde a ponte de madeira encosta na margem leste."/>
+</item>
+<item id="30301" name="corrimão da ponte (norte)">  <!-- bridge_wood_rail_north (wall, clientId 24027) -->
+	<attribute key="description" value="Corrimão de madeira do lado norte da ponte."/>
+</item>
+<item id="30302" name="corrimão da ponte (sul)">  <!-- bridge_wood_rail_south (wall, clientId 24028) -->
+	<attribute key="description" value="Corrimão de madeira do lado sul da ponte."/>
+</item>
+<item id="30303" name="pedra pequena">  <!-- rock_small (decoration, clientId 24029) -->
+	<attribute key="description" value="Uma pedra pequena, meio afundada na terra."/>
+</item>
+<item id="30304" name="pedra média">  <!-- rock_medium (decoration, clientId 24030) -->
+	<attribute key="description" value="Uma pedra de bom tamanho."/>
+</item>
+<item id="30305" name="pedregulho">  <!-- rock_large (decoration, clientId 24031) -->
+	<attribute key="description" value="Um pedregulho grande demais para mover."/>
+</item>
+<item id="30306" name="toco de árvore">  <!-- tree_stump_0 (decoration, clientId 24032) -->
+	<attribute key="description" value="O que sobrou de uma árvore derrubada."/>
+</item>
+<item id="30307" name="toco de árvore rachado">  <!-- tree_stump_1 (decoration, clientId 24033) -->
+	<attribute key="description" value="Um toco velho, com uma lasca quebrada na lateral."/>
+</item>
+<item id="30308" name="florzinha amarela">  <!-- wildflower_yellow (decoration, clientId 24034) -->
+	<attribute key="description" value="Uma florzinha silvestre amarela."/>
+</item>
+<item id="30309" name="florzinha rosa">  <!-- wildflower_pink (decoration, clientId 24035) -->
+	<attribute key="description" value="Uma florzinha silvestre rosa."/>
+</item>
+<item id="30310" name="florzinha branca">  <!-- wildflower_white (decoration, clientId 24036) -->
+	<attribute key="description" value="Uma florzinha silvestre branca."/>
+</item>
+<item id="30311" name="tufo de grama alta">  <!-- tall_grass_0 (decoration, clientId 24037) -->
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30312" name="tufo de grama alta">  <!-- tall_grass_1 (decoration, clientId 24038) -->
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30313" name="tufo de grama alta">  <!-- tall_grass_2 (decoration, clientId 24039) -->
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30314" name="cogumelo vermelho">  <!-- mushroom_red (decoration, clientId 24040) -->
+	<attribute key="description" value="Um cogumelo vermelho de pintas brancas. Melhor não comer."/>
+</item>
+<item id="30315" name="cogumelo castanho">  <!-- mushroom_brown (decoration, clientId 24041) -->
+	<attribute key="description" value="Um cogumelo castanho comum."/>
+</item>
+<item id="30316" name="galho caído">  <!-- fallen_branch (decoration, clientId 24042) -->
+	<attribute key="description" value="Um galho seco, caído no chão."/>
+</item>
+<item id="30317" name="poça d'água">  <!-- small_puddle (decoration, clientId 24043) -->
+	<attribute key="description" value="Uma poça d'água rasa, deixada pela última chuva."/>
+</item>
+<item id="30318" name="tocha de rua">  <!-- street_torch (decoration, clientId 24044) -->
+	<attribute key="description" value="Uma tocha de rua num poste, sempre acesa."/>
+</item>
+<item id="30319" name="placa de trilha">  <!-- signpost_trail (decoration, clientId 24045) -->
+	<attribute key="description" value="Uma placa de madeira apontando o caminho."/>
+</item>
+<item id="30320" name="barril">  <!-- wood_barrel (decoration, clientId 24046) -->
+	<attribute key="description" value="Um barril de madeira, fechado."/>
+</item>
+<item id="30321" name="caixote">  <!-- wood_crate (decoration, clientId 24047) -->
+	<attribute key="description" value="Um caixote de madeira empilhável."/>
+</item>
+<item id="30322" name="cerca de madeira">  <!-- wood_fence_h (wall, clientId 24048) -->
+	<attribute key="description" value="Uma cerca de madeira leste-oeste."/>
+</item>
+<item id="30323" name="cerca de madeira">  <!-- wood_fence_v (wall, clientId 24049) -->
+	<attribute key="description" value="Uma cerca de madeira norte-sul."/>
+</item>
+<item id="30324" name="cerca de madeira (canto)">  <!-- wood_fence_corner (wall, clientId 24050) -->
+	<attribute key="description" value="O canto de uma cerca de madeira."/>
+</item>
+<item id="30325" name="pedra do caminho">  <!-- stepping_stone_0 (decoration, clientId 24051) -->
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
+<item id="30326" name="pedra do caminho">  <!-- stepping_stone_1 (decoration, clientId 24052) -->
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
+<item id="30327" name="pedra do caminho">  <!-- stepping_stone_2 (decoration, clientId 24053) -->
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>

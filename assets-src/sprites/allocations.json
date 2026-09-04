@@ -1,8 +1,8 @@
 {
   "format": 1,
   "_doc": "Alocacao PERMANENTE de ids para os tiles de assets-src/sprites/tiles.json. Nunca edite nem apague uma entrada: o id ficaria orfao em mapas e saves ja gravados. Gerado por tools/spr/build_assets.py.",
-  "next_server_id": 30250,
-  "next_client_id": 23976,
+  "next_server_id": 30328,
+  "next_client_id": 24054,
   "by_key": {
     "tatami_floor": {
       "server_id": 30000,
@@ -1003,6 +1003,318 @@
     "bld_green_gate_c_1_1": {
       "server_id": 30249,
       "client_id": 23975
+    },
+    "border_grass_dirt_n": {
+      "server_id": 30250,
+      "client_id": 23976
+    },
+    "border_grass_dirt_s": {
+      "server_id": 30251,
+      "client_id": 23977
+    },
+    "border_grass_dirt_e": {
+      "server_id": 30252,
+      "client_id": 23978
+    },
+    "border_grass_dirt_w": {
+      "server_id": 30253,
+      "client_id": 23979
+    },
+    "border_grass_dirt_cnw": {
+      "server_id": 30254,
+      "client_id": 23980
+    },
+    "border_grass_dirt_cne": {
+      "server_id": 30255,
+      "client_id": 23981
+    },
+    "border_grass_dirt_csw": {
+      "server_id": 30256,
+      "client_id": 23982
+    },
+    "border_grass_dirt_cse": {
+      "server_id": 30257,
+      "client_id": 23983
+    },
+    "border_grass_dirt_icnw": {
+      "server_id": 30258,
+      "client_id": 23984
+    },
+    "border_grass_dirt_icne": {
+      "server_id": 30259,
+      "client_id": 23985
+    },
+    "border_grass_dirt_icsw": {
+      "server_id": 30260,
+      "client_id": 23986
+    },
+    "border_grass_dirt_icse": {
+      "server_id": 30261,
+      "client_id": 23987
+    },
+    "border_grass_water_n": {
+      "server_id": 30262,
+      "client_id": 23988
+    },
+    "border_grass_water_s": {
+      "server_id": 30263,
+      "client_id": 23989
+    },
+    "border_grass_water_e": {
+      "server_id": 30264,
+      "client_id": 23990
+    },
+    "border_grass_water_w": {
+      "server_id": 30265,
+      "client_id": 23991
+    },
+    "border_grass_water_cnw": {
+      "server_id": 30266,
+      "client_id": 23992
+    },
+    "border_grass_water_cne": {
+      "server_id": 30267,
+      "client_id": 23993
+    },
+    "border_grass_water_csw": {
+      "server_id": 30268,
+      "client_id": 23994
+    },
+    "border_grass_water_cse": {
+      "server_id": 30269,
+      "client_id": 23995
+    },
+    "border_grass_water_icnw": {
+      "server_id": 30270,
+      "client_id": 23996
+    },
+    "border_grass_water_icne": {
+      "server_id": 30271,
+      "client_id": 23997
+    },
+    "border_grass_water_icsw": {
+      "server_id": 30272,
+      "client_id": 23998
+    },
+    "border_grass_water_icse": {
+      "server_id": 30273,
+      "client_id": 23999
+    },
+    "border_grass_mud_n": {
+      "server_id": 30274,
+      "client_id": 24000
+    },
+    "border_grass_mud_s": {
+      "server_id": 30275,
+      "client_id": 24001
+    },
+    "border_grass_mud_e": {
+      "server_id": 30276,
+      "client_id": 24002
+    },
+    "border_grass_mud_w": {
+      "server_id": 30277,
+      "client_id": 24003
+    },
+    "border_grass_mud_cnw": {
+      "server_id": 30278,
+      "client_id": 24004
+    },
+    "border_grass_mud_cne": {
+      "server_id": 30279,
+      "client_id": 24005
+    },
+    "border_grass_mud_csw": {
+      "server_id": 30280,
+      "client_id": 24006
+    },
+    "border_grass_mud_cse": {
+      "server_id": 30281,
+      "client_id": 24007
+    },
+    "border_grass_mud_icnw": {
+      "server_id": 30282,
+      "client_id": 24008
+    },
+    "border_grass_mud_icne": {
+      "server_id": 30283,
+      "client_id": 24009
+    },
+    "border_grass_mud_icsw": {
+      "server_id": 30284,
+      "client_id": 24010
+    },
+    "border_grass_mud_icse": {
+      "server_id": 30285,
+      "client_id": 24011
+    },
+    "border_cobble_dirt_n": {
+      "server_id": 30286,
+      "client_id": 24012
+    },
+    "border_cobble_dirt_s": {
+      "server_id": 30287,
+      "client_id": 24013
+    },
+    "border_cobble_dirt_e": {
+      "server_id": 30288,
+      "client_id": 24014
+    },
+    "border_cobble_dirt_w": {
+      "server_id": 30289,
+      "client_id": 24015
+    },
+    "border_cobble_dirt_cnw": {
+      "server_id": 30290,
+      "client_id": 24016
+    },
+    "border_cobble_dirt_cne": {
+      "server_id": 30291,
+      "client_id": 24017
+    },
+    "border_cobble_dirt_csw": {
+      "server_id": 30292,
+      "client_id": 24018
+    },
+    "border_cobble_dirt_cse": {
+      "server_id": 30293,
+      "client_id": 24019
+    },
+    "border_cobble_dirt_icnw": {
+      "server_id": 30294,
+      "client_id": 24020
+    },
+    "border_cobble_dirt_icne": {
+      "server_id": 30295,
+      "client_id": 24021
+    },
+    "border_cobble_dirt_icsw": {
+      "server_id": 30296,
+      "client_id": 24022
+    },
+    "border_cobble_dirt_icse": {
+      "server_id": 30297,
+      "client_id": 24023
+    },
+    "bridge_wood_center": {
+      "server_id": 30298,
+      "client_id": 24024
+    },
+    "bridge_wood_head_west": {
+      "server_id": 30299,
+      "client_id": 24025
+    },
+    "bridge_wood_head_east": {
+      "server_id": 30300,
+      "client_id": 24026
+    },
+    "bridge_wood_rail_north": {
+      "server_id": 30301,
+      "client_id": 24027
+    },
+    "bridge_wood_rail_south": {
+      "server_id": 30302,
+      "client_id": 24028
+    },
+    "rock_small": {
+      "server_id": 30303,
+      "client_id": 24029
+    },
+    "rock_medium": {
+      "server_id": 30304,
+      "client_id": 24030
+    },
+    "rock_large": {
+      "server_id": 30305,
+      "client_id": 24031
+    },
+    "tree_stump_0": {
+      "server_id": 30306,
+      "client_id": 24032
+    },
+    "tree_stump_1": {
+      "server_id": 30307,
+      "client_id": 24033
+    },
+    "wildflower_yellow": {
+      "server_id": 30308,
+      "client_id": 24034
+    },
+    "wildflower_pink": {
+      "server_id": 30309,
+      "client_id": 24035
+    },
+    "wildflower_white": {
+      "server_id": 30310,
+      "client_id": 24036
+    },
+    "tall_grass_0": {
+      "server_id": 30311,
+      "client_id": 24037
+    },
+    "tall_grass_1": {
+      "server_id": 30312,
+      "client_id": 24038
+    },
+    "tall_grass_2": {
+      "server_id": 30313,
+      "client_id": 24039
+    },
+    "mushroom_red": {
+      "server_id": 30314,
+      "client_id": 24040
+    },
+    "mushroom_brown": {
+      "server_id": 30315,
+      "client_id": 24041
+    },
+    "fallen_branch": {
+      "server_id": 30316,
+      "client_id": 24042
+    },
+    "small_puddle": {
+      "server_id": 30317,
+      "client_id": 24043
+    },
+    "street_torch": {
+      "server_id": 30318,
+      "client_id": 24044
+    },
+    "signpost_trail": {
+      "server_id": 30319,
+      "client_id": 24045
+    },
+    "wood_barrel": {
+      "server_id": 30320,
+      "client_id": 24046
+    },
+    "wood_crate": {
+      "server_id": 30321,
+      "client_id": 24047
+    },
+    "wood_fence_h": {
+      "server_id": 30322,
+      "client_id": 24048
+    },
+    "wood_fence_v": {
+      "server_id": 30323,
+      "client_id": 24049
+    },
+    "wood_fence_corner": {
+      "server_id": 30324,
+      "client_id": 24050
+    },
+    "stepping_stone_0": {
+      "server_id": 30325,
+      "client_id": 24051
+    },
+    "stepping_stone_1": {
+      "server_id": 30326,
+      "client_id": 24052
+    },
+    "stepping_stone_2": {
+      "server_id": 30327,
+      "client_id": 24053
     }
   }
 }

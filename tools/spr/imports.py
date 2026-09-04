@@ -16,7 +16,7 @@ import json
 import os
 import sys
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 CELL = 32
 FLAG_ANIMATION = 1 << 24        # itemflags_t do items.otb (ver FORMATO.md secao 5)
@@ -70,6 +70,49 @@ def fit(img, tiles, anchor="bottom", upscale_small=False):
     x = (box - img.width) // 2
     y = box - img.height if anchor == "bottom" else (box - img.height) // 2
     out.paste(img, (x, y))
+    return out
+
+
+def _foot_center(img):
+    """Centro horizontal do APOIO: centroide dos pixels opacos do terco inferior.
+
+    Centralizar pela caixa faz o corpo escorregar quando um braco/perna se estende
+    para fora (poses de ataque, passo largo). O ponto de contato com o chao e o que
+    precisa ficar parado entre as fases."""
+    px = img.load()
+    y0 = max(0, img.height - max(4, img.height // 3))
+    tot = n = 0
+    for y in range(y0, img.height):
+        for x in range(img.width):
+            if px[x, y][3] >= 128:
+                tot += x
+                n += 1
+    if not n:
+        return img.width / 2.0
+    return tot / float(n)
+
+
+def fit_uniform(img, box, scale, mirror=False):
+    """Encaixa um quadro numa celula de `box` px com uma escala JA DECIDIDA.
+
+    Ao contrario de `fit()`, que redimensiona cada quadro para preencher a celula,
+    aqui a escala e a MESMA para todos os quadros da criatura — senao o boneco
+    encolhe e cresce a cada fase e a cada direcao. Depois de escalar, o quadro e
+    alinhado pela BASE (pes no chao da celula) e pelo centro do apoio.
+    """
+    img = _trim(img.convert("RGBA"))
+    if mirror:
+        img = ImageOps.mirror(img)
+    if scale < 1.0:
+        w = max(1, round(img.width * scale))
+        h = max(1, round(img.height * scale))
+        img = img.resize((w, h), Image.LANCZOS)
+    img = _binarize(img.convert("RGBA"))
+    img = _trim(img)                      # o LANCZOS pode devolver borda vazia
+    out = Image.new("RGBA", (box, box), (0, 0, 0, 0))
+    x = int(round(box / 2.0 - _foot_center(img)))
+    x = max(min(x, box - img.width), min(0, box - img.width))
+    out.paste(img, (x, box - img.height))
     return out
 
 
@@ -163,8 +206,99 @@ class Importer:
         img.save(path)
         return os.path.relpath(path, self.sheet_root).replace(os.sep, "/")
 
+    # ---- criaturas: quadro solto de uma entrada `directions`
+    def _dir_frame(self, spec, e):
+        """Um quadro de `directions`: "caminho.png" ou {"src":..., "mirror":true}."""
+        if isinstance(spec, str):
+            spec = {"src": spec}
+        img = self._open({"src": spec["src"], "crop": spec.get("crop", e.get("crop"))})
+        if img is None:
+            return None
+        return _trim(img), bool(spec.get("mirror"))
+
+    def creature_dirs(self, e):
+        """Criatura com arte POR DIRECAO e ciclo de andar (ver README/FORMATO).
+
+            "directions": {
+              "0": {"idle": "a.png", "walk": ["b.png", "a.png",
+                                              {"src": "b.png", "mirror": true}]},
+              "1": {...}, "2": {...},
+              "3": {"mirror_of": 1}            <- espelha a direcao 1
+            }
+
+        Direcoes na ordem do enum Otc::Direction: 0=Norte, 1=Leste, 2=Sul, 3=Oeste.
+        Produz frame group 0 (parado, 1 fase) + frame group 1 (andando, N fases),
+        `layers = 1` (a arte importada ja vem colorida).
+
+        Todos os quadros usam a MESMA escala (a maior que faz o quadro mais alto
+        caber na celula) e sao alinhados pela base dos pes — e o que impede o
+        boneco de "pular" e de mudar de tamanho ao virar ou andar.
+        """
+        dirs = e["directions"]
+        raw = {}          # d -> [(img, mirror), ...]  (indice 0 = parado)
+        pend = {}         # d -> direcao de origem (mirror_of), resolvido depois
+        n_walk = 0
+        for d in range(DIRECTIONS):
+            cfg = dirs.get(str(d)) or dirs.get(d)
+            if cfg is None:
+                self.warnings.append("%s: direcao %d ausente em 'directions'"
+                                     % (e.get("name", e["id"]), d))
+                return None
+            if "mirror_of" in cfg:
+                pend[d] = int(cfg["mirror_of"])
+                continue
+            walk = cfg.get("walk") or [cfg["idle"]]
+            got = [self._dir_frame(s, e) for s in [cfg["idle"]] + list(walk)]
+            if any(g is None for g in got):
+                return None            # PNG ausente: ja registrado em self.missing
+            raw[d] = got
+            n_walk = max(n_walk, len(walk))
+        for d, src in pend.items():
+            if src not in raw:
+                self.warnings.append("%s: mirror_of %d nao resolve" % (e.get("name"), src))
+                return None
+            raw[d] = [(img, not mir) for img, mir in raw[src]]
+
+        # fases iguais em todas as direcoes (repete a ultima quando faltar)
+        for d in raw:
+            while len(raw[d]) < 1 + n_walk:
+                raw[d].append(raw[d][-1])
+
+        tiles = int(e.get("tiles") or 1)
+        box = tiles * CELL
+        big = max(max(i.width for i, _ in v) for v in raw.values())
+        tall = max(max(i.height for i, _ in v) for v in raw.values())
+        scale = min(box / float(big), box / float(tall), 1.0)
+
+        rows = PHASES_IDLE + n_walk
+        sh = Image.new("RGBA", (DIRECTIONS * box, rows * box), (0, 0, 0, 0))
+        for d in range(DIRECTIONS):
+            for row in range(rows):
+                img, mir = raw[d][row]
+                sh.paste(fit_uniform(img, box, scale, mir), (d * box, row * box))
+        rel = self._save(sh, "look_%03d.png" % e["id"])
+        dur = int(e.get("duration", 220))
+        self.applied["creatures"] += 1
+        return {
+            "category": "creature", "id": e["id"],
+            "name": e.get("name", "import_%03d" % e["id"]),
+            "width": tiles, "height": tiles, "exact_size": min(255, box),
+            "layers": 1,
+            "pattern_x": DIRECTIONS, "pattern_y": 1, "pattern_z": 1,
+            "frame_groups": [
+                {"type": 0, "phases": PHASES_IDLE},
+                {"type": 1, "phases": n_walk,
+                 "animation": {"async": False, "loop_count": 0, "start_phase": 0,
+                               "durations": [[dur, dur]] * n_walk}},
+            ],
+            "sheets": [rel],
+            "_import": "directions",
+        }
+
     # ---- criaturas
     def creature(self, e):
+        if e.get("directions"):
+            return self.creature_dirs(e)
         srcs = e.get("dirs") or [e.get("src")] * DIRECTIONS
         imgs = []
         for rel in srcs:

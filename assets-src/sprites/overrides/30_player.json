@@ -1,0 +1,78 @@
+{
+ "_doc": "Outfit do JOGADOR a partir do material privado assets-src/import/player/ (fora do git, ADR-002). Mesmo esquema do imports.json; o build_assets.py carrega assets-src/sprites/overrides/*.json em ordem de nome DEPOIS do imports.json, entao este 30_ sobrescreve o looktype 128 que o imports.json apontava para monsters_sheet/0.png. Toda entrada cujo PNG nao existir e ignorada com aviso: numa maquina sem o material o build cai de volta no placeholder. A triagem quadro->direcao/fase esta documentada em assets-src/sprites/player_frames.json.",
+ "format": 1,
+ "root": "assets-src/import/player",
+ "build_dir": "assets-src/import/player/_sheets",
+
+ "_doc_creatures": "'directions' (imports.py, Importer.creature_dirs): 0=Norte, 1=Leste, 2=Sul, 3=Oeste; 'idle' = frame group 0 (1 fase), 'walk' = frame group 1 (N fases). Um quadro e uma string ou {\"src\":..., \"mirror\":true}. 'mirror_of': N gera a direcao espelhando a N. layers=1 (arte ja colorida). Escala unica + base dos pes para nao pular ao animar.",
+
+ "creatures": [
+  {
+   "id": 128,
+   "name": "naruto_player",
+   "tiles": 1,
+   "duration": 220,
+   "_uso": "OUTFIT PADRAO DO JOGADOR (looktype 128) + rogue_ninja, merchant_leaf, quest_giver_swamp",
+   "directions": {
+    "0": {
+     "_dir": "norte / costas (aproximacao: nao ha vista de costas no material). 0068 e o UNICO quadro em que os olhos nao foram desenhados — a 32px a faixa clara sob a bandana le como a nuca. O ciclo e 0068 e o seu espelho: o pe da frente troca de lado e o rosto nunca aparece. Testado in-game: usar 0074 na fase de passagem fazia PISCAR um rosto de frente a cada volta do ciclo.",
+     "idle": "sprite_0068.png",
+     "walk": [
+      "sprite_0068.png",
+      {"src": "sprite_0068.png", "mirror": true},
+      "sprite_0068.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste (perfil para a direita)",
+     "idle": "sprite_0080.png",
+     "walk": [
+      "sprite_0084.png",
+      "sprite_0083.png",
+      "sprite_0075.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul / de frente",
+     "idle": "sprite_0071.png",
+     "walk": [
+      "sprite_0070.png",
+      "sprite_0076.png",
+      {"src": "sprite_0070.png", "mirror": true}
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+
+  {
+   "id": 898,
+   "name": "naruto_attack",
+   "tiles": 1,
+   "duration": 140,
+   "_uso": "poses de ataque para jutsus/efeitos futuros. NAO ha monstro/NPC com este looktype: a faixa 878..897 e dos chefes 2x2 do gen_placeholders (BOSS_FIRST..BOSS_LAST), por isso 898. O build_assets.py preenche sozinho os ids sem thing entre o maior placeholder e 898 (laco 'todo id de 1..max precisa existir'), entao nao foi preciso mexer nele.",
+   "_seq": "43 guarda -> 31 carga -> 17 jab -> 12 avanco (todas viradas para a direita)",
+   "directions": {
+    "0": {
+     "idle": "sprite_0043.png",
+     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+    },
+    "1": {
+     "idle": "sprite_0043.png",
+     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+    },
+    "2": {
+     "idle": "sprite_0043.png",
+     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste, para o soco sair no sentido certo",
+     "mirror_of": 1
+    }
+   }
+  }
+ ]
+}

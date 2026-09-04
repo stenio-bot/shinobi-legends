@@ -38239,5 +38239,239 @@
 <item id="30249" name="painel verde c">  
 	<attribute key="description" value="Painel Verde C (peça 1,1)."/>
 </item>
+<item id="30250" name="borda grama/terra (n)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (norte)."/>
+</item>
+<item id="30251" name="borda grama/terra (s)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (sul)."/>
+</item>
+<item id="30252" name="borda grama/terra (e)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (leste)."/>
+</item>
+<item id="30253" name="borda grama/terra (w)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (oeste)."/>
+</item>
+<item id="30254" name="borda grama/terra (cnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo noroeste)."/>
+</item>
+<item id="30255" name="borda grama/terra (cne)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo nordeste)."/>
+</item>
+<item id="30256" name="borda grama/terra (csw)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo sudoeste)."/>
+</item>
+<item id="30257" name="borda grama/terra (cse)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto externo sudeste)."/>
+</item>
+<item id="30258" name="borda grama/terra (icnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno noroeste)."/>
+</item>
+<item id="30259" name="borda grama/terra (icne)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno nordeste)."/>
+</item>
+<item id="30260" name="borda grama/terra (icsw)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudoeste)."/>
+</item>
+<item id="30261" name="borda grama/terra (icse)">  
+	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30262" name="borda grama/agua (n)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (norte)."/>
+</item>
+<item id="30263" name="borda grama/agua (s)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (sul)."/>
+</item>
+<item id="30264" name="borda grama/agua (e)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (leste)."/>
+</item>
+<item id="30265" name="borda grama/agua (w)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (oeste)."/>
+</item>
+<item id="30266" name="borda grama/agua (cnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo noroeste)."/>
+</item>
+<item id="30267" name="borda grama/agua (cne)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo nordeste)."/>
+</item>
+<item id="30268" name="borda grama/agua (csw)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo sudoeste)."/>
+</item>
+<item id="30269" name="borda grama/agua (cse)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto externo sudeste)."/>
+</item>
+<item id="30270" name="borda grama/agua (icnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno noroeste)."/>
+</item>
+<item id="30271" name="borda grama/agua (icne)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno nordeste)."/>
+</item>
+<item id="30272" name="borda grama/agua (icsw)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudoeste)."/>
+</item>
+<item id="30273" name="borda grama/agua (icse)">  
+	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudeste)."/>
+</item>
+<item id="30274" name="borda grama/lama (n)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (norte)."/>
+</item>
+<item id="30275" name="borda grama/lama (s)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (sul)."/>
+</item>
+<item id="30276" name="borda grama/lama (e)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (leste)."/>
+</item>
+<item id="30277" name="borda grama/lama (w)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (oeste)."/>
+</item>
+<item id="30278" name="borda grama/lama (cnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo noroeste)."/>
+</item>
+<item id="30279" name="borda grama/lama (cne)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo nordeste)."/>
+</item>
+<item id="30280" name="borda grama/lama (csw)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo sudoeste)."/>
+</item>
+<item id="30281" name="borda grama/lama (cse)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto externo sudeste)."/>
+</item>
+<item id="30282" name="borda grama/lama (icnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno noroeste)."/>
+</item>
+<item id="30283" name="borda grama/lama (icne)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno nordeste)."/>
+</item>
+<item id="30284" name="borda grama/lama (icsw)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudoeste)."/>
+</item>
+<item id="30285" name="borda grama/lama (icse)">  
+	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudeste)."/>
+</item>
+<item id="30286" name="borda cobblestone/terra (n)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (norte)."/>
+</item>
+<item id="30287" name="borda cobblestone/terra (s)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (sul)."/>
+</item>
+<item id="30288" name="borda cobblestone/terra (e)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (leste)."/>
+</item>
+<item id="30289" name="borda cobblestone/terra (w)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (oeste)."/>
+</item>
+<item id="30290" name="borda cobblestone/terra (cnw)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo noroeste)."/>
+</item>
+<item id="30291" name="borda cobblestone/terra (cne)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo nordeste)."/>
+</item>
+<item id="30292" name="borda cobblestone/terra (csw)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo sudoeste)."/>
+</item>
+<item id="30293" name="borda cobblestone/terra (cse)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto externo sudeste)."/>
+</item>
+<item id="30294" name="borda cobblestone/terra (icnw)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno noroeste)."/>
+</item>
+<item id="30295" name="borda cobblestone/terra (icne)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno nordeste)."/>
+</item>
+<item id="30296" name="borda cobblestone/terra (icsw)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudoeste)."/>
+</item>
+<item id="30297" name="borda cobblestone/terra (icse)">  
+	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30298" name="tábua da ponte">  
+	<attribute key="description" value="Tábuas firmes de uma ponte de madeira."/>
+</item>
+<item id="30299" name="cabeceira oeste da ponte">  
+	<attribute key="description" value="Onde a ponte de madeira encosta na margem oeste."/>
+</item>
+<item id="30300" name="cabeceira leste da ponte">  
+	<attribute key="description" value="Onde a ponte de madeira encosta na margem leste."/>
+</item>
+<item id="30301" name="corrimão da ponte (norte)">  
+	<attribute key="description" value="Corrimão de madeira do lado norte da ponte."/>
+</item>
+<item id="30302" name="corrimão da ponte (sul)">  
+	<attribute key="description" value="Corrimão de madeira do lado sul da ponte."/>
+</item>
+<item id="30303" name="pedra pequena">  
+	<attribute key="description" value="Uma pedra pequena, meio afundada na terra."/>
+</item>
+<item id="30304" name="pedra média">  
+	<attribute key="description" value="Uma pedra de bom tamanho."/>
+</item>
+<item id="30305" name="pedregulho">  
+	<attribute key="description" value="Um pedregulho grande demais para mover."/>
+</item>
+<item id="30306" name="toco de árvore">  
+	<attribute key="description" value="O que sobrou de uma árvore derrubada."/>
+</item>
+<item id="30307" name="toco de árvore rachado">  
+	<attribute key="description" value="Um toco velho, com uma lasca quebrada na lateral."/>
+</item>
+<item id="30308" name="florzinha amarela">  
+	<attribute key="description" value="Uma florzinha silvestre amarela."/>
+</item>
+<item id="30309" name="florzinha rosa">  
+	<attribute key="description" value="Uma florzinha silvestre rosa."/>
+</item>
+<item id="30310" name="florzinha branca">  
+	<attribute key="description" value="Uma florzinha silvestre branca."/>
+</item>
+<item id="30311" name="tufo de grama alta">  
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30312" name="tufo de grama alta">  
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30313" name="tufo de grama alta">  
+	<attribute key="description" value="Um tufo de grama alta, balançando ao vento."/>
+</item>
+<item id="30314" name="cogumelo vermelho">  
+	<attribute key="description" value="Um cogumelo vermelho de pintas brancas. Melhor não comer."/>
+</item>
+<item id="30315" name="cogumelo castanho">  
+	<attribute key="description" value="Um cogumelo castanho comum."/>
+</item>
+<item id="30316" name="galho caído">  
+	<attribute key="description" value="Um galho seco, caído no chão."/>
+</item>
+<item id="30317" name="poça d'água">  
+	<attribute key="description" value="Uma poça d'água rasa, deixada pela última chuva."/>
+</item>
+<item id="30318" name="tocha de rua">  
+	<attribute key="description" value="Uma tocha de rua num poste, sempre acesa."/>
+</item>
+<item id="30319" name="placa de trilha">  
+	<attribute key="description" value="Uma placa de madeira apontando o caminho."/>
+</item>
+<item id="30320" name="barril">  
+	<attribute key="description" value="Um barril de madeira, fechado."/>
+</item>
+<item id="30321" name="caixote">  
+	<attribute key="description" value="Um caixote de madeira empilhável."/>
+</item>
+<item id="30322" name="cerca de madeira">  
+	<attribute key="description" value="Uma cerca de madeira leste-oeste."/>
+</item>
+<item id="30323" name="cerca de madeira">  
+	<attribute key="description" value="Uma cerca de madeira norte-sul."/>
+</item>
+<item id="30324" name="cerca de madeira (canto)">  
+	<attribute key="description" value="O canto de uma cerca de madeira."/>
+</item>
+<item id="30325" name="pedra do caminho">  
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
+<item id="30326" name="pedra do caminho">  
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
+<item id="30327" name="pedra do caminho">  
+	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
 <!-- NARUTO:END -->
 </items>

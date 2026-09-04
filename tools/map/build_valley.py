@@ -68,6 +68,114 @@ WOOD_FLOOR = 405                                 # wooden floor (interiores)
 MUD = [19947, 354, 355, 11145]                   # swamp mud / muddy floor
 WATER = 4608                                     # shallow water (bloqueia)
 
+# --------------------------------------------------------- autoborder (chao)
+# Hierarquia agua < lama < terra < grama < cobble: o material mais ALTO manda
+# uma faixa ondulada (item border_<par>_<peca> de assets-src/sprites/tiles.json,
+# arte em tools/spr/gen_borders.py) por cima do tile do material mais BAIXO.
+# So os 4 pares com arte gerada sao tratados; qualquer outra vizinhanca (p.ex.
+# grama/cobble, chao de pedra/madeira dos predios) fica sem borda.
+_GRASS_SET = set(GRASS)
+_DIRT_SET = set(DIRT)
+_COBBLE_SET = set(COBBLE)
+_MUD_SET = set(MUD)
+
+BORDER_INVADERS = {
+    "dirt": ("grass", "cobble"),
+    "water": ("grass",),
+    "mud": ("grass",),
+}
+BORDER_PAIR_KEY = {
+    ("grass", "dirt"): "grass_dirt",
+    ("grass", "water"): "grass_water",
+    ("grass", "mud"): "grass_mud",
+    ("cobble", "dirt"): "cobble_dirt",
+}
+BORDER_PIECES = ("n", "s", "e", "w", "cnw", "cne", "csw", "cse",
+                 "icnw", "icne", "icsw", "icse")
+
+
+def classify_ground(gid):
+    if gid in _GRASS_SET:
+        return "grass"
+    if gid in _DIRT_SET:
+        return "dirt"
+    if gid in _COBBLE_SET:
+        return "cobble"
+    if gid in _MUD_SET:
+        return "mud"
+    if gid == WATER:
+        return "water"
+    return None
+
+
+def apply_borders(b, sid):
+    """Passe final: para cada tile de material BAIXO (dirt/water/mud), olha os
+    8 vizinhos e estampa as pecas de borda dos materiais ALTOS adjacentes
+    (bitmask classico de autoborder: retas quando o vizinho ortogonal bate,
+    canto EXTERNO quando so a diagonal bate (os dois ortogonais nao), canto
+    INTERNO quando os dois ortogonais da diagonal batem junto com ela).
+    Devolve quantas pecas de borda foram colocadas."""
+    cells = b.cells
+
+    def mat_at(x, y):
+        c = cells.get((x, y))
+        if c is None or c.ground is None:
+            return None
+        return classify_ground(c.ground)
+
+    placed = 0
+    for (x, y), c in list(cells.items()):
+        if c.ground is None:
+            continue
+        lo = classify_ground(c.ground)
+        invaders = BORDER_INVADERS.get(lo)
+        if not invaders:
+            continue
+        for hi in invaders:
+            n = mat_at(x, y - 1) == hi
+            s = mat_at(x, y + 1) == hi
+            e = mat_at(x + 1, y) == hi
+            w = mat_at(x - 1, y) == hi
+            ne = mat_at(x + 1, y - 1) == hi
+            nw = mat_at(x - 1, y - 1) == hi
+            se = mat_at(x + 1, y + 1) == hi
+            sw = mat_at(x - 1, y + 1) == hi
+            if not (n or s or e or w or ne or nw or se or sw):
+                continue
+            pieces = []
+            if n:
+                pieces.append("n")
+            if s:
+                pieces.append("s")
+            if e:
+                pieces.append("e")
+            if w:
+                pieces.append("w")
+            if nw and not n and not w:
+                pieces.append("cnw")
+            elif n and w and nw:
+                pieces.append("icnw")
+            if ne and not n and not e:
+                pieces.append("cne")
+            elif n and e and ne:
+                pieces.append("icne")
+            if sw and not s and not w:
+                pieces.append("csw")
+            elif s and w and sw:
+                pieces.append("icsw")
+            if se and not s and not e:
+                pieces.append("cse")
+            elif s and e and se:
+                pieces.append("icse")
+            pk = BORDER_PAIR_KEY[(hi, lo)]
+            for piece in pieces:
+                sidv = sid.get("border_%s_%s" % (pk, piece))
+                if sidv is None:
+                    continue
+                b.put(x, y, sidv)
+                placed += 1
+    return placed
+
 TREES = [2700, 2701, 2702, 2707, 2712]           # fir/sycamore/willow/beech/pine
 DEAD_TREES = [2709, 2713, 2714, 2715, 2716]      # dead tree
 BUSHES = [2767, 2784, 3986]                      # bush / dry bush / thorn bush
@@ -824,6 +932,15 @@ def main():
     b, npcs = build(tpls, sid)
     carve_clearings(b)
     connect_clearings(b)
+    import decor
+    if all(k in sid for k in ("bridge_wood_center", "rock_small", "street_torch")):
+        decor.place_bridge(b, sid)
+        decor.place_forest_decor(b, sid, b.rng)
+        decor.place_camp_decor(b, sid)
+        decor.place_village_decor(b, sid)
+    else:
+        print("AVISO: tiles de decoração sem id em allocations.json; ponte/cenário não aplicados")
+    borders_placed = apply_borders(b, sid)
     sf = build_spawns(b, npcs)
 
     problems, walk, reach = validate(b, types, sf, npcs)
@@ -850,6 +967,7 @@ def main():
     print("  itens totais ..... %d" % sum(m.item_count_by_id().values()))
     print("  caminhaveis ...... %d  alcancaveis do templo: %d (%.1f%%)"
           % (len(walk), len(reach), 100.0 * len(reach) / len(walk)))
+    print("  bordas (autoborder) %d pecas" % borders_placed)
     print("  grupos de spawn .. %d" % len(sf.groups))
     print("  monstros ......... %d" % sf.monster_count())
     print("  NPCs ............. %d" % sf.npc_count())

@@ -284,8 +284,10 @@ importada já vem colorida, então vai com **`layers = 1`**: o cliente só aplic
 `head/body/legs/feet` quando `layers == 2`, logo os valores do `tfs_mapping.json`
 passam a ser ignorados nesses looktypes. Consequência direta: **monstros que
 compartilham looktype ficam idênticos** (ex.: `bandit` e `bandit_archer` são os
-dois o 129). Como não há direções nem quadros de andar no material, a mesma
-imagem vai nas 4 direções e nas 3 fases de caminhada.
+dois o 129). Nas folhas de monstro não há direções nem quadros de andar, então a
+mesma imagem vai nas 4 direções e nas 3 fases de caminhada. **Exceção**: entradas
+com o bloco `directions` (ver "Outfit do jogador") têm arte por direção e ciclo
+de andar de verdade.
 
 ### Receita completa
 
@@ -295,6 +297,129 @@ imagem vai nas 4 direções e nas 3 fases de caminhada.
 .venv/bin/python tools/spr/build_assets.py      # 3. compilar .spr/.dat
 .venv/bin/python tools/spr/dump_dat.py          # 4. validacao: OK, divergencias=0
 ```
+
+## Outfit do jogador (`overrides/30_player.json` + `player_frames.json`)
+
+O looktype **128** (outfit padrão do jogador) e o looktype **898**
+(`naruto_attack`, poses de golpe para jutsus/efeitos futuros) saem de um material
+privado do usuário em `assets-src/import/player/` — 76 quadros RGBA de
+17..33 × 30..41 px, fora do git (ADR-002). O `_contact.png` da pasta é a folha de
+revisão numerada.
+
+```bash
+.venv/bin/python tools/spr/build_assets.py      # aplica overrides/30_player.json
+.venv/bin/python tools/spr/dump_dat.py          # validacao: OK, divergencias=0
+```
+
+### O que o material é (e o que não é)
+
+Não é um set top-down de 4 direções: é um set de **vista lateral** de jogo de
+ação, com poses de ataque/pulo (0012–0059) e de parado/andar (0060–0087). Todos os
+76 quadros mostram o rosto — frontal ou 3/4 virado para a **direita**. **Não
+existe nenhuma vista de costas** (conferido pixel a pixel: há pele na faixa da
+cabeça em 76/76 quadros). Por isso a direção 0 (norte) é uma aproximação e a
+direção 3 (oeste) é espelhada da 1.
+
+A triagem quadro → (direção, fase) fica versionada em
+**`assets-src/sprites/player_frames.json`** — só índices e a justificativa de cada
+escolha, nenhuma imagem. Quem o build lê de verdade é
+`assets-src/sprites/overrides/30_player.json`.
+
+| Direção | Parado | Andar (contato, passagem, contato oposto) |
+|---|---|---|
+| 0 Norte (costas) | 0068 | 0068, 0068 espelhado, 0068 |
+| 1 Leste | 0080 | 0084, 0083, 0075 |
+| 2 Sul (frente) | 0071 | 0070, 0076, 0070 espelhado |
+| 3 Oeste | espelho do leste | espelho do leste |
+
+O ciclo do leste foi escolhido medindo os **pés** (pixels de sandália no terço
+inferior): 0084 = pé direito no ar (vão 15 px), 0083 = pés juntos na passagem
+(vão 2 px), 0075 = pé esquerdo no ar (vão 13 px), os três com 39 px de altura.
+0068 é o único quadro **alto** em que os olhos não foram desenhados: a 32 px a
+faixa clara sob a bandana lê como a nuca, e por ser alto virar de sul para norte
+não encolhe o boneco.
+
+O ataque 898 usa 0043 (guarda) → 0031 (recuo) → 0017 (jab) → 0012 (avanço), nas 4
+fases do frame group "andando".
+
+### `directions` no `imports.py`
+
+`Importer.creature_dirs` aceita, numa entrada de `creatures`, um bloco
+`directions` no lugar do `src`/`dirs` único (que continua funcionando igual):
+
+```jsonc
+"directions": {
+  "0": { "idle": "sprite_0068.png",
+         "walk": ["sprite_0068.png",
+                  {"src": "sprite_0068.png", "mirror": true},
+                  "sprite_0068.png"] },
+  "1": { "idle": "...", "walk": ["...", "...", "..."] },
+  "2": { "...": "..." },
+  "3": { "mirror_of": 1 }        // espelha a direção 1, quadro a quadro
+}
+```
+
+- Direções na ordem do enum `Otc::Direction` (`pattern_x` do `.dat`):
+  **0 = Norte, 1 = Leste, 2 = Sul, 3 = Oeste**.
+- `idle` vira o frame group 0 (1 fase); `walk` vira o frame group 1 com **N**
+  fases (3 no outfit, 4 no ataque — o número é livre, só precisa bater entre as
+  direções; quem tiver menos repete o último quadro).
+- Um quadro é uma string ou `{"src": ..., "mirror": true, "crop": [...]}`.
+- `layers = 1`, como toda arte importada.
+- `"duration"` (ms por fase, padrão 220) controla a velocidade da animação.
+
+### Normalização: por que os quadros não "pulam"
+
+`fit()` (usado pelas entradas antigas) redimensiona **cada** quadro para preencher
+a célula — com quadros de alturas diferentes o boneco cresce e encolhe a cada
+fase. As entradas com `directions` usam `fit_uniform()`:
+
+1. **Uma escala só** para todos os quadros da entrada:
+   `min(32/maior_largura, 32/maior_altura, 1.0)` — no outfit dá 32/40 = **0,80**.
+   LANCZOS na redução e alpha rebinarizado depois (o `.spr` 1098 é RGB).
+2. **Base dos pés** no fundo da célula de 32×32.
+3. **Centro do apoio** no meio da célula: o centroide dos pixels opacos do terço
+   inferior, não o centro da caixa. Centralizar pela caixa faz o corpo escorregar
+   quando um braço ou perna sai para fora (poses de ataque, passo largo).
+
+Personagem da Tibia é **1×1**: os quadros de até 41 px são *reduzidos* para caber
+em 32×32, nunca cortados nem promovidos a 1×2.
+
+### Faixa de ids
+
+`gen_placeholders.py` reserva `BOSS_FIRST..BOSS_LAST` (20 looktypes acima do maior
+citado nos XML do TFS, hoje 878..897) para chefes 2×2 — por isso o ataque usa
+**898**. Não foi preciso mexer no `build_assets.py`: ele já grava
+`maxCreatureId = max(tables[creature])` e preenche com thing vazio todo id sem
+arte no intervalo ("todo id de 1..max precisa existir"). Depois desta mudança o
+`.dat` tem 898 criaturas em vez de 897.
+
+### Teste in-game (2 rodadas)
+
+Cópia temporária de `client-otc/tests/autotest_rc.lua` em
+`client-otc/shinobirc.lua`: login `god`, `/arena` (sai da protection zone),
+`/looktype 128`, `g_game.walk` 6× em cada direção e `g_app.doScreenshot` a cada
+130 ms durante o movimento. Resultado em `screenshots/player_*.png`.
+
+- **Rodada 1** pegou um defeito: a fase de passagem do norte era o quadro 0074
+  (cabeça baixa, mas com rosto desenhado) e **piscava um rosto de frente** a cada
+  volta do ciclo. Trocada pelo espelho do 0068.
+- **Rodada 2** (final): as 4 direções corretas, pés no chão em todas as fases,
+  sem mudança de tamanho ao virar, leste e oeste espelhados, ciclo do leste com
+  as 3 poses visivelmente distintas.
+
+### Limitações
+
+- Não há vista de costas: o norte é 0068 + espelho, então o ciclo tem só **2
+  poses distintas** e lê como um balanço, não como uma passada.
+- Não há passo frontal: o sul usa 0070 e o seu espelho para simular a alternância.
+- O oeste é espelhado do leste, então bandana e zíper trocam de lado (invisível a
+  32 px).
+- Os quadros de 39–41 px são reduzidos a 80% e perdem ~1 px de detalhe no rosto.
+- `layers = 1`: as cores de outfit (`head/body/legs/feet`) que o servidor manda
+  são ignoradas no 128 — todo jogador fica com a mesma roupa laranja.
+- O looktype 898 tem a mesma arte nas 4 direções (só o oeste é espelhado): quem
+  usar precisa travar a direção ou usá-lo apenas como animação.
 
 ## Terreno procedural (`gen_terrain.py` + `overrides/10_terrain.json`)
 
@@ -392,6 +517,79 @@ o id no mapa.
 
 `assets-src/sprites/terrain/_sheets/` é **gerado** pelo build (as folhas já
 encaixadas na grade de 32px); não edite à mão.
+
+## Bordas de terreno / autoborder (`gen_borders.py` + `tiles.json`)
+
+O terreno procedural acima resolve a textura de cada material, mas cada tile
+ainda terminava numa linha reta exatamente no limite dos 32px — a transição
+grama/terra, grama/água, grama/lama e terra/cobblestone era um degrau
+perfeito. `tools/spr/gen_borders.py` desenha os **tiles de borda** (o
+autoborder clássico da Tibia): itens de decoração, com alpha real na
+máscara, desenhados por cima do chão na transição entre dois materiais.
+
+Diferente do terreno (que troca a arte de um id que já existe), borda é
+**item novo**: entra pelo mesmo fluxo de "Criando itens NOVOS" acima
+(`tiles.json` → `allocate_ids.py` → `build_assets.py`), só que com o grupo
+`decoration` + `on_top`/`top_order` (ver tabela de flags em "Criando itens
+NOVOS"). Detalhe completo do algoritmo, da convenção de nomes de par/peça e
+de como `build_valley.py` decide onde colocar cada peça:
+**`docs/sistemas/mapas.md#autoborder`**.
+
+Resumo do pipeline:
+
+```bash
+.venv/bin/python tools/spr/gen_borders.py        # 48 PNGs em terrain/borders/
+# declarar border_<par>_<peca> em assets-src/sprites/tiles.json (feito)
+.venv/bin/python tools/spr/allocate_ids.py        # ids permanentes
+.venv/bin/python tools/map/build_valley.py        # autoborder no mapa (apply_borders)
+.venv/bin/python tools/map/render_preview.py      # PNG de conferência sem cliente
+.venv/bin/python tools/spr/build_assets.py        # só entao grava items.otb/.dat/.spr
+```
+
+Reusa as paletas de `gen_terrain.py` (import direto do módulo, sem duplicar
+`P_GRASS`/`P_DIRT`/`P_WATER`/`P_MUD`/`P_COBBLE`) para a borda casar
+exatamente com o chão que ela cobre.
+
+## Decoração de cenário (`gen_decor.py` + `tiles_decor.json`)
+
+Ponte de madeira, pedras, tocos, flores, tufos de grama alta, cogumelos,
+galho caído, poça decorativa, tocha de rua em poste, placa de trilha,
+barril, caixote, cerca de madeira e caminho de pedras soltas — 30 itens
+novos, 31 PNGs (`stone_large` é 2×2). Igual a bordas, entra pelo fluxo de
+"Criando itens NOVOS" (declarar → `allocate_ids.py` → `build_assets.py`), mas
+com um manifesto **separado**, `assets-src/sprites/tiles_decor.json` (mesmo
+esquema do `tiles.json`), para não colidir com outra edição concorrente do
+`tiles.json` (bordas). O coordenador mescla as duas listas antes de rodar
+`allocate_ids.py` — por isso as entradas de `tiles_decor.json` ainda não têm
+`server_id`/`client_id`.
+
+```bash
+.venv/bin/python tools/spr/gen_decor.py           # PNGs em terrain/decor/
+# mesclar tiles_decor.json em tiles.json (coordenador)
+.venv/bin/python tools/spr/allocate_ids.py        # ids permanentes
+.venv/bin/python tools/map/decor.py               # teste de conectividade isolado (sem otbm)
+.venv/bin/python tools/map/build_valley.py        # mapa completo com a decoração integrada
+.venv/bin/python tools/spr/build_assets.py        # só então grava items.otb/.dat/.spr
+```
+
+Reaproveita as paletas e primitivas de `gen_terrain.py` (`P_WOOD`, `P_STONE`,
+`P_BARK`, `P_GRASS_DOT`, `P_FLOWER`, `P_PUDDLE`, `Rnd`, `put`, `rect`,
+`ellipse`, `outline`, `shade`, `fbm`) em vez de duplicá-las. Fogueira do
+acampamento (id vanilla 1428) e tendas (id vanilla 7605) já existem em
+`gen_terrain.py`/`overrides/10_terrain.json` — não foram redesenhadas.
+
+Flags de alto nível por categoria (ver tabela completa em "Criando itens
+NOVOS"): ponte = `ground` caminhável com `speed` igual ao piso (100, igual a
+405/431); corrimão da ponte = `wall` que bloqueia 1 tile (`walkable: false`,
+`has_height: true`); pedregulho grande = `decoration` bloqueante 2×2; pedras
+pequenas/médias, flores, tufos, cogumelos, galho e pedras de trilha =
+`decoration` caminhável; tocha de rua e fogueira = `decoration` bloqueante
+com `light`; cerca de madeira (H/V/canto) = `wall` bloqueante.
+
+O `tools/map/decor.py` correspondente (funções `place_bridge`,
+`place_forest_decor`, `place_camp_decor`, `place_village_decor`) e a
+integração no mapa estão documentados em
+**`docs/sistemas/mapas.md#decoração-e-ponte`**.
 
 ## Extração de screenshots (`extract_screenshot.py` + `overrides/20_screenshot.json`)
 
@@ -555,8 +753,12 @@ confira com `tools/map/otbm.py`, `OtbmMap.read(...).item_count_by_id()`).
   Tibia, mas exige que o mapa não empilhe árvores em casas adjacentes.
 - A água anima em 3 fases de onda senoidal: o padrão se repete de forma
   perceptível em lâminas grandes.
-- Não há ponte de madeira: o mapa atual atravessa o rio com piso de pedra (431) e
-  cerca (1533) como guarda-corpo.
+- Ponte de madeira desenhada e testada (`tools/spr/gen_decor.py`,
+  `tools/map/decor.py`), mas ainda **não integrada** ao `build_valley.py`
+  principal: até o coordenador mesclar `tiles_decor.json` em `tiles.json`,
+  alocar ids de verdade e chamar `place_bridge`/`place_*` de dentro do build,
+  o mapa gerado continua atravessando o rio com piso de pedra (431) e cerca
+  (1533) como guarda-corpo.
 - Itens animados têm as 2 fases exigidas pelo protocolo, mas as duas apontam para
   o mesmo sprite — então nada se mexe de fato. Para animar de verdade, basta dar
   sprites diferentes às duas fases.
@@ -574,8 +776,11 @@ confira com `tools/map/otbm.py`, `OtbmMap.read(...).item_count_by_id()`).
   ora os itens novos são colocados por script/GM (`/i <serverId>`), não pelo RME.
 - Sprite importado que compartilha looktype com outro monstro/NPC fica idêntico a
   ele: com `layers = 1` as cores de outfit do `tfs_mapping.json` não se aplicam.
-- A arte importada não tem direções nem quadros de andar: as 4 direções e as 3
-  fases de caminhada usam a mesma imagem (o bicho "desliza").
+- A arte importada de monstro não tem direções nem quadros de andar: as 4 direções
+  e as 3 fases de caminhada usam a mesma imagem (o bicho "desliza"). Só o outfit
+  do jogador (looktype 128, `overrides/30_player.json`) usa o bloco `directions`
+  com ciclo real — e mesmo lá o norte é uma aproximação, porque o material não tem
+  vista de costas.
 - Sprites que se sobrepõem na folha original não são separáveis por componente
   conexo; só com `crop` manual no `imports.json`.
 - Recortes maiores que 128 px são reduzidos para caber em 4×4 (o `.dat` não vai
