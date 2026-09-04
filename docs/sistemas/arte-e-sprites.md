@@ -11,25 +11,32 @@ seu próprio compilador de assets: `tools/spr/`.
 
 ```
 data/tfs_mapping.json ─┐
-server/tfs/data/items/items.otb ─┐
-                                 ├─> tools/spr/gen_placeholders.py
-tools/spr/art.py (desenho) ──────┘        │
-                                          ▼
-                          assets-src/sprites/**.png + manifest.json
-                                          │
-                                          ▼
-                          tools/spr/build_assets.py
-                                          │
-                                          ▼
-                client-otc/data/things/1098/Tibia.spr + Tibia.dat
-                                          │
-                                          ▼
-                          tools/spr/dump_dat.py (validação)
+items.otb.vanilla ─────┤
+                       ├─> tools/spr/gen_placeholders.py   (itens que JÁ existem)
+tools/spr/art.py ──────┘        │
+                                ▼
+                assets-src/sprites/**.png + manifest.json ──┐
+                                                            │
+tools/spr/gen_tiles.py ─> assets-src/sprites/tiles/*.png    │
+                          + tiles.json (à mão)         ─────┤ (itens NOVOS)
+                          + allocations.json (ids)          │
+                                                            ▼
+                                            tools/spr/build_assets.py
+                                                            │
+                    ┌───────────────────────┬───────────────┴──────────────┐
+                    ▼                       ▼                              ▼
+   client-otc/data/things/1098/   server/tfs/data/items/     server/generated/items/
+     Tibia.spr + Tibia.dat            items.otb              items_tiles_naruto.xml
+                    │                       │
+                    ▼                       ▼
+       tools/spr/dump_dat.py      tools/spr/test_otb_roundtrip.py
 ```
 
-- **Fonte da verdade da arte:** `assets-src/sprites/` (PNGs) + `manifest.json`.
-- **Artefatos gerados:** `client-otc/data/things/1098/Tibia.spr` e `Tibia.dat`.
-  Nunca edite à mão; regenere.
+- **Fonte da verdade da arte:** `assets-src/sprites/` (PNGs) + `manifest.json`
+  (itens que já existem no OTB) + `tiles.json` (itens **novos** de cenário).
+- **Artefatos gerados:** `client-otc/data/things/1098/Tibia.spr` e `Tibia.dat`,
+  `server/tfs/data/items/items.otb` e
+  `server/generated/items/items_tiles_naruto.xml`. Nunca edite à mão; regenere.
 - **Especificação do formato binário:** `tools/spr/FORMATO.md` (derivada do código
   do próprio cliente, não de documentação de terceiros).
 - **Como usar:** `tools/spr/README.md`.
@@ -74,6 +81,48 @@ fazem o servidor mandar um byte `0xFE` que o cliente só consome se o thing tive
 mais de uma fase. O build gera 2 fases (mesmo sprite nas duas) para os 2.083
 clientIds animados, e `dump_dat.py` confere os quatro flags item a item.
 
+## Criando itens NOVOS (cenário próprio)
+
+Até aqui o pipeline só sabia **dar arte** a itens que já existiam no `items.otb`
+do TFS. Para casa de vila ninja, portão torii, placa, móvel, chão de tatame etc.
+é preciso **criar** o item, e isso são três arquivos ao mesmo tempo:
+
+| Onde | O quê |
+|---|---|
+| `server/tfs/data/items/items.otb` | serverId novo → clientId novo, grupo (`itemgroup_t`) e flags (`itemflags_t`) |
+| `client-otc/data/things/1098/Tibia.dat` + `.spr` | o *thing* daquele clientId: geometria, fases, atributos de render |
+| `server/tfs/data/items/items.xml` | nome, descrição e atributos de gameplay do serverId |
+
+O `tools/spr/build_assets.py` faz os três a partir de
+**`assets-src/sprites/tiles.json`** (manifesto mantido à mão) — o passo a passo
+está em `tools/spr/README.md`, seção "Itens NOVOS de cenário".
+
+### Regras de id
+
+- **Server id a partir de 30000** (o `items.otb` vanilla vai até 26381).
+- **Client id a partir de 23726**, sequencial e **contíguo** com o vanilla
+  (que vai até 23725). Um buraco desalinha o `.dat` inteiro.
+- A alocação fica em **`assets-src/sprites/allocations.json`**, indexada pela
+  `key` do tile, e é **append-only**: um id já alocado nunca é renumerado nem
+  reaproveitado — mapas e saves já gravados apontariam para outro item. Apagar um
+  tile do `tiles.json` só aposenta o id.
+
+### Backup do `items.otb`
+
+A primeira gravação copia o OTB original para
+**`server/tfs/data/items/items.otb.vanilla`** (uma única vez). A partir daí o
+`.vanilla` é sempre a **base** do build: os 26.282 itens de fábrica são
+reescritos byte a byte a partir dele e os tiles próprios são anexados no fim.
+O build é idempotente — rodar duas vezes dá o mesmo arquivo, sem duplicar nada.
+
+`tools/spr/test_otb_roundtrip.py` prova essa propriedade: lê um `items.otb`,
+reescreve e compara (1) byte a byte, (2) campo a campo os dois parses e
+(3) a serialização "do zero" (o caminho dos itens novos, que não têm bytes
+originais para preservar).
+
+Para voltar ao OTB de fábrica: `cp items.otb.vanilla items.otb` e rode o build
+com `--no-otb`.
+
 ## Convenções de arte
 
 - Célula de 32×32, "chão" na linha y=30, fundo transparente.
@@ -98,6 +147,7 @@ clientIds animados, e `dump_dat.py` confere os quatro flags item a item.
 | Criaturas | looktypes 1..897 — os do `tfs_mapping.json` ganham arte temática (lobo/fera, cobra, sapo, sanguessuga, ninja, bandido); os looktypes vanilla do mapa do TFS viram fera genérica cinza (6 variantes); 878..897 são chefes 2×2 |
 | Efeitos | ids 1..255 — 1..70 com arte própria (explosão, faíscas, fumaça, corte, pulso, 4–7 fases), 71..255 placeholder simples de 3 fases |
 | Missiles | ids 1..255 — 1..50 com arte própria (shuriken, raio, orbe), 51..255 placeholder simples, todos em grade 3×3 de direções |
+| Cenário próprio | 8 itens **criados do zero** (serverId 30000–30007, clientId 23726–23733): chão de tatame, terra batida de vila, parede de madeira (vertical e horizontal), portão torii 2×1, placa de madeira, lanterna de papel com luz (2 fases) e cerca de bambu — ver `assets-src/sprites/tiles.json` |
 
 ## Quando trocar por arte definitiva
 
@@ -123,3 +173,10 @@ clientIds animados, e `dump_dat.py` confere os quatro flags item a item.
   variantes de tom: serve para o cliente não errar, não para reconhecer o monstro.
 - Todos os humanoides compartilham a mesma base; a diferença entre monstros e NPCs
   vem inteiramente das cores de outfit do `tfs_mapping.json`.
+- Um tile de `size: [2,1]` desenha 2 casas de largura mas **ocupa uma só casa** no
+  servidor (o desenho se estende para oeste/norte, como na Tibia). Cenário que
+  precise bloquear várias casas tem que ser montado com vários itens.
+- Os tiles novos não têm variação de borda automática: não existe autoborder nem
+  as 4×4 variações de chão que o RME espera. Cada variação é um item à parte.
+- `tiles.json` não gera `items.otbm`/`materials.xml` para o editor de mapas: por
+  ora os itens novos são colocados por script/GM (`/i <serverId>`), não pelo RME.

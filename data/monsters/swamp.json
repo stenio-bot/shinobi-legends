@@ -177,9 +177,60 @@
     "article": "uma"
   },
   {
+    "id": "lesser_serpent",
+    "name": "Serpente Menor",
+    "description": "Cria da Serpente Branca. Pequena, rápida e cheia de veneno.",
+    "level": 18,
+    "hp": 340,
+    "attack": 30,
+    "defense": 10,
+    "speed": 5.0,
+    "element": "doton",
+    "xp": 260,
+    "behavior": "aggressive",
+    "aggro_range": 5,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Bote",
+        "damage_min": 26,
+        "damage_max": 40,
+        "cooldown_s": 1.8,
+        "type": "melee",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.6,
+            "duration_s": 8,
+            "value": 5
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "snake_fang",
+        "chance": 0.45,
+        "min": 1,
+        "max": 3
+      },
+      {
+        "item_id": "antidote",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 45,
+    "ryo_max": 90,
+    "respawn_s": 55,
+    "sprite": "mon_snake",
+    "article": "uma"
+  },
+  {
     "id": "boss_elder_toad",
     "name": "Sapo Ancião",
-    "description": "Boss do Pântano. Invoca filhotes e cospe água em linha.",
+    "description": "Boss secundário da Floresta da Morte. Invoca filhotes e cospe água em linha.",
     "level": 25,
     "hp": 4000,
     "attack": 45,
@@ -275,5 +326,146 @@
     "respawn_s": 7200,
     "sprite": "mon_elder_toad",
     "article": "o"
+  },
+  {
+    "id": "boss_white_serpent",
+    "name": "Serpente Branca",
+    "description": "Ninja renegado de pele pálida e olhos de réptil. Quando encurralado, abandona a forma humana.",
+    "level": 25,
+    "hp": 4600,
+    "attack": 48,
+    "defense": 18,
+    "speed": 4.0,
+    "element": "doton",
+    "xp": 5600,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 4,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Lâmina de Grama",
+        "damage_min": 40,
+        "damage_max": 62,
+        "cooldown_s": 2.2,
+        "type": "melee",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.5,
+            "duration_s": 10,
+            "value": 6
+          }
+        ]
+      },
+      {
+        "name": "Doku: Névoa Venenosa",
+        "damage_min": 34,
+        "damage_max": 56,
+        "cooldown_s": 6.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.8,
+            "duration_s": 12,
+            "value": 7
+          }
+        ]
+      },
+      {
+        "name": "Cuspe Ácido",
+        "damage_min": 32,
+        "damage_max": 52,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.6,
+            "duration_s": 4,
+            "value": 0.4
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "Que curioso... um genin que ainda não sabe correr."
+      },
+      {
+        "hp_percent": 60,
+        "looktype": 890,
+        "message": "Chega de fingir que sou gente. Vejam o que eu realmente sou!",
+        "summons": [
+          {
+            "monster_id": "forest_snake",
+            "count": 3
+          }
+        ]
+      },
+      {
+        "hp_percent": 25,
+        "attack_multiplier": 1.9,
+        "message": "Minhas crias vão limpar o que sobrar de você!",
+        "summons": [
+          {
+            "monster_id": "lesser_serpent",
+            "count": 2
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "white_serpent_fang",
+        "chance": 1.0,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "scroll_doku_kiri",
+        "chance": 0.25,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "snake_fang",
+        "chance": 1.0,
+        "min": 4,
+        "max": 8
+      },
+      {
+        "item_id": "ring_chakra",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "katana_ronin",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "antidote",
+        "chance": 1.0,
+        "min": 3,
+        "max": 5
+      },
+      {
+        "item_id": "chakra_pill_medium",
+        "chance": 1.0,
+        "min": 3,
+        "max": 5
+      }
+    ],
+    "ryo_min": 1500,
+    "ryo_max": 3000,
+    "respawn_s": 7200,
+    "sprite": "mon_white_serpent",
+    "article": "a"
   }
 ]

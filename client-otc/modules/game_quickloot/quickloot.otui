@@ -230,7 +230,7 @@ Window
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       @onClick: |
-        modules.game_cyclopedia.show("items")
+        if modules.game_cyclopedia then modules.game_cyclopedia.show("items") end
         
   Panel
     id: information
@@ -248,9 +248,12 @@ Window
     anchors.right: filters.right
     padding: 7
 
+    # Shinobi Legends: painel 'Get Premium' (loja oficial) escondido; o widget continua
+    # existindo porque quickloot.lua faz referencia a ele.
     Panel
       id: vipPanel
       height: 34
+      visible: false
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -262,7 +265,6 @@ Window
         image-source: /game_quickloot/images/getpremium
         image-clip: 0 0 128 37
         image-border: 3
-        @onClick: modules.game_mainpanel.toggleStore()
 
         $pressed:
           image-clip: 0 37 128 37

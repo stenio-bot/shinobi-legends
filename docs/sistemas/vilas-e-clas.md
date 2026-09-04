@@ -42,7 +42,7 @@ flexível contra as áreas existentes, e a mais fraca contra Katon.
 
 ## Jutsus por vila (estado atual)
 Cada vila tem **5 jutsus próprios** nos tiers 1, 1, 2, 2, 3, mais os neutros
-(`kawarimi`, `bunshin`, `shousen`, `fuuin_contencao`), disponíveis para todas.
+(`kawarimi`, `bunshin`, `shousen`, `fuuin_contencao`, `doku_kiri`), disponíveis para todas.
 
 | Vila | Tier 1 | Tier 1 | Tier 2 | Tier 2 | Tier 3 |
 |---|---|---|---|---|---|

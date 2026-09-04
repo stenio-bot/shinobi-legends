@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/map/build_valley.py. NAO EDITE A MAO. -->
+<spawns>
+	<spawn centerx="1012" centery="1012" centerz="7" radius="4">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="-2" y="1" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1050" centery="1010" centerz="7" radius="4">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="-2" y="1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="1" y="2" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1085" centery="1015" centerz="7" radius="4">
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="2" y="-1" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="-2" y="1" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1006" centery="1050" centerz="7" radius="4">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="80"/>
+		<monster name="Bandido" x="2" y="-1" z="7" spawntime="80"/>
+		<monster name="Bandido" x="-2" y="1" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1070" centery="1040" centerz="7" radius="4">
+		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="2" y="-1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1105" centery="1045" centerz="7" radius="4">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="-2" y="1" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1015" centery="1090" centerz="7" radius="4">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="80"/>
+		<monster name="Bandido" x="2" y="-1" z="7" spawntime="80"/>
+		<monster name="Bandido" x="-2" y="1" z="7" spawntime="80"/>
+		<monster name="Bandido" x="1" y="2" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1060" centery="1105" centerz="7" radius="4">
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="2" y="-1" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="-2" y="1" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="1" y="2" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1112" centery="1075" centerz="7" radius="4">
+		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="-2" y="1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1005" centery="1005" centerz="7" radius="4">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1140" centery="1015" centerz="7" radius="4">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Sanguessuga Gigante" x="2" y="-1" z="7" spawntime="70"/>
+		<monster name="Sanguessuga Gigante" x="-2" y="1" z="7" spawntime="70"/>
+		<monster name="Sanguessuga Gigante" x="1" y="2" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1170" centery="1020" centerz="7" radius="4">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Sanguessuga Gigante" x="2" y="-1" z="7" spawntime="70"/>
+		<monster name="Sanguessuga Gigante" x="-2" y="1" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1145" centery="1040" centerz="7" radius="4">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Sapo Gigante" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Sapo Gigante" x="-2" y="1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1185" centery="1050" centerz="7" radius="4">
+		<monster name="Ninja Renegado" x="0" y="0" z="7" spawntime="120"/>
+		<monster name="Ninja Renegado" x="2" y="-1" z="7" spawntime="120"/>
+	</spawn>
+	<spawn centerx="1145" centery="1090" centerz="7" radius="4">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Sapo Gigante" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Sapo Gigante" x="-2" y="1" z="7" spawntime="90"/>
+		<monster name="Sapo Gigante" x="1" y="2" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1180" centery="1095" centerz="7" radius="4">
+		<monster name="Ninja Renegado" x="0" y="0" z="7" spawntime="120"/>
+		<monster name="Ninja Renegado" x="2" y="-1" z="7" spawntime="120"/>
+		<monster name="Ninja Renegado" x="-2" y="1" z="7" spawntime="120"/>
+	</spawn>
+	<spawn centerx="1190" centery="1015" centerz="7" radius="4">
+		<monster name="Serpente Branca" x="0" y="0" z="7" spawntime="3600"/>
+	</spawn>
+	<spawn centerx="1100" centery="1100" centerz="7" radius="3">
+		<monster name="Chefe dos Bandidos" x="0" y="0" z="7" spawntime="3600"/>
+	</spawn>
+	<spawn centerx="1097" centery="1103" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Bandido" x="2" y="0" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="0" y="2" z="7" spawntime="110"/>
+	</spawn>
+	<spawn centerx="1103" centery="1103" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="1" y="1" z="7" spawntime="110"/>
+	</spawn>
+	<spawn centerx="1165" centery="1060" centerz="7" radius="1">
+		<monster name="Sapo Ancião" x="0" y="0" z="7" spawntime="3600"/>
+	</spawn>
+	<spawn centerx="1016" centery="1041" centerz="7" radius="1">
+		<npc name="Ichiro, o Mercador" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1042" centery="1041" centerz="7" radius="1">
+		<npc name="Mestre Hayato" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1042" centery="1049" centerz="7" radius="1">
+		<npc name="Capitã Rin" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1133" centery="1057" centerz="7" radius="1">
+		<npc name="Velha Sumi" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1135" centery="1058" centerz="7" radius="1">
+		<npc name="Rastreador Goro" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+</spawns>

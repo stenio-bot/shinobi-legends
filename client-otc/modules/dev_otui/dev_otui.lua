@@ -2367,6 +2367,9 @@ function init()
   topButton = modules.client_topmenu.addTopRightToggleButton(
     'otuiEditorButton', tr('OTUI Editor'), '/images/topbuttons/buttons', toggle)
   topButton:setOn(false)
+  -- Shinobi Legends: icone de dev fora da barra de topo (visual Tibia classico).
+  -- O editor continua acessivel por Ctrl+Alt+U.
+  topButton:hide()
 
   Keybind.new('Debug', 'Toggle OTUI Editor', 'Ctrl+Alt+U', '')
   Keybind.bind('Debug', 'Toggle OTUI Editor', {

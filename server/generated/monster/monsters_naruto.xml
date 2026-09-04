@@ -18,4 +18,6 @@
 <monster name="Sanguessuga Gigante" file="naruto/leech.xml"/>
 <monster name="Sapo Gigante" file="naruto/giant_toad.xml"/>
 <monster name="Ninja Renegado" file="naruto/rogue_ninja.xml"/>
+<monster name="Serpente Menor" file="naruto/lesser_serpent.xml"/>
 <monster name="Sapo Ancião" file="naruto/boss_elder_toad.xml"/>
+<monster name="Serpente Branca" file="naruto/boss_white_serpent.xml"/>

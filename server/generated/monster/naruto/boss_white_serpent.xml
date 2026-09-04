@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Serpente Branca" nameDescription="a serpente branca" race="blood" experience="5600" speed="400" manacost="0">
+	<health now="4600" max="4600"/>
+	<look type="132" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-40" max="-62" poison="60"/>
+		<attack name="earth" interval="6000" chance="40" radius="3" target="0" min="-34" max="-56">
+			<attribute key="areaEffect" value="stones"/>
+		</attack>
+		<attack name="earth" interval="5000" chance="60" range="4" target="1" min="-32" max="-52">
+			<attribute key="shootEffect" value="earth"/>
+		</attack>
+		<attack name="speed" interval="5000" chance="60" speedchange="-160" duration="4000" range="4" target="1"/>
+	</attacks>
+	<defenses armor="18" defense="18"/>
+	<elements>
+		<element energyPercent="-50"/>
+		<element icePercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="3000" chance="100000"/>
+		<item id="5895" countmax="2" chance="100000"/>  <!-- white_serpent_fang -->
+		<item id="1956" chance="25000"/>  <!-- scroll_doku_kiri -->
+		<item id="5898" countmax="8" chance="100000"/>  <!-- snake_fang -->
+		<item id="2167" chance="20000"/>  <!-- ring_chakra -->
+		<item id="2412" chance="15000"/>  <!-- katana_ronin -->
+		<item id="8473" countmax="5" chance="100000"/>  <!-- antidote -->
+		<item id="7589" countmax="5" chance="100000"/>  <!-- chakra_pill_medium -->
+	</loot>
+</monster>

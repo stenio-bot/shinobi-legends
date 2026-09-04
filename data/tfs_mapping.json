@@ -127,6 +127,18 @@
       "corpse": 4166,
       "race": "blood"
     },
+    "lesser_serpent": {
+      "looktype": 56,
+      "corpse": 4238,
+      "race": "venom",
+      "_note": "placeholder: looktype 56 (cobra) recolorida"
+    },
+    "boss_white_serpent": {
+      "looktype": 132,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "placeholder: forma humana = outfit 132; a forma de serpente 2x2 (looktype 890, faixa 878..897 do .dat placeholder) é aplicada em runtime pela fase de 60% em boss_phases.lua — NÃO cite 890 em XML, senão gen_placeholders.py desloca a faixa de chefes"
+    },
     "ruin_puppet": {
       "looktype": 129,
       "head": 19,
@@ -286,7 +298,9 @@
     "magma_scale": 5889,
     "health_potion_large": 7591,
     "soldier_pill": 8472,
-    "oni_fang_blade": 7418
+    "oni_fang_blade": 7418,
+    "white_serpent_fang": 5895,
+    "scroll_doku_kiri": 1956
   },
   "npc_outfits": {
     "merchant_leaf": {
@@ -403,6 +417,8 @@
     "scroll_fuuton_rajada_cortante": "4842 old parchment",
     "scroll_doton_estacas_terra": "4857 wrinkled parchment",
     "scroll_doton_colapso": "5952 poem scroll",
-    "scroll_fuuin_contencao": "6119 scroll"
+    "scroll_fuuin_contencao": "6119 scroll",
+    "white_serpent_fang": "5895 fish fin",
+    "scroll_doku_kiri": "1956 map"
   }
 }

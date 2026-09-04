@@ -171,20 +171,10 @@ optionsController = Controller:new()
 optionsController:setUI('mainoptionspanel', modules.game_interface.getMainRightPanel())
 
 function optionsController:onInit()
-    createButton_large('Store shop', tr('Store shop'), '/images/options/store_large', toggleStore,
-    false, 8)
-
+    -- Shinobi Legends: removido o botao grande 'Store shop' (game_store/game_shop desativados).
     if not optionPanel then
         optionPanel = g_ui.loadUI('option_control_buttons', modules.client_options:getPanel())
         modules.client_options.addButton("Interface", "Control Buttons", optionPanel, function() initControlButtons() end)
-    end
-end
-
-function toggleStore()
-    if  g_game.getFeature(GameIngameStore) then
-        if modules.game_store then modules.game_store.toggle() end -- cipsoft packets
-    else
-        if modules.game_shop then modules.game_shop.toggle() end -- custom
     end
 end
 

@@ -278,5 +278,30 @@
     "required_level": 6,
     "required_village": "leaf",
     "sprite": "item_scroll"
+  },
+  {
+    "id": "white_serpent_fang",
+    "name": "Presa da Serpente Branca",
+    "description": "Presa curva e translúcida, ainda úmida de veneno. Material raro.",
+    "type": "material",
+    "rarity": "rare",
+    "weight": 0.4,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 340,
+    "sprite": "item_fang"
+  },
+  {
+    "id": "scroll_doku_kiri",
+    "name": "Pergaminho: Névoa Venenosa",
+    "description": "Ensina Doku: Névoa Venenosa. Qualquer vila pode aprender.",
+    "type": "scroll",
+    "rarity": "rare",
+    "weight": 0.5,
+    "buy_price": 7000,
+    "sell_price": 0,
+    "teaches_jutsu": "doku_kiri",
+    "required_level": 25,
+    "sprite": "item_scroll"
   }
 ]

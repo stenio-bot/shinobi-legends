@@ -86,6 +86,18 @@
 	<spawn centerx="1090" centery="1034" centerz="7" radius="3">
 		<monster name="Sapo Ancião" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
+	<spawn centerx="1074" centery="1018" centerz="7" radius="3">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="55"/>
+	</spawn>
+	<spawn centerx="1082" centery="1008" centerz="7" radius="3">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="55"/>
+	</spawn>
+	<spawn centerx="1086" centery="1034" centerz="7" radius="3">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="55"/>
+	</spawn>
+	<spawn centerx="1093" centery="1006" centerz="7" radius="3">
+		<monster name="Serpente Branca" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
 	<spawn centerx="1100" centery="1010" centerz="7" radius="3">
 		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>

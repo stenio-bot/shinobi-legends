@@ -416,8 +416,8 @@ keywordHandler:addKeyword({'quest'}, questCallback, {})""")
 
 for n in npcs.values():
     xml, lua = npc_files(n)
-    write(f"npc/naruto/{n['id']}.xml", xml)
-    write(f"npc/naruto/{n['id']}.lua", lua)
+    write(f"npc/{n['name']}.xml", xml)          # TFS instancia por nome: data/npc/<Nome>.xml
+    write(f"npc/scripts/naruto/{n['id']}.lua", lua)  # script="naruto/<id>.lua" é relativo a data/npc/scripts/
 
 # ---------------------------------------------------------------- lib + quests (revscriptsys)
 base = int(M["storage_base"])
@@ -506,7 +506,8 @@ for m in monsters.values():
     for ph in m.get("phases", []):
         summons = ", ".join(f"{{name = '{monsters[s['monster_id']]['name']}', count = {s.get('count', 1)}}}" for s in ph.get("summons", []))
         msg = ph.get("message", "").replace("'", "\\'")
-        phases.append(f"\t\t{{hp = {ph['hp_percent']}, mult = {ph.get('attack_multiplier', 1.0)}, message = '{msg}', summons = {{{summons}}}}},")
+        look = f", looktype = {int(ph['looktype'])}" if ph.get("looktype") else ""
+        phases.append(f"\t\t{{hp = {ph['hp_percent']}, mult = {ph.get('attack_multiplier', 1.0)}, message = '{msg}'{look}, summons = {{{summons}}}}},")
     phases.append("\t},")
 phases.append("}")
 phases.append("""
@@ -530,10 +531,25 @@ function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secon
 				if mon and attacker then mon:setTarget(attacker) end
 			end
 		end
+		if ph.looktype then
+			-- transformação: troca o outfit do boss (ex.: humano -> serpente 2x2)
+			local out = creature:getOutfit()
+			out.lookType = ph.looktype
+			out.lookHead, out.lookBody, out.lookLegs, out.lookFeet, out.lookAddons = 0, 0, 0, 0, 0
+			creature:setOutfit(out)
+			creature:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
+		end
 		if ph.mult > 1.0 then
-			-- TFS não permite mudar o dano do monstro em runtime; aproximação: cura + registra para uso futuro
+			-- LIMITAÇÃO: o onHealthChange não consegue alterar o dano dos <attack> do monstro
+			-- em runtime (o TFS 1.4.2 lê a spell list uma vez, no carregamento do XML). A fase
+			-- de "fúria" é aproximada por: (1) cura percentual, (2) aumento de velocidade, que
+			-- faz o boss alcançar e bater mais vezes por minuto, e (3) registro em NarutoBossMult
+			-- para quem quiser ler o multiplicador de fora (nenhum onThink é necessário).
 			NarutoBossMult = NarutoBossMult or {}
 			NarutoBossMult[id] = ph.mult
+			local heal = math.floor(creature:getMaxHealth() * (ph.mult - 1.0) * 0.10)
+			if heal > 0 then creature:addHealth(heal) end
+			creature:changeSpeed(math.floor(creature:getBaseSpeed() * (ph.mult - 1.0) * 0.5))
 			creature:getPosition():sendMagicEffect(CONST_ME_MAGIC_RED)
 		end
 	end

@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -19,7 +20,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image  # noqa: E402
 
 import sprformat as S  # noqa: E402
-from otb import parse_items_otb  # noqa: E402
+import tiles as T  # noqa: E402
+from otb import parse_items_otb, write_items_otb  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 CELL = 32
@@ -202,10 +204,9 @@ def item_attrs(item):
 
 
 # -------------------------------------------------------------------- build
-def build_items(manifest, sheets_dir, pool, stats):
+def build_items(manifest, sheets_dir, pool, stats, otb_items, tile_by_cid=None):
     cfg = manifest["items"]
-    otb_path = os.path.join(ROOT, cfg["otb"])
-    _, otb_items = parse_items_otb(otb_path)
+    tile_by_cid = tile_by_cid or {}
 
     by_cid = {}
     for it in otb_items:
@@ -248,6 +249,15 @@ def build_items(manifest, sheets_dir, pool, stats):
             item = {"client_id": cid, "group_name": "none", "flags": 0, "speed": 0,
                     "minimap_color": 0, "light_level": 0, "light_color": 0, "top_order": 0}
             stats["itens_sem_otb"] += 1
+        spec = tile_by_cid.get(cid)
+        if spec:
+            # item novo de cenario (assets-src/sprites/tiles.json): arte propria,
+            # geometria propria, atributos derivados do proprio manifesto
+            table[cid] = T.make_thing(spec, cid, item, cache, pool, item_attrs(item))
+            stats["estilos"]["tile"] = stats["estilos"].get("tile", 0) + 1
+            if item["flags"] & FLAGS["ANIMATION"]:
+                stats["itens_animados"] += 1
+            continue
         ov = overrides.get(str(cid))
         if ov:
             rel = ov["sheet"]
@@ -362,10 +372,26 @@ def build_thing(spec, cache, pool):
                         attrs=attrs, groups=groups)
 
 
+def load_base_otb(otb_path):
+    """Le o items.otb BASE. Se existir items.otb.vanilla (backup feito na
+    primeira vez que gravamos itens novos), e ele o ponto de partida — assim o
+    build e idempotente e nunca duplica os tiles ja adicionados."""
+    vanilla = otb_path + ".vanilla"
+    base = vanilla if os.path.exists(vanilla) else otb_path
+    header, items = parse_items_otb(base)
+    return base, header, items
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", default="assets-src/sprites/manifest.json")
+    ap.add_argument("--tiles", default="assets-src/sprites/tiles.json",
+                    help="manifesto dos itens NOVOS de cenario")
+    ap.add_argument("--allocations", default="assets-src/sprites/allocations.json")
+    ap.add_argument("--items-xml", default="server/generated/items/items_tiles_naruto.xml")
     ap.add_argument("--out", default="client-otc/data/things/1098")
+    ap.add_argument("--no-otb", action="store_true",
+                    help="nao reescrever o items.otb (so .spr/.dat)")
     args = ap.parse_args()
 
     manifest_path = os.path.join(ROOT, args.manifest)
@@ -375,13 +401,35 @@ def main():
     out_dir = os.path.join(ROOT, args.out)
     os.makedirs(out_dir, exist_ok=True)
 
+    otb_path = os.path.join(ROOT, manifest["items"]["otb"])
+    base_otb, otb_header, otb_items = load_base_otb(otb_path)
+
+    # ------------------------------------------------------ itens novos (tiles)
+    tiles_path = os.path.join(ROOT, args.tiles)
+    tile_cfg = None
+    tile_by_cid = {}
+    alloc = None
+    novas = []
+    novos_otb = []
+    if os.path.exists(tiles_path):
+        tile_cfg = T.load(tiles_path)
+        alloc_path = os.path.join(ROOT, args.allocations)
+        alloc, novas = T.allocate(tile_cfg, alloc_path, otb_items)
+        for spec in tile_cfg["tiles"]:
+            e = alloc["by_key"][spec["key"]]
+            it = T.make_otb_item(spec, e["server_id"], e["client_id"])
+            novos_otb.append(it)
+            tile_by_cid[e["client_id"]] = spec
+        otb_items = otb_items + novos_otb
+
     pool = SpritePool()
     stats = {"estilos": {}, "itens_sem_otb": 0, "overrides_sem_otb": [],
              "itens_animados": 0, "conferencia": None}
     cache = SheetCache(sheets_dir)
 
     tables = [{}, {}, {}, {}]
-    tables[S.CATEGORY_ITEM] = build_items(manifest, sheets_dir, pool, stats)
+    tables[S.CATEGORY_ITEM] = build_items(manifest, sheets_dir, pool, stats,
+                                          otb_items, tile_by_cid)
     for spec in manifest["things"]:
         cat, thing = build_thing(spec, cache, pool)
         tables[cat][thing.id] = thing
@@ -402,6 +450,29 @@ def main():
     dat_size = S.write_dat(dat_path, dat_sig, tables)
     spr_size = S.write_spr(spr_path, spr_sig, pool.blobs)
 
+    # --------------------------------------------------- items.otb + items.xml
+    if novos_otb and not args.no_otb:
+        vanilla = otb_path + ".vanilla"
+        if not os.path.exists(vanilla):
+            shutil.copy2(otb_path, vanilla)
+            print("backup: %s (feito uma unica vez)" % vanilla)
+        n = write_items_otb(otb_path, otb_items, otb_header)
+        print("items.otb -> %s (%.1f KB, %d itens, base %s)"
+              % (otb_path, n / 1024.0, len(otb_items), os.path.basename(base_otb)))
+
+        xml_path = os.path.join(ROOT, args.items_xml)
+        os.makedirs(os.path.dirname(xml_path), exist_ok=True)
+        cab = ("<!-- GERADO por tools/spr/build_assets.py a partir de\n"
+               "     assets-src/sprites/tiles.json + allocations.json. NAO EDITE A MAO.\n"
+               "     Itens NOVOS de cenario: os ids ja estao no items.otb (idem gerado).\n"
+               "     Injete este bloco em server/tfs/data/items/items.xml. -->")
+        with open(xml_path, "w", encoding="utf-8") as fh:
+            fh.write(T.render_items_xml(tile_cfg, alloc, cab))
+        print("items.xml -> %s (%d itens)" % (xml_path, len(tile_cfg["tiles"])))
+    elif novos_otb:
+        print("(--no-otb) items.otb NAO reescrito; %d tiles ficaram so no .dat"
+              % len(novos_otb))
+
     print("Tibia.dat -> %s (%.1f KB)" % (dat_path, dat_size / 1024.0))
     print("Tibia.spr -> %s (%.1f KB)" % (spr_path, spr_size / 1024.0))
     print("things: itens=%d (100..%d)  criaturas=%d  efeitos=%d  missiles=%d"
@@ -417,6 +488,13 @@ def main():
         for k in ("stackable", "fluid", "splash", "animation"):
             print("   %-10s otb=%-6d dat=%-6d %s"
                   % (k, esp[k], obt[k], "ok" if esp[k] == obt[k] else "<<< DIVERGE"))
+    if tile_cfg:
+        print("tiles proprios: %d (serverId %s)"
+              % (len(tile_cfg["tiles"]),
+                 ", ".join(str(alloc["by_key"][t["key"]]["server_id"])
+                           for t in tile_cfg["tiles"])))
+        for key, sid, cid in novas:
+            print("   NOVO id alocado: %-16s serverId=%d clientId=%d" % (key, sid, cid))
     if stats["overrides_sem_otb"]:
         print("AVISO: server ids do tfs_mapping sem entrada no items.otb: %s"
               % stats["overrides_sem_otb"])

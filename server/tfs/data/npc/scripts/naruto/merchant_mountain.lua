@@ -38,6 +38,7 @@ shopModule:addSellableItem({'glândula de sanguessuga'}, 5876, 35, 'glândula de
 shopModule:addSellableItem({'pele de sapo'}, 5880, 60, 'pele de sapo')
 shopModule:addSellableItem({'óleo de sapo'}, 5881, 150, 'óleo de sapo')
 shopModule:addSellableItem({'bandana riscada'}, 10289, 45, 'bandana riscada')
+shopModule:addSellableItem({'presa da serpente branca'}, 5895, 340, 'presa da serpente branca')
 shopModule:addSellableItem({'katana do trovão'}, 7382, 9680, 'katana do trovão')
 shopModule:addSellableItem({'kanabō de oni'}, 2421, 15680, 'kanabō de oni')
 shopModule:addSellableItem({'shuriken lâmina de vento'}, 7367, 11520, 'shuriken lâmina de vento')

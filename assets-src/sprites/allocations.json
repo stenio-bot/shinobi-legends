@@ -1,0 +1,40 @@
+{
+  "format": 1,
+  "_doc": "Alocacao PERMANENTE de ids para os tiles de assets-src/sprites/tiles.json. Nunca edite nem apague uma entrada: o id ficaria orfao em mapas e saves ja gravados. Gerado por tools/spr/build_assets.py.",
+  "next_server_id": 30008,
+  "next_client_id": 23734,
+  "by_key": {
+    "tatami_floor": {
+      "server_id": 30000,
+      "client_id": 23726
+    },
+    "village_dirt": {
+      "server_id": 30001,
+      "client_id": 23727
+    },
+    "wood_wall_v": {
+      "server_id": 30002,
+      "client_id": 23728
+    },
+    "wood_wall_h": {
+      "server_id": 30003,
+      "client_id": 23729
+    },
+    "torii_gate": {
+      "server_id": 30004,
+      "client_id": 23730
+    },
+    "wood_sign": {
+      "server_id": 30005,
+      "client_id": 23731
+    },
+    "paper_lantern": {
+      "server_id": 30006,
+      "client_id": 23732
+    },
+    "bamboo_fence": {
+      "server_id": 30007,
+      "client_id": 23733
+    }
+  }
+}

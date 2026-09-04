@@ -65,6 +65,20 @@ com monstro do mesmo level, que é exatamente o ritmo do conteúdo já existente
 | Serpente de Magma | 74 | 2 280 | 0.60 | 1 370 | 7 500 | 5,5 |
 | **Oni Ancestral** (boss) | 80 | 20 500 | 1.20 | 24 600 | 8 100 | 0,33 |
 
+### Floresta da Morte (área 10–25, revisada com a Serpente Branca)
+
+| Monstro | L | HP | ratio | XP | XP p/ subir | kills/level |
+|---|---|---|---|---|---|---|
+| Serpente Menor | 18 | 340 | 0.76 | 260 | 1 900 | 7,3 |
+| **Serpente Branca** (boss) | 25 | 4 600 | 1.22 | 5 600 | 2 600 | 0,46 |
+| Sapo Ancião (boss secundário) | 25 | 4 000 | 1.25 | 5 000 | 2 600 | 0,52 |
+
+A Serpente Branca é o boss **final** da faixa: 4 600 HP = 7× o `hp_base(25)` de 525 arredondado
+para cima (o Sapo Ancião fica em 4 000 e vira boss opcional). Dano: 40–62 no golpe primário
+(HP do player em L25 = 475 → 8–13%), névoa em área e cuspe ácido a ~90% do primário, como manda
+a regra de bosses. `attack_multiplier` de 1.9 na fase 3 vale, na prática, ~+45% de velocidade
+(ver a limitação do TFS em `monstros-e-pvm.md`).
+
 > **"Broken" definido antes do playtest:** se um spot der menos de 3 ou mais de 12 kills
 > por level, o `ratio` da faixa está errado. O lever é `ratio`, nunca o HP.
 
@@ -138,6 +152,10 @@ conveniência e não eficiência.
 | Pílula de Chakra Grande | 350 CK | 250 | 1,40 |
 | Pílula do Soldado | 500 HP + 500 CK | 900 | 1,11 (contando os dois) |
 
+**Material exclusivo de boss:** `sell_price ≈ 3 × (4.5 * L)` — a Presa da Serpente Branca (L25)
+vale 340, contra ~112 de um material comum da mesma faixa. Cai 100% (1–2), então é a renda
+garantida da luta; o resto do loot é chance.
+
 **Materiais de drop:** `sell_price ≈ 4.5 * L do monstro que dropa` (120–220 nas Ruínas,
 280–420 na Montanha). Com ~45% de chance por kill, o material é ~40% da renda de um spot;
 o ryo direto é os outros 60%.
@@ -173,7 +191,7 @@ nenhuma vila limpe uma zona inteira com vantagem:
 | Área | Elementos presentes | Vila mais favorecida | Vila mais punida |
 |---|---|---|---|
 | Floresta | none, doton, katon (boss) | Nuvem (raiton > doton) | — |
-| Pântano | suiton, none | Folha (katon vs suiton é desvantagem) | Nuvem |
+| Floresta da Morte | suiton, none, doton | Folha (katon vs suiton é desvantagem) | Nuvem |
 | Ruínas do Clã | none, doton, raiton, katon, fuuton (boss) | Nuvem e Areia | Folha |
 | Montanha do Trovão | raiton, suiton, fuuton, katon | Areia e Névoa | Nuvem |
 

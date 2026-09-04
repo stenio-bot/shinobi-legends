@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Serpente Menor" nameDescription="uma serpente menor" race="venom" experience="260" speed="500" manacost="0">
+	<health now="340" max="340"/>
+	<look type="56" corpse="4238"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="1800" min="-26" max="-40" poison="40"/>
+	</attacks>
+	<defenses armor="10" defense="10"/>
+	<elements>
+		<element energyPercent="-50"/>
+		<element icePercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="90" chance="100000"/>
+		<item id="5898" countmax="3" chance="45000"/>  <!-- snake_fang -->
+		<item id="8473" chance="20000"/>  <!-- antidote -->
+	</loot>
+</monster>

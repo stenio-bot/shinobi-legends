@@ -5,17 +5,10 @@ local leftButtonsPanel
 local rightGameButtonsPanel
 local topLeftTogglesPanel
 local topLeftButtonsPanel
-local topLeftOnlinePlayersLabel
-
-local topLeftDiscordStreamersLabel
-local topLeftYoutubeViewersLabel
-local topLeftYoutubeStreamersLabel
+-- Shinobi Legends: removidos os widgets de Discord/YouTube/players online do topo
+-- (branding de terceiros + dependem de webservice). Ver docs/04-setup-ot.md.
 local fpsLabel
 local pingLabel
-local topLeftYoutubeLink
-local topLeftDiscordLink
-local url_discord = ""
-local url_youtube = ""
 local lastSyncValue = -1
 local fpsEvent = nil
 local fpsMin = -1;
@@ -103,15 +96,6 @@ function init()
     rightGameButtonsPanel = topMenu:getChildById('rightGameButtonsPanel')
     pingLabel = topMenu:getChildById('pingLabel')
     fpsLabel = topMenu:getChildById('fpsLabel')
-
-    topLeftOnlinePlayersLabel = topMenu:recursiveGetChildById('topLeftOnlinePlayersLabel')
-
-    topLeftDiscordStreamersLabel = topMenu:recursiveGetChildById('topLeftDiscordStreamersLabel')
-    topLeftYoutubeViewersLabel = topMenu:recursiveGetChildById('topLeftYoutubeViewersLabel')
-    topLeftYoutubeStreamersLabel = topMenu:recursiveGetChildById('topLeftYoutubeStreamersLabel')
-
-    topLeftYoutubeLink = topMenu:recursiveGetChildById('youtubeIcon')
-    topLeftDiscordLink = topMenu:recursiveGetChildById('discordIcon')
 
     Keybind.new("UI", "Toggle Top Menu", "Ctrl+Shift+T", "")
     Keybind.bind("UI", "Toggle Top Menu", {
@@ -345,40 +329,25 @@ function setFpsVisible(enable)
     end
 end
 
+-- Shinobi Legends: os widgets de players online / Discord / YouTube foram removidos do
+-- topmenu.otui. As funções ficam como no-op porque client_entergame ainda as chama quando
+-- há webservice configurado (Services.status).
 function setPlayersOnline(value)
-    topLeftOnlinePlayersLabel:setText(value .. " " .. tr('players online'))
 end
+
 function setDiscordStreams(value)
-    topLeftDiscordStreamersLabel:setText(value)
 end
 
 function setYoutubeStreams(value)
-    topLeftYoutubeStreamersLabel:setText(value)
 end
+
 function setYoutubeViewers(value)
-    topLeftYoutubeViewersLabel:setText(value)
 end
 
 function setLinkYoutube(value)
-
-    url_youtube = value
-    topLeftYoutubeLink.onClick = function()
-        if url_youtube then
-            g_platform.openUrl(url_youtube)
-        end
-    end
-
 end
 
 function setLinkDiscord(value)
-
-    url_discord = value
-    topLeftDiscordLink.onClick = function()
-        if url_discord then
-            g_platform.openUrl(url_discord)
-        end
-    end
-
 end
 
 function addLeftButton(id, description, icon, callback, front)
@@ -507,11 +476,6 @@ function extendedView(extendedView)
         modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorBottom)
         pingLabel:setVisible(false)
         fpsLabel:setVisible(false)
-        topMenu.topLeftOnlinePlayers:hide()
-        topMenu.topLeftDiscord:setWidth(0)
-        topMenu.topLeftYoutube:setWidth(0)
-        topMenu.topLeftDiscord:hide()
-        topMenu.topLeftYoutube:hide()
     else
         if g_game.isOnline() then
             topMenu:hide()
@@ -519,10 +483,5 @@ function extendedView(extendedView)
         topMenu:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
         modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'parent', AnchorTop)
         topMenu:setWidth(1020)
-        topMenu.topLeftDiscord:setWidth(110)
-        topMenu.topLeftYoutube:setWidth(100)
-        topMenu.topLeftOnlinePlayers:show()
-        topMenu.topLeftDiscord:show()
-        topMenu.topLeftYoutube:show()
     end
 end

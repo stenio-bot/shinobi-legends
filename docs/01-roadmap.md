@@ -34,7 +34,7 @@ Objetivo: o loop de progressão fecha.
 ## Marco 3 — "Conteúdo" (em andamento)
 - [x] Tela inicial de escolha de vila (3 vilas, jutsu e skill favorita diferentes)
 - [x] Mapa definido em `data/maps/forest_valley.json` (96x40, spawns e zonas por level)
-- [x] 2 áreas: Floresta da Vila (1–10) e Pântano Sombrio (10–25), com 9 monstros
+- [x] 2 áreas: Floresta da Vila (1–10) e Floresta da Morte (10–25, ex-"Pântano Sombrio"), com 11 monstros
 - [x] 1 boss por área com fases (invocações, multiplicador de ataque, falas)
 - [x] Missões sequenciais de caça em 2 NPCs (aceitar, progresso no HUD, entregar, recompensa)
 - [x] Linha de visão (árvores bloqueiam aggro e ataques à distância)
@@ -44,6 +44,7 @@ Objetivo: o loop de progressão fecha.
 - [x] Áreas 25–50 (Ruínas do Clã) e 50–80 (Montanha do Trovão) no JSON
 - [ ] Arte própria substituindo placeholders
 - [ ] Som e música
+- [x] Tiles próprios de cenário via tools/spr (items.otb writer): tatame, terra de vila, paredes, torii, placa, lanterna, cerca
 - [ ] Mochila maior (+slots) como item, crafting básico
 
 ---
@@ -69,10 +70,12 @@ Objetivo: o loop de progressão fecha.
 - [ ] Efeitos anexados (auras) para modo chakra / rank
 
 ## OT-2 — Conteúdo no servidor
-- [ ] Mapa `.otbm` do Vale (floresta + pântano) no Remere's Map Editor
-- [ ] Monstros, jutsus, NPCs e missões gerados e testados in-game
+- [x] Mapa `.otbm` Vale da Folha gerado por tools/map (vila murada, floresta, ponte, Floresta da Morte, torre, acampamento), instalado como `mapName = "valley"` — editável no Remere's
+- [x] Monstros, jutsus, NPCs e missões gerados e testados in-game (NPCs corrigidos: `data/npc/<Nome>.xml` + `npc/scripts/naruto/`)
 - [ ] Sprites próprios em .spr/.dat (ObjectBuilder): personagem, 9 monstros, itens, efeitos de jutsu
-- [ ] Bosses com fases via script Lua (onThink / onHealthChange)
+- [x] Bosses com fases via script Lua (`onHealthChange` → `boss_phases.lua`): falas, invocações,
+      transformação por `looktype` e fase de fúria (cura + velocidade). Testado in-game na
+      **Serpente Branca** (Floresta da Morte, L25) — 3 fases, outfit 132 → 890, 3+2 invocações
 
 ## OT-3 — Multiplayer de verdade
 - [ ] Contas, site de registro (ou AAC), hospedagem

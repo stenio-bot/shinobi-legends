@@ -15,6 +15,7 @@ NarutoJutsus = {
 	"Bunshin no Jutsu",
 	"Shousen: Palma Curativa",
 	"Fuuin: Selo de Contenção",
+	"Doku: Névoa Venenosa",
 	"Raiton: Agulha de Raio",
 	"Raiton: Punho do Trovão",
 	"Raiton: Corrente Estática",

@@ -25,6 +25,9 @@ function init()
 	debugInfoButton = modules.client_topmenu.addTopRightToggleButton("debugInfoButton", tr("Debug Info"),
 		"/images/topbuttons/debug", toggle)
 	debugInfoButton:setOn(false)
+	-- Shinobi Legends: icone de dev fora da barra de topo (visual Tibia classico).
+	-- Continua acessivel por Ctrl+Alt+D.
+	debugInfoButton:hide()
 
 	debugInfoWindow = g_ui.displayUI("debug_info")
 	debugInfoWindow:hide()

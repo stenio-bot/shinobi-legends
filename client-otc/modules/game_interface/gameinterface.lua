@@ -2033,7 +2033,7 @@ end
 
 function toggleInternalFocus()
     for reason, _ in pairs(focusReason) do
-        if reason == 'bosscooldown' then
+        if reason == 'bosscooldown' and modules.game_analyser then
             modules.game_analyser.toggleBossCDFocus(false)
         end
     end

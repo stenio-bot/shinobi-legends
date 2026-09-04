@@ -131,6 +131,64 @@ python3 tools/gen_art_shinobi.py data/images/background.png data/images/clientic
 > (`/controls/keybinds/<nome>.otml`), então `Nevoa` vai sem acento de propósito: um `é` em
 > cp1252 produziria um nome de arquivo inválido em UTF-8 no macOS.
 
+### Interface: o que foi removido (limpeza "Tibia clássico", 2026-09-04)
+
+Regra: nada de branding de terceiros e nenhum botão que só faz sentido no Tibia oficial.
+Módulos **não são apagados** — são desativados no `.otmod` (facilita merge com o upstream).
+
+**Tela de login**
+
+| Onde | O que saiu |
+| --- | --- |
+| `modules/client_topmenu/topmenu.otui` | Widgets `topLeftDiscord`, `topLeftYoutube` e `topLeftOnlinePlayers` (ícones/links de Discord e YouTube e o contador "players online"). O `leftButtonsPanel` passou a ancorar em `parent.left` (antes era `prev.right`, que apontava para o bloco do YouTube). |
+| `modules/client_topmenu/topmenu.lua` | Variáveis e `recursiveGetChildById` desses widgets; `setPlayersOnline/setDiscordStreams/setYoutubeStreams/setYoutubeViewers/setLinkYoutube/setLinkDiscord` viraram **no-op** (client_entergame ainda as chama quando há `Services.status`); `extendedView()` não mexe mais neles. |
+| `modules/client/client.otmod` | `client_bottommenu` comentado do `load-later` — some o painel inferior inteiro (Boosted Creature, Boosted Boss, Event Schedule/calendário e o card de "hints" que linkava `github.com/mehah/otclient/wiki`). |
+| `modules/client_entergame/entergame.lua` | As três checagens `g_modules.getModule("client_bottommenu"):isLoaded()` passaram por um helper `isBottomMenuLoaded()` tolerante a `nil`. |
+| `modules/client_options/styles/misc/help.otui` | Botões **Wiki** e **Info** (abriam `github.com/mehah/otclient/wiki`). Sobraram "Clear Cache" e "Change language". |
+
+"players online" dependia do webservice (`Services.status`, comentado em `init.lua`), então saiu junto.
+
+**Barra de topo (ícones da direita)**
+
+Sobraram só os padrão Tibia: **áudio, opções, sair**. Os ícones de ferramenta de dev foram
+escondidos (`:hide()` logo após o `addTopRightToggleButton`) — os módulos continuam carregados
+e acessíveis por atalho:
+
+| Módulo | Botão escondido | Atalho que continua valendo |
+| --- | --- | --- |
+| `modules/client_terminal/terminal.lua` | `terminalButton` | `Ctrl+T` |
+| `modules/client_debug_info/debug_info.lua` | `debugInfoButton` | `Ctrl+Alt+D` |
+| `modules/dev_otui/dev_otui.lua` | `otuiEditorButton` | `Ctrl+Alt+U` |
+
+**Em jogo (`game_mainpanel`)**
+
+| Onde | O que saiu |
+| --- | --- |
+| `modules/game_mainpanel/mainpanel.lua` | O botão grande **"Store shop"** (`createButton_large` no `optionsController:onInit`) e a função `toggleStore()`. |
+| `modules/game_interface/interface.otmod` | `game_cyclopedia` comentado (juntou-se a prey, imbuing, market, shop, store, highscore, blessing, rewardwall, forge, taskboard, wheel, proficiency, que já estavam). |
+| `modules/game_cyclopedia/game_cyclopedia.otmod`, `game_analyser/analyser.otmod`, `game_taskboard/tasks.otmod`, `game_proficiency/proficiency.otmod` | `autoload: true` → `autoload: false`. **Esses quatro tinham `autoload`**, ou seja, carregavam sozinhos mesmo estando comentados no `interface.otmod` — era daí que vinham os botões órfãos (Cyclopedia, Boss Slots, Bosstiary, trackers, Task Hunt, Kill Tracker, Weapon Proficiency, Analyser). |
+| `modules/game_quickloot/quickloot.otui` | Painel `vipPanel` ("Get Premium", que chamava `toggleStore`) com `visible: false` — o widget continua existindo porque `quickloot.lua` o referencia. |
+
+Chamadas que apontavam para módulos agora desativados ganharam guarda (`modules.x and ...`):
+
+- `modules/game_minimap/minimap.lua` → `openCyclopediaMap()` cai sempre no `fullscreen()`.
+- `modules/game_interface/gameinterface.lua` → `toggleInternalFocus()` / `modules.game_analyser`.
+- `modules/game_quickloot/quickloot.otui` → `modules.game_cyclopedia.show("items")`.
+
+> Atenção com OTML: comentário **só em linha própria** (`# ...`). Um `#` no fim de uma linha de
+> valor (`autoload: false   # nota`) quebra o parser com
+> `Unable to discover module from file ...: OTML error`.
+
+**O que ficou em jogo:** inventário, skills, battle, minimapa, VIP, quest log, lista de jutsus
+(spelllist), hotkeys, opções, sair, chat, action bar, health/chakra. Confirmado em runtime — os
+únicos botões do painel direito são `hotkeysWindowButton`, `vipListButton`, `battleButton`,
+`skillsButton`, `spelllistButton`, `questLogButton` (+ `optionsMainButton` e `logoutButton` no
+painel de "specials").
+
+Validação: `tools/autotest_client.sh god god` → **erros do cliente: 0**, screenshots em
+`screenshots/autotest_0*.png`. A tela de login não é capturada pelo autotest; use o truque do
+`shinobirc.lua` temporário descrito acima (`screenshots/autotest_00_login.png`).
+
 ### Assets (sprites)
 - Coloque `Tibia.spr` e `Tibia.dat` versão **10.98** em `client-otc/data/things/1098/`.
 - Para desenvolvimento, use um par 10.98 legítimo que você possua; para distribuir, só sprites próprios (ADR-002).

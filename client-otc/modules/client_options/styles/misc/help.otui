@@ -1,37 +1,12 @@
 UIWidget
   anchors.fill: parent
   visible: false
+  # Shinobi Legends: removidos os botoes 'Wiki'/'Info' que abriam github.com/mehah/otclient/wiki
   SmallReversedQtPanel
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: parent.top
-    height: 60
-
-    QtButton
-      !text: tr('Wiki')
-      anchors.left: parent.left
-      anchors.top: parent.top
-      size: 130 20
-      margin-bottom: 10
-      margin-right: 10
-      @onClick: g_platform.openUrl("https://github.com/mehah/otclient/wiki")
-
-    QtButton
-      !text: tr('Info')
-      size: 130 20
-      margin-top: 5
-     
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-
-      @onClick: g_platform.openUrl("https://github.com/mehah/otclient/wiki")
-
-  SmallReversedQtPanel
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.top: prev.bottom
     height: 55
-    margin-top: 5
 
     QtButton
       !text: tr('Clear Cache')

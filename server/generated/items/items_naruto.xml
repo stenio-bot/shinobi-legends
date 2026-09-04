@@ -180,6 +180,15 @@
 	<attribute key="description" value="Ensina Katon: Sopro de Brasas (se ainda não souber)."/>
 	<!-- required_level 6: aplicar via movements.xml (level) -->
 </item>
+<item id="5895" name="presa da serpente branca">  <!-- white_serpent_fang (rare) -->
+	<attribute key="weight" value="40"/>
+	<attribute key="description" value="Presa curva e translúcida, ainda úmida de veneno. Material raro."/>
+</item>
+<item id="1956" name="pergaminho: névoa venenosa">  <!-- scroll_doku_kiri (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Doku: Névoa Venenosa. Qualquer vila pode aprender."/>
+	<!-- required_level 25: aplicar via movements.xml (level) -->
+</item>
 <item id="7382" name="katana do trovão">  <!-- thunder_katana (rare) -->
 	<attribute key="weight" value="600"/>
 	<attribute key="description" value="A lâmina estala sozinha antes da tempestade."/>

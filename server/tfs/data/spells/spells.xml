@@ -55,6 +55,12 @@
 	<vocation name="Vila da Nuvem"/>
 	<vocation name="Vila da Areia"/>
 </instant>
+<instant group="attack" name="Doku: Névoa Venenosa" words="doku kiri" lvl="25" mana="46" prem="0" range="2" needtarget="0" blockwalls="1" cooldown="6000" groupcooldown="1000" needlearn="1" script="naruto/doku_kiri.lua">
+	<vocation name="Vila da Folha"/>
+	<vocation name="Vila da Névoa"/>
+	<vocation name="Vila da Nuvem"/>
+	<vocation name="Vila da Areia"/>
+</instant>
 <instant group="attack" name="Raiton: Agulha de Raio" words="raiton hari" lvl="1" mana="14" prem="0" range="7" needtarget="1" blockwalls="1" cooldown="1500" groupcooldown="1000" needlearn="0" script="naruto/raiton_hari.lua">
 	<vocation name="Vila da Nuvem"/>
 </instant>

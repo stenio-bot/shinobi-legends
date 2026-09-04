@@ -1,0 +1,31 @@
+<!-- GERADO por tools/spr/build_assets.py a partir de
+     assets-src/sprites/tiles.json + allocations.json. NAO EDITE A MAO.
+     Itens NOVOS de cenario: os ids ja estao no items.otb (idem gerado).
+     Injete este bloco em server/tfs/data/items/items.xml. -->
+
+<item id="30000" name="chão de tatame">  <!-- tatami_floor (ground, clientId 23726) -->
+	<attribute key="description" value="Esteira de palha traçada, macia sob os pés."/>
+</item>
+<item id="30001" name="terra batida">  <!-- village_dirt (ground, clientId 23727) -->
+	<attribute key="description" value="Caminho de terra pisada da vila."/>
+</item>
+<item id="30002" name="parede de madeira">  <!-- wood_wall_v (wall, clientId 23728) -->
+	<attribute key="description" value="Parede de tábuas, orientação norte-sul."/>
+</item>
+<item id="30003" name="parede de madeira">  <!-- wood_wall_h (wall, clientId 23729) -->
+	<attribute key="description" value="Parede de tábuas, orientação leste-oeste."/>
+</item>
+<item id="30004" name="portão torii">  <!-- torii_gate (decoration, clientId 23730) -->
+	<attribute key="description" value="Portão vermelho que marca a entrada da vila."/>
+</item>
+<item id="30005" name="placa de madeira">  <!-- wood_sign (furniture, clientId 23731) -->
+	<attribute key="readable" value="1"/>
+	<attribute key="maxTextLen" value="128"/>
+	<attribute key="description" value="Uma placa esculpida à mão."/>
+</item>
+<item id="30006" name="lanterna de papel">  <!-- paper_lantern (decoration, clientId 23732) -->
+	<attribute key="description" value="Chochin acesa; oscila devagar."/>
+</item>
+<item id="30007" name="cerca de bambu">  <!-- bamboo_fence (wall, clientId 23733) -->
+	<attribute key="description" value="Colmos de bambu amarrados com corda."/>
+</item>

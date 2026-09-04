@@ -1,0 +1,100 @@
+{
+  "_doc": "Itens NOVOS de cenario do Shinobi Legends (nao existem no items.otb vanilla). Consumido por tools/spr/build_assets.py, que aloca os ids em allocations.json, reescreve server/tfs/data/items/items.otb, poe os things no Tibia.dat/.spr e gera server/generated/items/items_tiles_naruto.xml. Os PNGs sao desenhados por tools/spr/gen_tiles.py. Este arquivo e MANTIDO A MAO.",
+  "format": 1,
+  "sheet_root": "assets-src/sprites",
+  "server_id_base": 30000,
+  "client_id_base": 23726,
+  "_doc_grupo": "group: ground | wall | door | decoration | furniture | container. Vira grupo do OTB assim: ground->ground, container->container, resto->none (o TFS 1.4.2 marca 'door' pelo items.xml, nao pelo grupo do OTB).",
+  "_doc_flags": "flags de alto nivel: walkable (default true), blocks_projectile, blocks_pathfind (default = !walkable), on_top (+top_order 1..3), pickupable, stackable, movable, has_height, useable, readable, rotatable, hangable, vertical, horizontal, force_use, look_through, cannot_decay. 'otb_flags' aceita nomes crus de itemflags_t como escape hatch.",
+  "_doc_frames": "frames = um PNG por fase de animacao, cada um com width*32 x height*32 px. 2+ frames ligam FLAG_ANIMATION no OTB e 2+ animationPhases no .dat (os dois PRECISAM casar, ver docs/sistemas/arte-e-sprites.md).",
+  "_doc_size": "size = [largura, altura] em TILES do sprite. Um item 2x1 ainda ocupa UMA casa no servidor; o desenho so se estende para o oeste/norte.",
+
+  "tiles": [
+    {
+      "key": "tatami_floor",
+      "name": "chão de tatame",
+      "group": "ground",
+      "speed": 100,
+      "minimap_rgb": [196, 184, 126],
+      "frames": ["tiles/tatami_floor.png"],
+      "flags": { "walkable": true },
+      "xml": { "description": "Esteira de palha traçada, macia sob os pés." }
+    },
+    {
+      "key": "village_dirt",
+      "name": "terra batida",
+      "group": "ground",
+      "speed": 110,
+      "minimap_rgb": [146, 118, 88],
+      "frames": ["tiles/village_dirt.png"],
+      "flags": { "walkable": true },
+      "xml": { "description": "Caminho de terra pisada da vila." }
+    },
+    {
+      "key": "wood_wall_v",
+      "name": "parede de madeira",
+      "group": "wall",
+      "frames": ["tiles/wood_wall_v.png"],
+      "flags": {
+        "walkable": false, "blocks_projectile": true, "has_height": false,
+        "movable": false
+      },
+      "xml": { "description": "Parede de tábuas, orientação norte-sul." }
+    },
+    {
+      "key": "wood_wall_h",
+      "name": "parede de madeira",
+      "group": "wall",
+      "frames": ["tiles/wood_wall_h.png"],
+      "flags": {
+        "walkable": false, "blocks_projectile": true, "has_height": false,
+        "movable": false
+      },
+      "xml": { "description": "Parede de tábuas, orientação leste-oeste." }
+    },
+    {
+      "key": "torii_gate",
+      "name": "portão torii",
+      "group": "decoration",
+      "size": [2, 1],
+      "frames": ["tiles/torii_gate.png"],
+      "flags": { "walkable": true, "movable": false },
+      "xml": { "description": "Portão vermelho que marca a entrada da vila." }
+    },
+    {
+      "key": "wood_sign",
+      "name": "placa de madeira",
+      "group": "furniture",
+      "frames": ["tiles/wood_sign.png"],
+      "flags": {
+        "walkable": false, "movable": false, "readable": true,
+        "allow_dist_read": true, "has_height": true
+      },
+      "elevation": 6,
+      "xml": { "description": "Uma placa esculpida à mão." }
+    },
+    {
+      "key": "paper_lantern",
+      "name": "lanterna de papel",
+      "group": "decoration",
+      "frames": ["tiles/paper_lantern_0.png", "tiles/paper_lantern_1.png"],
+      "animation": { "durations": [[600, 600], [420, 420]] },
+      "light": { "level": 7, "r": 255, "g": 204, "b": 102 },
+      "flags": { "walkable": false, "movable": false, "has_height": true },
+      "elevation": 8,
+      "xml": { "description": "Chochin acesa; oscila devagar." }
+    },
+    {
+      "key": "bamboo_fence",
+      "name": "cerca de bambu",
+      "group": "wall",
+      "frames": ["tiles/bamboo_fence.png"],
+      "flags": {
+        "walkable": false, "blocks_projectile": false, "has_height": true,
+        "movable": false
+      },
+      "elevation": 12,
+      "xml": { "description": "Colmos de bambu amarrados com corda." }
+    }
+  ]
+}

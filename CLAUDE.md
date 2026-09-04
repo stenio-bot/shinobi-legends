@@ -62,9 +62,19 @@ godot --headless --path client-godot res://tests/smoke_test.tscn   # teste de fu
 ```
 Scripts rodados com `-s` NÃO enxergam autoloads; testes são cenas.
 
-## Estado atual
-Pivô para OTClient + TFS em andamento (ver docs/01-roadmap.md, "Fase OT"). O protótipo Godot
-(Marcos 1–3) está completo e congelado em `client-godot/`.
+## Estado atual (2026-09-04)
+Jogo roda ponta a ponta: OTClient compilado (client-otc/OTClient.app), TFS 1.4.2 com conteúdo Naruto,
+mapa próprio `valley` (tools/map/build_valley.py), sprites placeholder + tiles próprios (tools/spr),
+GM tools (/sl). Teste: `tools/autotest_client.sh god god` (precisa do servidor: tools/run_server.sh).
+Pendências grandes: arte de verdade (usuário vai fornecer .spr/.dat ou PNGs em assets-src/import/),
+mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas), criação de conta.
+
+## Armadilhas do TFS 1.4.2 já encontradas
+- accounts.type: GOD = 6 (5 é Community Manager). Talkactions de GM checam >= ACCOUNT_TYPE_GOD.
+- NPC: o servidor procura `data/npc/<Nome>.xml`; `script=` é relativo a `data/npc/scripts/`.
+- items.xml: `weaponType fist` não existe (Taijutsu = sword); tipo `sign` não existe.
+- Comentários OTML só em linha própria (`chave: valor  # x` quebra o parser).
+- stdout do TFS é bufferizado quando redirecionado: use `script -q log ./build/tfs` para ver prints em tempo real.
 
 ## Como adicionar conteúdo
 - Monstro: entrada em `data/monsters/<area>.json` + spawn em `data/maps/forest_valley.json` + cor em `Monster._color_for`.

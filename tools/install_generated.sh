@@ -8,10 +8,11 @@ TFS="$ROOT/server/tfs/data"
 
 python3 "$ROOT/tools/export_tfs.py"
 
-mkdir -p "$TFS/monster/naruto" "$TFS/spells/scripts/naruto" "$TFS/npc/naruto" "$TFS/scripts/naruto"
+mkdir -p "$TFS/monster/naruto" "$TFS/spells/scripts/naruto" "$TFS/npc/scripts/naruto" "$TFS/scripts/naruto"
 cp "$GEN"/monster/naruto/*.xml "$TFS/monster/naruto/"
 cp "$GEN"/spells/scripts/naruto/*.lua "$TFS/spells/scripts/naruto/"
-cp "$GEN"/npc/naruto/* "$TFS/npc/naruto/"
+cp "$GEN"/npc/*.xml "$TFS/npc/"
+cp "$GEN"/npc/scripts/naruto/*.lua "$TFS/npc/scripts/naruto/"
 cp "$GEN"/scripts/naruto/*.lua "$TFS/scripts/naruto/"
 cp "$GEN"/lib/naruto_quests.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_jutsus.lua "$TFS/lib/"
@@ -25,7 +26,7 @@ import sys,re
 f,close,block=sys.argv[1:4]
 s=open(f,encoding="utf-8",errors="surrogateescape").read()
 b=open(block,encoding="utf-8").read()
-b="\n".join(l for l in b.splitlines() if not l.startswith("<!-- GERADO") and not l.startswith("<!-- Cole"))
+b=re.sub(r"<!--.*?-->", "", b, flags=re.S)  # remove todos os comentários (cabeçalhos multi-linha quebram o parser)
 start,end="<!-- NARUTO:BEGIN -->","<!-- NARUTO:END -->"
 payload=f"{start}\n{b.strip()}\n{end}\n"
 if start in s:
@@ -59,7 +60,11 @@ PY
 }
 inject "$TFS/monster/monsters.xml" "</monsters>" "$GEN/monster/monsters_naruto.xml"
 inject "$TFS/spells/spells.xml" "</spells>" "$GEN/spells/spells_naruto.xml"
-inject "$TFS/items/items.xml" "</items>" "$GEN/items/items_naruto.xml"
+# itens gerados + tiles novos (server ids 30000+) no mesmo bloco NARUTO
+cat "$GEN/items/items_naruto.xml" > "$GEN/items/_items_all.xml"
+[ -f "$GEN/items/items_tiles_naruto.xml" ] && cat "$GEN/items/items_tiles_naruto.xml" >> "$GEN/items/_items_all.xml"
+inject "$TFS/items/items.xml" "</items>" "$GEN/items/_items_all.xml"
+rm -f "$GEN/items/_items_all.xml"
 
 grep -q "naruto_quests" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_quests.lua')" >> "$TFS/lib/lib.lua"
 grep -q "naruto_jutsus" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_jutsus.lua')" >> "$TFS/lib/lib.lua"

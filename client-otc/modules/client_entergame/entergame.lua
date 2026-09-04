@@ -304,15 +304,22 @@ function EnterGame.init()
     end
 end
 
+-- Shinobi Legends: client_bottommenu foi desativado em modules/client/client.otmod.
+-- getModule() pode devolver nil, então a checagem precisa ser tolerante.
+local function isBottomMenuLoaded()
+    local m = g_modules.getModule("client_bottommenu")
+    return m ~= nil and m:isLoaded()
+end
+
 function EnterGame.hidePanels()
-    if g_modules.getModule("client_bottommenu"):isLoaded()  then
+    if isBottomMenuLoaded()  then
         modules.client_bottommenu.hide()
     end
     modules.client_topmenu.hide()
 end
 
 function EnterGame.showPanels()
-    if g_modules.getModule("client_bottommenu"):isLoaded()  then
+    if isBottomMenuLoaded()  then
         modules.client_bottommenu.show()
     end
     modules.client_topmenu.show()
@@ -345,7 +352,7 @@ function EnterGame.firstShow()
     end
 
     if Services and Services.status then
-        if g_modules.getModule("client_bottommenu"):isLoaded()  then
+        if isBottomMenuLoaded()  then
             EnterGame.postCacheInfo()
             EnterGame.postEventScheduler()
             -- EnterGame.postShowOff() -- myacc/znote no send login.php

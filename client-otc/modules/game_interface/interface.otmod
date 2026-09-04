@@ -49,7 +49,7 @@ Module
     #- game_blessing   # desativado: Shinobi Legends (ADR-005)
     #- game_store   # desativado: Shinobi Legends (ADR-005)
     - game_quickloot
-    - game_cyclopedia
+    #- game_cyclopedia   # desativado: Shinobi Legends (ADR-005)
     - game_creatureinformation
     #- game_rewardwall   # desativado: Shinobi Legends (ADR-005)
     #- game_forge   # desativado: Shinobi Legends (ADR-005)

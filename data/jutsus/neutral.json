@@ -89,5 +89,33 @@
     ],
     "animation": "fx_seal_paper",
     "sfx": "sfx_seal"
+  },
+  {
+    "id": "doku_kiri",
+    "name": "Doku: Névoa Venenosa",
+    "description": "Exala uma névoa roxa ao redor do conjurador; quem respira sai envenenado.",
+    "element": "none",
+    "type": "area",
+    "shape": "circle_r2",
+    "range": 2,
+    "chakra_cost": 46,
+    "cooldown_s": 6.0,
+    "base_damage": 36,
+    "level_scale": 1.4,
+    "skill_scale": 1.0,
+    "skill": "ninjutsu",
+    "required_level": 25,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "poison",
+        "chance": 0.85,
+        "duration_s": 10,
+        "value": 6
+      }
+    ],
+    "animation": "fx_poison_mist",
+    "sfx": "sfx_hiss"
   }
 ]

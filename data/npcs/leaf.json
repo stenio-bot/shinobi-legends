@@ -182,18 +182,18 @@
         }
       },
       {
-        "id": "q_elder_toad",
-        "name": "O Ancião",
-        "text": "Derrote o Sapo Ancião no coração do pântano.",
+        "id": "q_white_serpent",
+        "name": "A Serpente Branca",
+        "text": "Um renegado de pele pálida montou covil no fim da Floresta da Morte. Ele não é humano faz tempo. Mate a Serpente Branca.",
         "objective": {
-          "kill": "boss_elder_toad",
+          "kill": "boss_white_serpent",
           "count": 1
         },
         "reward": {
-          "xp": 8000,
-          "ryo": 3000,
+          "xp": 9000,
+          "ryo": 3500,
           "items": [
-            "chakra_pill_medium"
+            "scroll_doku_kiri"
           ]
         }
       }

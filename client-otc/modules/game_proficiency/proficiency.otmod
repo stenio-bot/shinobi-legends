@@ -3,7 +3,8 @@ Module
   description: Weapon Proficiency System
   sandboxed: true
   scripts: [ const, proficiency_data, proficiency ]
-  autoload: true
+  # desativado: Shinobi Legends (ADR-005) -- era autoload: true
+  autoload: false
   autoload-priority: 1200
   minClientVersion: 1511
   dependencies:
