@@ -48,7 +48,37 @@ Vantagem: ×1.5. Desvantagem: ×0.75. Neutro: ×1.0. Monstros têm `element` (ou
 | `heal_over_time` | cura por segundo |
 
 ## Hotbar
-10 slots (teclas 1–0 ou F1–F10). Jutsus e consumíveis. Cooldown visual.
+No OTClient a hotbar é o módulo `game_actionbar` (barra inferior 1, teclas F1–F12). Os jutsus
+chegam nela por `client-otc/modules/naruto_theme/naruto_jutsus.lua`:
+
+- **Onde vivem os dados.** O cliente só conhece as spells da Tibia
+  (`modules/gamelib/spells.lua`: `SpellInfo['Default']` + `SpelllistSettings['Default']`).
+  `tools/export_tfs.py` gera `client-otc/modules/naruto_theme/jutsus_data.lua` (cabeçalho
+  `GERADO`) com um **segundo perfil**, `'Shinobi'`, no mesmo formato — `name`, `words` (os selos,
+  iguais aos do `spells_naruto.xml`), `level`, `mana`, `exhaustion` (cooldown em ms),
+  `group = {[1|2] = 1000}`, `vocations`, `description`, `clientId` (índice do ícone). O
+  `naruto_theme` só acrescenta as chaves `SpellInfo['Shinobi']` / `SpelllistSettings['Shinobi']`;
+  nenhum módulo original é sobrescrito.
+- **Ícones.** `.venv/bin/python tools/spr/gen_jutsu_icons.py` desenha (Pillow, arte própria)
+  `client-otc/data/images/game/spells/jutsus.png`: tira horizontal de 25 ícones 32×32, cor por
+  elemento e símbolo por tipo (projétil/alvo = bola, área = anel, beam = linha, self = silhueta,
+  cura = cruz; pontinhos no canto = tier). A **ordem da tira** (elemento → tier → level → id) é a
+  mesma de `jutsu_icon_order` nos dois scripts — mexeu em um, regenere o outro.
+- **Vocação = vila.** `player:getVocation()` devolve o `clientid` da vocação
+  (`data/tfs_mapping.json` → `villages.*.vocation_id`). O OTClient traduz isso para as vocações
+  da Tibia (`VocationsClient` → `VocationsServer`, `logics/const.lua translateVocation`), então
+  cada jutsu é exportado com `vocations = {base, base+4}`: Folha `{4,8}`, Névoa `{3,7}`,
+  Nuvem `{1,5}`, Areia `{2,6}`; jutsus neutros levam as oito.
+- **Preenchimento automático.** Em `onGameStart` (+1,5 s, para o level/vocação já terem chegado)
+  o módulo cria/seleciona um conjunto de hotkeys por vila (`Vila da Folha`, `Vila da Nevoa`…) e,
+  **se a barra inferior 1 desse conjunto estiver vazia**, grava nos slots 1..12 os jutsus que o
+  personagem pode usar (vocação + level), ordenados por level, via
+  `ApiJson.createOrUpdateText(1, i, words, true)` — o mesmo formato `chatText`/`sendAutomatically`
+  que a UI grava quando você arrasta uma spell para o slot — e liga F1..F12 com
+  `ApiJson.updateActionBarHotkey`. Depois `ApiJson.saveData()` + `selectHotkeySet` para redesenhar.
+  Slots já preenchidos pelo jogador nunca são sobrescritos.
+- **Lista de Jutsus** (Alt+L): `naruto_jutsus` chama `setSpelllistProfile('Shinobi')`, então a
+  janela lista os 25 jutsus com ícone e o filtro de "Vila" já vem marcado na vila do personagem.
 
 ## Formas de aprender jutsu
 - Automático ao atingir level (jutsus básicos da vila).

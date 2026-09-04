@@ -51,6 +51,12 @@ local TERMS = {
     ['Spell'] = 'Jutsu',
     ['Vocation'] = 'Vila',
     ['Vocation:'] = 'Vila:',
+    -- vocacoes da Tibia = vilas (data/tfs_mapping.json villages.*.vocation_id; a cadeia
+    -- vocation_id -> VocationsClient -> VocationsServer esta em naruto_jutsus.lua)
+    ['Sorcerer'] = 'Nuvem',
+    ['Druid'] = 'Areia',
+    ['Paladin'] = 'N\xE9voa',
+    ['Knight'] = 'Folha',
     ['Premium'] = 'Premium',
     ['Words'] = 'Selos',
     ['Words:'] = 'Selos:',
@@ -105,7 +111,10 @@ function init()
     apply()
     g_logger.info('naruto_theme: termos aplicados (Mana->Chakra, skills, jutsus); locale = ' ..
         DEFAULT_LOCALE)
+    -- naruto_jutsus.lua (mesmo sandbox): perfil de spelllist 'Shinobi' + barra de acao padrao
+    initJutsus()
 end
 
 function terminate()
+    terminateJutsus()
 end

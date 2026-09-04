@@ -45,14 +45,18 @@ function assignSpell(button, multiSlotIndex)
     ActionBarController:findWidget("#dev"):setVisible(dev)
     local playerVocation = translateVocation(player:getVocation())
     local playerLevel = player:getLevel()
-    local spells = modules.gamelib.SpellInfo['Default']
-    local defaultIconsFolder = SpelllistSettings['Default'].iconFile
+    -- Shinobi Legends: usa o perfil ativo da lista de jutsus ('Shinobi') em vez de 'Default',
+    -- para que a janela de atribuicao liste os jutsus com a folha de icones certa.
+    local spellProfile = (modules.game_spelllist and modules.game_spelllist.getSpelllistProfile and
+                             modules.game_spelllist.getSpelllistProfile()) or 'Default'
+    local spells = modules.gamelib.SpellInfo[spellProfile] or modules.gamelib.SpellInfo['Default']
+    local defaultIconsFolder = SpelllistSettings[spellProfile].iconFile
     local showAllSpells = (playerVocation == 0)
     for spellName, spellData in pairs(spells) do
         if showAllSpells or table.contains(spellData.vocations, playerVocation) then
             local widget = g_ui.createWidget('SpellPreview', spellList)
             local spellId = spellData.clientId
-            local clip = Spells.getImageClip(spellId)
+            local clip = Spells.getImageClip(spellId, spellProfile)
             radio:addWidget(widget)
             widget:setId(spellData.id)
             widget:setText(spellName .. "\n" .. spellData.words)
@@ -107,8 +111,9 @@ function assignSpell(button, multiSlotIndex)
             print("Warning Spell ID not found L81 modules/game_actionbar/logics/ActionAssignmentWindows.lua")
             return
         end
-        local clip = Spells.getImageClip(spellId, 'Default')
-        imageWidget:setImageSource(defaultIconsFolder)
+        local preselectProfile = Spells.getSpellProfileOf(spellData)
+        local clip = Spells.getImageClip(spellId, preselectProfile)
+        imageWidget:setImageSource(SpelllistSettings[preselectProfile].iconFile)
         imageWidget:setImageClip(clip)
         paramLabel:setOn(spellData.parameter)
         paramText:setEnabled(spellData.parameter)
@@ -192,7 +197,7 @@ function assignSpell(button, multiSlotIndex)
         for spellName, spellData in pairs(spells) do
             local widget = g_ui.createWidget('SpellPreview', spellList)
             local spellId = spellData.clientId
-            local clip = Spells.getImageClip(spellId)
+            local clip = Spells.getImageClip(spellId, spellProfile)
             radio:addWidget(widget)
             widget:setId(spellData.id)
             widget:setText(spellName .. "\n" .. spellData.words)

@@ -1092,8 +1092,11 @@ function updateButton(button)
                 print("Warning Spell ID not found L734 modules/game_actionbar/logics/ActionButtonLogic.lua")
                 return
             end
-            local source = SpelllistSettings['Default'].iconFile
-            local clip = Spells.getImageClip(spellId, 'Default')
+            -- Shinobi Legends: o perfil sai do proprio spellData (os jutsus usam o perfil
+            -- 'Shinobi', com folha de icones propria) em vez de ser fixo em 'Default'.
+            local spellProfile = Spells.getSpellProfileOf(spellData)
+            local source = SpelllistSettings[spellProfile].iconFile
+            local clip = Spells.getImageClip(spellId, spellProfile)
 
             button.item.text:setImageSource(source)
             button.item.text:setImageClip(clip)

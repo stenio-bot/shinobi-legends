@@ -189,6 +189,40 @@ Validação: `tools/autotest_client.sh god god` → **erros do cliente: 0**, scr
 `screenshots/autotest_0*.png`. A tela de login não é capturada pelo autotest; use o truque do
 `shinobirc.lua` temporário descrito acima (`screenshots/autotest_00_login.png`).
 
+### Jutsus no cliente (lista de jutsus + barra de ação)
+
+O OTClient traz só as spells da Tibia, então a Lista de Jutsus e a `game_actionbar` nasceriam
+vazias. O módulo `client-otc/modules/naruto_theme` resolve isso (detalhes e formato em
+`docs/sistemas/combate-e-jutsus.md`, seção "Hotbar"):
+
+| Arquivo | O que é | Como regerar |
+|---|---|---|
+| `client-otc/modules/naruto_theme/jutsus_data.lua` | GERADO. Perfil `'Shinobi'` de `SpellInfo`/`SpelllistSettings` com os 25 jutsus + `NarutoVillages`. | `python3 tools/export_tfs.py` |
+| `client-otc/data/images/game/spells/jutsus.png` | Folha de ícones 32×32 (arte própria, versionada). | `.venv/bin/python tools/spr/gen_jutsu_icons.py` |
+| `client-otc/modules/naruto_theme/naruto_jutsus.lua` | Registra o perfil, troca a Lista de Jutsus para ele e preenche a barra inferior 1. | manual |
+
+As duas gerações usam a **mesma ordem** de jutsus (elemento → tier → level → id); ao mexer em
+`data/jutsus/*.json` rode as duas.
+
+Mudanças mínimas em módulos originais (documentadas aqui porque fogem da regra "não editar
+`game_*`"):
+
+- `modules/gamelib/spells.lua`: nova função `Spells.getSpellProfileOf(spellData)` (descobre a
+  qual perfil uma entrada pertence).
+- `modules/game_actionbar/logics/ActionButtonLogic.lua` e `logics/ActionAssignmentWindows.lua`:
+  o perfil da folha de ícones deixou de ser fixo em `'Default'` e passa a vir do próprio
+  `spellData` / do perfil ativo da spelllist. Sem isso o slot com jutsu mostraria o ícone errado.
+
+O conjunto de hotkeys fica em `~/Library/Application Support/shinobi/.shinobi/settings/clientoptions.json`
+(um conjunto por vila: `Vila da Folha`, `Vila da Nevoa`, `Vila da Nuvem`, `Vila da Areia`). Para
+testar o preenchimento do zero, apague o conjunto da vila desse JSON e relogue.
+
+Validação (2026-09-04, servidor em 127.0.0.1:7171): login `god`, `/vila folha`, `/lvl 40`,
+`/jutsus`, relog → barra inferior 1 com 10 jutsus em F1–F10, Lista de Jutsus com 25 entradas
+(10 visíveis no filtro da vila), clique no slot 1 → `GM: katon goukakyuu` e dano no Lobo.
+**0 erros no log do cliente.** Screenshots: `screenshots/actionbar_barra.png`,
+`screenshots/actionbar_lista.png`, `screenshots/actionbar_cast.png`.
+
 ### Assets (sprites)
 - Coloque `Tibia.spr` e `Tibia.dat` versão **10.98** em `client-otc/data/things/1098/`.
 - Para desenvolvimento, use um par 10.98 legítimo que você possua; para distribuir, só sprites próprios (ADR-002).

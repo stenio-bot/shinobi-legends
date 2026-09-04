@@ -3,7 +3,7 @@
 Saída em server/generated/ (copie para server/tfs/data/ conforme docs/04-setup-ot.md).
 Uso: python3 tools/export_tfs.py
 """
-import json, os, glob, shutil, math
+import json, os, glob, shutil, math, unicodedata
 from xml.sax.saxutils import escape
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -690,3 +690,122 @@ if SKIPPED_ITEM_IDS:
         print(f"  - {our_id}: id {iid} SUBSTITUI o item vanilla (installer remove a entrada original)")
 elif not VANILLA_ITEM_IDS:
     print("AVISO: server/tfs/data/items/items.xml não encontrado; ids duplicados não foram verificados.")
+
+# ---------------------------------------------------------------- cliente: jutsus_data.lua
+# O OTClient só conhece as spells da Tibia (modules/gamelib/spells.lua). Geramos aqui um
+# perfil próprio de spelllist ("Shinobi") com os 25 jutsus, no MESMO formato de SpellInfo,
+# carregado por modules/naruto_theme. Com isso a "Lista de Jutsus" e a barra de ação passam
+# a conhecer e desenhar os jutsus. Os ícones vêm de tools/spr/gen_jutsu_icons.py.
+CLIENT_MODULE = os.path.join(ROOT, "client-otc", "modules", "naruto_theme")
+HEADER_CLIENT_LUA = (
+    "-- GERADO por tools/export_tfs.py a partir de data/jutsus/*.json. NAO EDITE A MAO.\n"
+    "-- Regenerar: python3 tools/export_tfs.py (e .venv/bin/python tools/spr/gen_jutsu_icons.py\n"
+    "-- para a folha client-otc/data/images/game/spells/jutsus.png, que precisa da MESMA ordem).\n"
+    "--\n"
+    "-- ENCODING: arquivo ASCII puro. As fontes do OTClient sao bitmaps indexados por byte,\n"
+    "-- entao acentos vao como escapes \\xNN em cp1252 (mesma regra de naruto_theme.lua).\n"
+)
+
+# Ordem dos icones na folha: PRECISA bater com jutsu_icon_order de tools/spr/gen_jutsu_icons.py.
+ICON_ELEMENT_ORDER = ["katon", "suiton", "raiton", "doton", "fuuton", "none"]
+
+def jutsu_icon_order(js):
+    def key(j):
+        el = j.get("element", "none")
+        return (ICON_ELEMENT_ORDER.index(el) if el in ICON_ELEMENT_ORDER else len(ICON_ELEMENT_ORDER),
+                int(j.get("tier", 1)), int(j.get("required_level", 1)), j["id"])
+    return sorted(js, key=key)
+
+# vocation_id (= clientid que o TFS manda no login) -> vocação "base" da Tibia que o OTClient usa.
+# Cadeia: player:getVocation() devolve o clientid; modules/game_actionbar/logics/const.lua
+# (translateVocation) e game_spelllist (selectDefaultVocation) mapeiam VocationsClient
+# (Knight=1, Paladin=2, Sorcerer=3, Druid=4, Monk=5) para VocationsServer (base e base+4).
+# Emitimos {base, base+4} para que tanto o filtro da Lista de Jutsus quanto o "posso usar?"
+# da barra de ação aceitem o jutsu da vila certa — e só dela.
+CLIENT_VOC_TO_TIBIA_BASE = {1: 4, 2: 3, 3: 1, 4: 2, 5: 9}
+
+def lua_str(s):
+    """String Lua em ASCII: acentos viram \\xNN no byte cp1252 (ver naruto_theme.lua)."""
+    out = []
+    for ch in str(s):
+        if ch == "\\":
+            out.append("\\\\")
+        elif ch == "'":
+            out.append("\\'")
+        elif ch == "\n":
+            out.append("\\n")
+        elif 32 <= ord(ch) < 127:
+            out.append(ch)
+        else:
+            for b in ch.encode("cp1252", errors="replace"):
+                out.append("\\x%02X" % b)
+    return "'" + "".join(out) + "'"
+
+def jutsu_vocations(j):
+    if not j["villages"]:
+        vids = [vm["vocation_id"] for vm in M["villages"].values()]
+    else:
+        vids = [M["villages"][v]["vocation_id"] for v in j["villages"]]
+    out = set()
+    for vid in vids:
+        base = CLIENT_VOC_TO_TIBIA_BASE.get(vid, vid)
+        out.add(base)
+        out.add(base + 4)
+    return sorted(out)
+
+ordered_jutsus = jutsu_icon_order(list(jutsus.values()))
+cl = [HEADER_CLIENT_LUA,
+      "-- Ajustes da folha de icones (mesmo formato de SpelllistSettings em gamelib/spells.lua).",
+      "NarutoSpelllistProfile = 'Shinobi'",
+      "NarutoSpelllistSettings = {",
+      "    iconFile = '/images/game/spells/jutsus',",
+      "    iconsForGameCooldown = '/images/game/spells/jutsus',",
+      "    iconSize = { width = 32, height = 32 },",
+      "    iconSizeCooldown = { width = 32, height = 32 },",
+      "    spellListWidth = 210,",
+      "    spellWindowWidth = 550,",
+      "}",
+      "",
+      "-- [nome do jutsu] = posicao na folha jutsus.png; x = indice * 32, y = 0.",
+      "NarutoSpellIcons = {"]
+for i, j in enumerate(ordered_jutsus):
+    cl.append("    [%s] = { x = %d, y = 0, index = %d }," % (lua_str(j["name"]), i * 32, i))
+cl.append("}")
+cl.append("")
+cl.append("-- Mesmo formato de SpellInfo['Default']. 'words' sao os selos (= words do spells.xml).")
+cl.append("NarutoSpellInfo = {")
+for i, j in enumerate(ordered_jutsus):
+    is_self = j["type"] == "self"
+    group_id = 2 if is_self else 1
+    need_target = "true" if j["type"] in ("projectile", "target") else "false"
+    cl.append(
+        "    [%s] = { id = %d, name = %s, words = %s, type = 'Instant', level = %d, mana = %d, "
+        "soul = 0, maglevel = 0, icon = %s, clientId = %d, group = { [%d] = 1000 }, needTarget = %s, "
+        "parameter = false, range = %d, exhaustion = %d, premium = false, vocations = { %s }, "
+        "special = false, source = 0, description = %s }," % (
+            lua_str(j["name"]), 900 + i, lua_str(j["name"]), lua_str(spell_words(j)),
+            int(j["required_level"]), int(j["chakra_cost"]), lua_str(j["id"]), i, group_id,
+            need_target, max(1, int(j["range"])), int(j["cooldown_s"] * 1000),
+            ", ".join(str(v) for v in jutsu_vocations(j)), lua_str(j.get("description", "")),
+        ))
+cl.append("}")
+cl.append("")
+cl.append("-- Vilas por vocation_id (o que player:getVocation() devolve). setName e o nome do")
+cl.append("-- conjunto de hotkeys do game_actionbar: ASCII puro, porque vira chave no JSON.")
+cl.append("NarutoVillages = {")
+for _v in load(os.path.join(DATA, "villages.json")):
+    _vm = M["villages"][_v["id"]]
+    _ascii = unicodedata.normalize("NFKD", _v["name"]).encode("ascii", "ignore").decode("ascii")
+    cl.append("    [%d] = { id = %s, name = %s, setName = %s, element = %s }," % (
+        _vm["vocation_id"], lua_str(_v["id"]), lua_str(_v["name"]), lua_str(_ascii), lua_str(_v["element"])))
+cl.append("}")
+cl.append("")
+cl.append("-- Ordem sugerida da barra de acao: por level exigido, depois nome.")
+cl.append("NarutoJutsuOrder = {")
+for j in sorted(ordered_jutsus, key=lambda x: (int(x["required_level"]), x["name"])):
+    cl.append("    %s," % lua_str(j["name"]))
+cl.append("}")
+os.makedirs(CLIENT_MODULE, exist_ok=True)
+with open(os.path.join(CLIENT_MODULE, "jutsus_data.lua"), "w", encoding="ascii") as f:
+    f.write("\n".join(cl) + "\n")
+print(f"OK: {len(ordered_jutsus)} jutsus -> client-otc/modules/naruto_theme/jutsus_data.lua")

@@ -602,3 +602,17 @@ function Spells.getImageClipCooldown(indexClip, profile)
     end
     return indexClip * SpelllistSettings[profile].iconSizeCooldown.width .. " 0 " .. SpelllistSettings[profile].iconSizeCooldown.width .. " " .. SpelllistSettings[profile].iconSizeCooldown.height
 end
+
+-- Shinobi Legends: descobre a que perfil (SpellInfo/SpelllistSettings) uma entrada pertence.
+-- Necessario porque o game_actionbar assumia o perfil 'Default' ao desenhar o icone de uma
+-- spell, e os jutsus vivem no perfil 'Shinobi', com folha propria (images/game/spells/jutsus).
+function Spells.getSpellProfileOf(spellData)
+    for profile, data in pairs(SpellInfo) do
+        for _, spell in pairs(data) do
+            if spell == spellData then
+                return profile
+            end
+        end
+    end
+    return 'Default'
+end
