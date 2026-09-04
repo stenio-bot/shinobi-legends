@@ -68,7 +68,11 @@
     "wolf": {
       "looktype": 21,
       "corpse": 5968,
-      "race": "blood"
+      "race": "blood",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "bandit": {
       "looktype": 129,
@@ -82,7 +86,11 @@
     "forest_snake": {
       "looktype": 56,
       "corpse": 4238,
-      "race": "blood"
+      "race": "blood",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "bandit_archer": {
       "looktype": 129,
@@ -105,12 +113,20 @@
     "leech": {
       "looktype": 19,
       "corpse": 4187,
-      "race": "venom"
+      "race": "venom",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "giant_toad": {
       "looktype": 60,
       "corpse": 4166,
-      "race": "blood"
+      "race": "blood",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "rogue_ninja": {
       "looktype": 128,
@@ -125,19 +141,31 @@
     "boss_elder_toad": {
       "looktype": 60,
       "corpse": 4166,
-      "race": "blood"
+      "race": "blood",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "lesser_serpent": {
       "looktype": 56,
       "corpse": 4238,
       "race": "venom",
-      "_note": "placeholder: looktype 56 (cobra) recolorida"
+      "_note": "placeholder: looktype 56 (cobra) recolorida",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "boss_white_serpent": {
       "looktype": 132,
       "corpse": 3058,
       "race": "blood",
-      "_note": "placeholder: forma humana = outfit 132; a forma de serpente 2x2 (looktype 890, faixa 878..897 do .dat placeholder) é aplicada em runtime pela fase de 60% em boss_phases.lua — NÃO cite 890 em XML, senão gen_placeholders.py desloca a faixa de chefes"
+      "_note": "placeholder: forma humana = outfit 132; a forma de serpente 2x2 (looktype 890, faixa 878..897 do .dat placeholder) é aplicada em runtime pela fase de 60% em boss_phases.lua — NÃO cite 890 em XML, senão gen_placeholders.py desloca a faixa de chefes",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "ruin_puppet": {
       "looktype": 129,
@@ -153,7 +181,11 @@
       "looktype": 61,
       "corpse": 3058,
       "race": "undead",
-      "_note": "placeholder: looktype 61 (golem de pedra vanilla)"
+      "_note": "placeholder: looktype 61 (golem de pedra vanilla)",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "spectral_warrior": {
       "looktype": 130,
@@ -189,13 +221,21 @@
       "looktype": 21,
       "corpse": 5968,
       "race": "blood",
-      "_note": "placeholder: looktype 21 e corpo 'dead wolf' até termos sprite de ave"
+      "_note": "placeholder: looktype 21 e corpo 'dead wolf' até termos sprite de ave",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "glacier_oni": {
       "looktype": 12,
       "corpse": 3058,
       "race": "blood",
-      "_note": "placeholder: looktype 12 (criatura grande vanilla)"
+      "_note": "placeholder: looktype 12 (criatura grande vanilla)",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "storm_monk": {
       "looktype": 137,
@@ -211,13 +251,21 @@
       "looktype": 56,
       "corpse": 4238,
       "race": "fire",
-      "_note": "placeholder: looktype 56 (cobra) recolorida"
+      "_note": "placeholder: looktype 56 (cobra) recolorida",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     },
     "boss_ancestral_oni": {
       "looktype": 12,
       "corpse": 3058,
       "race": "undead",
-      "_note": "placeholder: mesmo looktype do oni comum; boss precisa de sprite próprio"
+      "_note": "placeholder: mesmo looktype do oni comum; boss precisa de sprite próprio",
+      "head": 96,
+      "body": 95,
+      "legs": 94,
+      "feet": 93
     }
   },
   "items": {

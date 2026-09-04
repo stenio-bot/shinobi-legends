@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Sentinela de Pedra" nameDescription="uma sentinela de pedra" race="undead" experience="850" speed="300" manacost="0">
 	<health now="1000" max="1000"/>
-	<look type="61" corpse="3058"/>
+	<look type="61" head="96" body="95" legs="94" feet="93" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

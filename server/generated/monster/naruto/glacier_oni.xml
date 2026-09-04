@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Oni da Geleira" nameDescription="um oni da geleira" race="blood" experience="1650" speed="320" manacost="0">
 	<health now="2350" max="2350"/>
-	<look type="12" corpse="3058"/>
+	<look type="12" head="96" body="95" legs="94" feet="93" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

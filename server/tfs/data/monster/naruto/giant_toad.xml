@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Sapo Gigante" nameDescription="um sapo gigante" race="blood" experience="180" speed="400" manacost="0">
 	<health now="260" max="260"/>
-	<look type="60" corpse="4166"/>
+	<look type="60" head="96" body="95" legs="94" feet="93" corpse="4166"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

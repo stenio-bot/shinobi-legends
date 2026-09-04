@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Sapo Ancião" nameDescription="o sapo ancião" race="blood" experience="5000" speed="350" manacost="0">
 	<health now="4000" max="4000"/>
-	<look type="60" corpse="4166"/>
+	<look type="60" head="96" body="95" legs="94" feet="93" corpse="4166"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

@@ -8,7 +8,7 @@ function onSay(player, words, param)
 	end
 
 	local position = player:getPosition()
-	local monster = Game.createMonster(param, position, true, true)  -- Shinobi Legends: busca tile livre em volta
+	local monster = Game.createMonster(param, position, true, false)  -- Shinobi Legends: busca tile livre em volta (sem empilhar no GM)
 	if monster then
 		monster:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 		position:sendMagicEffect(CONST_ME_MAGIC_RED)
