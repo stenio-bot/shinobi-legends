@@ -22,6 +22,7 @@ NTO pode ser redistribuído (ADR-002).
 | `dump_dat.py` | Lê um par `.spr`/`.dat`, imprime estatísticas, valida e exporta PNGs. |
 | `import_sheets.py` | Recorta sprites soltos de uma folha PNG (componentes conexos) + folha de revisão. |
 | `imports.py` | Aplica `assets-src/sprites/imports.json` por cima do manifesto (arte importada). |
+| `import_mugen.py` | **Personagens MUGEN** (looktypes 900–926): triagem automática dos rips de `assets-src/import/mugen/` e geração de `overrides/40_mugen.json` + folhas de revisão. |
 
 ## Uso
 
@@ -359,3 +360,45 @@ variantes de um material partem de um campo base comum (`shared_field`), senao o
 campo vira um xadrez de tiles claros e escuros visivel de longe.
 
 `assets-src/sprites/terrain/_sheets/` e **gerado** pelo build; nao edite a mao.
+
+
+## Personagens MUGEN (`import_mugen.py` + `overrides/40_mugen.json`)
+
+Os looktypes **900–926** saem de 21.653 BMPs paletados em
+`assets-src/import/mugen/<Personagem>/[<Variacao>/]` — rips estilo MUGEN/JUS de um
+jogo de luta, material privado do usuario (fora do git, ADR-002). A numeracao e
+**fixa** e vive em `assets-src/sprites/mugen_looktypes.json`.
+
+```bash
+.venv/bin/python tools/spr/import_mugen.py           # triagem + PNGs + 40_mugen.json
+.venv/bin/python tools/spr/import_mugen.py --report  # so o diagnostico, nao grava
+.venv/bin/python tools/spr/import_mugen.py --only 913 922
+.venv/bin/python tools/spr/build_assets.py
+.venv/bin/python tools/spr/dump_dat.py               # validacao: OK, divergencias=0
+```
+
+O script converte o BMP para RGBA usando como chave o **indice 0 da paleta** e a
+cor exata do pixel (0,0), joga fora telas/efeitos (>96 px de lado, densidade da
+caixa fora de 10–75%) e escolhe sozinho:
+
+- **parado** = a primeira corrida de quadros consecutivos com silhueta quase
+  constante (a animacao de respirar), quadro mediano pelo vao entre os pes;
+- **andar** = 3 quadros consecutivos com a mesma altura do parado e o vao entre os
+  pes oscilando — o mesmo criterio do `30_player.json`;
+- **lado** = massa de pele no terco superior a esquerda vs a direita.
+
+O material e **lateral**: nao ha vista de frente nem de costas, entao
+Norte/Leste/Sul usam o mesmo perfil e o Oeste e `mirror_of: 1`.
+
+Quando a heuristica erra, a correcao vai no dicionario `OVERRIDES` no topo do
+script (`{"913": {"idle": 5, "walk": [24, 25, 26], "faces": "right"}}`), indexado
+pelo **numero do arquivo**. Hoje 11 dos 26 personagens usam override — o motivo de
+cada um esta comentado ali e em `docs/sistemas/arte-e-sprites.md`.
+
+Confira sempre as folhas de revisao antes do build:
+`assets-src/import/extracted/mugen/_review_<looktype>.png` (parado + 3 fases nas 4
+direcoes, 3x) e `_review_all.png` (uma linha por personagem).
+
+`40_mugen.json` e o unico arquivo versionado disso tudo; como todo override, cada
+entrada cujo PNG nao existir e ignorada com aviso, entao numa maquina sem o
+material o build roda igual e cai no placeholder.

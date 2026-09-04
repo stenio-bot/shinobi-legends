@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Serpente Branca" nameDescription="a serpente branca" race="blood" experience="5600" speed="400" manacost="0">
 	<health now="4600" max="4600"/>
-	<look type="132" head="96" body="95" legs="94" feet="93" corpse="3058"/>
+	<look type="916" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

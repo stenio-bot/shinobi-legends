@@ -1,0 +1,32 @@
+{
+  "_doc": "Numeração FIXA de looktypes para os personagens importados de assets-src/import/mugen (privado). Pasta relativa a assets-src/import/mugen. Usado por tools/spr/import_mugen.py (arte) e por data/tfs_mapping.json (uso no jogo).",
+  "looktypes": {
+    "900": {"folder": "Naruto/Naruto Kid", "name": "Naruto Kid"},
+    "901": {"folder": "Sasuke/Sasuke Kid", "name": "Sasuke Kid"},
+    "902": {"folder": "Sakura/Sakura Kid", "name": "Sakura Kid"},
+    "903": {"folder": "Hinata", "name": "Hinata"},
+    "904": {"folder": "Rock Lee", "name": "Rock Lee"},
+    "905": {"folder": "Tenten", "name": "Tenten"},
+    "906": {"folder": "Kakashi", "name": "Kakashi"},
+    "907": {"folder": "Minato/Minato", "name": "Minato"},
+    "908": {"folder": "Minato/Minato Edo", "name": "Minato Edo"},
+    "909": {"folder": "Killer Bee", "name": "Killer Bee"},
+    "910": {"folder": "Itachi", "name": "Itachi"},
+    "911": {"folder": "Pain", "name": "Pain"},
+    "912": {"folder": "Obito", "name": "Obito"},
+    "913": {"folder": "Madara", "name": "Madara"},
+    "914": {"folder": "Sasuke/Sasuke Taka", "name": "Sasuke Taka"},
+    "915": {"folder": "Sasuke/Sasuke Akatsuki", "name": "Sasuke Akatsuki"},
+    "916": {"folder": "Sasuke/Sasuke Rinnegan", "name": "Sasuke Rinnegan"},
+    "917": {"folder": "Sakura/Sakura", "name": "Sakura"},
+    "918": {"folder": "Sakura/Sakura The Last", "name": "Sakura The Last"},
+    "919": {"folder": "Naruto/Naruto Sennin", "name": "Naruto Sennin"},
+    "920": {"folder": "Naruto/Naruto KCM", "name": "Naruto KCM"},
+    "921": {"folder": "Naruto/Naruto 1 Calda", "name": "Naruto 1 Calda"},
+    "922": {"folder": "Naruto/Naruto 4 Caldas", "name": "Naruto 4 Caldas"},
+    "923": {"folder": "Naruto/Naruto 6 Caldas", "name": "Naruto 6 Caldas"},
+    "924": {"folder": "Naruto/Naruto Ashura", "name": "Naruto Ashura"},
+    "925": {"folder": "Naruto/Naruto Girl", "name": "Naruto Girl"},
+    "926": {"folder": "Naruto/Naruto Kid Fox", "name": "Naruto Kid Fox"}
+  }
+}

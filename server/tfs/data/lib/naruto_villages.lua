@@ -1,0 +1,10 @@
+-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+
+-- Coloque em data/lib/naruto_villages.lua e adicione
+-- `dofile('data/lib/naruto_villages.lua')` em data/lib/lib.lua (ANTES de scripts/naruto/village_outfit.lua)
+NarutoVillages = {
+	[1] = {name = 'Vila da Folha', default_outfit = 900, outfits = {900, 901, 902}},
+	[2] = {name = 'Vila da Névoa', default_outfit = 903, outfits = {903, 905}},
+	[3] = {name = 'Vila da Nuvem', default_outfit = 909, outfits = {909, 904}},
+	[4] = {name = 'Vila da Areia', default_outfit = 907, outfits = {907, 908}},
+}

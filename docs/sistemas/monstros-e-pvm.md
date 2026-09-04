@@ -74,6 +74,25 @@ Ninja renegado pálido que abandona a forma humana quando encurralado. 4 600 HP,
 Loot exclusivo: `white_serpent_fang` ("Presa da Serpente Branca", material raro, 100%) e
 `scroll_doku_kiri` (pergaminho tier 2 de `doku_kiri`, 25%).
 
+## Visuais dos bosses/monstros humanoides (looktypes 900–926)
+Personagens importados (looktypes fixos 900–926, ver `assets-src/sprites/mugen_looktypes.json`)
+são usados como **visual** de bosses e monstros humanoides — nunca como nome (ADR-002): o nome
+do monstro no jogo continua o nosso, só o `looktype` em `data/tfs_mapping.json` (campo
+`monsters.<id>`) muda.
+
+| Nosso monstro/boss | Looktype | Sprite de origem | Onde fica |
+|---|---|---|---|
+| Chefe dos Bandidos (`boss_bandit_chief`) | 915 | Sasuke Akatsuki | Floresta da Vila (boss) |
+| Serpente Branca, forma humana (`boss_white_serpent`) | 916 | Sasuke Rinnegan | Floresta da Morte (boss) |
+| Marionetista das Ruínas (`boss_puppeteer`) | 910 | Itachi | Ruínas do Clã (boss) |
+| Oni Ancestral (`boss_ancestral_oni`) | 913 | Madara | Montanha do Trovão (boss, único humanoide da área) |
+| Ninja Renegado (`rogue_ninja`) | 914 | Sasuke Taka | Floresta da Morte (monstro comum) |
+| Guerreiro Espectral (`spectral_warrior`) | 912 | Obito | Ruínas do Clã (monstro comum) |
+| Xamã da Maldição (`curse_shaman`) | 911 | Pain | Ruínas do Clã (monstro comum) |
+
+A forma de serpente 2×2 da Serpente Branca (fase 60%, looktype 890) continua sendo aplicada em
+runtime por `boss_phases.lua`, sem relação com a faixa 900–926.
+
 ## Loot
 - Rolagem independente por item: `chance` em 0–1.
 - Ryo sempre cai (`ryo_min`, `ryo_max`).

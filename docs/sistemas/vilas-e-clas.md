@@ -13,6 +13,48 @@ Cada vila tem: cidade inicial, NPCs próprios, 1 área de caça 1–10 próxima,
 ## Mudança de vila
 Não permitida no MVP. Futuro: quest cara que reseta jutsus exclusivos.
 
+## Visual (outfits) por vila
+Os personagens importados usam looktypes **fixos 900–926** (tabela em
+`assets-src/sprites/mugen_looktypes.json`, gerada por outro agente). Nomes de personagens do
+anime NÃO aparecem no jogo (ADR-002): os looktypes são só o visual; NPCs/monstros usam nomes
+próprios, e os outfits jogáveis são nomeados como trajes genéricos (ex.: "Traje Genin Laranja"),
+nunca com o nome do personagem original.
+
+`data/tfs_mapping.json` (`villages.<id>.outfits`/`default_outfit`) decide quais looktypes cada
+vila oferece na criação de personagem. `tools/export_tfs.py` gera:
+- `server/generated/XML/outfits.xml` — as entradas `<outfit>` (type 0 e 1) com nome de traje.
+- `server/generated/lib/naruto_villages.lua` — `NarutoVillages[vocation_id] = {name, default_outfit, outfits}`.
+- `server/generated/scripts/naruto/village_outfit.lua` — revscript `onLogin` que, na primeira
+  vez (storage 60000), aplica o outfit padrão da vila e libera (`addOutfit`) os demais outfits
+  daquela vila para o jogador escolher depois.
+
+| Vila | Outfits escolhíveis (looktype) | Outfit padrão |
+|---|---|---|
+| Folha | 900 (Traje Genin Laranja), 901 (Traje Genin Azul), 902 (Traje Genin Rosa) | 900 |
+| Névoa | 903 (Traje Kunoichi Branco), 905 (Traje Marrom de Viajante) | 903 |
+| Nuvem | 909 (Traje Listrado da Nuvem), 904 (Traje Verde de Treino) | 909 |
+| Areia | 907 (Traje Amarelo do Sábio), 908 (Traje Branco Cerimonial) | 907 |
+
+## Modos (transformações)
+Looktypes **919–926** são reservados para **transformações do jogador** (não são inimigos, não
+são escolhíveis na criação de personagem). Ideia de uso futuro: um jutsu tier 3 de "modo"
+(equivalente a Sábio/Bijuu no anime, mas com nome próprio no jogo) que troca o outfit do
+jogador temporariamente por um desses looktypes enquanto o efeito estiver ativo, revertendo ao
+outfit normal quando expirar ou o jogador for nocauteado. Mecanicamente seria parecido com a
+transformação dos bosses (`phases[].looktype` em `boss_phases.lua`), só que disparado por um
+jutsu do próprio jogador em vez de uma fase de vida — **ainda não implementado**.
+
+| Looktype | Sprite de origem (mugen_looktypes.json) |
+|---|---|
+| 919 | Naruto Sennin |
+| 920 | Naruto KCM |
+| 921 | Naruto 1 Calda |
+| 922 | Naruto 4 Caldas |
+| 923 | Naruto 6 Caldas |
+| 924 | Naruto Ashura |
+| 925 | Naruto Girl |
+| 926 | Naruto Kid Fox |
+
 ## Clãs (Marco 4, multiplayer)
 - Criados por jogador level 30+, custo em ryo.
 - Até 50 membros, cargos (líder, oficial, membro).

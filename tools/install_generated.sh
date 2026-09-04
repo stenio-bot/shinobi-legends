@@ -18,6 +18,8 @@ cp "$GEN"/lib/naruto_quests.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_jutsus.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_items.lua "$TFS/lib/"
 cp "$GEN"/XML/vocations.xml "$TFS/XML/vocations.xml"
+cp "$GEN"/XML/outfits.xml "$TFS/XML/outfits.xml"
+cp "$GEN"/lib/naruto_villages.lua "$TFS/lib/"
 
 # Blocos delimitados por marcadores: substitui se já existir, senão insere antes da tag de fechamento.
 inject() {  # inject <arquivo> <tag_fechamento> <arquivo_bloco>
@@ -70,4 +72,5 @@ rm -f "$GEN/items/_items_all.xml"
 grep -q "naruto_quests" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_quests.lua')" >> "$TFS/lib/lib.lua"
 grep -q "naruto_jutsus" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_jutsus.lua')" >> "$TFS/lib/lib.lua"
 grep -q "naruto_items" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_items.lua')" >> "$TFS/lib/lib.lua"
+grep -q "naruto_villages" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_villages.lua')" >> "$TFS/lib/lib.lua"
 echo "instalado em $TFS"

@@ -421,6 +421,137 @@ Cópia temporária de `client-otc/tests/autotest_rc.lua` em
 - O looktype 898 tem a mesma arte nas 4 direções (só o oeste é espelhado): quem
   usar precisa travar a direção ou usá-lo apenas como animação.
 
+## Personagens MUGEN (`import_mugen.py` + `overrides/40_mugen.json`)
+
+Os looktypes **900–926** são 26 personagens de Naruto vindos de um material
+privado do usuário em `assets-src/import/mugen/` (fora do git, ADR-002): 21.653
+BMPs paletados, rips estilo MUGEN/JUS de um jogo de luta. A numeração é **fixa** e
+vive em `assets-src/sprites/mugen_looktypes.json` (looktype → pasta → nome), que é
+versionado e serve tanto para a arte quanto para o uso no jogo.
+
+```bash
+.venv/bin/python tools/spr/import_mugen.py           # triagem + PNGs + 40_mugen.json
+.venv/bin/python tools/spr/import_mugen.py --report  # só o diagnóstico, não grava
+.venv/bin/python tools/spr/import_mugen.py --only 913 922
+.venv/bin/python tools/spr/build_assets.py
+.venv/bin/python tools/spr/dump_dat.py               # validacao: OK, divergencias=0
+```
+
+### O que o material é (e o que não é)
+
+Vista **lateral** de jogo de luta: o personagem olha para a direita ou para a
+esquerda. **Não existe vista de frente nem de costas** em nenhum dos 26 rips
+(conferido com um detector de pele na faixa da cabeça — ver `pick_back`, hoje só
+acessível por override manual). O fundo é a **cor-chave do índice 0 da paleta**,
+cuja cor concreta muda de quadro para quadro (verde escuro, verde neon…).
+
+A ordem dos arquivos é *quase* sempre: ícone, retrato 120×140, parado
+(respirando), agachar, andar, correr, pular e depois dezenas de golpes — mas
+varia o bastante para não dar para confiar em índices fixos. O script mede cada
+quadro.
+
+### Conversão e peneiras
+
+1. **BMP → RGBA** com chave dupla: índice 0 da paleta **e** a cor exata do pixel
+   (0,0). Alguns rips remapeiam a paleta; o canto superior esquerdo é sempre fundo.
+2. **Tamanho**: acima de 96 px de lado é tela/efeito (320×240, 632×480…); abaixo
+   de 12×20 é faísca, poeira ou ícone.
+3. **Densidade da caixa**: abaixo de 10% é fumaça espalhada, acima de 75% é uma
+   bola/pedra sólida (vários rips começam com dezenas dessas).
+4. **Altura típica**: a moda das alturas do rip é a altura do personagem — ele
+   aparece em centenas de quadros, cada efeito em poucos. Serve de **piso** para
+   a busca da pose parada.
+
+### Escolha automática dos quadros
+
+- **Parado** = a animação de *respirar*: a **primeira** corrida de quadros
+  consecutivos com a silhueta quase constante (altura e largura variando ≤ 4 px)
+  e mais alta que larga (`w ≤ 0,90 h`). Dentro dela fica o quadro **mediano pelo
+  vão entre os pés**. Também testei "a corrida mais longa" e "a mais estreita":
+  as duas erram mais (a mais longa pega o ciclo de andar do Kakashi, a mais
+  estreita pega uma pose inclinada do Naruto Kid).
+- **Andar** = 3 quadros **consecutivos** com a mesma altura do parado, com o
+  **vão entre os pés oscilando** (contato → passagem → contato oposto, o mesmo
+  critério do `30_player.json`), silhueta realmente mudando entre as fases
+  (diferença de máscara ≥ 3%), paleta parecida com a do parado (cosseno ≥ 0,80,
+  o que derruba espadas de chakra e mantos de raposa) e contagem de pixels a até
+  ±45% da do parado. Três passadas, da mais exigente para a mais tolerante:
+  primeiros 45 quadros com ±3 px de altura, depois ±6 px, depois até o quadro 120.
+- **Lado** = massa de pixels de **pele no terço superior** à esquerda × à direita
+  da caixa. Leste = olhando para a direita; se o rip olha para a esquerda, todos
+  os quadros entram espelhados e o oeste desespelha.
+- **Norte/Sul**: não existem no material. As três direções N/L/S usam o mesmo
+  perfil e o oeste é `mirror_of: 1`.
+
+### Overrides manuais
+
+`OVERRIDES`, no topo de `tools/spr/import_mugen.py`, permite fixar `idle`,
+`walk`, `faces` e `back` por looktype, pelo **número do arquivo** (`_NNNN`), não
+pelo índice na lista filtrada. **11 dos 26** precisaram:
+
+| Motivo | Looktypes |
+|---|---|
+| O rip **não tem** ciclo de andar (só parado, agachar, pular e golpes) — uso as fases do respirar como andar | 902 Sakura Kid, 907 Minato, 908 Minato Edo, 915 Sasuke Akatsuki, 925 Naruto Girl |
+| A heurística elegeu um golpe com efeito grande como "andar" | 919 Naruto Sennin, 920 Naruto KCM |
+| Forma de raposa: o rip começa com dezenas de efeitos e o bicho é quadrúpede | 921 1 Calda, 922 4 Caldas, 923 6 Caldas, 926 Kid Fox (só o lado) |
+| A primeira corrida de silhueta constante era um "apontar o braço" em loop | 911 Pain |
+
+### Saídas
+
+- `assets-src/import/extracted/mugen/<looktype>/{idle,walk0,walk1,walk2}_NNNN.png`
+  — os quadros recortados (privado);
+- `assets-src/import/extracted/mugen/_review_<looktype>.png` — folha de revisão
+  por personagem: parado + 3 fases nas 4 direções, ampliada 3×, já passada pelo
+  `fit_uniform` (é o que o build vai gravar);
+- `assets-src/import/extracted/mugen/_review_all.png` — folha geral, uma linha
+  por personagem;
+- **`assets-src/sprites/overrides/40_mugen.json`** — o único versionado. Mesmo
+  esquema do `imports.json`/`30_player.json`; `root` aponta para o material bruto
+  e os `src` começam com `../extracted/` porque os recortes ficam fora dele. Toda
+  entrada cujo PNG não existir é ignorada com aviso: numa máquina sem o material
+  o build cai no placeholder.
+
+### Encaixe
+
+`Importer.creature_dirs` + `fit_uniform`: **uma escala só por personagem**
+(`min(32/maior_largura, 32/maior_altura, 1)`), base dos pés no chão da célula e
+centro do apoio (centroide do terço inferior) no meio. Todos são **1×1**, como o
+outfit do jogador — nada vira 1×2. Madara (60 px) cai para ~53%, as formas de
+raposa (86 px de largura) para ~37% e ficam pequenas na célula: é o preço de um
+bicho quadrúpede e largo em 32×32.
+
+### Teste in-game (2 rodadas)
+
+Cópia temporária de `client-otc/tests/mugen_rc.lua` em `client-otc/shinobirc.lua`
+(removida no fim): login `god`, `/arena`, e para 900, 901, 906, 911, 913 e 922
+troca de outfit + `g_game.walk` nas 4 direções com 2 screenshots por direção →
+`screenshots/mugen_<looktype>_*.png`. **0 erros no cliente.**
+
+- **Rodada 1** achou dois defeitos do *teste* (não da arte): o `/looktype` do TFS
+  recusa id ≥ 903 (`server/tfs/data/talkactions/scripts/looktype.lua`, fora do
+  escopo deste trabalho), então o rc passou a trocar o outfit **no cliente**
+  (`localPlayer:setOutfit`) — quem desenha e anima a criatura é ele, é o
+  suficiente para conferir a arte; e 3 `zoomIn` cortavam o boneco na captura.
+- **Rodada 2** (final): os 6 renderizam certo, pés no chão, sem mudar de tamanho
+  ao virar, as 3 fases de andar visivelmente diferentes e o oeste espelhado.
+
+### Limitações
+
+- **Não há norte nem sul**: as três direções mostram o mesmo perfil. Andando para
+  cima ou para baixo o personagem continua de lado. É a mesma limitação do
+  `30_player.json`, só que aqui vale para os **quatro** lados menos o oeste.
+- O oeste é espelhado do leste: bandana, zíper e arma trocam de lado (invisível a
+  32 px).
+- `layers = 1`: as cores de outfit (`head/body/legs/feet`) do servidor são
+  ignoradas — cada looktype tem uma roupa fixa.
+- 5 personagens não têm ciclo de andar no material e apenas *balançam* ao andar.
+- As formas de raposa (921–923, 926) são quadrúpedes largos: reduzidos a ~37% da
+  altura original, leem como um vulto vermelho a 32 px.
+- Tenten (905) carrega um leque gigante em **todos** os quadros do rip; ele ocupa
+  metade da célula e não há como separá-lo.
+- O `/looktype` do TFS não alcança 900–926: para usar in-game é preciso mexer em
+  `server/` (fora do escopo) ou setar o outfit por script.
+
 ## Terreno procedural (`gen_terrain.py` + `overrides/10_terrain.json`)
 
 O mapa `valley` usa **itens vanilla** do `items.otb` (grama 4526–4531, cobblestone

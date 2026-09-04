@@ -1,0 +1,1225 @@
+{
+ "_doc": "Outfits dos personagens MUGEN (looktypes 900..926), GERADO por tools/spr/import_mugen.py a partir do material privado em assets-src/import/mugen (fora do git, ADR-002). Nao edite a mao: ajuste a heuristica ou o dicionario OVERRIDES do script e rode de novo. Toda entrada cujo PNG nao existir e ignorada com aviso, entao numa maquina sem o material o build cai no placeholder.",
+ "format": 1,
+ "root": "assets-src/import/mugen",
+ "build_dir": "assets-src/import/extracted/mugen/_sheets",
+ "_doc_root": "'root' aponta para o material bruto; os quadros JA RECORTADOS ficam em assets-src/import/extracted/mugen/<looktype>/, por isso os 'src' comecam com '../extracted/'.",
+ "_doc_creatures": "Mesmo esquema do overrides/30_player.json: 'directions' 0=Norte 1=Leste 2=Sul 3=Oeste, 'idle' = frame group 0 (1 fase), 'walk' = frame group 1 (3 fases), 'mirror_of' espelha outra direcao, layers=1 (a arte ja vem colorida). O material e LATERAL: N/L/S usam o mesmo perfil e so o oeste e espelhado.",
+ "creatures": [
+  {
+   "id": 900,
+   "name": "mugen_900_naruto_kid",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto Kid",
+   "_quadros": "parado 0004; andar 0009/0010/0011; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/900/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/900/walk0_0009.png",
+      "../extracted/mugen/900/walk1_0010.png",
+      "../extracted/mugen/900/walk2_0011.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/900/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/900/walk0_0009.png",
+      "../extracted/mugen/900/walk1_0010.png",
+      "../extracted/mugen/900/walk2_0011.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/900/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/900/walk0_0009.png",
+      "../extracted/mugen/900/walk1_0010.png",
+      "../extracted/mugen/900/walk2_0011.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 901,
+   "name": "mugen_901_sasuke_kid",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sasuke Kid",
+   "_quadros": "parado 0005; andar 0019/0020/0021; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/901/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/901/walk0_0019.png",
+      "../extracted/mugen/901/walk1_0020.png",
+      "../extracted/mugen/901/walk2_0021.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/901/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/901/walk0_0019.png",
+      "../extracted/mugen/901/walk1_0020.png",
+      "../extracted/mugen/901/walk2_0021.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/901/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/901/walk0_0019.png",
+      "../extracted/mugen/901/walk1_0020.png",
+      "../extracted/mugen/901/walk2_0021.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 902,
+   "name": "mugen_902_sakura_kid",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sakura Kid",
+   "_quadros": "parado 0004; andar 0003/0004/0005; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/902/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/902/walk0_0003.png",
+      "../extracted/mugen/902/walk1_0004.png",
+      "../extracted/mugen/902/walk2_0005.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/902/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/902/walk0_0003.png",
+      "../extracted/mugen/902/walk1_0004.png",
+      "../extracted/mugen/902/walk2_0005.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/902/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/902/walk0_0003.png",
+      "../extracted/mugen/902/walk1_0004.png",
+      "../extracted/mugen/902/walk2_0005.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 903,
+   "name": "mugen_903_hinata",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Hinata",
+   "_quadros": "parado 0003; andar 0054/0055/0056; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/903/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/903/walk0_0054.png",
+      "../extracted/mugen/903/walk1_0055.png",
+      "../extracted/mugen/903/walk2_0056.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/903/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/903/walk0_0054.png",
+      "../extracted/mugen/903/walk1_0055.png",
+      "../extracted/mugen/903/walk2_0056.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/903/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/903/walk0_0054.png",
+      "../extracted/mugen/903/walk1_0055.png",
+      "../extracted/mugen/903/walk2_0056.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 904,
+   "name": "mugen_904_rock_lee",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Rock Lee",
+   "_quadros": "parado 0005; andar 0024/0025/0026; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/904/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/904/walk0_0024.png",
+      "../extracted/mugen/904/walk1_0025.png",
+      "../extracted/mugen/904/walk2_0026.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/904/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/904/walk0_0024.png",
+      "../extracted/mugen/904/walk1_0025.png",
+      "../extracted/mugen/904/walk2_0026.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/904/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/904/walk0_0024.png",
+      "../extracted/mugen/904/walk1_0025.png",
+      "../extracted/mugen/904/walk2_0026.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 905,
+   "name": "mugen_905_tenten",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Tenten",
+   "_quadros": "parado 0005; andar 0114/0115/0118; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/905/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/905/walk0_0114.png",
+      "../extracted/mugen/905/walk1_0115.png",
+      "../extracted/mugen/905/walk2_0118.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/905/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/905/walk0_0114.png",
+      "../extracted/mugen/905/walk1_0115.png",
+      "../extracted/mugen/905/walk2_0118.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/905/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/905/walk0_0114.png",
+      "../extracted/mugen/905/walk1_0115.png",
+      "../extracted/mugen/905/walk2_0118.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 906,
+   "name": "mugen_906_kakashi",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Kakashi",
+   "_quadros": "parado 0004; andar 0028/0029/0030; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/906/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/906/walk0_0028.png",
+      "../extracted/mugen/906/walk1_0029.png",
+      "../extracted/mugen/906/walk2_0030.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/906/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/906/walk0_0028.png",
+      "../extracted/mugen/906/walk1_0029.png",
+      "../extracted/mugen/906/walk2_0030.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/906/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/906/walk0_0028.png",
+      "../extracted/mugen/906/walk1_0029.png",
+      "../extracted/mugen/906/walk2_0030.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 907,
+   "name": "mugen_907_minato",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Minato",
+   "_quadros": "parado 0003; andar 0003/0004/0005; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/907/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/907/walk0_0003.png",
+      "../extracted/mugen/907/walk1_0004.png",
+      "../extracted/mugen/907/walk2_0005.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/907/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/907/walk0_0003.png",
+      "../extracted/mugen/907/walk1_0004.png",
+      "../extracted/mugen/907/walk2_0005.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/907/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/907/walk0_0003.png",
+      "../extracted/mugen/907/walk1_0004.png",
+      "../extracted/mugen/907/walk2_0005.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 908,
+   "name": "mugen_908_minato_edo",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Minato Edo",
+   "_quadros": "parado 0005; andar 0005/0006/0007; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/908/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/908/walk0_0005.png",
+      "../extracted/mugen/908/walk1_0006.png",
+      "../extracted/mugen/908/walk2_0007.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/908/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/908/walk0_0005.png",
+      "../extracted/mugen/908/walk1_0006.png",
+      "../extracted/mugen/908/walk2_0007.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/908/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/908/walk0_0005.png",
+      "../extracted/mugen/908/walk1_0006.png",
+      "../extracted/mugen/908/walk2_0007.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 909,
+   "name": "mugen_909_killer_bee",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Killer Bee",
+   "_quadros": "parado 0006; andar 0046/0047/0048; olha para a esquerda (tudo espelhado); sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": {
+      "src": "../extracted/mugen/909/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/909/walk0_0046.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk1_0047.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk2_0048.png",
+       "mirror": true
+      }
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": {
+      "src": "../extracted/mugen/909/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/909/walk0_0046.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk1_0047.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk2_0048.png",
+       "mirror": true
+      }
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": {
+      "src": "../extracted/mugen/909/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/909/walk0_0046.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk1_0047.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/909/walk2_0048.png",
+       "mirror": true
+      }
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 910,
+   "name": "mugen_910_itachi",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Itachi",
+   "_quadros": "parado 0005; andar 0079/0080/0081; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/910/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/910/walk0_0079.png",
+      "../extracted/mugen/910/walk1_0080.png",
+      "../extracted/mugen/910/walk2_0081.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/910/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/910/walk0_0079.png",
+      "../extracted/mugen/910/walk1_0080.png",
+      "../extracted/mugen/910/walk2_0081.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/910/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/910/walk0_0079.png",
+      "../extracted/mugen/910/walk1_0080.png",
+      "../extracted/mugen/910/walk2_0081.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 911,
+   "name": "mugen_911_pain",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Pain",
+   "_quadros": "parado 0008; andar 0037/0038/0040; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/911/idle_0008.png",
+     "walk": [
+      "../extracted/mugen/911/walk0_0037.png",
+      "../extracted/mugen/911/walk1_0038.png",
+      "../extracted/mugen/911/walk2_0040.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/911/idle_0008.png",
+     "walk": [
+      "../extracted/mugen/911/walk0_0037.png",
+      "../extracted/mugen/911/walk1_0038.png",
+      "../extracted/mugen/911/walk2_0040.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/911/idle_0008.png",
+     "walk": [
+      "../extracted/mugen/911/walk0_0037.png",
+      "../extracted/mugen/911/walk1_0038.png",
+      "../extracted/mugen/911/walk2_0040.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 912,
+   "name": "mugen_912_obito",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Obito",
+   "_quadros": "parado 0003; andar 0059/0060/0061; olha para a direita; lado ambiguo (conf 0.06): assumido direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/912/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/912/walk0_0059.png",
+      "../extracted/mugen/912/walk1_0060.png",
+      "../extracted/mugen/912/walk2_0061.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/912/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/912/walk0_0059.png",
+      "../extracted/mugen/912/walk1_0060.png",
+      "../extracted/mugen/912/walk2_0061.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/912/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/912/walk0_0059.png",
+      "../extracted/mugen/912/walk1_0060.png",
+      "../extracted/mugen/912/walk2_0061.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 913,
+   "name": "mugen_913_madara",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Madara",
+   "_quadros": "parado 0005; andar 0024/0025/0026; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/913/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/913/walk0_0024.png",
+      "../extracted/mugen/913/walk1_0025.png",
+      "../extracted/mugen/913/walk2_0026.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/913/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/913/walk0_0024.png",
+      "../extracted/mugen/913/walk1_0025.png",
+      "../extracted/mugen/913/walk2_0026.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/913/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/913/walk0_0024.png",
+      "../extracted/mugen/913/walk1_0025.png",
+      "../extracted/mugen/913/walk2_0026.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 914,
+   "name": "mugen_914_sasuke_taka",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sasuke Taka",
+   "_quadros": "parado 0002; andar 0018/0019/0020; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/914/idle_0002.png",
+     "walk": [
+      "../extracted/mugen/914/walk0_0018.png",
+      "../extracted/mugen/914/walk1_0019.png",
+      "../extracted/mugen/914/walk2_0020.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/914/idle_0002.png",
+     "walk": [
+      "../extracted/mugen/914/walk0_0018.png",
+      "../extracted/mugen/914/walk1_0019.png",
+      "../extracted/mugen/914/walk2_0020.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/914/idle_0002.png",
+     "walk": [
+      "../extracted/mugen/914/walk0_0018.png",
+      "../extracted/mugen/914/walk1_0019.png",
+      "../extracted/mugen/914/walk2_0020.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 915,
+   "name": "mugen_915_sasuke_akatsuki",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sasuke Akatsuki",
+   "_quadros": "parado 0003; andar 0002/0003/0004; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/915/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/915/walk0_0002.png",
+      "../extracted/mugen/915/walk1_0003.png",
+      "../extracted/mugen/915/walk2_0004.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/915/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/915/walk0_0002.png",
+      "../extracted/mugen/915/walk1_0003.png",
+      "../extracted/mugen/915/walk2_0004.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/915/idle_0003.png",
+     "walk": [
+      "../extracted/mugen/915/walk0_0002.png",
+      "../extracted/mugen/915/walk1_0003.png",
+      "../extracted/mugen/915/walk2_0004.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 916,
+   "name": "mugen_916_sasuke_rinnegan",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sasuke Rinnegan",
+   "_quadros": "parado 0006; andar 0057/0058/0059; olha para a esquerda (tudo espelhado); sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": {
+      "src": "../extracted/mugen/916/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/916/walk0_0057.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk1_0058.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk2_0059.png",
+       "mirror": true
+      }
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": {
+      "src": "../extracted/mugen/916/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/916/walk0_0057.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk1_0058.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk2_0059.png",
+       "mirror": true
+      }
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": {
+      "src": "../extracted/mugen/916/idle_0006.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/916/walk0_0057.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk1_0058.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/916/walk2_0059.png",
+       "mirror": true
+      }
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 917,
+   "name": "mugen_917_sakura",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sakura",
+   "_quadros": "parado 0005; andar 0017/0018/0019; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/917/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/917/walk0_0017.png",
+      "../extracted/mugen/917/walk1_0018.png",
+      "../extracted/mugen/917/walk2_0019.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/917/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/917/walk0_0017.png",
+      "../extracted/mugen/917/walk1_0018.png",
+      "../extracted/mugen/917/walk2_0019.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/917/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/917/walk0_0017.png",
+      "../extracted/mugen/917/walk1_0018.png",
+      "../extracted/mugen/917/walk2_0019.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 918,
+   "name": "mugen_918_sakura_the_last",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Sakura The Last",
+   "_quadros": "parado 0004; andar 0026/0031/0034; olha para a esquerda (tudo espelhado); sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": {
+      "src": "../extracted/mugen/918/idle_0004.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/918/walk0_0026.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk1_0031.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk2_0034.png",
+       "mirror": true
+      }
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": {
+      "src": "../extracted/mugen/918/idle_0004.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/918/walk0_0026.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk1_0031.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk2_0034.png",
+       "mirror": true
+      }
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": {
+      "src": "../extracted/mugen/918/idle_0004.png",
+      "mirror": true
+     },
+     "walk": [
+      {
+       "src": "../extracted/mugen/918/walk0_0026.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk1_0031.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/918/walk2_0034.png",
+       "mirror": true
+      }
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 919,
+   "name": "mugen_919_naruto_sennin",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto Sennin",
+   "_quadros": "parado 0004; andar 0014/0015/0016; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/919/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/919/walk0_0014.png",
+      "../extracted/mugen/919/walk1_0015.png",
+      "../extracted/mugen/919/walk2_0016.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/919/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/919/walk0_0014.png",
+      "../extracted/mugen/919/walk1_0015.png",
+      "../extracted/mugen/919/walk2_0016.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/919/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/919/walk0_0014.png",
+      "../extracted/mugen/919/walk1_0015.png",
+      "../extracted/mugen/919/walk2_0016.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 920,
+   "name": "mugen_920_naruto_kcm",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto KCM",
+   "_quadros": "parado 0005; andar 0019/0020/0021; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/920/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/920/walk0_0019.png",
+      "../extracted/mugen/920/walk1_0020.png",
+      "../extracted/mugen/920/walk2_0021.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/920/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/920/walk0_0019.png",
+      "../extracted/mugen/920/walk1_0020.png",
+      "../extracted/mugen/920/walk2_0021.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/920/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/920/walk0_0019.png",
+      "../extracted/mugen/920/walk1_0020.png",
+      "../extracted/mugen/920/walk2_0021.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 921,
+   "name": "mugen_921_naruto_1_calda",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto 1 Calda",
+   "_quadros": "parado 0005; andar 0012/0013/0014; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/921/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/921/walk0_0012.png",
+      "../extracted/mugen/921/walk1_0013.png",
+      "../extracted/mugen/921/walk2_0014.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/921/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/921/walk0_0012.png",
+      "../extracted/mugen/921/walk1_0013.png",
+      "../extracted/mugen/921/walk2_0014.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/921/idle_0005.png",
+     "walk": [
+      "../extracted/mugen/921/walk0_0012.png",
+      "../extracted/mugen/921/walk1_0013.png",
+      "../extracted/mugen/921/walk2_0014.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 922,
+   "name": "mugen_922_naruto_4_caldas",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto 4 Caldas",
+   "_quadros": "parado 0076; andar 0079/0081/0082; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/922/idle_0076.png",
+     "walk": [
+      "../extracted/mugen/922/walk0_0079.png",
+      "../extracted/mugen/922/walk1_0081.png",
+      "../extracted/mugen/922/walk2_0082.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/922/idle_0076.png",
+     "walk": [
+      "../extracted/mugen/922/walk0_0079.png",
+      "../extracted/mugen/922/walk1_0081.png",
+      "../extracted/mugen/922/walk2_0082.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/922/idle_0076.png",
+     "walk": [
+      "../extracted/mugen/922/walk0_0079.png",
+      "../extracted/mugen/922/walk1_0081.png",
+      "../extracted/mugen/922/walk2_0082.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 923,
+   "name": "mugen_923_naruto_6_caldas",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto 6 Caldas",
+   "_quadros": "parado 0022; andar 0030/0031/0032; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/923/idle_0022.png",
+     "walk": [
+      "../extracted/mugen/923/walk0_0030.png",
+      "../extracted/mugen/923/walk1_0031.png",
+      "../extracted/mugen/923/walk2_0032.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/923/idle_0022.png",
+     "walk": [
+      "../extracted/mugen/923/walk0_0030.png",
+      "../extracted/mugen/923/walk1_0031.png",
+      "../extracted/mugen/923/walk2_0032.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/923/idle_0022.png",
+     "walk": [
+      "../extracted/mugen/923/walk0_0030.png",
+      "../extracted/mugen/923/walk1_0031.png",
+      "../extracted/mugen/923/walk2_0032.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 924,
+   "name": "mugen_924_naruto_ashura",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto Ashura",
+   "_quadros": "parado 0004; andar 0043/0044/0045; olha para a direita; lado ambiguo (conf 0.10): assumido direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/924/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/924/walk0_0043.png",
+      "../extracted/mugen/924/walk1_0044.png",
+      "../extracted/mugen/924/walk2_0045.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/924/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/924/walk0_0043.png",
+      "../extracted/mugen/924/walk1_0044.png",
+      "../extracted/mugen/924/walk2_0045.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/924/idle_0004.png",
+     "walk": [
+      "../extracted/mugen/924/walk0_0043.png",
+      "../extracted/mugen/924/walk1_0044.png",
+      "../extracted/mugen/924/walk2_0045.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 925,
+   "name": "mugen_925_naruto_girl",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto Girl",
+   "_quadros": "parado 0006; andar 0005/0006/0007; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/925/idle_0006.png",
+     "walk": [
+      "../extracted/mugen/925/walk0_0005.png",
+      "../extracted/mugen/925/walk1_0006.png",
+      "../extracted/mugen/925/walk2_0007.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/925/idle_0006.png",
+     "walk": [
+      "../extracted/mugen/925/walk0_0005.png",
+      "../extracted/mugen/925/walk1_0006.png",
+      "../extracted/mugen/925/walk2_0007.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/925/idle_0006.png",
+     "walk": [
+      "../extracted/mugen/925/walk0_0005.png",
+      "../extracted/mugen/925/walk1_0006.png",
+      "../extracted/mugen/925/walk2_0007.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  },
+  {
+   "id": 926,
+   "name": "mugen_926_naruto_kid_fox",
+   "tiles": 1,
+   "duration": 200,
+   "_personagem": "Naruto Kid Fox",
+   "_quadros": "parado 0001; andar 0014/0015/0016; olha para a direita; sem vista de costas: o norte repete o parado",
+   "directions": {
+    "0": {
+     "_dir": "norte — NAO ha vista de costas no material lateral: repete o parado",
+     "idle": "../extracted/mugen/926/idle_0001.png",
+     "walk": [
+      "../extracted/mugen/926/walk0_0014.png",
+      "../extracted/mugen/926/walk1_0015.png",
+      "../extracted/mugen/926/walk2_0016.png"
+     ]
+    },
+    "1": {
+     "_dir": "leste — perfil olhando para a direita",
+     "idle": "../extracted/mugen/926/idle_0001.png",
+     "walk": [
+      "../extracted/mugen/926/walk0_0014.png",
+      "../extracted/mugen/926/walk1_0015.png",
+      "../extracted/mugen/926/walk2_0016.png"
+     ]
+    },
+    "2": {
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/926/idle_0001.png",
+     "walk": [
+      "../extracted/mugen/926/walk0_0014.png",
+      "../extracted/mugen/926/walk1_0015.png",
+      "../extracted/mugen/926/walk2_0016.png"
+     ]
+    },
+    "3": {
+     "_dir": "oeste — espelho do leste",
+     "mirror_of": 1
+    }
+   }
+  }
+ ]
+}

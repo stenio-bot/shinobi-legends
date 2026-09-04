@@ -2,5 +2,5 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <npc name="Ferreiro Genzo" script="naruto/merchant_mountain.lua" walkinterval="2000" floorchange="0">
 	<health now="100" max="100"/>
-	<look type="129" head="78" body="94" legs="94" feet="78"/>
+	<look type="907" head="0" body="0" legs="0" feet="0"/>
 </npc>

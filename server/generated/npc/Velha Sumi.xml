@@ -2,5 +2,5 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <npc name="Velha Sumi" script="naruto/merchant_swamp.lua" walkinterval="2000" floorchange="0">
 	<health now="100" max="100"/>
-	<look type="138" head="40" body="40" legs="40" feet="40"/>
+	<look type="905" head="0" body="0" legs="0" feet="0"/>
 </npc>

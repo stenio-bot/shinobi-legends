@@ -2,5 +2,5 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <npc name="Mestra Yuki" script="naruto/quest_giver_mountain.lua" walkinterval="2000" floorchange="0">
 	<health now="100" max="100"/>
-	<look type="138" head="19" body="88" legs="88" feet="19"/>
+	<look type="903" head="0" body="0" legs="0" feet="0"/>
 </npc>

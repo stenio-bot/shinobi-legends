@@ -2,5 +2,5 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <npc name="Rastreador Goro" script="naruto/quest_giver_swamp.lua" walkinterval="2000" floorchange="0">
 	<health now="100" max="100"/>
-	<look type="128" head="20" body="60" legs="60" feet="20"/>
+	<look type="909" head="0" body="0" legs="0" feet="0"/>
 </npc>

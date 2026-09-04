@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Xamã da Maldição" nameDescription="um xamã da maldição" race="blood" experience="700" speed="420" manacost="0">
 	<health now="870" max="870"/>
-	<look type="138" head="94" body="79" legs="79" feet="94" corpse="3058"/>
+	<look type="911" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

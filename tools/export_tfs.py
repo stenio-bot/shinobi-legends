@@ -376,6 +376,80 @@ for vid, v in villages.items():
 voc.append('</vocations>')
 write("XML/vocations.xml", "\n".join(voc) + "\n")
 
+# ---------------------------------------------------------------- outfits de vila (ADR-002: nomes
+# próprios de traje, nunca nome de personagem do anime) + storage inicial por vocação/vila.
+# Looktypes fixos 900-926 vêm de assets-src/sprites/mugen_looktypes.json (outro agente gera o
+# sprite); aqui só decidimos QUAIS looktypes cada vila oferece e como o outfit.xml os nomeia.
+OUTFIT_NAMES = {
+    900: "Traje Genin Laranja",
+    901: "Traje Genin Azul",
+    902: "Traje Genin Rosa",
+    903: "Traje Kunoichi Branco",
+    904: "Traje Verde de Treino",
+    905: "Traje Marrom de Viajante",
+    907: "Traje Amarelo do Sábio",
+    908: "Traje Branco Cerimonial",
+    909: "Traje Listrado da Nuvem",
+}
+
+def village_outfits():
+    """{vocation_id: {name, default_outfit, outfits: [...]}} a partir de tfs_mapping.villages."""
+    out = {}
+    for vid, v in villages.items():
+        vm = M["villages"][vid]
+        out[vm["vocation_id"]] = {
+            "name": v["name"],
+            "default_outfit": int(vm["default_outfit"]),
+            "outfits": [int(o) for o in vm["outfits"]],
+        }
+    return out
+
+VOC_OUTFITS = village_outfits()
+ALL_VILLAGE_LOOKTYPES = sorted({look for vo in VOC_OUTFITS.values() for look in vo["outfits"]})
+
+outfits_xml = ['<?xml version="1.0" encoding="UTF-8"?>', HEADER_XML.rstrip("\n"), '<outfits>',
+               '\t<!-- Trajes das vilas (looktypes 900-926, ver assets-src/sprites/mugen_looktypes.json). -->']
+for sex in (0, 1):
+    outfits_xml.append(f'\t<!-- type {sex} ({"feminino" if sex == 0 else "masculino"}) -->')
+    for look in ALL_VILLAGE_LOOKTYPES:
+        name = escape(OUTFIT_NAMES.get(look, f"Traje {look}"))
+        outfits_xml.append(f'\t<outfit type="{sex}" looktype="{look}" name="{name}" enabled="1"/>')
+outfits_xml.append('</outfits>')
+write("XML/outfits.xml", "\n".join(outfits_xml) + "\n")
+
+villages_lua = [HEADER_LUA, "-- Coloque em data/lib/naruto_villages.lua e adicione",
+                "-- `dofile('data/lib/naruto_villages.lua')` em data/lib/lib.lua (ANTES de scripts/naruto/village_outfit.lua)",
+                "NarutoVillages = {"]
+for voc_id in sorted(VOC_OUTFITS):
+    vo = VOC_OUTFITS[voc_id]
+    outfits_lua = ", ".join(str(o) for o in vo["outfits"])
+    villages_lua.append(f"\t[{voc_id}] = {{name = '{escape(vo['name'])}', default_outfit = {vo['default_outfit']}, outfits = {{{outfits_lua}}}}},")
+villages_lua.append("}")
+write("lib/naruto_villages.lua", "\n".join(villages_lua) + "\n")
+
+village_outfit_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/village_outfit.lua (revscriptsys carrega sozinho).
+-- Na 1ª vez que o jogador loga, aplica o outfit padrão da vila (vocação) e libera os
+-- outfits escolhíveis daquela vila (NarutoVillages, definido em data/lib/naruto_villages.lua).
+local STORAGE_VILLAGE_OUTFIT = 60000
+
+local ev = CreatureEvent("NarutoVillageOutfit")
+function ev.onLogin(player)
+	if player:getStorageValue(STORAGE_VILLAGE_OUTFIT) < 1 then
+		local village = NarutoVillages[player:getVocation():getId()]
+		if village then
+			player:setOutfit({lookType = village.default_outfit})
+			for _, look in ipairs(village.outfits) do
+				player:addOutfit(look)
+			end
+		end
+		player:setStorageValue(STORAGE_VILLAGE_OUTFIT, 1)
+	end
+	return true
+end
+ev:register()
+"""
+write("scripts/naruto/village_outfit.lua", village_outfit_script)
+
 # ---------------------------------------------------------------- NPCs
 def npc_files(n):
     o = M["npc_outfits"].get(n["id"], {"type": 128, "head": 0, "body": 0, "legs": 0, "feet": 0})
@@ -598,6 +672,8 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `spells/scripts/naruto/*.lua` | `data/spells/scripts/naruto/` | copiar a pasta |
 | `items/items_naruto.xml` | `data/items/items.xml` | colar (ids placeholder: ver `data/tfs_mapping.json`) |
 | `XML/vocations.xml` | `data/XML/vocations.xml` | substituir o arquivo |
+| `XML/outfits.xml` | `data/XML/outfits.xml` | substituir o arquivo (PENDENTE no install_generated.sh, ver relatório) |
+| `lib/naruto_villages.lua` | `data/lib/` + `dofile` em `lib.lua` | PENDENTE no install_generated.sh, ver relatório |
 | `npc/naruto/*` | `data/npc/naruto/` | copiar a pasta |
 | `lib/naruto_quests.lua` | `data/lib/` + `dofile` em `lib.lua` | ver cabeçalho |
 | `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |

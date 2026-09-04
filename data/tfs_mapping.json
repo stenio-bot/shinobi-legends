@@ -49,19 +49,31 @@
   "villages": {
     "leaf": {
       "vocation_id": 1,
-      "town_id": 1
+      "town_id": 1,
+      "outfits": [900, 901, 902],
+      "default_outfit": 900,
+      "_note": "looktypes escolhíveis na criação (visual dos personagens importados, sem nomes do anime): 900 Traje Genin Laranja, 901 Traje Genin Azul, 902 Traje Genin Rosa"
     },
     "mist": {
       "vocation_id": 2,
-      "town_id": 2
+      "town_id": 2,
+      "outfits": [903, 905],
+      "default_outfit": 903,
+      "_note": "903 Traje Kunoichi Branco, 905 Traje Marrom de Viajante"
     },
     "cloud": {
       "vocation_id": 3,
-      "town_id": 3
+      "town_id": 3,
+      "outfits": [909, 904],
+      "default_outfit": 909,
+      "_note": "909 Traje Listrado da Nuvem, 904 Traje Verde de Treino"
     },
     "sand": {
       "vocation_id": 4,
-      "town_id": 4
+      "town_id": 4,
+      "outfits": [907, 908],
+      "default_outfit": 907,
+      "_note": "907 Traje Amarelo do Sábio, 908 Traje Branco Cerimonial"
     }
   },
   "monsters": {
@@ -102,13 +114,14 @@
       "race": "blood"
     },
     "boss_bandit_chief": {
-      "looktype": 131,
-      "head": 94,
-      "body": 78,
-      "legs": 79,
-      "feet": 114,
+      "looktype": 915,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
       "corpse": 3058,
-      "race": "blood"
+      "race": "blood",
+      "_note": "visual de vilão: looktype 915 (mugen_looktypes.json, sprite 'Sasuke Akatsuki' — usado só como asset visual, NÃO como nome; NPC/monstro continua se chamando 'Chefe dos Bandidos')"
     },
     "leech": {
       "looktype": 19,
@@ -129,14 +142,14 @@
       "feet": 93
     },
     "rogue_ninja": {
-      "looktype": 128,
+      "looktype": 914,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
-      "addons": 3,
       "corpse": 3058,
-      "race": "blood"
+      "race": "blood",
+      "_note": "visual: looktype 914 (mugen_looktypes.json, sprite 'Sasuke Taka' — ninja renegado de capa, combina com o conceito; nome do monstro continua 'Ninja Renegado')"
     },
     "boss_elder_toad": {
       "looktype": 60,
@@ -158,14 +171,14 @@
       "feet": 93
     },
     "boss_white_serpent": {
-      "looktype": 132,
+      "looktype": 916,
       "corpse": 3058,
       "race": "blood",
-      "_note": "placeholder: forma humana = outfit 132; a forma de serpente 2x2 (looktype 890, faixa 878..897 do .dat placeholder) é aplicada em runtime pela fase de 60% em boss_phases.lua — NÃO cite 890 em XML, senão gen_placeholders.py desloca a faixa de chefes",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "_note": "visual: forma humana = looktype 916 (mugen_looktypes.json, sprite 'Sasuke Rinnegan' — encaixa com 'ninja renegado pálido' antes da transformação); a forma de serpente 2x2 (looktype 890, faixa 878..897 do .dat placeholder) continua sendo aplicada em runtime pela fase de 60% em boss_phases.lua — NÃO cite 890 em XML, senão gen_placeholders.py desloca a faixa de chefes",
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0
     },
     "ruin_puppet": {
       "looktype": 129,
@@ -188,34 +201,34 @@
       "feet": 93
     },
     "spectral_warrior": {
-      "looktype": 130,
-      "head": 86,
-      "body": 86,
-      "legs": 86,
-      "feet": 86,
+      "looktype": 912,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
       "corpse": 3058,
       "race": "undead",
-      "_note": "placeholder: outfit 130 em tom pálido"
+      "_note": "visual: looktype 912 (mugen_looktypes.json, sprite 'Obito' — máscara/figura sombria combina com 'guerreiro espectral'; nome continua 'Guerreiro Espectral')"
     },
     "curse_shaman": {
-      "looktype": 138,
-      "head": 94,
-      "body": 79,
-      "legs": 79,
-      "feet": 94,
-      "corpse": 3058,
-      "race": "blood",
-      "_note": "placeholder: outfit 138 (feiticeira vanilla)"
-    },
-    "boss_puppeteer": {
-      "looktype": 131,
+      "looktype": 911,
       "head": 0,
-      "body": 86,
-      "legs": 79,
+      "body": 0,
+      "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "placeholder: outfit 131; trocar por sprite próprio do boss"
+      "_note": "visual: looktype 911 (mugen_looktypes.json, sprite 'Pain' — visual de vilão místico combina com 'xamã da maldição'; nome continua 'Xamã da Maldição')"
+    },
+    "boss_puppeteer": {
+      "looktype": 910,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "visual de vilão: looktype 910 (mugen_looktypes.json, sprite 'Itachi' — capa de vilão de elite, combina com o boss das Ruínas do Clã; nome continua 'Marionetista das Ruínas')"
     },
     "thunder_eagle": {
       "looktype": 21,
@@ -258,14 +271,14 @@
       "feet": 93
     },
     "boss_ancestral_oni": {
-      "looktype": 12,
+      "looktype": 913,
       "corpse": 3058,
       "race": "undead",
-      "_note": "placeholder: mesmo looktype do oni comum; boss precisa de sprite próprio",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "_note": "visual de vilão: looktype 913 (mugen_looktypes.json, sprite 'Madara' — único boss humanoide da Montanha do Trovão; nome continua 'Oni Ancestral')",
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0
     }
   },
   "items": {
@@ -352,67 +365,76 @@
   },
   "npc_outfits": {
     "merchant_leaf": {
-      "type": 128,
-      "head": 78,
-      "body": 95,
-      "legs": 114,
-      "feet": 78
+      "type": 904,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Ichiro, o Mercador → looktype 904 (mugen_looktypes.json, sprite 'Rock Lee')"
     },
     "scroll_master_leaf": {
-      "type": 130,
+      "type": 906,
       "head": 0,
-      "body": 76,
-      "legs": 76,
-      "feet": 76
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Mestre Hayato → looktype 906 (mugen_looktypes.json, sprite 'Kakashi')"
     },
     "quest_giver_leaf": {
-      "type": 137,
-      "head": 114,
-      "body": 20,
-      "legs": 20,
-      "feet": 114
+      "type": 917,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Capitã Rin → looktype 917 (mugen_looktypes.json, sprite 'Sakura')"
     },
     "merchant_swamp": {
-      "type": 138,
-      "head": 40,
-      "body": 40,
-      "legs": 40,
-      "feet": 40
+      "type": 905,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Velha Sumi → looktype 905 (mugen_looktypes.json, sprite 'Tenten')"
     },
     "quest_giver_swamp": {
-      "type": 128,
-      "head": 20,
-      "body": 60,
-      "legs": 60,
-      "feet": 20
+      "type": 909,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Rastreador Goro → looktype 909 (mugen_looktypes.json, sprite 'Killer Bee')"
     },
     "merchant_ruins": {
-      "type": 139,
-      "head": 114,
-      "body": 79,
-      "legs": 86,
-      "feet": 114
+      "type": 902,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Tsubaki, a Escavadora → looktype 902 (mugen_looktypes.json, sprite 'Sakura Kid'); NPC feminina, escolhido entre 907/903/902 por sobrar visual feminino jovem"
     },
     "quest_giver_ruins": {
-      "type": 130,
-      "head": 95,
-      "body": 95,
-      "legs": 76,
-      "feet": 76
+      "type": 907,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Ancião Kaito → looktype 907 (mugen_looktypes.json, sprite 'Minato'); NPC masculino mais velho, escolhido entre 907/903/902"
     },
     "merchant_mountain": {
-      "type": 129,
-      "head": 78,
-      "body": 94,
-      "legs": 94,
-      "feet": 78
+      "type": 907,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Ferreiro Genzo → looktype 907 (mugen_looktypes.json, sprite 'Minato'); reaproveitado (só sobrava 1 visual masculino entre 907/903/902 para 2 NPCs homens)"
     },
     "quest_giver_mountain": {
-      "type": 138,
-      "head": 19,
-      "body": 88,
-      "legs": 88,
-      "feet": 19
+      "type": 903,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "Mestra Yuki → looktype 903 (mugen_looktypes.json, sprite 'Hinata')"
     }
   },
   "_items_notes": {
