@@ -346,6 +346,9 @@ SQL
 Remere's Map Editor (RME) para criar `data/world/forgotten.otbm`. `server/generated/world/*-spawn.xml`
 tem as posições relativas do protótipo como referência.
 
+## Comandos de GM próprios (data/scripts/naruto/gm_tools.lua)
+`/sl` lista. `/god` = level 100, skills no teto prático (fist/shield 100, sword 90, club/axe/dist ~70 por causa dos multiplicadores das vocações), Ninjutsu ~30, todos os jutsus, 1.000.000 ryo no banco, mochila com todos os itens e melhor equipamento vestido. `/arena`, `/tp x,y,z`, `/lvl N`, `/jutsus`, `/full`, `/vila folha|nevoa|nuvem|areia`. Vanilla: `/m nome`, `/i id`, `/goto`, `/c`, `/ghost`, `/reload`.
+
 ## Avisos esperados no boot
 - `Unknown loot item "meat"` etc. (≈70): são monstros **vanilla** do TFS (que ainda povoam o mapa `forgotten.otbm`)
   procurando loot pelo nome de itens que nós sobrescrevemos (ex.: 2666 "meat" virou "onigiri"). Somem quando o mapa

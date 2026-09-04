@@ -467,6 +467,16 @@ function NarutoQuests.talk(player, quests)
 end
 """
 write("lib/naruto_quests.lua", lib)
+# lista de itens para o /god do GM: {id=server id, key, type, slot, level, stack}
+items_lua = HEADER_LUA + "NarutoItems = {\n"
+for it in items.values():
+    iid = item_id(it["id"])
+    if iid == 0 or it["type"] == "currency":
+        continue
+    slot = it.get("slot", "")
+    items_lua += f"\t{{id = {iid}, key = '{it['id']}', type = '{it['type']}', slot = '{slot}', level = {int(it.get('required_level', 1))}, stack = {int(it.get('stack_max', 1))}, atk = {int(it.get('attack', 0))}, def_ = {int(it.get('defense', 0))}}},\n"
+items_lua += "}\n"
+write("lib/naruto_items.lua", items_lua)
 write("lib/naruto_jutsus.lua", HEADER_LUA + "-- nomes de todos os jutsus (para /jutsus do GM)\nNarutoJutsus = {\n" + "".join(f"\t\"{j['name']}\",\n" for j in jutsus.values()) + "}\n")
 
 scripts = HEADER_LUA + """-- Coloque em data/scripts/naruto/quests_kill.lua (revscriptsys carrega sozinho)
