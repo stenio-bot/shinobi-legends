@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Marionetista das Ruínas" nameDescription="a marionetista das ruínas" race="blood" experience="11000" speed="380" manacost="0">
+	<health now="9100" max="9100"/>
+	<look type="131" head="0" body="86" legs="79" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-68" max="-110"/>
+		<attack name="holy" interval="5000" chance="60" range="1" target="1" min="-60" max="-95">
+			<attribute key="shootEffect" value="holy"/>
+		</attack>
+		<attack name="holy" interval="9000" chance="40" radius="3" target="0" min="-55" max="-90">
+			<attribute key="areaEffect" value="holyarea"/>
+		</attack>
+		<attack name="speed" interval="9000" chance="50" speedchange="-160" duration="4000" range="1" target="1"/>
+	</attacks>
+	<defenses armor="38" defense="38"/>
+	<elements>
+		<element firePercent="-50"/>
+		<element energyPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="6000" chance="100000"/>
+		<item id="2124" chance="12000"/>  <!-- strings_of_the_puppeteer -->
+		<item id="7385" chance="20000"/>  <!-- puppet_blade -->
+		<item id="2465" chance="25000"/>  <!-- robe_clan_ruins -->
+		<item id="2164" chance="18000"/>  <!-- ring_stone_will -->
+		<item id="1953" chance="15000"/>  <!-- scroll_katon_anel_chamas -->
+		<item id="1967" chance="15000"/>  <!-- scroll_suiton_prisao_agua -->
+		<item id="5884" countmax="6" chance="100000"/>  <!-- cursed_talisman -->
+		<item id="7588" countmax="10" chance="100000"/>  <!-- health_potion_medium -->
+	</loot>
+</monster>

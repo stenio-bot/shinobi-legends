@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Guerreiro Espectral" nameDescription="um guerreiro espectral" race="undead" experience="720" speed="460" manacost="0">
+	<health now="900" max="900"/>
+	<look type="130" head="86" body="86" legs="86" feet="86" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="1800" min="-54" max="-80"/>
+		<attack name="energy" interval="6000" chance="40" radius="3" target="0" min="-45" max="-70">
+			<attribute key="areaEffect" value="energyhit"/>
+		</attack>
+		<attack name="speed" interval="6000" chance="30" speedchange="-1000" duration="1500" range="1" target="1"/>
+	</attacks>
+	<defenses armor="27" defense="27"/>
+	<elements>
+		<element holyPercent="-50"/>
+		<element earthPercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="190" chance="100000"/>
+		<item id="5905" countmax="2" chance="50000"/>  <!-- spectral_ash -->
+		<item id="2457" chance="5000"/>  <!-- mask_clan_ruins -->
+		<item id="2383" chance="3000"/>  <!-- kodachi_ruins -->
+		<item id="7590" countmax="2" chance="12000"/>  <!-- chakra_pill_large -->
+	</loot>
+</monster>

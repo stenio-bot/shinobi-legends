@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Chefe dos Bandidos" nameDescription="o chefe dos bandidos" race="blood" experience="1500" speed="400" manacost="0">
+	<health now="1500" max="1500"/>
+	<look type="131" head="94" body="78" legs="79" feet="114" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-25" max="-45"/>
+		<attack name="fire" interval="6000" chance="40" radius="2" target="0" min="-20" max="-35">
+			<attribute key="areaEffect" value="firearea"/>
+		</attack>
+	</attacks>
+	<defenses armor="12" defense="12"/>
+	<elements>
+		<element icePercent="-50"/>
+		<element holyPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="800" chance="100000"/>
+		<item id="2412" chance="15000"/>  <!-- katana_ronin -->
+		<item id="1950" chance="10000"/>  <!-- scroll_shousen -->
+		<item id="2172" chance="20000"/>  <!-- gloves_taijutsu -->
+		<item id="7618" countmax="6" chance="100000"/>  <!-- health_potion_small -->
+		<item id="2229" countmax="10" chance="100000"/>  <!-- bandit_emblem -->
+	</loot>
+</monster>

@@ -1,0 +1,79 @@
+[
+  {
+    "id": "leaf",
+    "name": "Vila da Folha",
+    "element": "katon",
+    "bonus_skill": "taijutsu",
+    "starting_jutsus": [
+      "katon_goukakyuu"
+    ],
+    "starting_items": [
+      "kunai_iron",
+      "vest_genin",
+      "pants_ninja",
+      "sandals_ninja",
+      "bandana_leaf"
+    ],
+    "start_map": "leaf_village",
+    "start_x": 20,
+    "start_y": 20
+  },
+  {
+    "id": "mist",
+    "name": "Vila da Névoa",
+    "element": "suiton",
+    "bonus_skill": "ninjutsu",
+    "starting_jutsus": [
+      "suiton_mizudan"
+    ],
+    "starting_items": [
+      "kunai_iron",
+      "vest_genin",
+      "pants_ninja",
+      "sandals_ninja",
+      "bandana_leaf"
+    ],
+    "start_map": "mist_village",
+    "start_x": 20,
+    "start_y": 20
+  },
+  {
+    "id": "cloud",
+    "name": "Vila da Nuvem",
+    "element": "raiton",
+    "bonus_skill": "shuriken",
+    "starting_jutsus": [
+      "raiton_hari"
+    ],
+    "starting_items": [
+      "shuriken_iron",
+      "kunai_iron",
+      "vest_genin",
+      "pants_ninja",
+      "sandals_ninja",
+      "bandana_leaf"
+    ],
+    "start_map": "cloud_village",
+    "start_x": 20,
+    "start_y": 20
+  },
+  {
+    "id": "sand",
+    "name": "Vila da Areia",
+    "element": "fuuton",
+    "bonus_skill": "defense",
+    "starting_jutsus": [
+      "fuuton_lamina_vento"
+    ],
+    "starting_items": [
+      "kunai_iron",
+      "vest_genin",
+      "pants_ninja",
+      "sandals_ninja",
+      "bandana_leaf"
+    ],
+    "start_map": "sand_village",
+    "start_x": 20,
+    "start_y": 20
+  }
+]

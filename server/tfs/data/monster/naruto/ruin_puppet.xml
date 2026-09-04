@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Marionete de Combate" nameDescription="um marionete de combate" race="undead" experience="490" speed="400" manacost="0">
+	<health now="580" max="580"/>
+	<look type="129" head="19" body="76" legs="79" feet="114" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-40" max="-61"/>
+		<attack name="physical" interval="5000" chance="60" range="1" target="1" min="-30" max="-48">
+			<attribute key="shootEffect" value="throwingstar"/>
+		</attack>
+	</attacks>
+	<defenses armor="19" defense="19"/>
+	<loot>
+		<item id="2148" countmax="135" chance="100000"/>
+		<item id="5901" countmax="2" chance="50000"/>  <!-- puppet_joint -->
+		<item id="7588" countmax="2" chance="12000"/>  <!-- health_potion_medium -->
+		<item id="2410" chance="2000"/>  <!-- chain_kunai -->
+	</loot>
+</monster>

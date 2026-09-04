@@ -1,0 +1,131 @@
+[
+  {
+    "id": "bandana_leaf",
+    "name": "Bandana da Vila",
+    "description": "Símbolo de um ninja registrado.",
+    "type": "armor",
+    "slot": "head",
+    "rarity": "common",
+    "weight": 0.5,
+    "buy_price": 30,
+    "sell_price": 12,
+    "defense": 1,
+    "required_level": 1,
+    "sprite": "item_bandana"
+  },
+  {
+    "id": "vest_genin",
+    "name": "Colete de Genin",
+    "description": "Tecido reforçado.",
+    "type": "armor",
+    "slot": "body",
+    "rarity": "common",
+    "weight": 4,
+    "buy_price": 120,
+    "sell_price": 48,
+    "defense": 4,
+    "required_level": 1,
+    "sprite": "item_vest_genin"
+  },
+  {
+    "id": "vest_chuunin",
+    "name": "Colete de Chuunin",
+    "description": "Colete tático verde, padrão dos chuunin.",
+    "type": "armor",
+    "slot": "body",
+    "rarity": "uncommon",
+    "weight": 6,
+    "buy_price": 3000,
+    "sell_price": 1200,
+    "defense": 12,
+    "required_level": 20,
+    "bonuses": {
+      "hp": 30
+    },
+    "sprite": "item_vest_chuunin"
+  },
+  {
+    "id": "pants_ninja",
+    "name": "Calça Ninja",
+    "description": "Leve e resistente.",
+    "type": "armor",
+    "slot": "legs",
+    "rarity": "common",
+    "weight": 2,
+    "buy_price": 80,
+    "sell_price": 32,
+    "defense": 2,
+    "required_level": 1,
+    "sprite": "item_pants"
+  },
+  {
+    "id": "sandals_ninja",
+    "name": "Sandálias Ninja",
+    "description": "Clássicas.",
+    "type": "armor",
+    "slot": "feet",
+    "rarity": "common",
+    "weight": 1,
+    "buy_price": 60,
+    "sell_price": 24,
+    "defense": 1,
+    "required_level": 1,
+    "bonuses": {
+      "speed": 0.2
+    },
+    "sprite": "item_sandals"
+  },
+  {
+    "id": "mask_anbu",
+    "name": "Máscara Anbu",
+    "description": "Porcelana branca. Ninguém sabe quem você é.",
+    "type": "armor",
+    "slot": "head",
+    "rarity": "epic",
+    "weight": 1,
+    "buy_price": 0,
+    "sell_price": 10000,
+    "defense": 8,
+    "required_level": 50,
+    "bonuses": {
+      "crit_chance": 0.05,
+      "skill_genjutsu": 5
+    },
+    "sprite": "item_mask_anbu"
+  },
+  {
+    "id": "vest_toad",
+    "name": "Colete de Pele de Sapo",
+    "description": "Resiste a água.",
+    "type": "armor",
+    "slot": "body",
+    "rarity": "uncommon",
+    "weight": 5,
+    "buy_price": 2200,
+    "sell_price": 880,
+    "defense": 9,
+    "required_level": 12,
+    "bonuses": {
+      "element_resist_suiton": 0.2,
+      "hp": 20
+    },
+    "sprite": "item_vest_toad"
+  },
+  {
+    "id": "boots_swamp",
+    "name": "Botas do Pântano",
+    "description": "Não afundam.",
+    "type": "armor",
+    "slot": "feet",
+    "rarity": "uncommon",
+    "weight": 2,
+    "buy_price": 1500,
+    "sell_price": 600,
+    "defense": 3,
+    "required_level": 10,
+    "bonuses": {
+      "speed": 0.5
+    },
+    "sprite": "item_boots"
+  }
+]

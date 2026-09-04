@@ -1,0 +1,325 @@
+# 04 — Setup do ambiente Open Tibia (macOS, Apple Silicon)
+
+## Visão
+```
+[OTClient Redemption]  ──TCP 7171/7172──►  [TFS 1.4.2]  ──►  [MariaDB]
+   client-otc/                                server/tfs/
+   assets: data/things/1098/ (.spr/.dat)      data/: monstros, spells, npc, mapa .otbm
+```
+
+## 1. Toolchain (uma vez)
+```bash
+brew install cmake ninja pkg-config mariadb
+git clone https://github.com/microsoft/vcpkg ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
+echo 'export VCPKG_ROOT=$HOME/vcpkg' >> ~/.zshrc && source ~/.zshrc
+```
+
+## 2. Cliente
+```bash
+cd client-otc
+cmake --preset macos-release        # 1ª vez baixa e compila dependências via vcpkg (30–60 min)
+cmake --build --preset macos-release
+```
+Binário em `client-otc/build/macos-release/otclient`. Rode a partir de `client-otc/` (precisa de `init.lua`, `modules/`, `data/`).
+
+### Cliente: como rodar
+
+Compilar (a 1ª vez o vcpkg baixa e compila ~40 dependências; conte 30–60 min):
+
+```bash
+cd client-otc
+export VCPKG_ROOT=$HOME/vcpkg
+cmake --preset macos-release                              # configure + vcpkg
+cmake --build --preset macos-release --target otclient    # compila só o cliente
+```
+
+Acompanhar uma compilação longa sem travar o terminal:
+
+```bash
+cd client-otc
+export VCPKG_ROOT=$HOME/vcpkg
+( cmake --preset macos-release > build-configure.log 2>&1
+  echo "CONFIGURE_EXIT=$?" >> build-configure.log
+  cmake --build --preset macos-release --target otclient > build-compile.log 2>&1
+  echo "BUILD_EXIT=$?" >> build-compile.log ) &
+tail -f client-otc/build-compile.log     # termina com BUILD_EXIT=0 se deu certo
+```
+
+Rodar. **Sempre a partir de `client-otc/`**: o cliente procura `init.lua`, `modules/` e `data/`
+no diretório atual.
+
+```bash
+cd client-otc
+./build/macos-release/otclient 2>&1 | tee shinobi.log
+```
+
+Se o build gerar um bundle `OTClient.app` em vez do binário solto, o Gatekeeper barra a
+primeira execução (o binário não é assinado por um Developer ID). Limpe a quarentena e
+assine localmente uma vez:
+
+```bash
+cd client-otc
+xattr -cr build/macos-release/OTClient.app
+codesign --force --deep --sign - build/macos-release/OTClient.app
+./build/macos-release/OTClient.app/Contents/MacOS/otclient 2>&1 | tee shinobi.log
+```
+
+Checagens rápidas no `shinobi.log`:
+
+- `naruto_theme: termos aplicados ... locale = pt_br` → o tema carregou.
+- nenhuma linha `ERROR` de módulo (`Unable to load module`, `failed to load style`).
+- `Unable to translate: "..."` é só `pdebug`, não é erro: indica termo sem tradução.
+
+**Sem sprites o cliente não entra no jogo.** `data/things/1098/` está vazio (ver *Assets*
+acima), então a conexão com o servidor falha ao carregar o `.dat`/`.spr`. A **tela de login
+já aparece normalmente** — é ela que valida todo o trabalho de identidade visual.
+
+Screenshot da janela. `screencapture` exige que o processo que o chama tenha permissão de
+**Gravação de Tela** (Ajustes do Sistema → Privacidade e Segurança); sem isso ele falha com
+`could not create image from display`. O caminho que sempre funciona é pedir ao próprio
+cliente que salve o framebuffer dele — `g_app.doScreenshot(nome)` escreve no *write dir*:
+
+```bash
+cd client-otc
+cat > shinobirc.lua <<'LUA'
+scheduleEvent(function() g_app.doScreenshot('/screenshot_login.png') end, 6000)
+LUA
+./OTClient.app/Contents/MacOS/OTClient > shinobi.log 2>&1 &
+sleep 20
+cp ~/Library/Application\ Support/shinobi/.shinobi/screenshot_login.png screenshot_login.png
+rm shinobirc.lua                      # é só um utilitário de captura, não versionar
+```
+
+> O arquivo de *runtime config* do cliente é `/<compactName>rc.lua`, e o compact name deste
+> projeto é `shinobi` — ou seja, **`shinobirc.lua`**. O `otclientrc.lua` que veio do upstream
+> não é mais carregado (`init.lua:175`).
+
+O *write dir* é `~/Library/Application Support/shinobi/.shinobi/` — é lá que ficam também o
+`config.otml` e os presets de controle em `controls/keybinds/` e `controls/hotkeys/`.
+
+### Identidade visual (o que foi customizado)
+
+| Arquivo | O que faz |
+| --- | --- |
+| `data/locales/pt_br.lua` | Locale pt-BR completo, **cp1252** (ver nota abaixo) |
+| `modules/naruto_theme/` | Termos Tibia→Naruto (Mana→Chakra, skills, jutsus); define `pt_br` como padrão |
+| `data/images/background.png` | Arte própria 1920×1080 da tela de login (vila ninja à noite) |
+| `data/images/clienticon.png` | Ícone próprio (folha + shuriken de chakra) |
+| `tools/gen_art_shinobi.py` | Gera as duas imagens acima por código (stdlib, sem Pillow) |
+| `modules/client_background/` | Título `SHINOBI LEGENDS` + subtítulo `Narutibia PvM` |
+| `data/styles/50-ninja.otui` | Paleta (`$chakraBlue`, `$leafGreen`, `$sandGold`, `$nightBg`…) e estilos do tema |
+| `modules/game_healthinfo/` | Barras recoloridas: vida vermelho-alaranjado, chakra azul-claro |
+| `modules/corelib/keybind.lua` | Presets de controle: `Folha`, `Nevoa`, `Nuvem`, `Areia` |
+
+Regenerar a arte (determinística, mesma seed → mesma imagem):
+
+```bash
+cd client-otc
+python3 tools/gen_art_shinobi.py data/images/background.png data/images/clienticon.png
+```
+
+> **Encoding: use cp1252, não UTF-8.** As fontes do OTClient são bitmaps indexados por
+> **byte** (`src/framework/graphics/ttfloader.cpp` gera glifos só de 32 a 255, e
+> `bitmapfont.cpp` indexa com `static_cast<uint8_t>(text[i])`). Texto UTF-8 com acento
+> ocupa 2 bytes e sai como mojibake na tela. O campo `charset` das tabelas de locale é
+> decorativo — nada no código o lê. Por isso `data/locales/pt_br.lua` e
+> `modules/naruto_theme/naruto_theme.lua` estão gravados em cp1252, como os demais
+> locales do upstream. Ao editar, preserve o encoding:
+> `iconv -f cp1252 -t utf-8 arquivo.lua` para ler, e converta de volta ao salvar.
+
+> **Presets de keybind em ASCII.** O nome do preset vira nome de arquivo
+> (`/controls/keybinds/<nome>.otml`), então `Nevoa` vai sem acento de propósito: um `é` em
+> cp1252 produziria um nome de arquivo inválido em UTF-8 no macOS.
+
+### Assets (sprites)
+- Coloque `Tibia.spr` e `Tibia.dat` versão **10.98** em `client-otc/data/things/1098/`.
+- Para desenvolvimento, use um par 10.98 legítimo que você possua; para distribuir, só sprites próprios (ADR-002).
+- Desative o auto-install em `init.lua` (`clientAssets.enabled = false`) para não baixar assets 13.x.
+- Sprites próprios: ObjectBuilder 0.5.5 (cria/edita .spr/.dat; abre em Windows/macOS via AIR).
+
+## 3. Servidor
+```bash
+cd server
+git clone --branch v1.4.2 --depth 1 https://github.com/otland/forgottenserver tfs
+cd tfs && mkdir build && cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake .. && cmake --build . -j8
+cp ../config.lua.dist ../config.lua
+```
+> Dependências via Homebrew: `boost cryptopp fmt pugixml luajit mariadb-connector-c`.
+> Configure: `cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="/opt/homebrew;/opt/homebrew/opt/mariadb-connector-c;/opt/homebrew/opt/luajit" -DUSE_LUAJIT=ON ..`
+
+### Patches aplicados no fonte do TFS (2026-09-03)
+O TFS 1.4.2 é de 2022 e não compila/roda sem ajustes com as versões atuais de Boost, fmt,
+CMake e Apple Clang no Apple Silicon. Cada patch abaixo é o mínimo necessário.
+
+| # | Arquivo(s) | Problema | Correção |
+|---|-----------|----------|----------|
+| 1 | `src/connection.h`, `src/server.h`, `src/signals.h`, `src/connection.cpp`, `src/server.cpp` | Boost ≥1.87 removeu `boost::asio::io_service` e `io_service.post()` (Homebrew tem 1.92) | `io_context` + `boost::asio::post(...)` |
+| 2 | `src/connection.cpp` | `deadline_timer::expires_from_now` removido | `steady_timer::expires_after` |
+| 3 | Rede | `to_uint` / `make_address_v4` mudaram de assinatura | atualizado para a API nova |
+| 4 | `src/otpch.h` | fmt ≥10 não formata mais enums sem escopo implicitamente. `iomapserialize.cpp`, `iomarket.cpp` passam `AccessList_t`, `MarketAction_t`, `MarketOfferState_t` direto para `fmt::format("{:d}", ...)` → `type_is_unformattable_for` | `formatter` genérico para `std::is_enum_v<E>` que delega ao `underlying_type_t`, adicionado no fim do PCH. Envolvido em `#ifndef FS_ENUM_FORMATTER_PATCH` porque `otpch.h` não tem include guard e é ao mesmo tempo force-included como PCH e `#include`ado em cada `.cpp` (sem o guard: "redefinition of formatter") |
+| 5 | `src/scheduler.cpp`, `src/server.cpp` | `timer.expires_from_now(...)` em `basic_waitable_timer` | `timer.expires_after(...)` |
+| 6 | `src/signals.cpp` | `Signals::Signals(boost::asio::io_service&)` sobrou do patch 1 (o `.h` já era `io_context`) | `boost::asio::io_context&` |
+| 7 | `CMakeLists.txt` (bloco `FORCE_LUAJIT`) | **Em arm64 o binário morria instantaneamente com SIGKILL (exit 137) e zero saída.** O TFS passa `-pagezero_size 10000 -image_base 100000000` no APPLE para o LuaJIT x86_64 alocar nos 2 GB baixos; o linker já avisava `Linking with PIE, -image_base will be ignored` e o kernel do macOS mata o executável resultante | flags aplicadas só quando `CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64"`. Em Apple Silicon o LuaJIT usa GC64 e não precisa do hack |
+
+Patch no gerador (não no TFS): `tools/export_tfs.py` agora lê `server/tfs/data/items/items.xml`
+(ignorando o bloco `NARUTO:BEGIN/END`) e **pula** os ids que já existem no items.xml vanilla,
+eliminando os 35 avisos `[Warning - Items::parseItemNode] Duplicate item with id`. Os ids pulados
+são listados no fim da execução do gerador — são placeholders de `data/tfs_mapping.json` que
+devem ser trocados por ids livres quando houver sprite próprio.
+
+Banco (o MariaDB do Homebrew autentica o seu usuário do macOS, não `root`):
+```bash
+brew services start mariadb
+mysql -u "$USER" -e "CREATE DATABASE forgottenserver; CREATE USER 'tfs'@'localhost' IDENTIFIED BY 'tfs'; GRANT ALL ON forgottenserver.* TO 'tfs'@'localhost';"
+mysql -u tfs -ptfs forgottenserver < schema.sql
+```
+Em `config.lua`: `mysqlUser = "tfs"`, `mysqlPass = "tfs"`, `mysqlDatabase = "forgottenserver"`.
+
+### Instalar o conteúdo gerado
+```bash
+python3 tools/export_tfs.py
+cp -R server/generated/monster/naruto server/tfs/data/monster/
+cp -R server/generated/spells/scripts/naruto server/tfs/data/spells/scripts/
+cp -R server/generated/npc/naruto server/tfs/data/npc/
+cp -R server/generated/scripts/naruto server/tfs/data/scripts/
+cp server/generated/lib/naruto_quests.lua server/tfs/data/lib/
+cp server/generated/XML/vocations.xml server/tfs/data/XML/vocations.xml
+```
+E manualmente: colar `monsters_naruto.xml` em `monsters.xml`, `spells_naruto.xml` em `spells.xml`,
+`items_naruto.xml` em `items.xml`, e `dofile('data/lib/naruto_quests.lua')` em `data/lib/lib.lua`.
+Ou simplesmente: `tools/install_generated.sh` (faz tudo isso, idempotente, blocos marcados `NARUTO:BEGIN/END`).
+
+## 4. Conectar
+No cliente: Enter Game → servidor `127.0.0.1`, porta `7171`, versão `1098`. Conta padrão do schema: `god` / `god`.
+
+## 5. Como rodar
+
+O TFS **precisa** ser executado com o cwd em `server/tfs` (procura `config.lua`, `data/` e
+`key.pem` relativos ao diretório atual). Use o script:
+
+```bash
+tools/run_server.sh            # sobe o servidor (Ctrl+C para parar)
+tools/run_server.sh --build    # recompila antes de subir
+```
+
+Equivalente manual:
+```bash
+brew services start mariadb                 # o banco precisa estar no ar
+cd server/tfs && ./build/tfs
+```
+
+Recompilar apenas:
+```bash
+cd server/tfs/build && cmake --build . -j8
+```
+
+Reinstalar o conteúdo Naruto gerado (sempre que `data/*.json` mudar):
+```bash
+tools/install_generated.sh                  # roda export_tfs.py + instala em server/tfs/data
+```
+
+Parar o servidor:
+```bash
+pkill -f 'build/tfs'
+```
+
+Verificar que está aceitando conexão:
+```bash
+nc -z 127.0.0.1 7171 && echo ok
+```
+
+### Log de inicialização esperado
+```
+>> Loading config
+>> Loading RSA key
+>> Establishing database connection... MySQL 3.4.10
+>> Loading vocations
+>> Loading items
+>> Loading script systems / Using LuaJIT 2.1
+>> Loading lua libs / lua scripts / monsters / lua monsters / outfits
+>> Checking world type... PVP
+>> Loading map        (Map size: 2048x2048)
+>> Initializing gamestate
+>> Loaded all modules, server starting up...
+>> Shinobi Legends Server Online!
+```
+Nenhum aviso de item duplicado, de XML mal formado ou de erro Lua nos arquivos Naruto.
+Ainda aparecem ~400 avisos `[Warning - Spell::configureSpell] Wrong vocation name: Knight/Druid/...`:
+são as **spells vanilla** do TFS referenciando as vocações originais, que o nosso
+`vocations.xml` gerado substituiu. Inofensivo; some quando as spells vanilla forem removidas.
+
+### Contas de teste (criadas em 2026-09-03)
+| Conta | Senha | Personagem | Level | Vocação | Town | group_id | Posição |
+|-------|-------|-----------|-------|---------|------|----------|---------|
+| `teste` | `teste` | `Naruto` | 8 | 1 (Vila da Folha) | 1 (Trekolt) | 1 (player) | 95, 117, 7 |
+| `god` | `god` | `GM` | 8 | 1 (Vila da Folha) | 1 (Trekolt) | 6 (god) | 95, 117, 7 |
+
+Senhas em SHA1 (TFS 1.4 usa sha1 fixo, sem opção `passwordType`). A posição é o templo do
+town 1 do `forgotten.otbm` que vem com o TFS — a tabela `towns` é preenchida pelo servidor a
+partir do mapa; confira com `mysql -u tfs -ptfs forgottenserver -e "SELECT * FROM towns;"`.
+
+Recriar/resetar as contas:
+```bash
+mysql -u tfs -ptfs forgottenserver <<'SQL'
+INSERT INTO accounts (name, password, type, email, creation)
+VALUES ('teste', SHA1('teste'), 1, '', UNIX_TIMESTAMP())
+ON DUPLICATE KEY UPDATE password = SHA1('teste'), type = 1;
+INSERT INTO accounts (name, password, type, email, creation)
+VALUES ('god', SHA1('god'), 5, '', UNIX_TIMESTAMP())
+ON DUPLICATE KEY UPDATE password = SHA1('god'), type = 5;
+INSERT INTO players (name, group_id, account_id, level, vocation, experience,
+                     health, healthmax, mana, manamax, cap, town_id, posx, posy, posz, looktype, sex)
+VALUES ('Naruto', 1, (SELECT id FROM accounts WHERE name='teste'),
+        8, 1, 4200, 255, 255, 70, 70, 4400, 1, 95, 117, 7, 128, 1)
+ON DUPLICATE KEY UPDATE level=8, vocation=1, town_id=1, posx=95, posy=117, posz=7;
+INSERT INTO players (name, group_id, account_id, level, vocation, experience,
+                     health, healthmax, mana, manamax, cap, town_id, posx, posy, posz, looktype, sex)
+VALUES ('GM', 6, (SELECT id FROM accounts WHERE name='god'),
+        8, 1, 4200, 255, 255, 70, 70, 4400, 1, 95, 117, 7, 128, 1)
+ON DUPLICATE KEY UPDATE group_id=6, town_id=1, posx=95, posy=117, posz=7;
+SQL
+```
+> `experience = 4200` é o total exato do level 8 pela fórmula do TFS
+> (`(50*n^3 - 150*n^2 + 400*n)/3`, com `n = level-1`). Level e experiência precisam bater,
+> senão o servidor recalcula o level no primeiro login.
+
+## 6. Mapa
+Remere's Map Editor (RME) para criar `data/world/forgotten.otbm`. `server/generated/world/*-spawn.xml`
+tem as posições relativas do protótipo como referência.
+
+## Avisos esperados no boot
+- `Unknown loot item "meat"` etc. (≈70): são monstros **vanilla** do TFS (que ainda povoam o mapa `forgotten.otbm`)
+  procurando loot pelo nome de itens que nós sobrescrevemos (ex.: 2666 "meat" virou "onigiri"). Somem quando o mapa
+  próprio substituir o vanilla. Não é erro do nosso conteúdo.
+- `spells.xml` agora contém **só** os jutsus (o installer descarta as spells vanilla, que referenciavam vocações Knight/Druid).
+
+## Teste ponta a ponta (2026-09-03, funcionando)
+`tools/autotest_client.sh [conta] [senha]` — sobe o cliente com login automático, entra no jogo, anda, mira o monstro
+mais próximo, lança `katon goukakyuu` e `kawarimi`, loga stats e salva screenshots em `screenshots/`.
+Resultado de referência: 0 erros no cliente, `A rat loses 20 hitpoints due to your attack`, hp 255/255 chakra 70/70.
+Armadilhas já resolvidas: (1) `EnterGame.setAccountName` espera valor criptografado — preencher o widget direto;
+(2) todo item com FLAG_ANIMATION no OTB precisa de ≥2 fases no .dat, senão o pacote de mapa desalinha;
+(3) `/a N` (andar) falha contra paredes — no templo padrão use `/m` ou saia andando.
+
+## 6. Modo GM (explorar o jogo)
+Conta `god`/`god`, personagem `GM`. **accounts.type precisa ser 6** (ACCOUNT_TYPE_GOD no TFS 1.4.2; 5 é Community Manager).
+Comandos próprios (`server/tfs/data/scripts/naruto/gm_tools.lua`):
+
+| Comando | Efeito |
+|---|---|
+| `/sl` | lista os comandos |
+| `/arena` | teleporta para o tile livre mais próximo fora de zona de proteção (3x3 livre) |
+| `/tp x,y,z` | teleporta |
+| `/lvl N` | vai para o level N (vida/chakra cheios) |
+| `/jutsus` | aprende todos os jutsus |
+| `/full` | vida e chakra cheios |
+| `/vila folha\|nevoa\|nuvem\|areia` | troca de vila (vocação) |
+
+Padrão TFS que importa: `/m Nome` (invoca monstro; patch: procura tile livre em volta), `/i nome do item`, `/goto Jogador`,
+`/c Jogador` (puxa), `/ghost`, `/reload talkactions|spells|monsters`, `/pos`. Nomes dos monstros: os do JSON ("Lobo",
+"Sapo Gigante", "Ninja Renegado", "Chefe dos Bandidos", "Sapo Ancião"...). Jutsus: os selos são o id com espaço
+(`katon goukakyuu`, `suiton mizudan`, `kawarimi`, `shousen`).
+
+Teste automatizado do fluxo: `tools/autotest_client.sh` (servidor no ar) — loga como GM, `/arena`, `/lvl 20`, invoca
+Lobo e Sapo Gigante, ataca, solta jutsu, tira screenshots em `screenshots/`.

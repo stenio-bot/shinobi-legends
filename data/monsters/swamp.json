@@ -1,0 +1,279 @@
+[
+  {
+    "id": "leech",
+    "name": "Sanguessuga Gigante",
+    "description": "Lenta, mas o veneno acumula.",
+    "level": 10,
+    "hp": 180,
+    "attack": 18,
+    "defense": 6,
+    "speed": 2.5,
+    "element": "suiton",
+    "xp": 120,
+    "behavior": "aggressive",
+    "aggro_range": 4,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Sucção",
+        "damage_min": 8,
+        "damage_max": 16,
+        "cooldown_s": 1.6,
+        "type": "melee",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.5,
+            "duration_s": 8,
+            "value": 3
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "leech_gland",
+        "chance": 0.4,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "antidote",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 15,
+    "ryo_max": 40,
+    "respawn_s": 45,
+    "sprite": "mon_leech",
+    "article": "uma"
+  },
+  {
+    "id": "giant_toad",
+    "name": "Sapo Gigante",
+    "description": "Pula em cima de quem chega perto.",
+    "level": 13,
+    "hp": 260,
+    "attack": 24,
+    "defense": 8,
+    "speed": 4,
+    "element": "suiton",
+    "xp": 180,
+    "behavior": "aggressive",
+    "aggro_range": 5,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Língua",
+        "damage_min": 14,
+        "damage_max": 26,
+        "cooldown_s": 1.8,
+        "type": "melee"
+      },
+      {
+        "name": "Salto",
+        "damage_min": 20,
+        "damage_max": 34,
+        "cooldown_s": 6.0,
+        "type": "area",
+        "shape": "circle_r1",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.3,
+            "duration_s": 1.0
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "toad_skin",
+        "chance": 0.45,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "toad_oil",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "chakra_pill_medium",
+        "chance": 0.08,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 25,
+    "ryo_max": 60,
+    "respawn_s": 50,
+    "sprite": "mon_toad",
+    "article": "um"
+  },
+  {
+    "id": "rogue_ninja",
+    "name": "Ninja Renegado",
+    "description": "Desertor da vila. Joga shuriken e depois parte pra lâmina.",
+    "level": 18,
+    "hp": 340,
+    "attack": 30,
+    "defense": 12,
+    "speed": 4.5,
+    "element": "none",
+    "xp": 300,
+    "behavior": "ranged",
+    "aggro_range": 7,
+    "attack_range": 4,
+    "attacks": [
+      {
+        "name": "Shuriken",
+        "damage_min": 18,
+        "damage_max": 30,
+        "cooldown_s": 2.0,
+        "type": "projectile"
+      },
+      {
+        "name": "Corte",
+        "damage_min": 24,
+        "damage_max": 40,
+        "cooldown_s": 2.5,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "rogue_headband",
+        "chance": 0.5,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "shuriken_iron",
+        "chance": 0.4,
+        "min": 5,
+        "max": 15
+      },
+      {
+        "item_id": "katana_ronin",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "vest_chuunin",
+        "chance": 0.02,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 40,
+    "ryo_max": 100,
+    "respawn_s": 60,
+    "sprite": "mon_rogue",
+    "article": "uma"
+  },
+  {
+    "id": "boss_elder_toad",
+    "name": "Sapo Ancião",
+    "description": "Boss do Pântano. Invoca filhotes e cospe água em linha.",
+    "level": 25,
+    "hp": 4000,
+    "attack": 45,
+    "defense": 18,
+    "speed": 3.5,
+    "element": "suiton",
+    "xp": 5000,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Esmagar",
+        "damage_min": 35,
+        "damage_max": 60,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Jato de Água",
+        "damage_min": 30,
+        "damage_max": 50,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.8,
+            "duration_s": 4,
+            "value": 0.5
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 60,
+        "summons": [
+          {
+            "monster_id": "giant_toad",
+            "count": 2
+          }
+        ],
+        "message": "Meus filhos, devorem o intruso!"
+      },
+      {
+        "hp_percent": 30,
+        "attack_multiplier": 1.6,
+        "summons": [
+          {
+            "monster_id": "leech",
+            "count": 3
+          }
+        ],
+        "message": "O pântano inteiro se levanta contra você!"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_chakra",
+        "chance": 0.25,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "fuuma_shuriken",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_suiton_suiryuudan",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "toad_oil",
+        "chance": 1.0,
+        "min": 2,
+        "max": 4
+      },
+      {
+        "item_id": "chakra_pill_medium",
+        "chance": 1.0,
+        "min": 3,
+        "max": 5
+      }
+    ],
+    "ryo_min": 1500,
+    "ryo_max": 3000,
+    "respawn_s": 7200,
+    "sprite": "mon_elder_toad",
+    "article": "o"
+  }
+]

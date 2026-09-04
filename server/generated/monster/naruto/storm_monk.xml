@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Monge da Tempestade" nameDescription="um monge da tempestade" race="blood" experience="1080" speed="540" manacost="0">
+	<health now="1800" max="1800"/>
+	<look type="137" head="114" body="88" legs="88" feet="114" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="1600" min="-90" max="-134"/>
+		<attack name="holy" interval="5000" chance="40" radius="2" target="0" min="-80" max="-120">
+			<attribute key="areaEffect" value="holyarea"/>
+		</attack>
+		<attack name="speed" interval="5000" chance="30" speedchange="-1000" duration="1000" range="1" target="1"/>
+	</attacks>
+	<defenses armor="48" defense="48"/>
+	<elements>
+		<element firePercent="-50"/>
+		<element energyPercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="340" chance="100000"/>
+		<item id="5891" countmax="2" chance="30000"/>  <!-- thunder_feather -->
+		<item id="5893" chance="20000"/>  <!-- oni_horn -->
+		<item id="2491" chance="4000"/>  <!-- helm_stormcaller -->
+		<item id="7367" chance="2000"/>  <!-- windblade_shuriken -->
+		<item id="7591" countmax="3" chance="18000"/>  <!-- health_potion_large -->
+	</loot>
+</monster>

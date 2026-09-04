@@ -1,0 +1,69 @@
+[
+  {
+    "id": "merchant_ruins",
+    "name": "Tsubaki, a Escavadora",
+    "map": "forest_valley",
+    "x": 100,
+    "y": 20,
+    "type": "shop",
+    "sells": [
+      "health_potion_medium",
+      "chakra_pill_large",
+      "antidote",
+      "kodachi_ruins",
+      "chain_kunai",
+      "mask_clan_ruins",
+      "robe_clan_ruins",
+      "greaves_clan_ruins",
+      "boots_clan_ruins",
+      "amulet_clan_seal",
+      "ring_stone_will",
+      "scroll_katon_anel_chamas",
+      "scroll_suiton_prisao_agua",
+      "scroll_doton_estacas_terra"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "quest_giver_ruins",
+    "name": "Ancião Kaito",
+    "map": "forest_valley",
+    "x": 102,
+    "y": 22,
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_ruins_puppets",
+        "name": "Ordens antigas",
+        "text": "As marionetes ainda patrulham o pátio. Destrua 12 delas.",
+        "objective": { "kill": "ruin_puppet", "count": 12 },
+        "reward": { "xp": 6000, "ryo": 1500, "items": ["health_potion_medium"] }
+      },
+      {
+        "id": "q_ruins_sentinels",
+        "name": "Quebrando o portão",
+        "text": "Sentinelas de pedra bloqueiam o portão interno. Derrube 10.",
+        "objective": { "kill": "stone_sentinel", "count": 10 },
+        "reward": { "xp": 9000, "ryo": 2400, "items": ["boots_clan_ruins"] }
+      },
+      {
+        "id": "q_ruins_shamans",
+        "name": "Selos que não se apagam",
+        "text": "Os xamãs mantêm a maldição viva. Silencie 8.",
+        "objective": { "kill": "curse_shaman", "count": 8 },
+        "reward": { "xp": 14000, "ryo": 4000, "items": ["amulet_clan_seal"] }
+      },
+      {
+        "id": "q_ruins_boss",
+        "name": "Quem puxa os fios",
+        "text": "No salão central alguém comanda tudo isso. Acabe com o Marionetista.",
+        "objective": { "kill": "boss_puppeteer", "count": 1 },
+        "reward": { "xp": 30000, "ryo": 12000, "items": ["ring_stone_will"] }
+      }
+    ]
+  }
+]

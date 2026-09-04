@@ -1,0 +1,67 @@
+[
+  {
+    "id": "merchant_mountain",
+    "name": "Ferreiro Genzo",
+    "map": "forest_valley",
+    "x": 152,
+    "y": 20,
+    "type": "shop",
+    "sells": [
+      "health_potion_large",
+      "soldier_pill",
+      "chakra_pill_large",
+      "thunder_katana",
+      "oni_kanabo",
+      "windblade_shuriken",
+      "helm_stormcaller",
+      "mail_stormcaller",
+      "greaves_stormcaller",
+      "boots_stormcaller",
+      "necklace_storm_fang",
+      "ring_ancestral"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "quest_giver_mountain",
+    "name": "Mestra Yuki",
+    "map": "forest_valley",
+    "x": 154,
+    "y": 22,
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_mountain_eagles",
+        "name": "Céu limpo",
+        "text": "As águias do trovão não deixam ninguém subir a trilha. Abata 15.",
+        "objective": { "kill": "thunder_eagle", "count": 15 },
+        "reward": { "xp": 20000, "ryo": 6000, "items": ["health_potion_large"] }
+      },
+      {
+        "id": "q_mountain_oni",
+        "name": "O que desce do gelo",
+        "text": "Onis da geleira invadiram o acampamento. Mate 10.",
+        "objective": { "kill": "glacier_oni", "count": 10 },
+        "reward": { "xp": 32000, "ryo": 10000, "items": ["boots_stormcaller"] }
+      },
+      {
+        "id": "q_mountain_serpents",
+        "name": "As fendas quentes",
+        "text": "As serpentes de magma estão abrindo o pico por dentro. Mate 10.",
+        "objective": { "kill": "magma_serpent", "count": 10 },
+        "reward": { "xp": 48000, "ryo": 16000, "items": ["scroll_fuuin_contencao"] }
+      },
+      {
+        "id": "q_mountain_boss",
+        "name": "A raiva antiga",
+        "text": "Dentro do pico dorme o Oni Ancestral. Ele não vai dormir para sempre.",
+        "objective": { "kill": "boss_ancestral_oni", "count": 1 },
+        "reward": { "xp": 90000, "ryo": 30000, "items": ["ring_ancestral"] }
+      }
+    ]
+  }
+]

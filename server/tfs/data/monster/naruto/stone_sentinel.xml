@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Sentinela de Pedra" nameDescription="uma sentinela de pedra" race="undead" experience="850" speed="300" manacost="0">
+	<health now="1000" max="1000"/>
+	<look type="61" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2400" min="-46" max="-70"/>
+		<attack name="earth" interval="7000" chance="40" radius="2" target="0" min="-40" max="-60">
+			<attribute key="areaEffect" value="stones"/>
+		</attack>
+		<attack name="speed" interval="7000" chance="30" speedchange="-1000" duration="1000" range="1" target="1"/>
+	</attacks>
+	<defenses armor="34" defense="34"/>
+	<elements>
+		<element energyPercent="-50"/>
+		<element icePercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="160" chance="100000"/>
+		<item id="5892" countmax="2" chance="45000"/>  <!-- granite_core -->
+		<item id="5901" chance="20000"/>  <!-- puppet_joint -->
+		<item id="2478" chance="4000"/>  <!-- greaves_clan_ruins -->
+		<item id="2645" chance="5000"/>  <!-- boots_clan_ruins -->
+	</loot>
+</monster>

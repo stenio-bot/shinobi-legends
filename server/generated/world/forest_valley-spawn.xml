@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<!-- Referência de spawns. Coordenadas do protótipo (x,y) + offset; ajuste ao mapa .otbm real. -->
+<spawns>
+	<spawn centerx="1020" centery="1010" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1022" centery="1012" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1008" centery="1008" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1006" centery="1026" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1024" centery="1028" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1030" centery="1006" centerz="7" radius="3">
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1016" centery="1030" centerz="7" radius="3">
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="40"/>
+	</spawn>
+	<spawn centerx="1036" centery="1008" centerz="7" radius="3">
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="40"/>
+	</spawn>
+	<spawn centerx="1010" centery="1034" centerz="7" radius="3">
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="40"/>
+	</spawn>
+	<spawn centerx="1030" centery="1014" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1040" centery="1020" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1038" centery="1030" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1044" centery="1014" centerz="7" radius="3">
+		<monster name="Bandido" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1042" centery="1010" centerz="7" radius="3">
+		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1046" centery="1026" centerz="7" radius="3">
+		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1046" centery="1035" centerz="7" radius="3">
+		<monster name="Chefe dos Bandidos" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1056" centery="1008" centerz="7" radius="3">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1058" centery="1030" centerz="7" radius="3">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1066" centery="1012" centerz="7" radius="3">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1070" centery="1034" centerz="7" radius="3">
+		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1064" centery="1022" centerz="7" radius="3">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1072" centery="1008" centerz="7" radius="3">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1076" centery="1028" centerz="7" radius="3">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1068" centery="1030" centerz="7" radius="3">
+		<monster name="Sapo Gigante" x="0" y="0" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1080" centery="1014" centerz="7" radius="3">
+		<monster name="Ninja Renegado" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1084" centery="1030" centerz="7" radius="3">
+		<monster name="Ninja Renegado" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1088" centery="1022" centerz="7" radius="3">
+		<monster name="Ninja Renegado" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1090" centery="1034" centerz="7" radius="3">
+		<monster name="Sapo Ancião" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1100" centery="1010" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1104" centery="1026" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1110" centery="1016" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1108" centery="1034" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1116" centery="1008" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1114" centery="1030" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1120" centery="1014" centerz="7" radius="3">
+		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1124" centery="1028" centerz="7" radius="3">
+		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1128" centery="1020" centerz="7" radius="3">
+		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1122" centery="1006" centerz="7" radius="3">
+		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1132" centery="1010" centerz="7" radius="3">
+		<monster name="Guerreiro Espectral" x="0" y="0" z="7" spawntime="75"/>
+	</spawn>
+	<spawn centerx="1136" centery="1026" centerz="7" radius="3">
+		<monster name="Guerreiro Espectral" x="0" y="0" z="7" spawntime="75"/>
+	</spawn>
+	<spawn centerx="1140" centery="1018" centerz="7" radius="3">
+		<monster name="Guerreiro Espectral" x="0" y="0" z="7" spawntime="75"/>
+	</spawn>
+	<spawn centerx="1138" centery="1032" centerz="7" radius="3">
+		<monster name="Xamã da Maldição" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1144" centery="1012" centerz="7" radius="3">
+		<monster name="Xamã da Maldição" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1142" centery="1024" centerz="7" radius="3">
+		<monster name="Xamã da Maldição" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1146" centery="1036" centerz="7" radius="3">
+		<monster name="Marionetista das Ruínas" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1152" centery="1010" centerz="7" radius="3">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1156" centery="1028" centerz="7" radius="3">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1160" centery="1016" centerz="7" radius="3">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1154" centery="1034" centerz="7" radius="3">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1164" centery="1008" centerz="7" radius="3">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="80"/>
+	</spawn>
+	<spawn centerx="1166" centery="1022" centerz="7" radius="3">
+		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1170" centery="1012" centerz="7" radius="3">
+		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1168" centery="1032" centerz="7" radius="3">
+		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1174" centery="1026" centerz="7" radius="3">
+		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1178" centery="1010" centerz="7" radius="3">
+		<monster name="Monge da Tempestade" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1182" centery="1028" centerz="7" radius="3">
+		<monster name="Monge da Tempestade" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1176" centery="1018" centerz="7" radius="3">
+		<monster name="Monge da Tempestade" x="0" y="0" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1186" centery="1014" centerz="7" radius="3">
+		<monster name="Serpente de Magma" x="0" y="0" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1190" centery="1030" centerz="7" radius="3">
+		<monster name="Serpente de Magma" x="0" y="0" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1188" centery="1022" centerz="7" radius="3">
+		<monster name="Serpente de Magma" x="0" y="0" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1196" centery="1036" centerz="7" radius="3">
+		<monster name="Oni Ancestral" x="0" y="0" z="7" spawntime="10800"/>
+	</spawn>
+</spawns>

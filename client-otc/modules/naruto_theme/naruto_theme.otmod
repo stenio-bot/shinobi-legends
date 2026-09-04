@@ -1,0 +1,13 @@
+Module
+  name: naruto_theme
+  description: Tema Shinobi Legends - renomeia Mana/skills/spells para Chakra/jutsus e define idioma pt
+  author: Shinobi Legends
+  sandboxed: true
+  autoload: true
+  autoload-priority: 600
+  reloadable: true
+  scripts: [ naruto_theme ]
+  dependencies:
+    - client_locales
+  @onLoad: init()
+  @onUnload: terminate()

@@ -1,0 +1,28 @@
+-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- nomes de todos os jutsus (para /jutsus do GM)
+NarutoJutsus = {
+	"Doton: Muralha de Pedra",
+	"Doton: Estacas de Terra",
+	"Doton: Colapso do Terreno",
+	"Fuuton: Lâmina de Vento",
+	"Fuuton: Rajada Cortante",
+	"Katon: Grande Bola de Fogo",
+	"Katon: Flores de Fênix",
+	"Katon: Dragão de Fogo",
+	"Katon: Sopro de Brasas",
+	"Katon: Anel de Chamas",
+	"Kawarimi no Jutsu",
+	"Bunshin no Jutsu",
+	"Shousen: Palma Curativa",
+	"Fuuin: Selo de Contenção",
+	"Raiton: Agulha de Raio",
+	"Raiton: Punho do Trovão",
+	"Raiton: Corrente Estática",
+	"Raiton: Lança do Relâmpago",
+	"Raiton: Armadura Elétrica",
+	"Suiton: Projétil de Água",
+	"Suiton: Dragão de Água",
+	"Suiton: Névoa Cortante",
+	"Suiton: Prisão de Água",
+	"Suiton: Vórtice Devorador",
+}

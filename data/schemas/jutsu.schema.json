@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Jutsu",
+  "type": "object",
+  "required": ["id","name","element","type","range","chakra_cost","cooldown_s","base_damage","level_scale","skill_scale","required_level","villages"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type":"string","pattern":"^[a-z0-9_]+$"},
+    "name": {"type":"string"},
+    "description": {"type":"string"},
+    "element": {"enum":["katon","suiton","doton","fuuton","raiton","none"]},
+    "type": {"enum":["projectile","area","self","target","beam"]},
+    "shape": {"type":"string","description":"circle_r1, cross_r2, line_5, cone_3..."},
+    "range": {"type":"integer","minimum":0},
+    "chakra_cost": {"type":"integer","minimum":0},
+    "cooldown_s": {"type":"number","minimum":0},
+    "base_damage": {"type":"number","minimum":0},
+    "level_scale": {"type":"number","minimum":0},
+    "skill_scale": {"type":"number","minimum":0},
+    "skill": {"enum":["ninjutsu","genjutsu","taijutsu","shuriken"],"default":"ninjutsu"},
+    "required_level": {"type":"integer","minimum":1},
+    "required_skill": {"type":"object","properties":{"skill":{"type":"string"},"value":{"type":"integer"}}},
+    "villages": {"type":"array","items":{"type":"string"}},
+    "tier": {"type":"integer","minimum":1,"maximum":5},
+    "effects": {"type":"array","items":{
+      "type":"object","required":["type","chance","duration_s"],
+      "properties":{
+        "type":{"enum":["burn","slow","stun","poison","paralyze","heal_over_time"]},
+        "chance":{"type":"number","minimum":0,"maximum":1},
+        "duration_s":{"type":"number"},
+        "value":{"type":"number"}
+      }}},
+    "animation": {"type":"string"},
+    "sfx": {"type":"string"}
+  }
+}

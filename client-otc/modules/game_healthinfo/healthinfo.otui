@@ -1,0 +1,88 @@
+PhantomMiniWindow
+  id: mainhealthmanapanel
+  draggable: true
+  phantom: false
+  &panelHeight: 32
+  height: 32
+
+  UIWidget
+    id: health
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: parent.verticalCenter
+    margin-left: 8
+    margin-right: 8
+    margin-top: 8
+    phantom: true
+
+    NinjaHealthIcon
+      id: icon
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      size: 12 11
+
+    NinjaHealthValue
+      id: text
+      !text: '155'
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      width: 44
+      text-align: left
+
+    NinjaBarBorder
+      id: total
+      anchors.left: icon.right
+      anchors.right: text.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      margin-right: 10
+      height: 11
+
+    NinjaHealthFill
+      id: current
+      anchors.left: total.left
+      anchors.verticalCenter: total.verticalCenter
+      height: 11
+      width: 47
+
+  UIWidget
+    id: mana
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.verticalCenter
+    anchors.bottom: parent.bottom
+    margin-left: 8
+    margin-right: 8
+    margin-top: 4
+    phantom: true
+
+    NinjaChakraIcon
+      id: icon
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      size: 12 11
+
+    NinjaChakraValue
+      id: text
+      !text: '60'
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      width: 44
+      text-align: left
+
+    NinjaBarBorder
+      id: total
+      anchors.left: icon.right
+      anchors.right: text.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      margin-right: 10
+      height: 11
+
+    NinjaChakraFill
+      id: current
+      anchors.left: total.left
+      anchors.verticalCenter: total.verticalCenter
+      height: 11
+      width: 47

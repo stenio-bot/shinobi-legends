@@ -1,0 +1,21 @@
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<!-- Cole dentro de <monsters> em data/monster/monsters.xml -->
+<monster name="Lobo" file="naruto/wolf.xml"/>
+<monster name="Bandido" file="naruto/bandit.xml"/>
+<monster name="Cobra da Floresta" file="naruto/forest_snake.xml"/>
+<monster name="Bandido Arqueiro" file="naruto/bandit_archer.xml"/>
+<monster name="Chefe dos Bandidos" file="naruto/boss_bandit_chief.xml"/>
+<monster name="Águia do Trovão" file="naruto/thunder_eagle.xml"/>
+<monster name="Oni da Geleira" file="naruto/glacier_oni.xml"/>
+<monster name="Monge da Tempestade" file="naruto/storm_monk.xml"/>
+<monster name="Serpente de Magma" file="naruto/magma_serpent.xml"/>
+<monster name="Oni Ancestral" file="naruto/boss_ancestral_oni.xml"/>
+<monster name="Marionete de Combate" file="naruto/ruin_puppet.xml"/>
+<monster name="Sentinela de Pedra" file="naruto/stone_sentinel.xml"/>
+<monster name="Guerreiro Espectral" file="naruto/spectral_warrior.xml"/>
+<monster name="Xamã da Maldição" file="naruto/curse_shaman.xml"/>
+<monster name="Marionetista das Ruínas" file="naruto/boss_puppeteer.xml"/>
+<monster name="Sanguessuga Gigante" file="naruto/leech.xml"/>
+<monster name="Sapo Gigante" file="naruto/giant_toad.xml"/>
+<monster name="Ninja Renegado" file="naruto/rogue_ninja.xml"/>
+<monster name="Sapo Ancião" file="naruto/boss_elder_toad.xml"/>

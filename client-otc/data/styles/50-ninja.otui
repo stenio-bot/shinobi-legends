@@ -1,0 +1,88 @@
+// ---------------------------------------------------------------------------
+// Shinobi Legends - paleta e estilos de tema (ADR-005)
+//
+// Aliases OTML sao globais *por documento*: em src/framework/otml/otmlparser.cpp
+// so os "&" de nivel raiz entram em doc->m_globalAliases, e cada .otui e um doc
+// separado. Por isso a paleta e os estilos que a consomem ficam no MESMO arquivo;
+// os outros modulos usam o resultado pelo NOME DO ESTILO (estilos, esses sim, sao
+// globais via g_ui.importStyle). Precisa de uma cor nova em outro modulo? Crie
+// aqui um estilo que ja a aplique, em vez de espalhar hexadecimais pelo projeto.
+//
+// Carregado automaticamente por client_styles (importResources("styles", "otui")).
+// A ordem e alfabetica, entao 10-/20-/30-/40- vem antes e da para sobrepor aqui.
+//
+// OTML so aceita comentario de linha inteira (// ou #). Nao use comentario no fim
+// de uma linha de valor: ele vira parte do valor.
+// ---------------------------------------------------------------------------
+
+// paleta
+// chakra: azul-claro brilhante
+&chakraBlue:  #6ec8ff
+&chakraDeep:  #2f7fd0
+&chakraGlow:  #a8e2ff
+// folha (vila da Folha)
+&leafGreen:   #56a860
+// areia / titulo
+&sandGold:    #e0c070
+// fundo noturno
+&nightBg:     #0b1220
+&nightPanel:  #131c30
+// vida: vermelho-alaranjado
+&emberRed:    #ff6a3d
+&emberDeep:   #b83a1e
+// texto secundario
+&mistGrey:    #c0c8d4
+
+// barras de vida / chakra (consumidas por game_healthinfo)
+NinjaHealthFill < UIWidget
+  image-source: /images/healthmana/hitpoints_bar_filled
+  image-border-left: 5
+  image-border-right: 7
+  image-color: $emberRed
+
+NinjaChakraFill < UIWidget
+  image-source: /images/healthmana/mana_bar_filled
+  image-border-left: 5
+  image-border-right: 7
+  image-color: $chakraBlue
+
+NinjaBarBorder < UIWidget
+  image-source: /images/healthmana/hitpoints_manapoints_bar_border
+  image-border-left: 6
+  image-border-right: 6
+  image-color: $mistGrey
+
+NinjaHealthIcon < UIWidget
+  image-source: /images/healthmana/hitpoints_symbol
+  image-color: $emberRed
+
+NinjaChakraIcon < UIWidget
+  image-source: /images/healthmana/mana_symbol
+  image-color: $chakraBlue
+
+NinjaHealthValue < Label
+  color: $emberRed
+
+NinjaChakraValue < Label
+  color: $chakraGlow
+
+// tela de login (consumidos por client_background)
+NinjaGameTitle < UILabel
+  ttf-font: verdana-bold
+  ttf-font-size: 56
+  stroke: 2 black
+  color: $sandGold
+  text-align: center
+  text-auto-resize: true
+  phantom: true
+  focusable: false
+
+NinjaGameSubtitle < UILabel
+  ttf-font: verdana-bold
+  ttf-font-size: 22
+  stroke: 1 black
+  color: $chakraGlow
+  text-align: center
+  text-auto-resize: true
+  phantom: true
+  focusable: false

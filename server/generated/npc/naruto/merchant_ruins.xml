@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<npc name="Tsubaki, a Escavadora" script="naruto/merchant_ruins.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100"/>
+	<look type="139" head="114" body="79" legs="86" feet="114"/>
+</npc>

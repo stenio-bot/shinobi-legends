@@ -1,0 +1,23 @@
+[
+  {
+    "id": "fuuton_lamina_vento",
+    "name": "Fuuton: Lâmina de Vento",
+    "description": "Uma lâmina de ar comprimido cortando em linha reta até o alvo.",
+    "element": "fuuton", "type": "projectile",
+    "range": 6, "chakra_cost": 13, "cooldown_s": 1.7,
+    "base_damage": 23, "level_scale": 1.1, "skill_scale": 0.85,
+    "skill": "ninjutsu", "required_level": 1, "villages": ["sand"], "tier": 1,
+    "animation": "fx_wind_blade", "sfx": "sfx_wind_cut"
+  },
+  {
+    "id": "fuuton_rajada_cortante",
+    "name": "Fuuton: Rajada Cortante",
+    "description": "Uma rajada em leque que retalha tudo à frente e desequilibra os atingidos.",
+    "element": "fuuton", "type": "area", "shape": "cone_3",
+    "range": 3, "chakra_cost": 34, "cooldown_s": 4.5,
+    "base_damage": 30, "level_scale": 1.3, "skill_scale": 0.9,
+    "skill": "ninjutsu", "required_level": 16, "villages": ["sand"], "tier": 2,
+    "effects": [{"type":"slow","chance":0.5,"duration_s":3,"value":0.35}],
+    "animation": "fx_wind_cone", "sfx": "sfx_wind_burst"
+  }
+]

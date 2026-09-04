@@ -1,0 +1,445 @@
+[
+  {
+    "id": "thunder_eagle",
+    "name": "Águia do Trovão",
+    "description": "Mergulha da nuvem e some antes de você reagir.",
+    "level": 54,
+    "hp": 1160,
+    "attack": 82,
+    "defense": 23,
+    "speed": 5.2,
+    "element": "raiton",
+    "xp": 810,
+    "behavior": "ranged",
+    "aggro_range": 9,
+    "attack_range": 5,
+    "attacks": [
+      {
+        "name": "Pena Elétrica",
+        "damage_min": 73,
+        "damage_max": 109,
+        "cooldown_s": 2.2,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "paralyze",
+            "chance": 0.25,
+            "duration_s": 1.5
+          }
+        ]
+      },
+      {
+        "name": "Mergulho",
+        "damage_min": 65,
+        "damage_max": 100,
+        "cooldown_s": 6.0,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "thunder_feather",
+        "chance": 0.5,
+        "min": 1,
+        "max": 3
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 0.12,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "boots_stormcaller",
+        "chance": 0.03,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 135,
+    "ryo_max": 270,
+    "respawn_s": 80,
+    "sprite": "mon_thunder_eagle",
+    "article": "uma"
+  },
+  {
+    "id": "glacier_oni",
+    "name": "Oni da Geleira",
+    "description": "Desce do pico congelado quando sente calor humano.",
+    "level": 60,
+    "hp": 2350,
+    "attack": 90,
+    "defense": 63,
+    "speed": 3.2,
+    "element": "suiton",
+    "xp": 1650,
+    "behavior": "aggressive",
+    "aggro_range": 6,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Marreta de Gelo",
+        "damage_min": 80,
+        "damage_max": 120,
+        "cooldown_s": 2.6,
+        "type": "melee"
+      },
+      {
+        "name": "Sopro Glacial",
+        "damage_min": 70,
+        "damage_max": 105,
+        "cooldown_s": 7.0,
+        "type": "area",
+        "shape": "cone_3",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.7,
+            "duration_s": 5,
+            "value": 0.5
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "glacier_shard",
+        "chance": 0.45,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "oni_horn",
+        "chance": 0.25,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "greaves_stormcaller",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 0.1,
+        "min": 1,
+        "max": 2
+      }
+    ],
+    "ryo_min": 150,
+    "ryo_max": 300,
+    "respawn_s": 90,
+    "sprite": "mon_glacier_oni",
+    "article": "um"
+  },
+  {
+    "id": "storm_monk",
+    "name": "Monge da Tempestade",
+    "description": "Treina no penhasco há décadas. Bate mais rápido do que a vista acompanha.",
+    "level": 68,
+    "hp": 1800,
+    "attack": 100,
+    "defense": 48,
+    "speed": 5.4,
+    "element": "fuuton",
+    "xp": 1080,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Palma do Vendaval",
+        "damage_min": 90,
+        "damage_max": 134,
+        "cooldown_s": 1.6,
+        "type": "melee"
+      },
+      {
+        "name": "Corte de Vento",
+        "damage_min": 80,
+        "damage_max": 120,
+        "cooldown_s": 5.0,
+        "type": "area",
+        "shape": "cross_r2",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.3,
+            "duration_s": 1.0
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "thunder_feather",
+        "chance": 0.3,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "oni_horn",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "helm_stormcaller",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "windblade_shuriken",
+        "chance": 0.02,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 0.18,
+        "min": 1,
+        "max": 3
+      }
+    ],
+    "ryo_min": 170,
+    "ryo_max": 340,
+    "respawn_s": 90,
+    "sprite": "mon_storm_monk",
+    "article": "um"
+  },
+  {
+    "id": "magma_serpent",
+    "name": "Serpente de Magma",
+    "description": "Vive nas fendas quentes sob a montanha. Deixa o chão em brasa por onde passa.",
+    "level": 74,
+    "hp": 2280,
+    "attack": 109,
+    "defense": 52,
+    "speed": 4.4,
+    "element": "katon",
+    "xp": 1370,
+    "behavior": "aggressive",
+    "aggro_range": 7,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Bote Incandescente",
+        "damage_min": 97,
+        "damage_max": 145,
+        "cooldown_s": 2.0,
+        "type": "melee",
+        "effects": [
+          {
+            "type": "burn",
+            "chance": 0.5,
+            "duration_s": 6,
+            "value": 14
+          }
+        ]
+      },
+      {
+        "name": "Jorro de Magma",
+        "damage_min": 85,
+        "damage_max": 130,
+        "cooldown_s": 6.5,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "burn",
+            "chance": 0.7,
+            "duration_s": 6,
+            "value": 16
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "magma_scale",
+        "chance": 0.5,
+        "min": 1,
+        "max": 3
+      },
+      {
+        "item_id": "oni_horn",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "thunder_katana",
+        "chance": 0.02,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 0.15,
+        "min": 1,
+        "max": 2
+      }
+    ],
+    "ryo_min": 185,
+    "ryo_max": 370,
+    "respawn_s": 100,
+    "sprite": "mon_magma_serpent",
+    "article": "um"
+  },
+  {
+    "id": "boss_ancestral_oni",
+    "name": "Oni Ancestral",
+    "description": "Boss da Montanha do Trovão. Dorme dentro do pico e acorda com raiva antiga.",
+    "level": 80,
+    "hp": 20500,
+    "attack": 128,
+    "defense": 60,
+    "speed": 3.6,
+    "element": "raiton",
+    "xp": 24600,
+    "behavior": "aggressive",
+    "aggro_range": 10,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Golpe do Chifre",
+        "damage_min": 104,
+        "damage_max": 170,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Trovão Descendente",
+        "damage_min": 95,
+        "damage_max": 150,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "paralyze",
+            "chance": 0.5,
+            "duration_s": 2.0
+          }
+        ]
+      },
+      {
+        "name": "Rugido da Montanha",
+        "damage_min": 90,
+        "damage_max": 140,
+        "cooldown_s": 10.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.4,
+            "duration_s": 1.5
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 70,
+        "summons": [
+          {
+            "monster_id": "thunder_eagle",
+            "count": 3
+          }
+        ],
+        "message": "O céu é meu. Desçam com ele."
+      },
+      {
+        "hp_percent": 40,
+        "summons": [
+          {
+            "monster_id": "glacier_oni",
+            "count": 2
+          }
+        ],
+        "message": "Meus irmãos ainda respiram sob o gelo!"
+      },
+      {
+        "hp_percent": 15,
+        "attack_multiplier": 1.7,
+        "summons": [
+          {
+            "monster_id": "storm_monk",
+            "count": 2
+          }
+        ],
+        "message": "Que a montanha caia junto comigo!"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "oni_fang_blade",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "mail_stormcaller",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "necklace_storm_fang",
+        "chance": 0.18,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "ring_ancestral",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "oni_kanabo",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_fuuin_contencao",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_doton_colapso",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_suiton_vortice",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "oni_horn",
+        "chance": 1.0,
+        "min": 5,
+        "max": 10
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 1.0,
+        "min": 8,
+        "max": 15
+      }
+    ],
+    "ryo_min": 4800,
+    "ryo_max": 9600,
+    "respawn_s": 10800,
+    "sprite": "mon_ancestral_oni",
+    "article": "o"
+  }
+]

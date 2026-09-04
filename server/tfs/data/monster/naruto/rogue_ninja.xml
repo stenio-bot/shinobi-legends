@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Ninja Renegado" nameDescription="uma ninja renegado" race="blood" experience="300" speed="450" manacost="0">
+	<health now="340" max="340"/>
+	<look type="128" head="0" body="0" legs="0" feet="0" addons="3" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="4"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="physical" interval="2000" chance="60" range="4" target="1" min="-18" max="-30">
+			<attribute key="shootEffect" value="throwingstar"/>
+		</attack>
+		<attack name="melee" interval="2500" min="-24" max="-40"/>
+	</attacks>
+	<defenses armor="12" defense="12"/>
+	<loot>
+		<item id="2148" countmax="100" chance="100000"/>
+		<item id="10289" chance="50000"/>  <!-- rogue_headband -->
+		<item id="7378" countmax="15" chance="40000"/>  <!-- shuriken_iron -->
+		<item id="2412" chance="4000"/>  <!-- katana_ronin -->
+		<item id="2464" chance="2000"/>  <!-- vest_chuunin -->
+	</loot>
+</monster>

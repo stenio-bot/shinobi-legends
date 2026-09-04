@@ -1,0 +1,408 @@
+{
+  "_doc": "Mapeamento dos nossos ids para ids do Tibia 10.98 (TFS 1.4.2). Valores marcados 'placeholder' usam itens/outfits vanilla até termos sprites próprios no ObjectBuilder. Ao criar sprite próprio, troque o id aqui e regenere.",
+  "storage_base": 50000,
+  "elements": {
+    "katon": {
+      "combat": "COMBAT_FIREDAMAGE",
+      "xml": "fire",
+      "area_effect": "CONST_ME_FIREAREA",
+      "shoot": "CONST_ANI_FIRE"
+    },
+    "suiton": {
+      "combat": "COMBAT_ICEDAMAGE",
+      "xml": "ice",
+      "area_effect": "CONST_ME_ICEATTACK",
+      "shoot": "CONST_ANI_ICE"
+    },
+    "raiton": {
+      "combat": "COMBAT_ENERGYDAMAGE",
+      "xml": "energy",
+      "area_effect": "CONST_ME_ENERGYHIT",
+      "shoot": "CONST_ANI_ENERGY"
+    },
+    "doton": {
+      "combat": "COMBAT_EARTHDAMAGE",
+      "xml": "earth",
+      "area_effect": "CONST_ME_STONES",
+      "shoot": "CONST_ANI_EARTH"
+    },
+    "fuuton": {
+      "combat": "COMBAT_HOLYDAMAGE",
+      "xml": "holy",
+      "area_effect": "CONST_ME_HOLYAREA",
+      "shoot": "CONST_ANI_HOLY"
+    },
+    "none": {
+      "combat": "COMBAT_PHYSICALDAMAGE",
+      "xml": "physical",
+      "area_effect": "CONST_ME_HITAREA",
+      "shoot": "CONST_ANI_THROWINGSTAR"
+    }
+  },
+  "skills": {
+    "taijutsu": "SKILL_SWORD",
+    "shuriken": "SKILL_DISTANCE",
+    "ninjutsu": "MAGLEVEL",
+    "genjutsu": "SKILL_CLUB",
+    "defense": "SKILL_SHIELD"
+  },
+  "villages": {
+    "leaf": {
+      "vocation_id": 1,
+      "town_id": 1
+    },
+    "mist": {
+      "vocation_id": 2,
+      "town_id": 2
+    },
+    "cloud": {
+      "vocation_id": 3,
+      "town_id": 3
+    },
+    "sand": {
+      "vocation_id": 4,
+      "town_id": 4
+    }
+  },
+  "monsters": {
+    "wolf": {
+      "looktype": 21,
+      "corpse": 5968,
+      "race": "blood"
+    },
+    "bandit": {
+      "looktype": 129,
+      "head": 78,
+      "body": 114,
+      "legs": 76,
+      "feet": 95,
+      "corpse": 3058,
+      "race": "blood"
+    },
+    "forest_snake": {
+      "looktype": 56,
+      "corpse": 4238,
+      "race": "blood"
+    },
+    "bandit_archer": {
+      "looktype": 129,
+      "head": 20,
+      "body": 30,
+      "legs": 40,
+      "feet": 50,
+      "corpse": 3058,
+      "race": "blood"
+    },
+    "boss_bandit_chief": {
+      "looktype": 131,
+      "head": 94,
+      "body": 78,
+      "legs": 79,
+      "feet": 114,
+      "corpse": 3058,
+      "race": "blood"
+    },
+    "leech": {
+      "looktype": 19,
+      "corpse": 4187,
+      "race": "venom"
+    },
+    "giant_toad": {
+      "looktype": 60,
+      "corpse": 4166,
+      "race": "blood"
+    },
+    "rogue_ninja": {
+      "looktype": 128,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "addons": 3,
+      "corpse": 3058,
+      "race": "blood"
+    },
+    "boss_elder_toad": {
+      "looktype": 60,
+      "corpse": 4166,
+      "race": "blood"
+    },
+    "ruin_puppet": {
+      "looktype": 129,
+      "head": 19,
+      "body": 76,
+      "legs": 79,
+      "feet": 114,
+      "corpse": 3058,
+      "race": "undead",
+      "_note": "placeholder: outfit humano vanilla 129 recolorido; corpo 'dead human'"
+    },
+    "stone_sentinel": {
+      "looktype": 61,
+      "corpse": 3058,
+      "race": "undead",
+      "_note": "placeholder: looktype 61 (golem de pedra vanilla)"
+    },
+    "spectral_warrior": {
+      "looktype": 130,
+      "head": 86,
+      "body": 86,
+      "legs": 86,
+      "feet": 86,
+      "corpse": 3058,
+      "race": "undead",
+      "_note": "placeholder: outfit 130 em tom pálido"
+    },
+    "curse_shaman": {
+      "looktype": 138,
+      "head": 94,
+      "body": 79,
+      "legs": 79,
+      "feet": 94,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "placeholder: outfit 138 (feiticeira vanilla)"
+    },
+    "boss_puppeteer": {
+      "looktype": 131,
+      "head": 0,
+      "body": 86,
+      "legs": 79,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "placeholder: outfit 131; trocar por sprite próprio do boss"
+    },
+    "thunder_eagle": {
+      "looktype": 21,
+      "corpse": 5968,
+      "race": "blood",
+      "_note": "placeholder: looktype 21 e corpo 'dead wolf' até termos sprite de ave"
+    },
+    "glacier_oni": {
+      "looktype": 12,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "placeholder: looktype 12 (criatura grande vanilla)"
+    },
+    "storm_monk": {
+      "looktype": 137,
+      "head": 114,
+      "body": 88,
+      "legs": 88,
+      "feet": 114,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "placeholder: outfit 137"
+    },
+    "magma_serpent": {
+      "looktype": 56,
+      "corpse": 4238,
+      "race": "fire",
+      "_note": "placeholder: looktype 56 (cobra) recolorida"
+    },
+    "boss_ancestral_oni": {
+      "looktype": 12,
+      "corpse": 3058,
+      "race": "undead",
+      "_note": "placeholder: mesmo looktype do oni comum; boss precisa de sprite próprio"
+    }
+  },
+  "items": {
+    "ryo": 2148,
+    "kunai_iron": 2404,
+    "tanto_steel": 2379,
+    "katana_ronin": 2412,
+    "shuriken_iron": 7378,
+    "fuuma_shuriken": 7368,
+    "gloves_taijutsu": 2172,
+    "bandana_leaf": 2480,
+    "vest_genin": 2467,
+    "vest_chuunin": 2464,
+    "pants_ninja": 2649,
+    "sandals_ninja": 2643,
+    "mask_anbu": 2497,
+    "vest_toad": 2463,
+    "boots_swamp": 2195,
+    "onigiri": 2666,
+    "chakra_pill_small": 7620,
+    "chakra_pill_medium": 7589,
+    "health_potion_small": 7618,
+    "antidote": 8473,
+    "wolf_pelt": 5897,
+    "snake_fang": 5898,
+    "bandit_emblem": 2229,
+    "leech_gland": 5876,
+    "toad_skin": 5880,
+    "toad_oil": 5881,
+    "rogue_headband": 10289,
+    "scroll_katon_housenka": 1952,
+    "scroll_shousen": 1950,
+    "scroll_suiton_suiryuudan": 1955,
+    "scroll_katon_karyuu": 1954,
+    "scroll_kawarimi": 1949,
+    "scroll_bunshin": 1948,
+    "ring_chakra": 2167,
+    "backpack_leather": 1988,
+    "scroll_raiton_punho_trovao": 2597,
+    "kodachi_ruins": 2383,
+    "puppet_blade": 7385,
+    "chain_kunai": 2410,
+    "mask_clan_ruins": 2457,
+    "robe_clan_ruins": 2465,
+    "greaves_clan_ruins": 2478,
+    "boots_clan_ruins": 2645,
+    "amulet_clan_seal": 2131,
+    "ring_stone_will": 2164,
+    "scroll_katon_anel_chamas": 1953,
+    "scroll_suiton_prisao_agua": 1967,
+    "scroll_doton_estacas_terra": 4857,
+    "scroll_fuuton_rajada_cortante": 4842,
+    "scroll_raiton_lanca_relampago": 1969,
+    "scroll_raiton_armadura_eletrica": 2239,
+    "scroll_katon_sopro_brasas": 1951,
+    "scroll_suiton_vortice": 1968,
+    "scroll_doton_colapso": 5952,
+    "scroll_fuuin_contencao": 6119,
+    "puppet_joint": 5901,
+    "granite_core": 5892,
+    "spectral_ash": 5905,
+    "cursed_talisman": 5884,
+    "health_potion_medium": 7588,
+    "chakra_pill_large": 7590,
+    "strings_of_the_puppeteer": 2124,
+    "thunder_katana": 7382,
+    "oni_kanabo": 2421,
+    "windblade_shuriken": 7367,
+    "helm_stormcaller": 2491,
+    "mail_stormcaller": 2492,
+    "greaves_stormcaller": 2477,
+    "boots_stormcaller": 2646,
+    "necklace_storm_fang": 2136,
+    "ring_ancestral": 2169,
+    "thunder_feather": 5891,
+    "glacier_shard": 2158,
+    "oni_horn": 5893,
+    "magma_scale": 5889,
+    "health_potion_large": 7591,
+    "soldier_pill": 8472,
+    "oni_fang_blade": 7418
+  },
+  "npc_outfits": {
+    "merchant_leaf": {
+      "type": 128,
+      "head": 78,
+      "body": 95,
+      "legs": 114,
+      "feet": 78
+    },
+    "scroll_master_leaf": {
+      "type": 130,
+      "head": 0,
+      "body": 76,
+      "legs": 76,
+      "feet": 76
+    },
+    "quest_giver_leaf": {
+      "type": 137,
+      "head": 114,
+      "body": 20,
+      "legs": 20,
+      "feet": 114
+    },
+    "merchant_swamp": {
+      "type": 138,
+      "head": 40,
+      "body": 40,
+      "legs": 40,
+      "feet": 40
+    },
+    "quest_giver_swamp": {
+      "type": 128,
+      "head": 20,
+      "body": 60,
+      "legs": 60,
+      "feet": 20
+    },
+    "merchant_ruins": {
+      "type": 139,
+      "head": 114,
+      "body": 79,
+      "legs": 86,
+      "feet": 114
+    },
+    "quest_giver_ruins": {
+      "type": 130,
+      "head": 95,
+      "body": 95,
+      "legs": 76,
+      "feet": 76
+    },
+    "merchant_mountain": {
+      "type": 129,
+      "head": 78,
+      "body": 94,
+      "legs": 94,
+      "feet": 78
+    },
+    "quest_giver_mountain": {
+      "type": 138,
+      "head": 19,
+      "body": 88,
+      "legs": 88,
+      "feet": 19
+    }
+  },
+  "_items_notes": {
+    "_doc": "nome vanilla do id placeholder usado em 'items'. O valor em 'items' precisa continuar sendo int puro (tools/export_tfs.py faz int(...) direto) e ÚNICO: o exportador substitui o item vanilla de mesmo id, então dois itens nossos nunca podem compartilhar id.",
+    "kodachi_ruins": "2383 spike sword",
+    "puppet_blade": "7385 crimson sword",
+    "chain_kunai": "2410 throwing knife",
+    "mask_clan_ruins": "2457 steel helmet",
+    "robe_clan_ruins": "2465 brass armor",
+    "greaves_clan_ruins": "2478 brass legs",
+    "boots_clan_ruins": "2645 steel boots",
+    "amulet_clan_seal": "2131 star amulet",
+    "ring_stone_will": "2164 might ring",
+    "puppet_joint": "5901 wood",
+    "granite_core": "5892 huge chunk of crude iron",
+    "spectral_ash": "5905 vampire dust",
+    "cursed_talisman": "5884 spirit container",
+    "health_potion_medium": "7588 strong health potion",
+    "chakra_pill_large": "7590 great mana potion",
+    "strings_of_the_puppeteer": "2124 crystal ring",
+    "thunder_katana": "7382 demonrage sword",
+    "oni_kanabo": "2421 thunder hammer",
+    "windblade_shuriken": "7367 enchanted spear",
+    "helm_stormcaller": "2491 crown helmet",
+    "mail_stormcaller": "2492 dragon scale mail",
+    "greaves_stormcaller": "2477 knight legs",
+    "boots_stormcaller": "2646 golden boots",
+    "necklace_storm_fang": "2136 demonbone amulet",
+    "ring_ancestral": "2169 time ring",
+    "thunder_feather": "5891 enchanted chicken wing",
+    "glacier_shard": "2158 blue gem",
+    "oni_horn": "5893 perfect behemoth fang",
+    "magma_scale": "5889 piece of draconian steel",
+    "health_potion_large": "7591 great health potion",
+    "soldier_pill": "8472 great spirit potion",
+    "oni_fang_blade": "7418 nightmare blade",
+    "scroll_kawarimi": "1949 scroll",
+    "scroll_bunshin": "1948 parchment",
+    "scroll_shousen": "1950 book",
+    "scroll_katon_sopro_brasas": "1951 blank parchment",
+    "scroll_katon_housenka": "1952 document",
+    "scroll_katon_anel_chamas": "1953 parchment",
+    "scroll_katon_karyuu": "1954 sheet of paper",
+    "scroll_suiton_suiryuudan": "1955 book",
+    "scroll_suiton_prisao_agua": "1967 parchment",
+    "scroll_suiton_vortice": "1968 document",
+    "scroll_raiton_lanca_relampago": "1969 parchment",
+    "scroll_raiton_armadura_eletrica": "2239 burnt scroll",
+    "scroll_raiton_punho_trovao": "2597 letter",
+    "scroll_fuuton_rajada_cortante": "4842 old parchment",
+    "scroll_doton_estacas_terra": "4857 wrinkled parchment",
+    "scroll_doton_colapso": "5952 poem scroll",
+    "scroll_fuuin_contencao": "6119 scroll"
+  }
+}

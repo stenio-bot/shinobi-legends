@@ -1,0 +1,434 @@
+{
+  "max_level": 100,
+  "xp_formula": "50 * level^2 + 50 * level (xp_total acumulada para atingir o level)",
+  "death_xp_loss_percent": 10,
+  "death_item_drop_chance": 0.3,
+  "hp_formula": "100 + level*15",
+  "chakra_formula": "50 + level*10",
+  "base_speed_tiles_s": 4,
+  "capacity_formula": "100 + level*5",
+  "ranks": [
+    {
+      "name": "Genin",
+      "min_level": 1
+    },
+    {
+      "name": "Chuunin",
+      "min_level": 20
+    },
+    {
+      "name": "Jounin",
+      "min_level": 50
+    },
+    {
+      "name": "Anbu",
+      "min_level": 80
+    },
+    {
+      "name": "Kage",
+      "min_level": 100
+    }
+  ],
+  "levels": [
+    {
+      "level": 1,
+      "xp_total": 100
+    },
+    {
+      "level": 2,
+      "xp_total": 300
+    },
+    {
+      "level": 3,
+      "xp_total": 600
+    },
+    {
+      "level": 4,
+      "xp_total": 1000
+    },
+    {
+      "level": 5,
+      "xp_total": 1500
+    },
+    {
+      "level": 6,
+      "xp_total": 2100
+    },
+    {
+      "level": 7,
+      "xp_total": 2800
+    },
+    {
+      "level": 8,
+      "xp_total": 3600
+    },
+    {
+      "level": 9,
+      "xp_total": 4500
+    },
+    {
+      "level": 10,
+      "xp_total": 5500
+    },
+    {
+      "level": 11,
+      "xp_total": 6600
+    },
+    {
+      "level": 12,
+      "xp_total": 7800
+    },
+    {
+      "level": 13,
+      "xp_total": 9100
+    },
+    {
+      "level": 14,
+      "xp_total": 10500
+    },
+    {
+      "level": 15,
+      "xp_total": 12000
+    },
+    {
+      "level": 16,
+      "xp_total": 13600
+    },
+    {
+      "level": 17,
+      "xp_total": 15300
+    },
+    {
+      "level": 18,
+      "xp_total": 17100
+    },
+    {
+      "level": 19,
+      "xp_total": 19000
+    },
+    {
+      "level": 20,
+      "xp_total": 21000
+    },
+    {
+      "level": 21,
+      "xp_total": 23100
+    },
+    {
+      "level": 22,
+      "xp_total": 25300
+    },
+    {
+      "level": 23,
+      "xp_total": 27600
+    },
+    {
+      "level": 24,
+      "xp_total": 30000
+    },
+    {
+      "level": 25,
+      "xp_total": 32500
+    },
+    {
+      "level": 26,
+      "xp_total": 35100
+    },
+    {
+      "level": 27,
+      "xp_total": 37800
+    },
+    {
+      "level": 28,
+      "xp_total": 40600
+    },
+    {
+      "level": 29,
+      "xp_total": 43500
+    },
+    {
+      "level": 30,
+      "xp_total": 46500
+    },
+    {
+      "level": 31,
+      "xp_total": 49600
+    },
+    {
+      "level": 32,
+      "xp_total": 52800
+    },
+    {
+      "level": 33,
+      "xp_total": 56100
+    },
+    {
+      "level": 34,
+      "xp_total": 59500
+    },
+    {
+      "level": 35,
+      "xp_total": 63000
+    },
+    {
+      "level": 36,
+      "xp_total": 66600
+    },
+    {
+      "level": 37,
+      "xp_total": 70300
+    },
+    {
+      "level": 38,
+      "xp_total": 74100
+    },
+    {
+      "level": 39,
+      "xp_total": 78000
+    },
+    {
+      "level": 40,
+      "xp_total": 82000
+    },
+    {
+      "level": 41,
+      "xp_total": 86100
+    },
+    {
+      "level": 42,
+      "xp_total": 90300
+    },
+    {
+      "level": 43,
+      "xp_total": 94600
+    },
+    {
+      "level": 44,
+      "xp_total": 99000
+    },
+    {
+      "level": 45,
+      "xp_total": 103500
+    },
+    {
+      "level": 46,
+      "xp_total": 108100
+    },
+    {
+      "level": 47,
+      "xp_total": 112800
+    },
+    {
+      "level": 48,
+      "xp_total": 117600
+    },
+    {
+      "level": 49,
+      "xp_total": 122500
+    },
+    {
+      "level": 50,
+      "xp_total": 127500
+    },
+    {
+      "level": 51,
+      "xp_total": 132600
+    },
+    {
+      "level": 52,
+      "xp_total": 137800
+    },
+    {
+      "level": 53,
+      "xp_total": 143100
+    },
+    {
+      "level": 54,
+      "xp_total": 148500
+    },
+    {
+      "level": 55,
+      "xp_total": 154000
+    },
+    {
+      "level": 56,
+      "xp_total": 159600
+    },
+    {
+      "level": 57,
+      "xp_total": 165300
+    },
+    {
+      "level": 58,
+      "xp_total": 171100
+    },
+    {
+      "level": 59,
+      "xp_total": 177000
+    },
+    {
+      "level": 60,
+      "xp_total": 183000
+    },
+    {
+      "level": 61,
+      "xp_total": 189100
+    },
+    {
+      "level": 62,
+      "xp_total": 195300
+    },
+    {
+      "level": 63,
+      "xp_total": 201600
+    },
+    {
+      "level": 64,
+      "xp_total": 208000
+    },
+    {
+      "level": 65,
+      "xp_total": 214500
+    },
+    {
+      "level": 66,
+      "xp_total": 221100
+    },
+    {
+      "level": 67,
+      "xp_total": 227800
+    },
+    {
+      "level": 68,
+      "xp_total": 234600
+    },
+    {
+      "level": 69,
+      "xp_total": 241500
+    },
+    {
+      "level": 70,
+      "xp_total": 248500
+    },
+    {
+      "level": 71,
+      "xp_total": 255600
+    },
+    {
+      "level": 72,
+      "xp_total": 262800
+    },
+    {
+      "level": 73,
+      "xp_total": 270100
+    },
+    {
+      "level": 74,
+      "xp_total": 277500
+    },
+    {
+      "level": 75,
+      "xp_total": 285000
+    },
+    {
+      "level": 76,
+      "xp_total": 292600
+    },
+    {
+      "level": 77,
+      "xp_total": 300300
+    },
+    {
+      "level": 78,
+      "xp_total": 308100
+    },
+    {
+      "level": 79,
+      "xp_total": 316000
+    },
+    {
+      "level": 80,
+      "xp_total": 324000
+    },
+    {
+      "level": 81,
+      "xp_total": 332100
+    },
+    {
+      "level": 82,
+      "xp_total": 340300
+    },
+    {
+      "level": 83,
+      "xp_total": 348600
+    },
+    {
+      "level": 84,
+      "xp_total": 357000
+    },
+    {
+      "level": 85,
+      "xp_total": 365500
+    },
+    {
+      "level": 86,
+      "xp_total": 374100
+    },
+    {
+      "level": 87,
+      "xp_total": 382800
+    },
+    {
+      "level": 88,
+      "xp_total": 391600
+    },
+    {
+      "level": 89,
+      "xp_total": 400500
+    },
+    {
+      "level": 90,
+      "xp_total": 409500
+    },
+    {
+      "level": 91,
+      "xp_total": 418600
+    },
+    {
+      "level": 92,
+      "xp_total": 427800
+    },
+    {
+      "level": 93,
+      "xp_total": 437100
+    },
+    {
+      "level": 94,
+      "xp_total": 446500
+    },
+    {
+      "level": 95,
+      "xp_total": 456000
+    },
+    {
+      "level": 96,
+      "xp_total": 465600
+    },
+    {
+      "level": 97,
+      "xp_total": 475300
+    },
+    {
+      "level": 98,
+      "xp_total": 485100
+    },
+    {
+      "level": 99,
+      "xp_total": 495000
+    },
+    {
+      "level": 100,
+      "xp_total": 505000
+    }
+  ]
+}

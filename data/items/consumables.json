@@ -1,0 +1,7 @@
+[
+  {"id":"onigiri","name":"Onigiri","description":"Bolinho de arroz. Recupera 40 HP.","type":"consumable","rarity":"common","weight":0.3,"stack_max":100,"buy_price":10,"sell_price":2,"effect":{"type":"heal_hp","value":40},"sprite":"item_onigiri"},
+  {"id":"chakra_pill_small","name":"Pílula de Chakra Pequena","description":"Recupera 60 de chakra.","type":"consumable","rarity":"common","weight":0.1,"stack_max":100,"buy_price":30,"sell_price":6,"effect":{"type":"heal_chakra","value":60},"sprite":"item_pill_blue"},
+  {"id":"chakra_pill_medium","name":"Pílula de Chakra Média","description":"Recupera 150 de chakra.","type":"consumable","rarity":"uncommon","weight":0.1,"stack_max":100,"buy_price":120,"sell_price":30,"effect":{"type":"heal_chakra","value":150},"required_level":15,"sprite":"item_pill_blue2"},
+  {"id":"health_potion_small","name":"Poção de Vida Pequena","description":"Recupera 100 HP.","type":"consumable","rarity":"common","weight":0.2,"stack_max":100,"buy_price":50,"sell_price":10,"effect":{"type":"heal_hp","value":100},"sprite":"item_potion_red"},
+  {"id":"antidote","name":"Antídoto","description":"Cura veneno.","type":"consumable","rarity":"common","weight":0.1,"stack_max":50,"buy_price":40,"sell_price":8,"effect":{"type":"cure","stat":"poison"},"sprite":"item_antidote"}
+]

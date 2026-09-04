@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Sapo Ancião" nameDescription="o sapo ancião" race="blood" experience="5000" speed="350" manacost="0">
+	<health now="4000" max="4000"/>
+	<look type="60" corpse="4166"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-35" max="-60"/>
+		<attack name="ice" interval="5000" chance="60" range="1" target="1" min="-30" max="-50">
+			<attribute key="shootEffect" value="ice"/>
+		</attack>
+		<attack name="speed" interval="5000" chance="80" speedchange="-200" duration="4000" range="1" target="1"/>
+	</attacks>
+	<defenses armor="18" defense="18"/>
+	<elements>
+		<element earthPercent="-50"/>
+		<element firePercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="3000" chance="100000"/>
+		<item id="2167" chance="25000"/>  <!-- ring_chakra -->
+		<item id="7368" chance="15000"/>  <!-- fuuma_shuriken -->
+		<item id="1955" chance="20000"/>  <!-- scroll_suiton_suiryuudan -->
+		<item id="5881" countmax="4" chance="100000"/>  <!-- toad_oil -->
+		<item id="7589" countmax="5" chance="100000"/>  <!-- chakra_pill_medium -->
+	</loot>
+</monster>

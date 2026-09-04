@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Sanguessuga Gigante" nameDescription="uma sanguessuga gigante" race="venom" experience="120" speed="250" manacost="0">
+	<health now="180" max="180"/>
+	<look type="19" corpse="4187"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="1600" min="-8" max="-16" poison="24"/>
+	</attacks>
+	<defenses armor="6" defense="6"/>
+	<elements>
+		<element earthPercent="-50"/>
+		<element firePercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="40" chance="100000"/>
+		<item id="5876" countmax="2" chance="40000"/>  <!-- leech_gland -->
+		<item id="8473" chance="15000"/>  <!-- antidote -->
+	</loot>
+</monster>

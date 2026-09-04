@@ -1,0 +1,13 @@
+{
+  "order": [
+    "katon",
+    "fuuton",
+    "raiton",
+    "doton",
+    "suiton"
+  ],
+  "note": "cada elemento é forte contra o próximo da lista (circular) e fraco contra o anterior",
+  "advantage_multiplier": 1.5,
+  "disadvantage_multiplier": 0.75,
+  "neutral_multiplier": 1.0
+}

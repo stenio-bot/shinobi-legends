@@ -1,0 +1,38 @@
+{
+  "start_value": 10,
+  "max_value": 150,
+  "tries_formula": "50 * 1.1^(skill - 10)",
+  "village_bonus_multiplier": 1.2,
+  "skills": [
+    {
+      "id": "taijutsu",
+      "name": "Taijutsu",
+      "raises_on": "melee_hit",
+      "effect": "dano físico melee"
+    },
+    {
+      "id": "shuriken",
+      "name": "Shuriken",
+      "raises_on": "ranged_hit",
+      "effect": "dano físico ranged"
+    },
+    {
+      "id": "ninjutsu",
+      "name": "Ninjutsu",
+      "raises_on": "jutsu_cast_ninjutsu",
+      "effect": "dano de jutsu"
+    },
+    {
+      "id": "genjutsu",
+      "name": "Genjutsu",
+      "raises_on": "jutsu_cast_genjutsu",
+      "effect": "duração/chance de efeitos"
+    },
+    {
+      "id": "defense",
+      "name": "Defesa",
+      "raises_on": "hit_received",
+      "effect": "reduz dano recebido"
+    }
+  ]
+}

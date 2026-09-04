@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Oni Ancestral" nameDescription="o oni ancestral" race="undead" experience="24600" speed="360" manacost="0">
+	<health now="20500" max="20500"/>
+	<look type="12" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-104" max="-170"/>
+		<attack name="energy" interval="5000" chance="60" range="1" target="1" min="-95" max="-150">
+			<attribute key="shootEffect" value="energy"/>
+		</attack>
+		<attack name="speed" interval="5000" chance="50" speedchange="-1000" duration="2000" range="1" target="1"/>
+		<attack name="energy" interval="10000" chance="40" radius="3" target="0" min="-90" max="-140">
+			<attribute key="areaEffect" value="energyhit"/>
+		</attack>
+		<attack name="speed" interval="10000" chance="40" speedchange="-1000" duration="1500" range="1" target="1"/>
+	</attacks>
+	<defenses armor="60" defense="60"/>
+	<elements>
+		<element holyPercent="-50"/>
+		<element earthPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="9600" chance="100000"/>
+		<item id="7418" chance="10000"/>  <!-- oni_fang_blade -->
+		<item id="2492" chance="20000"/>  <!-- mail_stormcaller -->
+		<item id="2136" chance="18000"/>  <!-- necklace_storm_fang -->
+		<item id="2169" chance="15000"/>  <!-- ring_ancestral -->
+		<item id="2421" chance="12000"/>  <!-- oni_kanabo -->
+		<item id="6119" chance="20000"/>  <!-- scroll_fuuin_contencao -->
+		<item id="5952" chance="12000"/>  <!-- scroll_doton_colapso -->
+		<item id="1968" chance="12000"/>  <!-- scroll_suiton_vortice -->
+		<item id="5893" countmax="10" chance="100000"/>  <!-- oni_horn -->
+		<item id="7591" countmax="15" chance="100000"/>  <!-- health_potion_large -->
+	</loot>
+</monster>

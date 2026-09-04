@@ -1,0 +1,492 @@
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+
+<!-- Entradas para data/items/items.xml. Os ids são placeholders de data/tfs_mapping.json; itens vanilla com o mesmo id JÁ EXISTEM no items.xml — remova a entrada antiga ou troque o id quando tiver sprite próprio. -->
+<item id="2480" name="bandana da vila">  <!-- bandana_leaf (common) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Símbolo de um ninja registrado."/>
+	<attribute key="armor" value="1"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="2467" name="colete de genin">  <!-- vest_genin (common) -->
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Tecido reforçado."/>
+	<attribute key="armor" value="4"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="2464" name="colete de chuunin">  <!-- vest_chuunin (uncommon) -->
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="Colete tático verde, padrão dos chuunin."/>
+	<attribute key="armor" value="12"/>
+	<attribute key="slotType" value="body"/>
+	<attribute key="maxhitpoints" value="30"/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="2649" name="calça ninja">  <!-- pants_ninja (common) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Leve e resistente."/>
+	<attribute key="armor" value="2"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="2643" name="sandálias ninja">  <!-- sandals_ninja (common) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Clássicas."/>
+	<attribute key="armor" value="1"/>
+	<attribute key="slotType" value="feet"/>
+	<attribute key="speed" value="20"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="2497" name="máscara anbu">  <!-- mask_anbu (epic) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Porcelana branca. Ninguém sabe quem você é."/>
+	<attribute key="armor" value="8"/>
+	<attribute key="slotType" value="head"/>
+	<attribute key="skillClub" value="5"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="2463" name="colete de pele de sapo">  <!-- vest_toad (uncommon) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Resiste a água."/>
+	<attribute key="armor" value="9"/>
+	<attribute key="slotType" value="body"/>
+	<attribute key="absorbPercentIce" value="20"/>
+	<attribute key="maxhitpoints" value="20"/>
+	<!-- required_level 12: aplicar via movements.xml (level) -->
+</item>
+<item id="2195" name="botas do pântano">  <!-- boots_swamp (uncommon) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Não afundam."/>
+	<attribute key="armor" value="3"/>
+	<attribute key="slotType" value="feet"/>
+	<attribute key="speed" value="50"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="2666" name="onigiri">  <!-- onigiri (common) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Bolinho de arroz. Recupera 40 HP."/>
+</item>
+<item id="7620" name="pílula de chakra pequena">  <!-- chakra_pill_small (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Recupera 60 de chakra."/>
+</item>
+<item id="7589" name="pílula de chakra média">  <!-- chakra_pill_medium (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Recupera 150 de chakra."/>
+	<!-- required_level 15: aplicar via movements.xml (level) -->
+</item>
+<item id="7618" name="poção de vida pequena">  <!-- health_potion_small (common) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Recupera 100 HP."/>
+</item>
+<item id="8473" name="antídoto">  <!-- antidote (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Cura veneno."/>
+</item>
+<item id="5897" name="pele de lobo">  <!-- wolf_pelt (common) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Material. Vendável."/>
+</item>
+<item id="5898" name="presa de cobra">  <!-- snake_fang (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Material para venenos."/>
+</item>
+<item id="2229" name="emblema de bandido">  <!-- bandit_emblem (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de caça. Missões pedem isso."/>
+</item>
+<item id="1952" name="pergaminho: flores de fênix">  <!-- scroll_katon_housenka (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Katon: Housenka."/>
+	<!-- required_level 12: aplicar via movements.xml (level) -->
+</item>
+<item id="1950" name="pergaminho: palma curativa">  <!-- scroll_shousen (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Shousen."/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="2167" name="anel de chakra">  <!-- ring_chakra (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Regen de chakra +2."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="maxmanapoints" value="40"/>
+	<!-- required_level 18: aplicar via movements.xml (level) -->
+</item>
+<item id="5876" name="glândula de sanguessuga">  <!-- leech_gland (common) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Material alquímico."/>
+</item>
+<item id="5880" name="pele de sapo">  <!-- toad_skin (common) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Couro impermeável."/>
+</item>
+<item id="5881" name="óleo de sapo">  <!-- toad_oil (uncommon) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Raro. Usado em pergaminhos de Suiton."/>
+</item>
+<item id="10289" name="bandana riscada">  <!-- rogue_headband (common) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Bandana de um desertor. Prova de caça."/>
+</item>
+<item id="1955" name="pergaminho: dragão de água">  <!-- scroll_suiton_suiryuudan (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Suiton: Suiryuudan."/>
+	<!-- required_level 25: aplicar via movements.xml (level) -->
+</item>
+<item id="2597" name="pergaminho: punho do trovão">  <!-- scroll_raiton_punho_trovao (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Raiton: Punho do Trovão."/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="1954" name="pergaminho: dragão de fogo">  <!-- scroll_katon_karyuu (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Katon: Karyuu Endan."/>
+	<!-- required_level 35: aplicar via movements.xml (level) -->
+</item>
+<item id="1949" name="pergaminho: kawarimi">  <!-- scroll_kawarimi (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Kawarimi (se ainda não souber)."/>
+	<!-- required_level 5: aplicar via movements.xml (level) -->
+</item>
+<item id="1948" name="pergaminho: bunshin">  <!-- scroll_bunshin (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Bunshin."/>
+	<!-- required_level 8: aplicar via movements.xml (level) -->
+</item>
+<item id="1988" name="mochila de couro">  <!-- backpack_leather (uncommon) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="+8 slots... em breve. Por enquanto +30 de capacidade."/>
+	<attribute key="slotType" value="backpack"/>
+	<!-- required_level 5: aplicar via movements.xml (level) -->
+</item>
+<item id="4842" name="pergaminho: rajada cortante">  <!-- scroll_fuuton_rajada_cortante (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Fuuton: Rajada Cortante."/>
+	<!-- required_level 16: aplicar via movements.xml (level) -->
+</item>
+<item id="1969" name="pergaminho: lança do relâmpago">  <!-- scroll_raiton_lanca_relampago (uncommon) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Raiton: Lança do Relâmpago."/>
+	<!-- required_level 18: aplicar via movements.xml (level) -->
+</item>
+<item id="2239" name="pergaminho: armadura elétrica">  <!-- scroll_raiton_armadura_eletrica (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Raiton: Armadura Elétrica."/>
+	<!-- required_level 24: aplicar via movements.xml (level) -->
+</item>
+<item id="1951" name="pergaminho: sopro de brasas">  <!-- scroll_katon_sopro_brasas (common) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Katon: Sopro de Brasas (se ainda não souber)."/>
+	<!-- required_level 6: aplicar via movements.xml (level) -->
+</item>
+<item id="7382" name="katana do trovão">  <!-- thunder_katana (rare) -->
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="A lâmina estala sozinha antes da tempestade."/>
+	<attribute key="attack" value="74"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 55: aplicar via movements.xml (level) -->
+</item>
+<item id="2421" name="kanabō de oni">  <!-- oni_kanabo (epic) -->
+	<attribute key="weight" value="1400"/>
+	<attribute key="description" value="Clava cravejada, pesada demais para quem não treinou."/>
+	<attribute key="attack" value="96"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="6"/>
+	<attribute key="maxhitpoints" value="80"/>
+	<attribute key="speed" value="-30"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="7367" name="shuriken lâmina de vento">  <!-- windblade_shuriken (rare) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Gira cortando o próprio ar; volta pela mesma trilha."/>
+	<attribute key="attack" value="78"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillDist" value="5"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2491" name="elmo do bramido">  <!-- helm_stormcaller (rare) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Feito na forja da montanha, temperado em raio."/>
+	<attribute key="armor" value="15"/>
+	<attribute key="slotType" value="head"/>
+	<attribute key="maxhitpoints" value="40"/>
+	<attribute key="absorbPercentEnergy" value="15"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2492" name="cota do bramido">  <!-- mail_stormcaller (epic) -->
+	<attribute key="weight" value="1100"/>
+	<attribute key="description" value="Escamas metálicas que dispersam a descarga."/>
+	<attribute key="armor" value="33"/>
+	<attribute key="slotType" value="body"/>
+	<attribute key="maxhitpoints" value="150"/>
+	<attribute key="absorbPercentEnergy" value="20"/>
+	<attribute key="skillShield" value="4"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2477" name="grevas do bramido">  <!-- greaves_stormcaller (rare) -->
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="Placas articuladas para escalar sob tempestade."/>
+	<attribute key="armor" value="21"/>
+	<attribute key="slotType" value="legs"/>
+	<attribute key="maxhitpoints" value="60"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2646" name="botas do bramido">  <!-- boots_stormcaller (rare) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Sola isolante. A montanha não avisa quando descarrega."/>
+	<attribute key="armor" value="12"/>
+	<attribute key="slotType" value="feet"/>
+	<attribute key="speed" value="60"/>
+	<attribute key="absorbPercentEnergy" value="10"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2136" name="colar presa da tempestade">  <!-- necklace_storm_fang (epic) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Uma presa de oni riscada por raios."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="8"/>
+	<attribute key="maxmanapoints" value="150"/>
+	<!-- required_level 60: aplicar via movements.xml (level) -->
+</item>
+<item id="2169" name="anel ancestral">  <!-- ring_ancestral (epic) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Passou por muitas mãos. Todas caíram na montanha."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="maxhitpoints" value="180"/>
+	<!-- required_level 65: aplicar via movements.xml (level) -->
+</item>
+<item id="1968" name="pergaminho: vórtice devorador">  <!-- scroll_suiton_vortice (epic) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Suiton: Vórtice Devorador."/>
+	<!-- required_level 45: aplicar via movements.xml (level) -->
+</item>
+<item id="5952" name="pergaminho: colapso do terreno">  <!-- scroll_doton_colapso (epic) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Doton: Colapso do Terreno."/>
+	<!-- required_level 48: aplicar via movements.xml (level) -->
+</item>
+<item id="6119" name="pergaminho: selo de contenção">  <!-- scroll_fuuin_contencao (epic) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Fuuin: Selo de Contenção. Qualquer vila pode aprender."/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="5891" name="pena do trovão">  <!-- thunder_feather (uncommon) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Continua eriçada horas depois. Material."/>
+</item>
+<item id="2158" name="estilhaço de geleira">  <!-- glacier_shard (rare) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Não derrete. Material."/>
+</item>
+<item id="5893" name="chifre de oni">  <!-- oni_horn (rare) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Prova de caça grande. Material raro."/>
+</item>
+<item id="5889" name="escama de magma">  <!-- magma_scale (rare) -->
+	<attribute key="weight" value="60"/>
+	<attribute key="description" value="Quente ao toque mesmo dias depois. Material raro."/>
+</item>
+<item id="7591" name="poção de vida grande">  <!-- health_potion_large (rare) -->
+	<attribute key="weight" value="40"/>
+	<attribute key="description" value="Recupera 700 HP."/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="8472" name="pílula do soldado">  <!-- soldier_pill (rare) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Recupera 500 de HP e de chakra. Amarga como derrota."/>
+	<!-- required_level 55: aplicar via movements.xml (level) -->
+</item>
+<item id="7418" name="lâmina presa de oni">  <!-- oni_fang_blade (legendary) -->
+	<attribute key="weight" value="900"/>
+	<attribute key="description" value="Loot exclusivo do Oni Ancestral. Talhada do próprio chifre dele."/>
+	<attribute key="attack" value="112"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="8"/>
+	<attribute key="maxhitpoints" value="120"/>
+	<!-- required_level 78: aplicar via movements.xml (level) -->
+</item>
+<item id="2383" name="kodachi das ruínas">  <!-- kodachi_ruins (uncommon) -->
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Lâmina curta recuperada de um túmulo do clã. Ainda corta."/>
+	<attribute key="attack" value="40"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 28: aplicar via movements.xml (level) -->
+</item>
+<item id="7385" name="lâmina de marionete">  <!-- puppet_blade (rare) -->
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="Braço-lâmina arrancado de uma marionete de guerra."/>
+	<attribute key="attack" value="52"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="3"/>
+	<!-- required_level 35: aplicar via movements.xml (level) -->
+</item>
+<item id="2410" name="kunai com corrente">  <!-- chain_kunai (uncommon) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Kunai presa a uma corrente: arremessa e volta."/>
+	<attribute key="attack" value="42"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillDist" value="2"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2457" name="máscara do clã perdido">  <!-- mask_clan_ruins (uncommon) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Máscara ritual de um clã que ninguém mais nomeia."/>
+	<attribute key="armor" value="8"/>
+	<attribute key="slotType" value="head"/>
+	<attribute key="skillClub" value="2"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2465" name="manto do clã perdido">  <!-- robe_clan_ruins (rare) -->
+	<attribute key="weight" value="700"/>
+	<attribute key="description" value="Tecido pesado bordado com selos desbotados."/>
+	<attribute key="armor" value="17"/>
+	<attribute key="slotType" value="body"/>
+	<attribute key="maxhitpoints" value="60"/>
+	<attribute key="absorbPercentEarth" value="15"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2478" name="grevas do clã perdido">  <!-- greaves_clan_ruins (uncommon) -->
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Placas de pedra polida sobre couro."/>
+	<attribute key="armor" value="11"/>
+	<attribute key="slotType" value="legs"/>
+	<attribute key="maxhitpoints" value="25"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2645" name="botas do clã perdido">  <!-- boots_clan_ruins (uncommon) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Silenciosas nas lajes soltas das ruínas."/>
+	<attribute key="armor" value="6"/>
+	<attribute key="slotType" value="feet"/>
+	<attribute key="speed" value="40"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2131" name="amuleto do selo antigo">  <!-- amulet_clan_seal (rare) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="O selo ainda puxa chakra do ambiente."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="maxmanapoints" value="80"/>
+	<attribute key="magiclevelpoints" value="3"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2164" name="anel da vontade de pedra">  <!-- ring_stone_will (rare) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Pesa mais do que deveria. Quem o usa também."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="maxhitpoints" value="70"/>
+	<attribute key="skillShield" value="4"/>
+	<!-- required_level 32: aplicar via movements.xml (level) -->
+</item>
+<item id="1953" name="pergaminho: anel de chamas">  <!-- scroll_katon_anel_chamas (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Katon: Anel de Chamas."/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="1967" name="pergaminho: prisão de água">  <!-- scroll_suiton_prisao_agua (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Suiton: Prisão de Água."/>
+	<!-- required_level 22: aplicar via movements.xml (level) -->
+</item>
+<item id="4857" name="pergaminho: estacas de terra">  <!-- scroll_doton_estacas_terra (rare) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ensina Doton: Estacas de Terra."/>
+	<!-- required_level 22: aplicar via movements.xml (level) -->
+</item>
+<item id="5901" name="junta de marionete">  <!-- puppet_joint (common) -->
+	<attribute key="weight" value="80"/>
+	<attribute key="description" value="Madeira tratada e engrenagem. Material."/>
+</item>
+<item id="5892" name="núcleo de granito">  <!-- granite_core (uncommon) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="O que faz uma sentinela andar. Material."/>
+</item>
+<item id="5905" name="cinza espectral">  <!-- spectral_ash (uncommon) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Fria ao toque. Material alquímico."/>
+</item>
+<item id="5884" name="talismã amaldiçoado">  <!-- cursed_talisman (rare) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Ninguém sabe o que ele selava. Material raro."/>
+</item>
+<item id="7588" name="poção de vida média">  <!-- health_potion_medium (uncommon) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Recupera 300 HP."/>
+	<!-- required_level 25: aplicar via movements.xml (level) -->
+</item>
+<item id="7590" name="pílula de chakra grande">  <!-- chakra_pill_large (uncommon) -->
+	<attribute key="weight" value="15"/>
+	<attribute key="description" value="Recupera 350 de chakra."/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
+<item id="2124" name="fios do marionetista">  <!-- strings_of_the_puppeteer (epic) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Loot exclusivo do Marionetista das Ruínas. Os fios obedecem sozinhos."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillSword" value="5"/>
+	<attribute key="speed" value="30"/>
+	<!-- required_level 45: aplicar via movements.xml (level) -->
+</item>
+<item id="2404" name="kunai de ferro">  <!-- kunai_iron (common) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Arma básica de todo genin."/>
+	<attribute key="attack" value="8"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="2379" name="tantō de aço">  <!-- tanto_steel (common) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Lâmina curta e rápida."/>
+	<attribute key="attack" value="16"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 8: aplicar via movements.xml (level) -->
+</item>
+<item id="2412" name="katana do ronin">  <!-- katana_ronin (uncommon) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Encontrada em ninjas renegados."/>
+	<attribute key="attack" value="28"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="7378" name="shuriken de ferro">  <!-- shuriken_iron (common) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Estrela de arremesso. Alcance 4."/>
+	<attribute key="attack" value="6"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="4"/>
+	<attribute key="ammoType" value="throwingstar"/>
+	<attribute key="shootType" value="throwingstar"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="7368" name="fūma shuriken">  <!-- fuuma_shuriken (rare) -->
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Shuriken gigante, retorna à mão."/>
+	<attribute key="attack" value="30"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 25: aplicar via movements.xml (level) -->
+</item>
+<item id="2172" name="luvas de combate">  <!-- gloves_taijutsu (uncommon) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Para quem prefere os punhos."/>
+	<attribute key="attack" value="14"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="3"/>
+	<attribute key="speed" value="50"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>

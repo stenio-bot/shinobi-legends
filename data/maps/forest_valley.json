@@ -1,0 +1,372 @@
+{
+  "id": "forest_valley",
+  "name": "Vale da Floresta, Pântano, Ruínas e Montanha",
+  "width": 200,
+  "height": 40,
+  "seed": 42,
+  "start": {
+    "x": 12,
+    "y": 18
+  },
+  "zones": [
+    {
+      "name": "Floresta da Vila",
+      "level_range": [
+        1,
+        10
+      ],
+      "rect": [
+        0,
+        0,
+        50,
+        40
+      ]
+    },
+    {
+      "name": "Pântano Sombrio",
+      "level_range": [
+        10,
+        25
+      ],
+      "rect": [
+        50,
+        0,
+        46,
+        40
+      ]
+    },
+    {
+      "name": "Ruínas do Clã",
+      "level_range": [
+        25,
+        50
+      ],
+      "rect": [
+        96,
+        0,
+        52,
+        40
+      ]
+    },
+    {
+      "name": "Montanha do Trovão",
+      "level_range": [
+        50,
+        80
+      ],
+      "rect": [
+        148,
+        0,
+        52,
+        40
+      ]
+    }
+  ],
+  "spawns": [
+    {
+      "monster_id": "wolf",
+      "x": 20,
+      "y": 10
+    },
+    {
+      "monster_id": "wolf",
+      "x": 22,
+      "y": 12
+    },
+    {
+      "monster_id": "wolf",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "monster_id": "wolf",
+      "x": 6,
+      "y": 26
+    },
+    {
+      "monster_id": "wolf",
+      "x": 24,
+      "y": 28
+    },
+    {
+      "monster_id": "wolf",
+      "x": 30,
+      "y": 6
+    },
+    {
+      "monster_id": "forest_snake",
+      "x": 16,
+      "y": 30
+    },
+    {
+      "monster_id": "forest_snake",
+      "x": 36,
+      "y": 8
+    },
+    {
+      "monster_id": "forest_snake",
+      "x": 10,
+      "y": 34
+    },
+    {
+      "monster_id": "bandit",
+      "x": 30,
+      "y": 14
+    },
+    {
+      "monster_id": "bandit",
+      "x": 40,
+      "y": 20
+    },
+    {
+      "monster_id": "bandit",
+      "x": 38,
+      "y": 30
+    },
+    {
+      "monster_id": "bandit",
+      "x": 44,
+      "y": 14
+    },
+    {
+      "monster_id": "bandit_archer",
+      "x": 42,
+      "y": 10
+    },
+    {
+      "monster_id": "bandit_archer",
+      "x": 46,
+      "y": 26
+    },
+    {
+      "monster_id": "boss_bandit_chief",
+      "x": 46,
+      "y": 35
+    },
+    {
+      "monster_id": "leech",
+      "x": 56,
+      "y": 8
+    },
+    {
+      "monster_id": "leech",
+      "x": 58,
+      "y": 30
+    },
+    {
+      "monster_id": "leech",
+      "x": 66,
+      "y": 12
+    },
+    {
+      "monster_id": "leech",
+      "x": 70,
+      "y": 34
+    },
+    {
+      "monster_id": "giant_toad",
+      "x": 64,
+      "y": 22
+    },
+    {
+      "monster_id": "giant_toad",
+      "x": 72,
+      "y": 8
+    },
+    {
+      "monster_id": "giant_toad",
+      "x": 76,
+      "y": 28
+    },
+    {
+      "monster_id": "giant_toad",
+      "x": 68,
+      "y": 30
+    },
+    {
+      "monster_id": "rogue_ninja",
+      "x": 80,
+      "y": 14
+    },
+    {
+      "monster_id": "rogue_ninja",
+      "x": 84,
+      "y": 30
+    },
+    {
+      "monster_id": "rogue_ninja",
+      "x": 88,
+      "y": 22
+    },
+    {
+      "monster_id": "boss_elder_toad",
+      "x": 90,
+      "y": 34
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 100,
+      "y": 10
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 104,
+      "y": 26
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 110,
+      "y": 16
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 108,
+      "y": 34
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 116,
+      "y": 8
+    },
+    {
+      "monster_id": "ruin_puppet",
+      "x": 114,
+      "y": 30
+    },
+    {
+      "monster_id": "stone_sentinel",
+      "x": 120,
+      "y": 14
+    },
+    {
+      "monster_id": "stone_sentinel",
+      "x": 124,
+      "y": 28
+    },
+    {
+      "monster_id": "stone_sentinel",
+      "x": 128,
+      "y": 20
+    },
+    {
+      "monster_id": "stone_sentinel",
+      "x": 122,
+      "y": 6
+    },
+    {
+      "monster_id": "spectral_warrior",
+      "x": 132,
+      "y": 10
+    },
+    {
+      "monster_id": "spectral_warrior",
+      "x": 136,
+      "y": 26
+    },
+    {
+      "monster_id": "spectral_warrior",
+      "x": 140,
+      "y": 18
+    },
+    {
+      "monster_id": "curse_shaman",
+      "x": 138,
+      "y": 32
+    },
+    {
+      "monster_id": "curse_shaman",
+      "x": 144,
+      "y": 12
+    },
+    {
+      "monster_id": "curse_shaman",
+      "x": 142,
+      "y": 24
+    },
+    {
+      "monster_id": "boss_puppeteer",
+      "x": 146,
+      "y": 36
+    },
+    {
+      "monster_id": "thunder_eagle",
+      "x": 152,
+      "y": 10
+    },
+    {
+      "monster_id": "thunder_eagle",
+      "x": 156,
+      "y": 28
+    },
+    {
+      "monster_id": "thunder_eagle",
+      "x": 160,
+      "y": 16
+    },
+    {
+      "monster_id": "thunder_eagle",
+      "x": 154,
+      "y": 34
+    },
+    {
+      "monster_id": "thunder_eagle",
+      "x": 164,
+      "y": 8
+    },
+    {
+      "monster_id": "glacier_oni",
+      "x": 166,
+      "y": 22
+    },
+    {
+      "monster_id": "glacier_oni",
+      "x": 170,
+      "y": 12
+    },
+    {
+      "monster_id": "glacier_oni",
+      "x": 168,
+      "y": 32
+    },
+    {
+      "monster_id": "glacier_oni",
+      "x": 174,
+      "y": 26
+    },
+    {
+      "monster_id": "storm_monk",
+      "x": 178,
+      "y": 10
+    },
+    {
+      "monster_id": "storm_monk",
+      "x": 182,
+      "y": 28
+    },
+    {
+      "monster_id": "storm_monk",
+      "x": 176,
+      "y": 18
+    },
+    {
+      "monster_id": "magma_serpent",
+      "x": 186,
+      "y": 14
+    },
+    {
+      "monster_id": "magma_serpent",
+      "x": 190,
+      "y": 30
+    },
+    {
+      "monster_id": "magma_serpent",
+      "x": 188,
+      "y": 22
+    },
+    {
+      "monster_id": "boss_ancestral_oni",
+      "x": 196,
+      "y": 36
+    }
+  ]
+}

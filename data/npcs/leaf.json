@@ -1,0 +1,202 @@
+[
+  {
+    "id": "merchant_leaf",
+    "name": "Ichiro, o Mercador",
+    "map": "forest_valley",
+    "x": 22,
+    "y": 18,
+    "type": "shop",
+    "sells": [
+      "kunai_iron",
+      "tanto_steel",
+      "shuriken_iron",
+      "vest_genin",
+      "pants_ninja",
+      "sandals_ninja",
+      "bandana_leaf",
+      "onigiri",
+      "chakra_pill_small",
+      "health_potion_small",
+      "antidote",
+      "backpack_leather"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "scroll_master_leaf",
+    "name": "Mestre Hayato",
+    "map": "forest_valley",
+    "x": 25,
+    "y": 15,
+    "type": "shop",
+    "sells": [
+      "scroll_katon_sopro_brasas",
+      "scroll_katon_housenka",
+      "scroll_katon_karyuu",
+      "scroll_shousen",
+      "scroll_kawarimi",
+      "scroll_bunshin"
+    ],
+    "buys_types": []
+  },
+  {
+    "id": "quest_giver_leaf",
+    "name": "Capitã Rin",
+    "map": "forest_valley",
+    "x": 18,
+    "y": 22,
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_wolves_1",
+        "name": "Lobos na trilha",
+        "text": "Os lobos estão atacando viajantes. Mate 5.",
+        "objective": {
+          "kill": "wolf",
+          "count": 5
+        },
+        "reward": {
+          "xp": 120,
+          "ryo": 60,
+          "items": [
+            "health_potion_small"
+          ]
+        }
+      },
+      {
+        "id": "q_bandits_1",
+        "name": "Limpando a estrada",
+        "text": "Bandidos na estrada leste. Mate 10.",
+        "objective": {
+          "kill": "bandit",
+          "count": 10
+        },
+        "reward": {
+          "xp": 400,
+          "ryo": 200,
+          "items": [
+            "scroll_kawarimi"
+          ]
+        }
+      },
+      {
+        "id": "q_bandit_chief",
+        "name": "O Chefe",
+        "text": "Acabe com o Chefe dos Bandidos no sudeste da floresta.",
+        "objective": {
+          "kill": "boss_bandit_chief",
+          "count": 1
+        },
+        "reward": {
+          "xp": 1500,
+          "ryo": 800,
+          "items": [
+            "backpack_leather"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "merchant_swamp",
+    "name": "Velha Sumi",
+    "map": "forest_valley",
+    "x": 60,
+    "y": 18,
+    "type": "shop",
+    "sells": [
+      "health_potion_small",
+      "chakra_pill_small",
+      "chakra_pill_medium",
+      "antidote",
+      "vest_toad",
+      "boots_swamp",
+      "katana_ronin",
+      "fuuma_shuriken"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "quest_giver_swamp",
+    "name": "Rastreador Goro",
+    "map": "forest_valley",
+    "x": 60,
+    "y": 20,
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_leeches",
+        "name": "Sangue ruim",
+        "text": "Sanguessugas infestam a margem. Mate 8.",
+        "objective": {
+          "kill": "leech",
+          "count": 8
+        },
+        "reward": {
+          "xp": 900,
+          "ryo": 300,
+          "items": [
+            "antidote",
+            "antidote"
+          ]
+        }
+      },
+      {
+        "id": "q_toads",
+        "name": "Coaxar da morte",
+        "text": "Mate 10 sapos gigantes.",
+        "objective": {
+          "kill": "giant_toad",
+          "count": 10
+        },
+        "reward": {
+          "xp": 2000,
+          "ryo": 600,
+          "items": [
+            "vest_toad"
+          ]
+        }
+      },
+      {
+        "id": "q_rogues",
+        "name": "Desertores",
+        "text": "Traga a cabeça de 8 ninjas renegados.",
+        "objective": {
+          "kill": "rogue_ninja",
+          "count": 8
+        },
+        "reward": {
+          "xp": 3500,
+          "ryo": 1200,
+          "items": [
+            "scroll_bunshin"
+          ]
+        }
+      },
+      {
+        "id": "q_elder_toad",
+        "name": "O Ancião",
+        "text": "Derrote o Sapo Ancião no coração do pântano.",
+        "objective": {
+          "kill": "boss_elder_toad",
+          "count": 1
+        },
+        "reward": {
+          "xp": 8000,
+          "ryo": 3000,
+          "items": [
+            "chakra_pill_medium"
+          ]
+        }
+      }
+    ]
+  }
+]

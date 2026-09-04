@@ -1,0 +1,433 @@
+[
+  {
+    "id": "ruin_puppet",
+    "name": "Marionete de Combate",
+    "description": "Marionete de guerra abandonada. Ainda cumpre a última ordem.",
+    "level": 27,
+    "hp": 580,
+    "attack": 46,
+    "defense": 19,
+    "speed": 4.0,
+    "element": "none",
+    "xp": 490,
+    "behavior": "aggressive",
+    "aggro_range": 6,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Braço-Lâmina",
+        "damage_min": 40,
+        "damage_max": 61,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      },
+      {
+        "name": "Dardo Oculto",
+        "damage_min": 30,
+        "damage_max": 48,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.35,
+            "duration_s": 6,
+            "value": 6
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "puppet_joint",
+        "chance": 0.5,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "health_potion_medium",
+        "chance": 0.12,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "chain_kunai",
+        "chance": 0.02,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 68,
+    "ryo_max": 135,
+    "respawn_s": 60,
+    "sprite": "mon_ruin_puppet",
+    "article": "um"
+  },
+  {
+    "id": "stone_sentinel",
+    "name": "Sentinela de Pedra",
+    "description": "Guarda o pátio interno. Lenta, mas quase não se quebra.",
+    "level": 32,
+    "hp": 1000,
+    "attack": 53,
+    "defense": 34,
+    "speed": 3.0,
+    "element": "doton",
+    "xp": 850,
+    "behavior": "aggressive",
+    "aggro_range": 5,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Soco de Granito",
+        "damage_min": 46,
+        "damage_max": 70,
+        "cooldown_s": 2.4,
+        "type": "melee"
+      },
+      {
+        "name": "Tremor",
+        "damage_min": 40,
+        "damage_max": 60,
+        "cooldown_s": 7.0,
+        "type": "area",
+        "shape": "circle_r1",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.3,
+            "duration_s": 1.0
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "granite_core",
+        "chance": 0.45,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "puppet_joint",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "greaves_clan_ruins",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "boots_clan_ruins",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 80,
+    "ryo_max": 160,
+    "respawn_s": 70,
+    "sprite": "mon_stone_sentinel",
+    "article": "uma"
+  },
+  {
+    "id": "spectral_warrior",
+    "name": "Guerreiro Espectral",
+    "description": "Morreu defendendo o clã e não aceitou a notícia.",
+    "level": 38,
+    "hp": 900,
+    "attack": 60,
+    "defense": 27,
+    "speed": 4.6,
+    "element": "raiton",
+    "xp": 720,
+    "behavior": "aggressive",
+    "aggro_range": 7,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Corte Fantasma",
+        "damage_min": 54,
+        "damage_max": 80,
+        "cooldown_s": 1.8,
+        "type": "melee"
+      },
+      {
+        "name": "Descarga Espectral",
+        "damage_min": 45,
+        "damage_max": 70,
+        "cooldown_s": 6.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "paralyze",
+            "chance": 0.3,
+            "duration_s": 1.5
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "spectral_ash",
+        "chance": 0.5,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "mask_clan_ruins",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "kodachi_ruins",
+        "chance": 0.03,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "chakra_pill_large",
+        "chance": 0.12,
+        "min": 1,
+        "max": 2
+      }
+    ],
+    "ryo_min": 95,
+    "ryo_max": 190,
+    "respawn_s": 75,
+    "sprite": "mon_spectral_warrior",
+    "article": "um"
+  },
+  {
+    "id": "curse_shaman",
+    "name": "Xamã da Maldição",
+    "description": "Mantém os selos das ruínas ativos. Ataca de longe e queima o chão.",
+    "level": 44,
+    "hp": 870,
+    "attack": 68,
+    "defense": 18,
+    "speed": 4.2,
+    "element": "katon",
+    "xp": 700,
+    "behavior": "ranged",
+    "aggro_range": 8,
+    "attack_range": 5,
+    "attacks": [
+      {
+        "name": "Selo Flamejante",
+        "damage_min": 61,
+        "damage_max": 91,
+        "cooldown_s": 2.4,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "burn",
+            "chance": 0.4,
+            "duration_s": 5,
+            "value": 8
+          }
+        ]
+      },
+      {
+        "name": "Círculo de Maldição",
+        "damage_min": 50,
+        "damage_max": 78,
+        "cooldown_s": 8.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.5,
+            "duration_s": 4,
+            "value": 0.4
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "cursed_talisman",
+        "chance": 0.45,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "spectral_ash",
+        "chance": 0.25,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "amulet_clan_seal",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_doton_estacas_terra",
+        "chance": 0.02,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_medium",
+        "chance": 0.2,
+        "min": 1,
+        "max": 3
+      }
+    ],
+    "ryo_min": 110,
+    "ryo_max": 220,
+    "respawn_s": 80,
+    "sprite": "mon_curse_shaman",
+    "article": "um"
+  },
+  {
+    "id": "boss_puppeteer",
+    "name": "Marionetista das Ruínas",
+    "description": "Boss das Ruínas do Clã. Não luta: manda as marionetes lutarem.",
+    "level": 50,
+    "hp": 9100,
+    "attack": 83,
+    "defense": 38,
+    "speed": 3.8,
+    "element": "fuuton",
+    "xp": 11000,
+    "behavior": "aggressive",
+    "aggro_range": 9,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Fios Cortantes",
+        "damage_min": 68,
+        "damage_max": 110,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Rajada de Dardos",
+        "damage_min": 60,
+        "damage_max": 95,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "poison",
+            "chance": 0.6,
+            "duration_s": 8,
+            "value": 10
+          }
+        ]
+      },
+      {
+        "name": "Dança das Marionetes",
+        "damage_min": 55,
+        "damage_max": 90,
+        "cooldown_s": 9.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.5,
+            "duration_s": 4,
+            "value": 0.4
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 70,
+        "summons": [
+          {
+            "monster_id": "ruin_puppet",
+            "count": 2
+          }
+        ],
+        "message": "Vocês vieram brincar com meus bonecos?"
+      },
+      {
+        "hp_percent": 40,
+        "summons": [
+          {
+            "monster_id": "stone_sentinel",
+            "count": 1
+          },
+          {
+            "monster_id": "ruin_puppet",
+            "count": 2
+          }
+        ],
+        "message": "A sentinela acorda. Corram."
+      },
+      {
+        "hp_percent": 15,
+        "attack_multiplier": 1.5,
+        "message": "Então eu mesmo corto os fios!"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "strings_of_the_puppeteer",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "puppet_blade",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "robe_clan_ruins",
+        "chance": 0.25,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "ring_stone_will",
+        "chance": 0.18,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_katon_anel_chamas",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_suiton_prisao_agua",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "cursed_talisman",
+        "chance": 1.0,
+        "min": 3,
+        "max": 6
+      },
+      {
+        "item_id": "health_potion_medium",
+        "chance": 1.0,
+        "min": 5,
+        "max": 10
+      }
+    ],
+    "ryo_min": 3000,
+    "ryo_max": 6000,
+    "respawn_s": 7200,
+    "sprite": "mon_puppeteer",
+    "article": "a"
+  }
+]

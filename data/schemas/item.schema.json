@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Item",
+  "type": "object",
+  "required": ["id","name","type","rarity","weight","buy_price","sell_price"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type":"string","pattern":"^[a-z0-9_]+$"},
+    "name": {"type":"string"},
+    "description": {"type":"string"},
+    "type": {"enum":["weapon","armor","accessory","consumable","scroll","material","currency"]},
+    "slot": {"enum":["head","body","legs","feet","weapon","offhand","accessory","back"]},
+    "rarity": {"enum":["common","uncommon","rare","epic","legendary"]},
+    "weight": {"type":"number","minimum":0},
+    "stack_max": {"type":"integer","minimum":1,"default":1},
+    "buy_price": {"type":"integer","minimum":0},
+    "sell_price": {"type":"integer","minimum":0},
+    "attack": {"type":"integer","minimum":0},
+    "defense": {"type":"integer","minimum":0},
+    "weapon_class": {"enum":["melee","ranged"]},
+    "weapon_range": {"type":"integer","minimum":1},
+    "skill": {"enum":["taijutsu","shuriken"]},
+    "bonuses": {"type":"object","additionalProperties":{"type":"number"}},
+    "required_level": {"type":"integer","minimum":1},
+    "required_village": {"type":"string"},
+    "required_skill": {"type":"object","properties":{"skill":{"type":"string"},"value":{"type":"integer"}}},
+    "effect": {"type":"object","properties":{
+      "type":{"enum":["heal_hp","heal_chakra","heal_both","buff","cure"]},
+      "value":{"type":"number"},
+      "duration_s":{"type":"number"},
+      "stat":{"type":"string"}
+    }},
+    "teaches_jutsu": {"type":"string"},
+    "sprite": {"type":"string"}
+  }
+}

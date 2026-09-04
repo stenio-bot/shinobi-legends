@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Lobo" nameDescription="um lobo" race="blood" experience="25" speed="450" manacost="0">
+	<health now="60" max="60"/>
+	<look type="21" corpse="5968"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="1500" min="-4" max="-10"/>
+	</attacks>
+	<defenses armor="2" defense="2"/>
+	<loot>
+		<item id="2148" countmax="8" chance="100000"/>
+		<item id="5897" chance="50000"/>  <!-- wolf_pelt -->
+		<item id="2666" chance="10000"/>  <!-- onigiri -->
+	</loot>
+</monster>

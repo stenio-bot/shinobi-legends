@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+.venv/
+
+# Godot (protótipo)
+client-godot/.godot/
+client-godot/export/
+*.import.tmp
+
+# OTClient
+client-otc/build/
+client-otc/data/things/*/
+client-otc/*.log
+client-otc/otclient
+client-otc/otclient_dx
+
+# Servidor
+server/tfs/build/
+server/tfs/config.lua
+
+# Diversos
+.env
+node_modules/
+screenshot_marco*.png
+client-otc/OTClient.app/
+screenshots/
