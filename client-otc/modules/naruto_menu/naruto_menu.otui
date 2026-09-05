@@ -1,0 +1,426 @@
+// ---------------------------------------------------------------------------
+// Menu Shinobi - janela e estilos (modules/naruto_menu).
+//
+// Estilo Tibia classico: MainWindow (data/styles/10-windows.otui) + TabBar
+// (data/styles/20-tabbars.otui) + ScrollablePanel/VerticalScrollBar. Sem
+// HTML/CSS de proposito, para a janela ficar igual as outras do cliente.
+//
+// PALETA: os aliases "&" do OTML sao globais POR DOCUMENTO (otmlparser.cpp so
+// promove os "&" de nivel raiz do proprio arquivo). Por isso as cores de
+// data/styles/50-ninja.otui estao repetidas aqui - e a mesma paleta, copiada de
+// proposito. Mudou la? Mude aqui.
+//
+// OTML so aceita comentario em linha inteira; nao comente no fim de uma linha
+// de valor. Textos com acento sao definidos no Lua (naruto_menu.lua), porque as
+// fontes do cliente sao bitmaps indexados por byte (ver naruto_theme.lua).
+// ---------------------------------------------------------------------------
+
+&shNight:  #131c30
+&shGold:   #e0c070
+&shGrey:   #c0c8d4
+&shGreen:  #56a860
+
+// ---------------------------------------------------------------------------
+// blocos reutilizados
+// ---------------------------------------------------------------------------
+// Estrutura de lista rolavel, igual a do MiniWindowContents (30-miniwindow.otui):
+// a ScrollablePanel e a JANELA (ancorada em cima e embaixo, altura fixa) e o
+// Panel de dentro e que cresce com verticalBox + fit-children. Se o
+// fit-children ficar na propria ScrollablePanel ancorada top+bottom, o layout e
+// as ancoras brigam para sempre e o cliente trava antes de abrir a janela.
+ShinobiListArea < ScrollablePanel
+  vertical-scrollbar: listScrollBar
+  focusable: false
+  padding-right: 2
+
+ShinobiListPanel < Panel
+  id: list
+  anchors.top: parent.top
+  anchors.left: parent.left
+  anchors.right: parent.right
+  layout:
+    type: verticalBox
+    fit-children: true
+
+ShinobiTabPanel < Panel
+
+ShinobiHint < Label
+  color: $shGrey
+  text-wrap: true
+  text-align: topLeft
+
+// linha de personagem (aba Personagem)
+ShinobiCharacterBox < UIWidget
+  height: 86
+  focusable: false
+  image-source: /images/ui/panel_flat
+  image-border: 4
+  margin-bottom: 4
+  border-width: 1
+  border-color: alpha
+
+  UICreature
+    id: preview
+    size: 68 68
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+
+  Button
+    id: chooseButton
+    width: 92
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+
+  Label
+    id: nameLabel
+    anchors.left: preview.right
+    anchors.top: parent.top
+    anchors.right: markLabel.left
+    margin-left: 10
+    margin-top: 8
+    margin-right: 8
+    color: $shGold
+    font: verdana-11px-antialised
+
+  Label
+    id: markLabel
+    anchors.right: chooseButton.left
+    anchors.top: parent.top
+    width: 50
+    margin-top: 8
+    margin-right: 8
+    color: $shGreen
+    text-align: right
+
+  Label
+    id: descLabel
+    anchors.left: nameLabel.left
+    anchors.top: nameLabel.bottom
+    anchors.right: chooseButton.left
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-right: 8
+    margin-bottom: 6
+    color: $shGrey
+    text-wrap: true
+    text-align: topLeft
+
+// botao de elemento (aba Elemento) - a cor vem do Lua via setImageColor
+ShinobiElementButton < UIButton
+  size: 108 50
+  image-source: /images/ui/panel_flat
+  image-border: 4
+  font: verdana-11px-antialised
+  color: #ffffff
+  text-align: center
+  text-wrap: true
+  border-width: 2
+  border-color: alpha
+  opacity: 0.9
+
+  $hover:
+    opacity: 1.0
+
+  $checked:
+    border-color: #ffffff
+    opacity: 1.0
+
+// linha de jutsu (abas Elemento e Jutsus)
+ShinobiJutsuRow < UIWidget
+  height: 40
+  focusable: false
+  image-source: /images/ui/panel_flat
+  image-border: 4
+  margin-bottom: 3
+
+  UIWidget
+    id: icon
+    size: 32 32
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    image-source: /images/game/spells/jutsus
+    image-clip: 0 0 32 32
+
+  Button
+    id: useButton
+    width: 70
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
+  Label
+    id: nameLabel
+    anchors.left: icon.right
+    anchors.top: parent.top
+    anchors.right: useButton.left
+    margin-left: 8
+    margin-top: 5
+    margin-right: 6
+    color: $shGold
+
+  Label
+    id: infoLabel
+    anchors.left: nameLabel.left
+    anchors.top: nameLabel.bottom
+    anchors.right: useButton.left
+    margin-top: 2
+    margin-right: 6
+    color: $shGrey
+
+// ---------------------------------------------------------------------------
+// aba Personagem
+// ---------------------------------------------------------------------------
+ShinobiCharacterTab < ShinobiTabPanel
+  VerticalScrollBar
+    id: listScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 24
+
+  ShinobiListArea
+    id: listArea
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: listScrollBar.left
+    anchors.bottom: parent.bottom
+    margin-right: 4
+
+    ShinobiListPanel
+
+// ---------------------------------------------------------------------------
+// aba Elemento
+// ---------------------------------------------------------------------------
+ShinobiElementTab < ShinobiTabPanel
+  UIWidget
+    id: elementRow
+    height: 50
+    focusable: false
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    layout:
+      type: horizontalBox
+      spacing: 6
+
+  Label
+    id: elementTitle
+    height: 16
+    anchors.top: elementRow.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    color: $shGold
+    font: verdana-11px-antialised
+
+  Button
+    id: chooseElementButton
+    width: 100
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+  VerticalScrollBar
+    id: listScrollBar
+    anchors.top: elementTitle.bottom
+    anchors.bottom: chooseElementButton.top
+    anchors.right: parent.right
+    margin-top: 6
+    margin-bottom: 8
+    step: 24
+
+  ShinobiListArea
+    id: listArea
+    anchors.top: elementTitle.bottom
+    anchors.left: parent.left
+    anchors.right: listScrollBar.left
+    anchors.bottom: chooseElementButton.top
+    margin-top: 6
+    margin-bottom: 8
+    margin-right: 4
+
+    ShinobiListPanel
+
+// ---------------------------------------------------------------------------
+// aba Jutsus
+// ---------------------------------------------------------------------------
+ShinobiJutsusTab < ShinobiTabPanel
+  ShinobiHint
+    id: hint
+    height: 30
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  Button
+    id: fillBarButton
+    width: 150
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+  VerticalScrollBar
+    id: listScrollBar
+    anchors.top: hint.bottom
+    anchors.bottom: fillBarButton.top
+    anchors.right: parent.right
+    margin-top: 6
+    margin-bottom: 8
+    step: 24
+
+  ShinobiListArea
+    id: listArea
+    anchors.top: hint.bottom
+    anchors.left: parent.left
+    anchors.right: listScrollBar.left
+    anchors.bottom: fillBarButton.top
+    margin-top: 6
+    margin-bottom: 8
+    margin-right: 4
+
+    ShinobiListPanel
+
+// ---------------------------------------------------------------------------
+// aba Comandos (so GM)
+// ---------------------------------------------------------------------------
+ShinobiCommandButton < Button
+  width: 112
+  height: 22
+
+ShinobiCommandsTab < ShinobiTabPanel
+  ShinobiHint
+    id: hint
+    height: 32
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  ShinobiCommandButton
+    id: btnGod
+    text: /god
+    anchors.top: hint.bottom
+    anchors.left: parent.left
+    margin-top: 6
+
+  ShinobiCommandButton
+    id: btnFull
+    text: /full
+    anchors.top: btnGod.top
+    anchors.left: btnGod.right
+    margin-left: 6
+
+  ShinobiCommandButton
+    id: btnArena
+    text: /arena
+    anchors.top: btnGod.top
+    anchors.left: btnFull.right
+    margin-left: 6
+
+  ShinobiCommandButton
+    id: btnPvm
+    text: /pvm
+    anchors.top: btnGod.top
+    anchors.left: btnArena.right
+    margin-left: 6
+
+  ShinobiCommandButton
+    id: btnLvl50
+    text: Level 50
+    anchors.top: btnGod.bottom
+    anchors.left: parent.left
+    margin-top: 6
+
+  ShinobiCommandButton
+    id: btnLvl100
+    text: Level 100
+    anchors.top: btnLvl50.top
+    anchors.left: btnLvl50.right
+    margin-left: 6
+
+  ShinobiCommandButton
+    id: btnSummon
+    anchors.top: btnLvl50.bottom
+    anchors.left: parent.left
+    margin-top: 12
+
+  TextEdit
+    id: monsterEdit
+    text: Lobo
+    anchors.verticalCenter: btnSummon.verticalCenter
+    anchors.left: btnSummon.right
+    anchors.right: parent.right
+    margin-left: 6
+
+  ShinobiCommandButton
+    id: btnTp
+    text: /tp x,y,z
+    anchors.top: btnSummon.bottom
+    anchors.left: parent.left
+    margin-top: 6
+
+  TextEdit
+    id: posEdit
+    text: 1000,1000,7
+    anchors.verticalCenter: btnTp.verticalCenter
+    anchors.left: btnTp.right
+    anchors.right: parent.right
+    margin-left: 6
+
+  CheckBox
+    id: noclipBox
+    width: 280
+    height: 20
+    anchors.top: btnTp.bottom
+    anchors.left: parent.left
+    margin-top: 16
+
+  ShinobiHint
+    id: noclipHint
+    height: 46
+    anchors.top: noclipBox.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+
+// ---------------------------------------------------------------------------
+// janela
+// ---------------------------------------------------------------------------
+MainWindow
+  id: shinobiMenuWindow
+  size: 680 520
+  @onEscape: modules.naruto_menu.hide()
+
+  TabBar
+    id: menuTabBar
+    height: 22
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  Button
+    id: closeButton
+    width: 72
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+  Label
+    id: statusLabel
+    anchors.left: parent.left
+    anchors.right: closeButton.left
+    anchors.verticalCenter: closeButton.verticalCenter
+    margin-right: 10
+    color: $shGrey
+    text-align: left
+
+  Panel
+    id: menuContent
+    anchors.top: menuTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 4
+    margin-bottom: 8
+    image-source: /images/ui/panel_flat
+    image-border: 4
+    padding: 6

@@ -1,5 +1,32 @@
 [
   {
+    "id": "doton_bala_lama",
+    "name": "Doton: Bala de Lama",
+    "description": "Uma bala de lama endurecida disparada em alta velocidade.",
+    "element": "doton",
+    "type": "projectile",
+    "range": 6,
+    "chakra_cost": 14,
+    "cooldown_s": 1.8,
+    "base_damage": 23,
+    "level_scale": 1.1,
+    "skill_scale": 0.85,
+    "skill": "ninjutsu",
+    "required_level": 1,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "slow",
+        "chance": 0.3,
+        "duration_s": 3,
+        "value": 0.25
+      }
+    ],
+    "animation": "fx_mud_bullet",
+    "sfx": "sfx_splat"
+  },
+  {
     "id": "doton_muralha_pedra",
     "name": "Doton: Muralha de Pedra",
     "description": "Ergue uma casca de rocha ao redor do corpo, endurecendo a pele por alguns segundos.",
@@ -13,10 +40,7 @@
     "skill_scale": 0,
     "skill": "ninjutsu",
     "required_level": 8,
-    "villages": [
-      "sand",
-      "cloud"
-    ],
+    "villages": [],
     "tier": 1,
     "effects": [
       {
@@ -44,9 +68,7 @@
     "skill_scale": 1.0,
     "skill": "ninjutsu",
     "required_level": 22,
-    "villages": [
-      "sand"
-    ],
+    "villages": [],
     "tier": 2,
     "effects": [
       {
@@ -73,9 +95,7 @@
     "skill_scale": 1.3,
     "skill": "ninjutsu",
     "required_level": 48,
-    "villages": [
-      "sand"
-    ],
+    "villages": [],
     "tier": 3,
     "effects": [
       {

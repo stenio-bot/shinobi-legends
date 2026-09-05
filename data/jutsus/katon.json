@@ -14,9 +14,7 @@
     "skill_scale": 0.8,
     "skill": "ninjutsu",
     "required_level": 1,
-    "villages": [
-      "leaf"
-    ],
+    "villages": [],
     "tier": 1,
     "effects": [
       {
@@ -44,9 +42,7 @@
     "skill_scale": 0.7,
     "skill": "ninjutsu",
     "required_level": 12,
-    "villages": [
-      "leaf"
-    ],
+    "villages": [],
     "tier": 2,
     "effects": [
       {
@@ -74,9 +70,7 @@
     "skill_scale": 1.2,
     "skill": "ninjutsu",
     "required_level": 35,
-    "villages": [
-      "leaf"
-    ],
+    "villages": [],
     "tier": 3,
     "effects": [
       {
@@ -104,9 +98,7 @@
     "skill_scale": 0.6,
     "skill": "ninjutsu",
     "required_level": 6,
-    "villages": [
-      "leaf"
-    ],
+    "villages": [],
     "tier": 1,
     "effects": [
       {
@@ -134,9 +126,7 @@
     "skill_scale": 1.0,
     "skill": "ninjutsu",
     "required_level": 20,
-    "villages": [
-      "leaf"
-    ],
+    "villages": [],
     "tier": 2,
     "effects": [
       {

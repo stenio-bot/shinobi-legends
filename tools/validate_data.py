@@ -64,16 +64,52 @@ for m in monsters:
             if s["monster_id"] not in monster_ids: errors.append(f"monstro {m['id']}: summon desconhecido '{s['monster_id']}'")
     if m["ryo_min"] > m["ryo_max"]: errors.append(f"monstro {m['id']}: ryo_min > ryo_max")
 jutsu_by_id = {j["id"]: j for j in jutsus}
+
+# element_sets.json: 4 jutsus por elemento, existentes, unicos, do elemento certo.
+# NOTA (novo modelo personagem+elemento): vila nao filtra mais jutsu, entao aqui so
+# validamos que o set pertence ao elemento certo, nao a vila.
+element_sets = load(os.path.join(ROOT, "element_sets.json"))
+element_set_schema = load(os.path.join(ROOT, "schemas", "element_set.schema.json"))
+valid_elements = {"katon", "suiton", "doton", "fuuton", "raiton"}
+element_set_ids = set()
+for es in element_sets:
+    if V:
+        for e in V(element_set_schema).iter_errors(es):
+            errors.append(f"data/element_sets.json [{es.get('id','?')}]: {e.message}")
+    if es["id"] in element_set_ids:
+        errors.append(f"element_sets.json: id duplicado '{es['id']}'")
+    element_set_ids.add(es["id"])
+    jids = es.get("jutsus", [])
+    if len(jids) != 4:
+        errors.append(f"element_set {es['id']}: precisa de exatamente 4 jutsus (tem {len(jids)})")
+    if len(set(jids)) != len(jids):
+        errors.append(f"element_set {es['id']}: jutsus duplicados em {jids}")
+    for jid in jids:
+        if jid not in jutsu_ids:
+            errors.append(f"element_set {es['id']}: jutsu desconhecido '{jid}'")
+            continue
+        jel = jutsu_by_id[jid]["element"]
+        if jel != es["id"]:
+            errors.append(f"element_set {es['id']}: jutsu '{jid}' tem elemento '{jel}', esperado '{es['id']}'")
+for el in valid_elements:
+    if el not in element_set_ids:
+        errors.append(f"element_sets.json: falta o set do elemento '{el}'")
+
+# characters.json: 4 personal_jutsus por personagem, existentes e unicos.
+# 'jutsus' (alias legado lido por tools/export_tfs.py) deve ter o mesmo conteudo.
 for c in characters:
     if c["village"] not in village_ids:
         errors.append(f"personagem {c['id']}: vila desconhecida '{c['village']}'")
-    for jid in c["jutsus"]:
+    pj = c.get("personal_jutsus", [])
+    if len(pj) != 4:
+        errors.append(f"personagem {c['id']}: precisa de exatamente 4 personal_jutsus (tem {len(pj)})")
+    if len(set(pj)) != len(pj):
+        errors.append(f"personagem {c['id']}: personal_jutsus duplicados em {pj}")
+    for jid in pj:
         if jid not in jutsu_ids:
             errors.append(f"personagem {c['id']}: jutsu desconhecido '{jid}'")
-            continue
-        jv = jutsu_by_id[jid]["villages"]
-        if jv and c["village"] not in jv:
-            errors.append(f"personagem {c['id']}: jutsu '{jid}' nao pertence a vila '{c['village']}' (villages={jv})")
+    if "jutsus" in c and c["jutsus"] != pj:
+        errors.append(f"personagem {c['id']}: campo legado 'jutsus' diverge de 'personal_jutsus'")
 
 for v in villages:
     for j in v["starting_jutsus"]:
@@ -99,7 +135,7 @@ for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
             for i in q["reward"].get("items", []):
                 if i not in item_ids: errors.append(f"quest {q['id']}: item de recompensa desconhecido '{i}'")
 
-print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas, {len(characters)} personagens")
+print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas, {len(characters)} personagens, {len(element_sets)} sets elementais")
 if errors:
     print("\n".join("ERRO " + e for e in errors)); sys.exit(1)
 print("OK — tudo válido")

@@ -1,0 +1,15 @@
+Module
+  name: naruto_menu
+  description: Menu Shinobi - selecao de personagem/elemento, jutsus, comandos de GM e noclip
+  author: Shinobi Legends
+  sandboxed: true
+  autoload: true
+  autoload-priority: 1100
+  reloadable: true
+  scripts: [ naruto_menu ]
+  dependencies:
+    - corelib
+    - gamelib
+    - modulelib
+  @onLoad: menuController:init()
+  @onUnload: menuController:terminate()

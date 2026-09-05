@@ -2,18 +2,29 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Character",
   "type": "object",
-  "required": ["id", "name", "looktype", "village", "jutsus"],
+  "required": ["id", "name", "looktype", "village", "personal_jutsus"],
   "additionalProperties": false,
   "properties": {
     "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
     "name": {"type": "string", "description": "Nome próprio do personagem (ADR-002): nunca nome do anime."},
+    "description": {"type": "string", "description": "Uma frase de identidade do personagem, sem nomes do anime."},
     "looktype": {"type": "integer", "minimum": 900, "maximum": 909},
-    "village": {"type": "string", "description": "Vila (vocação) a que este personagem pertence."},
+    "village": {"type": "string", "description": "Vila (vocação/town) a que este personagem pertence. Não filtra mais jutsus."},
+    "default_element": {
+      "enum": ["katon", "suiton", "doton", "fuuton", "raiton"],
+      "description": "Sugestão de elemento inicial na tela de escolha; o jogador pode trocar."
+    },
+    "personal_jutsus": {
+      "type": "array",
+      "description": "Os 4 jutsus PESSOAIS (identidade) do personagem, aprendidos no nível máximo assim que ele é escolhido. Não incluem jutsus elementais — esses vêm de data/element_sets.json a partir do elemento escolhido pelo jogador.",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+      "uniqueItems": true
+    },
     "jutsus": {
       "type": "array",
-      "description": "Lista ORDENADA de ids de jutsu (data/jutsus/*.json) que o personagem aprende ao ser escolhido.",
-      "minItems": 5,
-      "maxItems": 8,
+      "description": "DEPRECATED: alias de compatibilidade para tools/export_tfs.py (que ainda lê 'jutsus'). Deve conter exatamente o mesmo conteúdo de personal_jutsus. Não editar manualmente — gerado junto com personal_jutsus.",
       "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}
     }
   }

@@ -223,6 +223,93 @@ Validação (2026-09-04, servidor em 127.0.0.1:7171): login `god`, `/vila folha`
 **0 erros no log do cliente.** Screenshots: `screenshots/actionbar_barra.png`,
 `screenshots/actionbar_lista.png`, `screenshots/actionbar_cast.png`.
 
+### Menu Shinobi (`client-otc/modules/naruto_menu/`)
+
+Janela única com abas, estilo Tibia clássico (`MainWindow` + `TabBar` do `data/styles/`),
+título **Shinobi**. Módulo próprio, `sandboxed`, `autoload-priority: 1100` — a faixa
+1000–9999 é a única que o `init.lua` carrega **depois** do `game_interface`
+(`autoLoadModules(999)` → `ensureModuleLoaded('game_interface')` → `autoLoadModules(9999)`).
+
+Arquivos:
+
+| Arquivo | O que tem |
+|---|---|
+| `naruto_menu.otmod` | módulo (autoload 1100, `menuController:init()`) |
+| `naruto_menu.otui` | estilos + a janela; paleta copiada de `data/styles/50-ninja.otui` |
+| `naruto_menu.lua` | Controller, opcode 210, abas, noclip |
+| `client-otc/data/images/game/shinobi_menu.png` | ícone 20x20 do botão (bandana + folha) |
+
+**Como abrir:** botão `Shinobi` no `game_mainpanel` (`addToggleButton('shinobiMenu', ...)`),
+atalho **Ctrl+J** (`Keybind.new('Windows', 'Show/hide Shinobi menu', 'Ctrl+J', '')`) e
+**automaticamente** quando chega um `state` com `first_time = true` (abre na aba Personagem).
+
+**Abas**
+
+- **Personagem** — uma linha por personagem do `state.characters`, com preview `UICreature`
+  (mesmo widget do `game_outfit`) usando o `looktype`, nome + vila, descrição, elemento padrão
+  e nº de jutsus. O atual fica marcado com borda verde e "ATUAL"; nos outros o botão
+  **Escolher** manda `{"type":"select","character":"<id>"}`.
+- **Elemento** — 5 botões grandes (Fogo/Água/Raio/Terra/Vento) com as cores da paleta ninja;
+  clicar num deles lista os 4 jutsus daquele elemento (vindos do `state.elements`), com selos,
+  chakra e recarga. **Escolher** manda `{"type":"select","element":"<id>"}`.
+- **Jutsus** — os 8 `active_jutsus`, com ícone tirado da folha
+  `data/images/game/spells/jutsus.png`. O índice do ícone vem de `NarutoSpellIcons` /
+  `NarutoSpellInfo` (`jutsus_data.lua`): casa o `id` do servidor com o campo `.icon` do jutsu;
+  se o id não existir no cliente a linha aparece sem ícone (sem erro). **Usar** fala os selos
+  (`g_game.talk`) e **Preencher barra** chama
+  `modules.naruto_theme.fillActionBarWithWords(words, 'shinobi_menu')`, que grava os 8 selos
+  na barra de ação inferior 1 (F1..F8) num conjunto de hotkeys próprio.
+- **Comandos** — só aparece quando o `state` diz `is_gm: true`. Botões `/god`, `/full`,
+  `/arena`, `/pvm`, `/lvl 50`, `/lvl 100`, campo + `/m <nome>`, campo + `/tp x,y,z`, e o
+  toggle **Atravessar tudo (noclip)**.
+
+**Enquanto o servidor não responde** a janela abre vazia com "Aguardando servidor..." e
+nenhum erro no log. Ela pede o estado com `{"type":"get_state"}` ao abrir e 2,5 s depois do
+login, caso nada tenha chegado.
+
+**Encoding:** o servidor manda JSON em UTF-8, mas as fontes do OTClient são bitmaps indexados
+por byte. O módulo converte **toda string recebida de UTF-8 para cp1252** (`utf8ToCp1252`)
+antes de mostrar; sem isso "adversário" aparece como "adversÃ¡rio".
+
+#### Noclip de GM — como o truque funciona
+
+O TFS não tem "noclip". O que existe é o `/tp x,y,z` do `gm_tools.lua`, que só responde para
+conta GOD. Com o toggle ligado, quando um passo do jogador é recusado o cliente calcula o tile
+de destino (posição + direção do passo) e manda `g_game.talk('/tp x,y,z')` para lá — o servidor
+teleporta 1 tile e o efeito é o de ter atravessado a parede/árvore. Na prática, o mapa inteiro
+fica desbloqueado na versão do GM.
+
+São **dois gatilhos**, porque um só não cobre tudo:
+
+1. `LocalPlayer.onCancelWalk` — `src/client/localplayer.cpp` faz
+   `callLuaField("onCancelWalk", direction)` dentro de `cancelWalk()`. Dispara quando o
+   **servidor** recusa o passo (`0xB5 GameServerCancelWalk`): PZ, criatura no caminho etc.
+2. Gatilho de "passo barrado pelo próprio cliente". Com a feature `GameAllowPreWalk` ligada
+   (o `game_features/features.lua` liga sempre), o `game_walk/walk.lua` testa
+   `toTile:isWalkable()` e dá `return false` **antes** de mandar qualquer coisa para o
+   servidor — ou seja, contra uma árvore o evento de cancel walk nunca acontece. Por isso o
+   módulo também escuta as teclas de andar (o `corelib/keyboard.lua` aceita vários callbacks
+   por combo, então isso convive com o `game_walk`) e, se o tile de destino existe mas não é
+   andável, faz o `/tp`.
+
+Limites: no máximo 1 tentativa a cada 300 ms (1 por passo) e só para tiles que existem em
+`g_map.getTile` — não teleporta para fora do mapa carregado. O toggle é desligado a cada
+`onGameEnd` e só funciona se o `state` disser `is_gm`.
+
+#### Teste
+
+Rodado em 2026-09-04 contra `127.0.0.1:7171` com uma cópia temporária de
+`client-otc/tests/autotest_rc.lua` em `client-otc/shinobirc.lua` (o OTClient executa
+`<compactName>rc.lua` depois de carregar os módulos; o arquivo foi removido no fim).
+Resultado: **0 erros no log**, screenshots em `screenshots/menu_*.png`
+(`menu_01_personagem`, `menu_02_elemento`, `menu_03_elemento_raiton`, `menu_04_jutsus`,
+`menu_05_jutsus_barra`, `menu_06_comandos`, `menu_07_state_falso`, `menu_08/09_noclip`,
+`menu_10_select_real`). Verificado: `state` real chegando do servidor (9 personagens, 5
+elementos, 8 jutsus ativos), `select` real trocando `genin_laranja` → `genin_uchiha`, injeção
+de um `state` falso pelo rc (`modules.naruto_menu.onState(json.decode(...))`), botão do
+mainpanel e Ctrl+J registrados, barra de ação preenchida com 8 jutsus, e o noclip atravessando
+uma árvore (1050,1057,7 → 1050,1056,7).
+
 ### Assets (sprites)
 - Coloque `Tibia.spr` e `Tibia.dat` versão **10.98** em `client-otc/data/things/1098/`.
 - Para desenvolvimento, use um par 10.98 legítimo que você possua; para distribuir, só sprites próprios (ADR-002).
@@ -276,6 +363,8 @@ cp -R server/generated/spells/scripts/naruto server/tfs/data/spells/scripts/
 cp -R server/generated/npc/naruto server/tfs/data/npc/
 cp -R server/generated/scripts/naruto server/tfs/data/scripts/
 cp server/generated/lib/naruto_quests.lua server/tfs/data/lib/
+cp server/generated/lib/naruto_json.lua server/tfs/data/lib/          # JSON puro em Lua (opcode 210)
+cp server/generated/lib/naruto_characters.lua server/tfs/data/lib/    # personagens + sets de elemento
 cp server/generated/XML/vocations.xml server/tfs/data/XML/vocations.xml
 ```
 E manualmente: colar `monsters_naruto.xml` em `monsters.xml`, `spells_naruto.xml` em `spells.xml`,
@@ -381,7 +470,7 @@ Remere's Map Editor (RME) para criar `data/world/forgotten.otbm`. `server/genera
 tem as posições relativas do protótipo como referência.
 
 ## Comandos de GM próprios (data/scripts/naruto/gm_tools.lua)
-`/sl` lista. `/god` = level 100, skills no teto prático (fist/shield 100, sword 90, club/axe/dist ~70 por causa dos multiplicadores das vocações), Ninjutsu ~30, jutsus do PERSONAGEM atual (ver `/personagem`), 1.000.000 ryo no banco, mochila com todos os itens e melhor equipamento vestido. `/arena`, `/tp x,y,z`, `/lvl N`, `/jutsus` (idem, só do personagem atual), `/full`, `/vila folha|nevoa|nuvem|areia`, `/personagem <id|nome>` (troca de personagem — jutsus por personagem, ver `docs/sistemas/vilas-e-clas.md`; GM ignora a vila), `/pvm` (liga/desliga ser atacado por monstros — ver seção "GM: /pvm" abaixo). Para jogadores normais, dentro da própria vila: `!personagem` (lista) e `!personagem <nome>` (troca). Vanilla: `/m nome`, `/i id`, `/goto`, `/c`, `/ghost`, `/reload`.
+`/sl` lista. `/god` = level 100, skills no teto prático (fist/shield 100, sword 90, club/axe/dist ~70 por causa dos multiplicadores das vocações), Ninjutsu ~30, os 8 jutsus atuais (personagem + elemento), 1.000.000 ryo no banco, mochila com todos os itens e melhor equipamento vestido. `/arena`, `/tp x,y,z`, `/lvl N`, `/jutsus` (os 8 atuais: 4 do personagem + 4 do elemento), `/full`, `/vila folha|nevoa|nuvem|areia`, `/personagem <id|nome>` (troca de personagem; GM ignora a vila), `/elemento <katon|suiton|raiton|doton|fuuton>` (troca o set elemental), `/pvm` (liga/desliga ser atacado por monstros — ver seção "GM: /pvm" abaixo). Para jogadores normais: `!personagem` (lista os da própria vila) / `!personagem <nome>` (troca) e `!elemento` (lista) / `!elemento <katon|suiton|raiton|doton|fuuton>` (troca). Tudo isso também está no menu Shinobi do cliente, que fala com o servidor pelo opcode estendido 210 — protocolo em `docs/sistemas/combate-e-jutsus.md` → "Protocolo opcode 210". Vanilla: `/m nome`, `/i id`, `/goto`, `/c`, `/ghost`, `/reload`.
 
 ### GM: /pvm (por que os monstros não atacavam o GM)
 O grupo `god` (id 6, `server/tfs/data/XML/groups.xml`) tem as flags `ignoredbymonsters="1"` e
@@ -427,17 +516,20 @@ Comandos próprios (`server/tfs/data/scripts/naruto/gm_tools.lua`):
 |---|---|
 | `/sl` | lista os comandos |
 | `/arena` | teleporta para o tile livre mais próximo fora de zona de proteção (3x3 livre) |
-| `/tp x,y,z` | teleporta |
+| `/tp x,y,z` | teleporta para **qualquer tile existente**, inclusive bloqueado ou dentro de PZ (`player:teleportTo(pos, false)`; só recusa quando não há tile na posição) |
 | `/lvl N` | vai para o level N (vida/chakra cheios) |
-| `/jutsus` | aprende os jutsus do PERSONAGEM atual (não todos — ver `/personagem`) |
+| `/jutsus` | aprende os **8 jutsus atuais** (4 do personagem + 4 do elemento) e reenvia o `state` |
 | `/full` | vida e chakra cheios |
 | `/vila folha\|nevoa\|nuvem\|areia` | troca de vila (vocação) |
-| `/personagem <id\|nome>` | troca de personagem (jutsus por personagem; GM troca de qualquer vila) |
+| `/personagem <id\|nome>` | troca de personagem (GM troca de qualquer vila) |
+| `/elemento katon\|suiton\|raiton\|doton\|fuuton` | troca o set de 4 jutsus elementais |
 | `/pvm` | liga/desliga ser atacado por monstros (grupo God ↔ God Vulnerável, id 7) — ver "GM: /pvm" acima |
 
-Jogadores normais (não-GM) trocam de personagem DENTRO da própria vila com a talkaction
-`!personagem` (lista os disponíveis) e `!personagem <nome>` (troca) — ver
-`docs/sistemas/vilas-e-clas.md` → "Personagens e jutsus".
+Jogadores normais (não-GM) trocam de personagem DENTRO da própria vila com `!personagem`
+(lista) / `!personagem <nome>` (troca) e de elemento com `!elemento` (lista) /
+`!elemento <katon|suiton|raiton|doton|fuuton>` — cada troca reaprende os 8 jutsus (4 pessoais
++ 4 do elemento) e reenvia o `state` pelo opcode 210. Ver `docs/sistemas/vilas-e-clas.md` →
+"Personagens e jutsus" e `docs/sistemas/combate-e-jutsus.md` → "Protocolo opcode 210".
 
 Padrão TFS que importa: `/m Nome` (invoca monstro; patch: procura tile livre em volta), `/i nome do item`, `/goto Jogador`,
 `/c Jogador` (puxa), `/ghost`, `/reload talkactions|spells|monsters`, `/pos`. Nomes dos monstros: os do JSON ("Lobo",

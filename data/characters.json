@@ -2,64 +2,91 @@
   {
     "id": "genin_laranja",
     "name": "Genin Laranja",
+    "description": "Um genin barulhento e teimoso que nunca desiste de um combate.",
     "looktype": 900,
     "village": "leaf",
-    "jutsus": ["fuuton_lamina_vento", "kawarimi", "bunshin", "clone_sombrio", "fuuton_rajada_cortante"]
+    "default_element": "fuuton",
+    "personal_jutsus": ["clone_sombrio", "kawarimi", "fuuton_rasteira_vento", "vigor_teimoso"],
+    "jutsus": ["clone_sombrio", "kawarimi", "fuuton_rasteira_vento", "vigor_teimoso"]
   },
   {
     "id": "genin_uchiha",
     "name": "Genin Uchiha",
+    "description": "Um genin frio e calculista, treinado para prever cada golpe do adversário.",
     "looktype": 901,
     "village": "leaf",
-    "jutsus": ["katon_goukakyuu", "raiton_hari", "katon_sopro_brasas", "raiton_corrente_estatica", "katon_housenka", "katon_karyuu_endan"]
+    "default_element": "katon",
+    "personal_jutsus": ["foco_ocular", "agulhas_incendiarias", "contra_ataque_calculado", "kawarimi"],
+    "jutsus": ["foco_ocular", "agulhas_incendiarias", "contra_ataque_calculado", "kawarimi"]
   },
   {
     "id": "kunoichi_rosa",
     "name": "Kunoichi Rosa",
+    "description": "Uma médica-ninja de força descomunal e socos que racham o chão.",
     "looktype": 902,
     "village": "leaf",
-    "jutsus": ["punho_suave", "kawarimi", "bunshin", "shousen", "chute_giratorio"]
+    "default_element": "suiton",
+    "personal_jutsus": ["shousen", "punho_suave", "soco_monstruoso", "kawarimi"],
+    "jutsus": ["shousen", "punho_suave", "soco_monstruoso", "kawarimi"]
   },
   {
     "id": "herdeira_hyuga",
     "name": "Herdeira Hyuga",
+    "description": "Herdeira de um clã ocular, ataca pontos vitais de chakra com precisão cirúrgica.",
     "looktype": 903,
     "village": "mist",
-    "jutsus": ["suiton_mizudan", "suiton_nevoa_cortante", "suiton_prisao_agua", "suiton_suiryuudan", "suiton_vortice_devorador", "fuuin_contencao"]
+    "default_element": "suiton",
+    "personal_jutsus": ["palma_gentil", "fuuin_contencao", "visao_total", "palma_dupla"],
+    "jutsus": ["palma_gentil", "fuuin_contencao", "visao_total", "palma_dupla"]
   },
   {
     "id": "kunoichi_armas",
     "name": "Kunoichi das Armas",
+    "description": "Especialista em armas arremessadas, cobre o campo de batalha com lâminas e veneno.",
     "looktype": 905,
     "village": "mist",
-    "jutsus": ["agulhas_multiplas", "kawarimi", "suiton_nevoa_cortante", "lamina_chakra", "doku_kiri"]
+    "default_element": "suiton",
+    "personal_jutsus": ["agulhas_multiplas", "lamina_chakra", "doku_kiri", "bunshin"],
+    "jutsus": ["agulhas_multiplas", "lamina_chakra", "doku_kiri", "bunshin"]
   },
   {
     "id": "ninja_verde",
     "name": "Ninja Verde",
+    "description": "Um taijutsuísta puro que compensa a falta de chakra com força bruta e disciplina.",
     "looktype": 904,
     "village": "cloud",
-    "jutsus": ["punho_suave", "kawarimi", "bunshin", "doton_muralha_pedra", "chute_giratorio"]
+    "default_element": "raiton",
+    "personal_jutsus": ["punho_suave", "chute_giratorio", "soco_da_juventude", "chute_ascendente"],
+    "jutsus": ["punho_suave", "chute_giratorio", "soco_da_juventude", "chute_ascendente"]
   },
   {
     "id": "ninja_abelha",
     "name": "Ninja Abelha",
+    "description": "Um espadachim elétrico, rápido e obcecado por evoluir a cada combate.",
     "looktype": 909,
     "village": "cloud",
-    "jutsus": ["raiton_hari", "raiton_corrente_estatica", "raiton_lanca_relampago", "raiton_armadura_eletrica", "raiton_punho_trovao"]
+    "default_element": "raiton",
+    "personal_jutsus": ["lamina_relampago_pessoal", "corte_duplo", "bainha_eletrica", "raio_selado"],
+    "jutsus": ["lamina_relampago_pessoal", "corte_duplo", "bainha_eletrica", "raio_selado"]
   },
   {
     "id": "sabio_loiro",
     "name": "Sabio Loiro",
+    "description": "Um sábio errante que domina selos de teleporte e ataques cirúrgicos à distância.",
     "looktype": 907,
     "village": "sand",
-    "jutsus": ["fuuton_lamina_vento", "raio_selado", "kawarimi", "fuuton_rajada_cortante", "doton_estacas_terra"]
+    "default_element": "fuuton",
+    "personal_jutsus": ["kawarimi", "kunai_marcada", "salto_do_selo", "explosao_do_selo"],
+    "jutsus": ["kawarimi", "kunai_marcada", "salto_do_selo", "explosao_do_selo"]
   },
   {
     "id": "sabio_cerimonial",
     "name": "Sabio Cerimonial",
+    "description": "Um sábio cerimonial que protege aliados com barreiras e selos sagrados.",
     "looktype": 908,
     "village": "sand",
-    "jutsus": ["fuuton_lamina_vento", "doton_muralha_pedra", "fuuton_rajada_cortante", "doton_estacas_terra", "doton_colapso_terreno"]
+    "default_element": "doton",
+    "personal_jutsus": ["fuuin_contencao", "barreira_protetora", "selo_de_exorcismo", "circulo_de_selos"],
+    "jutsus": ["fuuin_contencao", "barreira_protetora", "selo_de_exorcismo", "circulo_de_selos"]
   }
 ]

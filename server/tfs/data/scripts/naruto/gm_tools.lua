@@ -2,8 +2,9 @@
 -- /arena          teleporta para o tile livre mais próximo fora de zona de proteção
 -- /tp x,y,z       teleporta para a posição
 -- /lvl N          sobe/desce para o level N
--- /jutsus         aprende os jutsus do PERSONAGEM atual (ver /personagem)
--- /personagem nome  troca de personagem (qualquer um, ignora vila; ver !personagem para jogadores)
+-- /jutsus         aprende os 8 jutsus ATUAIS (4 do personagem + 4 do elemento)
+-- /personagem id  troca de personagem (qualquer um, ignora vila; ver !personagem para jogadores)
+-- /elemento id    troca de elemento (katon|suiton|raiton|doton|fuuton; ver !elemento)
 -- /full           vida e chakra cheios
 -- /vila nome      troca de vila (vocação): folha, nevoa, nuvem, areia
 -- /god            level 100, skills 100, todos os jutsus, 1 milhão de ryo, mochila com todos os itens, melhor equipamento vestido
@@ -26,6 +27,27 @@ local function currentCharacter(player)
 	end
 	local list = NarutoCharacters.byVillage and NarutoCharacters.byVillage[player:getVocation():getId()]
 	return list and list[1] or nil
+end
+
+-- Elemento atual (storage 60002 = índice em NarutoElements.list).
+local function currentElement(player)
+	if not NarutoElements then return nil end
+	local idx = player:getStorageValue(60002)
+	if idx and idx > 0 and NarutoElements.list[idx] then
+		return NarutoElements.list[idx]
+	end
+	local char = currentCharacter(player)
+	return char and NarutoElements.byId[char.default_element] or NarutoElements.list[1]
+end
+
+-- Os 8 jutsus atuais: 4 do personagem + 4 do elemento (nomes, na ordem do protocolo 210).
+local function activeJutsuNames(player)
+	local names = {}
+	local char = currentCharacter(player)
+	if char then for _, j in ipairs(char.jutsus) do names[#names + 1] = j.name end end
+	local el = currentElement(player)
+	if el then for _, j in ipairs(el.jutsus) do names[#names + 1] = j.name end end
+	return names, char, el
 end
 
 local function findArena(from)
@@ -86,11 +108,11 @@ local function godMode(player)
 		guard = guard + 1
 	end
 	player:setGroup(group)
-	-- jutsus: apenas os do personagem atual (use /personagem para trocar de personagem antes)
-	local char = currentCharacter(player)
+	-- jutsus: os 8 ATUAIS (4 do personagem + 4 do elemento). Use /personagem e /elemento antes.
+	local names, char = activeJutsuNames(player)
 	local jutsuCount = 0
-	if char then
-		for _, name in ipairs(char.jutsus) do player:learnSpell(name) jutsuCount = jutsuCount + 1 end
+	if #names > 0 then
+		for _, name in ipairs(names) do player:learnSpell(name) jutsuCount = jutsuCount + 1 end
 	elseif NarutoJutsus then
 		for _, name in ipairs(NarutoJutsus) do player:learnSpell(name) end
 		jutsuCount = #NarutoJutsus
@@ -141,12 +163,12 @@ end
 
 local VILAS = { folha = 1, nevoa = 2, ["névoa"] = 2, nuvem = 3, areia = 4 }
 
-local t = TalkAction("/arena", "/tp", "/lvl", "/jutsus", "/full", "/vila", "/sl", "/god", "/pvm", "/personagem")
+local t = TalkAction("/arena", "/tp", "/lvl", "/jutsus", "/full", "/vila", "/sl", "/god", "/pvm", "/personagem", "/elemento")
 function t.onSay(player, words, param)
 	if not isGod(player) then return true end
 	param = param and param:trim() or ""
 	if words == "/sl" then
-		player:sendTextMessage(MESSAGE_INFO_DESCR, "GM: /god (tudo no máximo), /arena, /tp x,y,z, /lvl N, /jutsus (do personagem atual), /full, /vila folha|nevoa|nuvem|areia, /personagem id|nome (troca de personagem, qualquer vila), /pvm (liga/desliga ser atacado por monstros). Padrão TFS: /m nome, /i item, /goto jogador, /c jogador, /ghost, /reload.")
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "GM: /god (tudo no máximo), /arena, /tp x,y,z, /lvl N, /jutsus (os 8 atuais), /full, /vila folha|nevoa|nuvem|areia, /personagem id|nome (troca de personagem, qualquer vila), /elemento katon|suiton|raiton|doton|fuuton, /pvm (liga/desliga ser atacado por monstros). Padrão TFS: /m nome, /i item, /goto jogador, /c jogador, /ghost, /reload.")
 	elseif words == "/personagem" then
 		if not NarutoCharacters or not NarutoCharacters.apply then
 			player:sendCancelMessage("Personagens não carregados (rode tools/export_tfs.py e reinstale).")
@@ -166,7 +188,30 @@ function t.onSay(player, words, param)
 			player:sendCancelMessage("Personagem não encontrado. Use /personagem para ver a lista.")
 			return false
 		end
-		local ok, err = NarutoCharacters.apply(player, target.looktype, {force = true})
+		local ok, err = NarutoCharacters.apply(player, target.id, nil, {force = true})
+		if not ok then player:sendCancelMessage(err) end
+	elseif words == "/elemento" then
+		if not NarutoElements or not NarutoCharacters or not NarutoCharacters.apply then
+			player:sendCancelMessage("Elementos não carregados (rode tools/install_generated.sh).")
+			return false
+		end
+		if param == "" then
+			local names = {}
+			for _, e in ipairs(NarutoElements.list) do names[#names + 1] = e.id .. " (" .. e.name .. ")" end
+			local cur = currentElement(player)
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "Elemento atual: " .. (cur and cur.name or "nenhum") ..
+				". Disponíveis: " .. table.concat(names, ", ") .. ". Uso: /elemento <id>")
+			return false
+		end
+		local q, target = param:lower(), nil
+		for _, e in ipairs(NarutoElements.list) do
+			if e.id:lower() == q or e.name:lower() == q then target = e break end
+		end
+		if not target then
+			player:sendCancelMessage("Elemento não encontrado. Use /elemento para ver a lista.")
+			return false
+		end
+		local ok, err = NarutoCharacters.apply(player, nil, target.id, {force = true})
 		if not ok then player:sendCancelMessage(err) end
 	elseif words == "/pvm" then
 		local currentId = player:getGroup():getId()
@@ -190,8 +235,9 @@ function t.onSay(player, words, param)
 		local x, y, z = param:match("^(%d+)%s*,%s*(%d+)%s*,%s*(%d+)$")
 		if not x then player:sendCancelMessage("Uso: /tp x,y,z") return false end
 		local pos = Position(tonumber(x), tonumber(y), tonumber(z))
-		if not Tile(pos) then player:sendCancelMessage("Posição inválida.") return false end
-		player:teleportTo(pos)
+		if not Tile(pos) then player:sendCancelMessage("Posição inválida (não existe tile aí).") return false end
+		-- pushMovement = false: teleporta para QUALQUER tile existente, mesmo bloqueado/PZ
+		player:teleportTo(pos, false)
 		pos:sendMagicEffect(CONST_ME_TELEPORT)
 	elseif words == "/lvl" then
 		local target = tonumber(param)
@@ -202,14 +248,16 @@ function t.onSay(player, words, param)
 		player:addMana(player:getMaxMana())
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "Level " .. player:getLevel() .. ".")
 	elseif words == "/jutsus" then
-		local char = currentCharacter(player)
+		local names, char, el = activeJutsuNames(player)
 		local n = 0
-		if char then
-			for _, name in ipairs(char.jutsus) do
+		if #names > 0 then
+			for _, name in ipairs(names) do
 				player:learnSpell(name)
 				n = n + 1
 			end
-			player:sendTextMessage(MESSAGE_INFO_DESCR, n .. " jutsus aprendidos (personagem: " .. char.name .. ").")
+			player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("%d jutsus aprendidos (personagem: %s, elemento: %s).",
+				n, char and char.name or "?", el and el.name or "?"))
+			if NarutoCharacters and NarutoCharacters.sendState then NarutoCharacters.sendState(player) end
 		elseif NarutoJutsus then
 			for _, name in ipairs(NarutoJutsus) do
 				player:learnSpell(name)

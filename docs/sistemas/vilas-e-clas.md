@@ -8,7 +8,10 @@
 | Vila da Nuvem | Raiton | Shuriken | Raiton: Agulha de Raio |
 | Vila da Areia | Fuuton / Doton | Defesa | Fuuton: Lâmina de Vento |
 
-Cada vila tem: cidade inicial, NPCs próprios, 1 área de caça 1–10 próxima, jutsus exclusivos (campo `villages` no jutsu).
+Cada vila tem: cidade inicial, NPCs próprios, 1 área de caça 1–10 próxima. **Vila não filtra
+mais jutsu** (ver "Personagem + Elemento: 4 + 4" em `docs/sistemas/combate-e-jutsus.md`): o
+campo `villages` de todo jutsu em `data/jutsus/*.json` está vazio (`[]`), e o kit de combate do
+jogador vem só do PERSONAGEM (identidade) + ELEMENTO (escolha livre), não da vila.
 
 ## Mudança de vila
 Não permitida no MVP. Futuro: quest cara que reseta jutsus exclusivos.
@@ -82,82 +85,96 @@ No ciclo elemental (`katon > fuuton > raiton > doton > suiton > katon`) a Areia 
 elos opostos: Fuuton bate forte em Raiton e Doton bate forte em Suiton — é a vila mais
 flexível contra as áreas existentes, e a mais fraca contra Katon.
 
-## Jutsus por vila (estado atual)
-Cada vila tem **5 jutsus próprios** nos tiers 1, 1, 2, 2, 3, mais os neutros
-(`kawarimi`, `bunshin`, `shousen`, `fuuin_contencao`, `doku_kiri`), disponíveis para todas.
+## Jutsus por elemento (histórico → ver "sets" atuais)
+As tabelas abaixo mostram os jutsus que cada elemento acumulou ao longo do desenvolvimento.
+No modelo atual (Personagem + Elemento), o que o jogador realmente recebe ao escolher um
+elemento são só os **4 jutsus do set** em `data/element_sets.json` — ver a tabela em
+"Personagens e jutsus" abaixo e a seção "Personagem + Elemento: 4 + 4" de
+`docs/sistemas/combate-e-jutsus.md`. Os jutsus elementais que ficaram de fora do set (ex.:
+`katon_sopro_brasas`, `suiton_vortice_devorador`, `raiton_punho_trovao`) continuam válidos em
+`data/jutsus/*.json` (podem virar loot/pergaminho de bônus no futuro), só não fazem parte do
+kit automático.
 
-| Vila | Tier 1 | Tier 1 | Tier 2 | Tier 2 | Tier 3 |
-|---|---|---|---|---|---|
-| Folha | Grande Bola de Fogo | Sopro de Brasas | Flores de Fênix | Anel de Chamas | Dragão de Fogo |
-| Névoa | Projétil de Água | Névoa Cortante | Dragão de Água | Prisão de Água | Vórtice Devorador |
-| Nuvem | Agulha de Raio | Corrente Estática | Lança do Relâmpago | Armadura Elétrica | Punho do Trovão |
-| Areia | Lâmina de Vento | Muralha de Pedra | Rajada Cortante | Estacas de Terra | Colapso do Terreno |
+| Elemento | Jutsus existentes (tiers) |
+|---|---|
+| Katon | Grande Bola de Fogo (1), Sopro de Brasas (1), Flores de Fênix (2), Anel de Chamas (2), Dragão de Fogo (3) |
+| Suiton | Projétil de Água (1), Névoa Cortante (1), Dragão de Água (2), Prisão de Água (2), Vórtice Devorador (3) |
+| Raiton | Agulha de Raio (1), Corrente Estática (1), Lança do Relâmpago (2), Armadura Elétrica (2), Punho do Trovão (3) |
+| Doton | Bala de Lama (1), Muralha de Pedra (1), Estacas de Terra (2), Colapso do Terreno (3) |
+| Fuuton | Lâmina de Vento (1), Rajada Cortante (2), Redemoinho Prisão (2), Tornado Cortante (3) |
 
 > Nota de PI (ADR-002): nenhum jutsu usa nome registrado do anime. O antigo
 > `raiton_chidori` / "Mil Pássaros" foi renomeado para `raiton_punho_trovao` /
-> "Raiton: Punho do Trovão" e passou a ser exclusivo da Nuvem; o pergaminho virou
-> `scroll_raiton_punho_trovao`.
+> "Raiton: Punho do Trovão"; o pergaminho virou `scroll_raiton_punho_trovao`.
 
-## Personagens e jutsus
+## Personagens e jutsus (Personagem + Elemento)
 
-A VILA continua sendo a vocação/facção (Folha, Névoa, Nuvem, Areia): decide town, elemento
-principal, skill bônus e quais outfits (looktype 900–909) o jogador pode escolher. Dentro da
-vila, cada OUTFIT agora é um **PERSONAGEM** com seu próprio conjunto fixo de jutsus (estilo
-NTO Ultimate, onde a vocação = o personagem escolhido) — trocar de personagem troca a barra de
-jutsus junto, sem mudar de vila.
+A VILA agora é só vocação/town: decide cidade inicial, NPCs, elemento "de referência" e a
+skill bônus — **não filtra mais jutsu**. Dentro da vila, cada OUTFIT (looktype 900–909) é um
+**PERSONAGEM** com identidade fixa de 4 jutsus **pessoais** (`personal_jutsus`, não
+elementais). Ao entrar no jogo o jogador escolhe PERSONAGEM + ELEMENTO e recebe, no nível
+máximo, os 4 pessoais + os 4 do elemento (`data/element_sets.json`) — 8 jutsus, prontos, sem
+precisar caçar level nem aprender nada depois. A progressão vira treino físico (level, skills),
+não aprendizado de jutsu.
 
 Fonte de verdade: `data/characters.json` (schema em `data/schemas/character.schema.json`).
-Cada entrada tem `id`, `name` (nome próprio, nunca do anime — ADR-002), `looktype` (900–909),
-`village` e uma lista ORDENADA de 5–8 `jutsus` (ids de `data/jutsus/*.json`, que precisam
-pertencer à `village` do personagem ou ser universais — `villages: []`).
+Cada entrada tem `id`, `name` (nome próprio, nunca do anime — ADR-002), `description` (1 frase
+de identidade), `looktype` (900–909), `village`, `default_element` (sugestão inicial, o
+jogador pode trocar) e `personal_jutsus`: lista ORDENADA de **exatamente 4** ids de
+`data/jutsus/*.json`, todos com `villages: []`.
 
-| id | Nome | Vila | Looktype | Jutsus |
+| id | Nome | Descrição | Vila | Elemento padrão | Jutsus pessoais |
+|---|---|---|---|---|---|
+| `genin_laranja` | Genin Laranja | Genin barulhento e teimoso que nunca desiste de um combate | Folha | Fuuton | Clone Sombrio, Kawarimi no Jutsu, Rasteira de Vento Leve, Vigor Teimoso |
+| `genin_uchiha` | Genin Uchiha | Genin frio e calculista, treinado para prever cada golpe do adversário | Folha | Katon | Foco Ocular, Agulhas Incendiárias, Contra-Ataque Calculado, Kawarimi no Jutsu |
+| `kunoichi_rosa` | Kunoichi Rosa | Médica-ninja de força descomunal e socos que racham o chão | Folha | Suiton | Shousen: Palma Curativa, Punho Suave, Soco Monstruoso, Kawarimi no Jutsu |
+| `herdeira_hyuga` | Herdeira Hyuga | Herdeira de um clã ocular, ataca pontos vitais de chakra com precisão cirúrgica | Névoa | Suiton | Palma Gentil, Fuuin: Selo de Contenção, Visão de Alcance Total, Palma Dupla |
+| `kunoichi_armas` | Kunoichi das Armas | Especialista em armas arremessadas, cobre o campo com lâminas e veneno | Névoa | Suiton | Agulhas Múltiplas, Lâmina de Chakra, Doku: Névoa Venenosa, Bunshin no Jutsu |
+| `ninja_verde` | Ninja Verde | Taijutsuísta puro que compensa a falta de chakra com força bruta e disciplina | Nuvem | Raiton | Punho Suave, Chute Giratório, Soco da Juventude, Chute Ascendente |
+| `ninja_abelha` | Ninja Abelha | Espadachim elétrico, rápido e obcecado por evoluir a cada combate | Nuvem | Raiton | Lâmina Relâmpago, Corte Duplo, Bainha Elétrica, Raio Selado |
+| `sabio_loiro` | Sábio Loiro | Sábio errante que domina selos de teleporte e ataques cirúrgicos à distância | Areia | Fuuton | Kawarimi no Jutsu, Kunai Marcada, Salto do Selo, Explosão do Selo |
+| `sabio_cerimonial` | Sábio Cerimonial | Sábio cerimonial que protege aliados com barreiras e selos sagrados | Areia | Doton | Fuuin: Selo de Contenção, Barreira Protetora, Selo de Exorcismo, Círculo de Selos |
+
+`kawarimi`, `punho_suave` e `fuuin_contencao` aparecem em mais de um personagem (no máximo 2
+cada) — são movimentos genéricos o bastante (substituição, golpe de chakra, selo de papel)
+para caber em identidades diferentes sem quebrar a fantasia de nenhuma delas.
+
+Jutsus pessoais novos criados para fechar as identidades (`data/jutsus/personal.json`, todos
+`villages: []`, `element` = `none` ou o elemento de sabor do personagem — não fazem parte de
+nenhum `element_sets.json`):
+
+| id | Nome | Elemento | Tipo | Personagem |
 |---|---|---|---|---|
-| `genin_laranja` | Genin Laranja | Folha | 900 | Fuuton: Lâmina de Vento, Kawarimi no Jutsu, Bunshin no Jutsu, Clone Sombrio, Fuuton: Rajada Cortante |
-| `genin_uchiha` | Genin Uchiha | Folha | 901 | Katon: Grande Bola de Fogo, Raiton: Agulha de Raio, Katon: Sopro de Brasas, Raiton: Corrente Estática, Katon: Flores de Fênix, Katon: Dragão de Fogo |
-| `kunoichi_rosa` | Kunoichi Rosa | Folha | 902 | Punho Suave, Kawarimi no Jutsu, Bunshin no Jutsu, Shousen: Palma Curativa, Chute Giratório |
-| `herdeira_hyuga` | Herdeira Hyuga | Névoa | 903 | Suiton: Projétil de Água, Suiton: Névoa Cortante, Suiton: Prisão de Água, Suiton: Dragão de Água, Suiton: Vórtice Devorador, Fuuin: Selo de Contenção |
-| `kunoichi_armas` | Kunoichi das Armas | Névoa | 905 | Agulhas Múltiplas, Kawarimi no Jutsu, Suiton: Névoa Cortante, Lâmina de Chakra, Doku: Névoa Venenosa |
-| `ninja_verde` | Ninja Verde | Nuvem | 904 | Punho Suave, Kawarimi no Jutsu, Bunshin no Jutsu, Doton: Muralha de Pedra, Chute Giratório |
-| `ninja_abelha` | Ninja Abelha | Nuvem | 909 | Raiton: Agulha de Raio, Raiton: Corrente Estática, Raiton: Lança do Relâmpago, Raiton: Armadura Elétrica, Raiton: Punho do Trovão |
-| `sabio_loiro` | Sábio Loiro | Areia | 907 | Fuuton: Lâmina de Vento, Raio Selado, Kawarimi no Jutsu, Fuuton: Rajada Cortante, Doton: Estacas de Terra |
-| `sabio_cerimonial` | Sábio Cerimonial | Areia | 908 | Fuuton: Lâmina de Vento, Doton: Muralha de Pedra, Fuuton: Rajada Cortante, Doton: Estacas de Terra, Doton: Colapso do Terreno |
+| `fuuton_rasteira_vento` | Rasteira de Vento Leve | fuuton | area | Genin Laranja |
+| `vigor_teimoso` | Vigor Teimoso | none | self | Genin Laranja |
+| `foco_ocular` | Foco Ocular | none | self | Genin Uchiha |
+| `agulhas_incendiarias` | Agulhas Incendiárias | katon | projectile | Genin Uchiha |
+| `contra_ataque_calculado` | Contra-Ataque Calculado | none | target | Genin Uchiha |
+| `soco_monstruoso` | Soco Monstruoso | none | target | Kunoichi Rosa |
+| `palma_gentil` | Palma Gentil | none | target | Herdeira Hyuga |
+| `visao_total` | Visão de Alcance Total | none | self | Herdeira Hyuga |
+| `palma_dupla` | Palma Dupla | none | area | Herdeira Hyuga |
+| `soco_da_juventude` | Soco da Juventude | none | target | Ninja Verde |
+| `chute_ascendente` | Chute Ascendente | none | target | Ninja Verde |
+| `lamina_relampago_pessoal` | Lâmina Relâmpago | raiton | target | Ninja Abelha |
+| `corte_duplo` | Corte Duplo | none | area | Ninja Abelha |
+| `bainha_eletrica` | Bainha Elétrica | raiton | self | Ninja Abelha |
+| `kunai_marcada` | Kunai Marcada | none | projectile | Sábio Loiro |
+| `salto_do_selo` | Salto do Selo | none | self | Sábio Loiro |
+| `explosao_do_selo` | Explosão do Selo | none | area | Sábio Loiro |
+| `barreira_protetora` | Barreira Protetora | none | self | Sábio Cerimonial |
+| `selo_de_exorcismo` | Selo de Exorcismo | none | target | Sábio Cerimonial |
+| `circulo_de_selos` | Círculo de Selos | none | area | Sábio Cerimonial |
 
-Jutsus novos criados para fechar identidades sem elemento suficiente (nomes próprios,
-`data/jutsus/neutral.json` e `raiton.json`):
+`raio_selado` (projétil de precisão, antes em `data/jutsus/raiton.json` com `villages:
+["sand"]`) virou pessoal do Ninja Abelha e mudou de arquivo para `data/jutsus/personal.json`
+(mesmo id, mesmos números, `villages: []`).
 
-| id | Nome | Tipo | Skill | Vilas |
-|---|---|---|---|---|
-| `clone_sombrio` | Clone Sombrio | self | genjutsu | universal |
-| `punho_suave` | Punho Suave | target | taijutsu | Folha, Nuvem |
-| `chute_giratorio` | Chute Giratório | area | taijutsu | Folha, Nuvem |
-| `agulhas_multiplas` | Agulhas Múltiplas | projectile | shuriken | Névoa |
-| `lamina_chakra` | Lâmina de Chakra | beam | shuriken | Névoa |
-| `raio_selado` | Raio Selado | projectile (raiton) | ninjutsu | Areia |
-
-Também foram ampliados os `villages` de alguns jutsus tier 1 já existentes para dar acesso
-elemental a personagens "hibridos" (ex.: `raiton_hari`/`raiton_corrente_estatica` ganharam
-Folha para o Genin Uchiha; `fuuton_lamina_vento`/`fuuton_rajada_cortante` ganharam Folha para
-o Genin Laranja; `doton_muralha_pedra` ganhou Nuvem para o Ninja Verde). Isso só amplia QUEM
-PODE aprender o jutsu (a checagem em `data/villages.json`/GM); quem efetivamente o conhece em
-cada momento é sempre o personagem ativo.
-
-### Servidor
-- Todo jutsu passa a ter `needlearn="1"` no `spells.xml`, **exceto `kawarimi`** (universal,
-  toda vila conhece — é a "esquiva básica"). Sem aprender, o servidor recusa o cast com
-  "You must learn this spell first.".
-- `server/generated/lib/naruto_characters.lua` (`NarutoCharacters`): tabela `list`/`byLook`/
-  `byId`/`byVillage`/`allJutsuNames`, gerada de `data/characters.json`.
-- `server/generated/scripts/naruto/character_switch.lua`: define `NarutoCharacters.apply(player,
-  looktype, opts)` — valida vila (a menos que `opts.force` ou o jogador seja GM), esquece os
-  jutsus de TODOS os personagens (exceto universais) e aprende só os do personagem escolhido,
-  troca o `lookType` do outfit, salva `storage 60001` e avisa "Personagem: X. Jutsus: ...".
-  Um `CreatureEvent onLogin` reaplica pelo storage a cada login. Talkaction `!personagem
-  [nome|id]` para jogadores (lista/troca só dentro da própria vila).
-- `village_outfit.lua` agora aplica, no primeiro login, o PRIMEIRO personagem de
-  `characters.json` daquela vila (via `NarutoCharacters.apply`) em vez de só `setOutfit`.
-- `/personagem <id|nome>` no `gm_tools.lua` troca para qualquer personagem (ignora vila);
-  `/jutsus` e `/god` passam a aprender só os jutsus do personagem atual (não todos).
+### Compatibilidade com o exportador
+`tools/export_tfs.py` já lê `personal_jutsus` (com fallback para o campo legado `jutsus`) e
+`data/element_sets.json`; por segurança, `characters.json` também grava um campo `jutsus` com
+o MESMO conteúdo de `personal_jutsus` em cada personagem (não editar um sem o outro —
+`tools/validate_data.py` acusa erro se divergirem).
 
 ### Cliente
 - `tools/export_tfs.py` gera `NarutoCharacterJutsus[looktype] = {id, name, village, words}` em

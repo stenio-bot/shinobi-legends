@@ -149,6 +149,48 @@ function fillActionBarForCharacter(looktype, force)
     return true
 end
 
+--- Preenche a barra inferior 1 com uma lista qualquer de selos (words).
+--- Exposto para o menu Shinobi (modules/naruto_menu): ele passa os selos dos 8
+--- jutsus ativos que o servidor mandou no opcode 210, que nao tem nada a ver
+--- com o looktype do personagem. Mesmo formato de gravacao do
+--- fillActionBarForCharacter (ApiJson.createOrUpdateText / chatText+enviar).
+function fillActionBarWithWords(words, setName)
+    local ab = modules.game_actionbar
+    if not ab or not ab.ApiJson or not ab.selectHotkeySet then
+        return false
+    end
+    if type(words) ~= 'table' or #words == 0 then
+        return false
+    end
+    setName = setName or 'shinobi_menu' -- ascii/snake_case: vira chave no JSON
+
+    local api = ab.ApiJson
+    if ab.createHotkeySet then
+        ab.createHotkeySet(setName) -- devolve false se ja existir; tudo bem
+    end
+    ab.selectHotkeySet(setName)
+
+    for i = 1, MAX_SLOTS do
+        local w = words[i]
+        if w then
+            api.createOrUpdateText(BOTTOM_BAR, i, w, true)
+            if api.updateActionBarHotkey then
+                api.updateActionBarHotkey('TriggerActionButton_' .. BOTTOM_BAR .. '.' .. i, 'F' .. i)
+            end
+        elseif api.removeAction then
+            api.removeAction(BOTTOM_BAR, i)
+        end
+    end
+    api.saveData()
+    ab.selectHotkeySet(setName) -- recria os botoes da barra a partir do JSON
+    -- o conjunto atual deixou de ser o do personagem: o proximo onOutfitChange
+    -- (ou o proximo login) volta a montar a barra pelo looktype.
+    lastCharacterLooktype = nil
+    log('barra ' .. BOTTOM_BAR .. ' do conjunto "' .. setName .. '" preenchida com ' ..
+            #words .. ' jutsus (menu Shinobi)')
+    return true
+end
+
 --- Dispara quando QUALQUER creature muda de outfit; filtra para o jogador local.
 local function onCreatureOutfitChange(creature, outfit, oldOutfit)
     local player = g_game.getLocalPlayer()

@@ -183,6 +183,54 @@ Regras que mantêm o tier 3 sendo o "show" sem virar obrigatório:
   elemental vale mais que subir um tier — isso é intencional e é o que faz o jogador
   trocar de jutsu por área em vez de spammar o mais caro.
 
+### Jutsus novos criados (Personagem + Elemento: 4 + 4)
+
+Fechando os `element_sets.json` (doton tinha só 3 jutsus, fuuton só 2) e as 36 vagas de
+`personal_jutsus` (9 personagens × 4), com a curva de tier acima.
+
+**Elementais (`data/jutsus/doton.json`, `data/jutsus/fuuton.json`):**
+
+| id | Tier | Tipo | chakra | cooldown_s | base_damage | level_scale | skill_scale | Efeito |
+|---|---|---|---|---|---|---|---|---|
+| `doton_bala_lama` | 1 | projectile | 14 | 1.8 | 23 | 1.1 | 0.85 | slow 30% / 3s |
+| `fuuton_tornado_cortante` | 3 | beam (line_6) | 62 | 8.0 | 75 | 2.0 | 1.2 | slow 60% / 4s |
+| `fuuton_redemoinho_prisao` | 2 | target (controle) | 38 | 9.0 | 20 | 0.8 | 1.0 | paralyze 75% / 3s |
+
+`doton_bala_lama` fecha a categoria "projétil básico" que faltava no elemento (os outros 3
+jutsus de doton já existiam: muralha de pedra self, estacas de terra área, colapso do terreno
+área forte). `fuuton_tornado_cortante` e `fuuton_redemoinho_prisao` fecham "beam/linha forte"
+e "utilitário/controle" que faltavam em fuuton (só existiam projétil e área).
+
+**Pessoais (`data/jutsus/personal.json`, 20 jutsus — 16 restantes das 36 vagas reusam jutsus
+já existentes, ver `docs/sistemas/vilas-e-clas.md`):**
+
+| id | Tier | Tipo | chakra | cooldown_s | base_damage | Efeito |
+|---|---|---|---|---|---|---|
+| `fuuton_rasteira_vento` | 1 | area (cone_2) | 14 | 3.0 | 12 | slow 40% / 2s |
+| `vigor_teimoso` | 1 | self | 30 | 18.0 | 0 | heal_over_time 7/s por 6s |
+| `foco_ocular` | 1 | self | 26 | 14.0 | 0 | heal_over_time 5/s por 5s |
+| `agulhas_incendiarias` | 1 | projectile | 14 | 2.0 | 19 | burn 30% / 4s |
+| `contra_ataque_calculado` | 2 | target | 20 | 6.0 | 28 | stun 30% / 1s |
+| `soco_monstruoso` | 2 | target | 24 | 4.0 | 34 | stun 35% / 1s |
+| `palma_gentil` | 1 | target | 16 | 2.0 | 22 | slow 30% / 3s |
+| `visao_total` | 1 | self | 22 | 16.0 | 0 | heal_over_time 5/s por 5s |
+| `palma_dupla` | 2 | area (cone_2) | 36 | 5.0 | 38 | paralyze 40% / 1.5s |
+| `soco_da_juventude` | 2 | target | 26 | 4.5 | 36 | stun 30% / 1s |
+| `chute_ascendente` | 1 | target | 16 | 2.5 | 20 | slow 30% / 2s |
+| `lamina_relampago_pessoal` | 1 | target | 22 | 2.2 | 26 | paralyze 20% / 1s |
+| `corte_duplo` | 2 | area (cone_2) | 32 | 4.5 | 32 | — |
+| `bainha_eletrica` | 2 | self | 34 | 16.0 | 0 | heal_over_time 9/s por 8s |
+| `kunai_marcada` | 1 | projectile | 14 | 1.8 | 18 | — (marca alvo p/ `salto_do_selo`) |
+| `salto_do_selo` | 1 | self | 28 | 10.0 | 0 | teleporte até a marca |
+| `explosao_do_selo` | 2 | area (circle_r1) | 46 | 7.0 | 48 | stun 40% / 1s |
+| `barreira_protetora` | 2 | self | 38 | 18.0 | 0 | heal_over_time 9/s por 8s |
+| `selo_de_exorcismo` | 2 | target | 34 | 6.0 | 30 | paralyze 40% / 2s |
+| `circulo_de_selos` | 2 | area (circle_r2) | 44 | 8.0 | 26 | paralyze 50% / 2.5s |
+
+Todos seguem a regra da seção acima: `self`/utilitário sem dano compra sobrevivência
+(`heal_over_time`) ou controle (`paralyze`/`stun`/`slow`), nunca os dois ao mesmo tempo; tier 2
+custa ~2× o chakra do tier 1 pelo dobro (ou mais) de `base_damage`.
+
 ## 7. Distribuição elemental por área
 
 Toda área tem pelo menos 3 elementos diferentes para que o ciclo elemental importe e

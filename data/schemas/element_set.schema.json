@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ElementSet",
+  "description": "Kit de 4 jutsus elementais que o jogador recebe ao escolher um elemento (independente de vila).",
+  "type": "object",
+  "required": ["id", "name", "jutsus"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"enum": ["katon", "suiton", "doton", "fuuton", "raiton"]},
+    "name": {"type": "string", "description": "Nome em pt-BR mostrado na escolha de elemento (ex.: 'Fogo')."},
+    "jutsus": {
+      "type": "array",
+      "description": "Ordem de uso: 1 projétil básico, 1 área/cone, 1 beam/linha forte, 1 utilitário/defensivo ou controle.",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+      "uniqueItems": true
+    }
+  }
+}

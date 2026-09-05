@@ -151,10 +151,7 @@
     "skill_scale": 0.9,
     "skill": "taijutsu",
     "required_level": 3,
-    "villages": [
-      "leaf",
-      "cloud"
-    ],
+    "villages": [],
     "tier": 1,
     "effects": [
       {
@@ -182,10 +179,7 @@
     "skill_scale": 1.0,
     "skill": "taijutsu",
     "required_level": 14,
-    "villages": [
-      "leaf",
-      "cloud"
-    ],
+    "villages": [],
     "tier": 2,
     "animation": "fx_taijutsu_spin",
     "sfx": "sfx_whirl"
@@ -204,9 +198,7 @@
     "skill_scale": 0.9,
     "skill": "shuriken",
     "required_level": 1,
-    "villages": [
-      "mist"
-    ],
+    "villages": [],
     "tier": 1,
     "animation": "fx_needles",
     "sfx": "sfx_metal_throw"
@@ -226,9 +218,7 @@
     "skill_scale": 1.1,
     "skill": "shuriken",
     "required_level": 20,
-    "villages": [
-      "mist"
-    ],
+    "villages": [],
     "tier": 2,
     "animation": "fx_chakra_blade",
     "sfx": "sfx_slash"

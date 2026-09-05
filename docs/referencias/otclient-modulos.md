@@ -61,3 +61,52 @@ base edubart rev 2.760, C++20 + Lua/OTUI + renderer HTML/CSS, MIT).
 ## Comunicação com servidor custom
 - `Controller:registerExtendedOpcode(op, fn)` / `sendExtendedOpcode(op, json)` — padrão de `game_shop` e locales.
   Caminho mais barato para rank ninja, clãs, missões, elementos, sem tocar no protocolo C++.
+
+## Módulos próprios do Shinobi Legends (`modules/naruto_*`)
+
+Convenção: módulo próprio, `sandboxed: true`, nunca editar os `game_*` originais além do
+mínimo. Cada um expõe suas funções globais do sandbox como `modules.<nome>.<fn>`.
+
+| Módulo | Prioridade | O que faz |
+|---|---|---|
+| `naruto_theme` | 600 | traduções (Mana→Chakra, skills, vilas) via `installLocale`; registra o perfil de spelllist `Shinobi` e monta a barra de ação (`naruto_jutsus.lua`); dados gerados em `jutsus_data.lua` |
+| `naruto_menu` | 1100 | janela **Shinobi** (Personagem / Elemento / Jutsus / Comandos) + noclip de GM; conversa com o servidor pelo **opcode estendido 210** |
+
+### Faixas de `autoload-priority` (init.lua)
+
+`autoLoadModules(99)` (libs) → `autoLoadModules(499)` + `client` → `autoLoadModules(999)` +
+`game_interface` → `autoLoadModules(9999)` + `client_mods` → `<compactName>rc.lua`.
+**Para carregar DEPOIS do `game_interface` (e portanto depois do `game_mainpanel`,
+`game_actionbar` etc., que são `load-later` dele) a prioridade precisa estar em 1000–9999.**
+É por isso que o `naruto_menu` usa 1100 e o `naruto_theme`, que só mexe em locale, usa 600.
+
+### API usada pelo `naruto_menu` (bons exemplos para módulos futuros)
+
+- `Controller:new()` + `menuController:init()/terminate()` no `.otmod`; o Controller limpa
+  sozinho eventos, keybinds, scheduleEvents e opcodes no terminate.
+- `controller:registerExtendedOpcode(210, fn)` / `controller:sendExtendedOpcode(210, json)`;
+  o callback recebe `(protocol, code, buffer)`. `json.encode`/`json.decode` do corelib.
+- `modules.game_mainpanel.addToggleButton(id, tooltip, image, callback, front, index)` para o
+  botão no painel direito; `Keybind.new(cat, action, 'Ctrl+J', '')` + `Keybind.bind(...)` para
+  o atalho (e `Keybind.delete` no terminate).
+- `UICreature` (`setOutfit`, `setCreatureSize`, `setCenter`, `getCreature():setDirection`) para
+  preview de personagem — mesmo widget do `game_outfit`.
+- `UITabBar`: `setContentWidget(painel)` **antes** de `addTab(texto, painel)`; `getTab(texto)` e
+  `selectTab(tab)`. `removeTab` destrói o `tabPanel` junto.
+
+### Armadilhas de OTUI já encontradas
+
+- **Lista rolável:** a `ScrollablePanel` é a *janela* (ancorada em cima e embaixo, altura fixa,
+  `vertical-scrollbar: <id do irmão>`), e quem cresce é um `Panel` DENTRO dela com
+  `layout: verticalBox` + `fit-children: true` — é o padrão do `MiniWindowContents`
+  (`30-miniwindow.otui`). Pôr `fit-children` na própria `ScrollablePanel` ancorada
+  top+bottom faz layout e âncoras brigarem para sempre: **o cliente trava antes de abrir a
+  janela, sem nada no log**.
+- Só **filhos diretos** com `id` viram campo Lua do pai (`UIWidget::setId` →
+  `parent->setLuaField`). Neto precisa de `recursiveGetChildById` (ou guardar o atalho).
+- Aliases `&cor` do OTML são **por documento**; por isso a paleta de `50-ninja.otui` é copiada
+  dentro do `naruto_menu.otui`.
+- Um `.otui` só instancia os nós SEM `<`; `Estilo < Base` é definição. O nó raiz instanciado
+  (`MainWindow`) é o que o `g_ui.displayUI('naruto_menu')` devolve.
+- Texto vindo do servidor é UTF-8; as fontes são bitmaps indexados por byte. Converter para
+  cp1252 antes de exibir (`utf8ToCp1252` no `naruto_menu.lua`).
