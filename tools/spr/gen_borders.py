@@ -44,6 +44,7 @@ import argparse
 import math
 import os
 import sys
+import zlib
 
 from PIL import Image
 
@@ -56,12 +57,20 @@ ROOT = GT.ROOT
 OUT_DIR = os.path.join(ROOT, "assets-src", "sprites", "terrain", "borders")
 
 # par -> (paleta do material ALTO, paleta do material baixo so p/ contato/sombra)
+# hierarquia (docs/sistemas/mapas.md#autoborder): agua < areia < lama < terra <
+# grama < cobble. grass_sand/sand_water sao os 2 pares novos da Costa das Mares
+# (antes so' um corte reto — nao existia par de areia nenhum).
 PAIRS = {
     "grass_dirt": (GT.P_GRASS, GT.P_DIRT),
     "grass_water": (GT.P_GRASS, GT.P_WATER),
     "grass_mud": (GT.P_GRASS, GT.P_MUD),
     "cobble_dirt": (GT.P_COBBLE, GT.P_DIRT),
+    "grass_sand": (GT.P_GRASS, GT.P_SAND),
+    "sand_water": (GT.P_SAND, GT.P_WATER),
 }
+#: pares cuja borda de contato usa espuma/areia clara (margem de agua) em vez
+#: da sombra escura de contato padrao dos pares terrosos.
+WATER_EDGE_PAIRS = ("grass_water", "sand_water")
 
 EDGES = ("n", "s", "e", "w")
 OUTER = ("cnw", "cne", "csw", "cse")
@@ -107,12 +116,24 @@ def _depth_profile(seed, base=4.5, amp=1.7, jitter=0.7, n=CELL):
     return [max(1.5, sm[i] + (rnd.f() - 0.5) * jitter) for i in range(n)]
 
 
+def _stable_hash(s):
+    """zlib.crc32, NAO o hash() embutido do Python: hash() de str e' salgado
+    por processo (PYTHONHASHSEED) — rodar `gen_borders.py` de novo SEM
+    nenhuma mudanca de codigo ja bastava pra toda peca (inclusive pares
+    antigos como grass_dirt) sair com uma curva diferente a cada execucao.
+    Bug pre-existente encontrado ao regenerar as bordas pra missao "decor v2"
+    (2026-09-05): o mesmo cuidado que `build_valley._border_variant` ja tinha
+    (crc32, nao hash()) faltava aqui. crc32 e' deterministico entre
+    execucoes — rodar o gerador duas vezes sem mudar nada da' o MESMO PNG."""
+    return zlib.crc32(s.encode("utf-8"))
+
+
 def _profiles(pair_key):
     """4 curvas (norte/sul/leste/oeste) do par, todas da MESMA familia (mesmo
     base/amp/estilo, sementes derivadas de uma raiz comum) — os cantos as
     REUSAM diretamente (nunca inventam uma forma propria), o que garante que
     reta e canto concordem em amplitude e "caligrafia" da onda."""
-    root = abs(hash(pair_key)) % 90000
+    root = _stable_hash(pair_key) % 90000
     return {
         "n": _depth_profile(root + 11),
         "s": _depth_profile(root + 227),
@@ -122,7 +143,7 @@ def _profiles(pair_key):
 
 
 def _profiles_variant(pair_key):
-    root = abs(hash(pair_key + "_v2")) % 90000
+    root = _stable_hash(pair_key + "_v2") % 90000
     return {
         "n": _depth_profile(root + 11),
         "s": _depth_profile(root + 227),
@@ -233,12 +254,14 @@ def _texture_hi(pair_key, hi_pal):
     grama, pedras de calcada — e ficava com "cara de mancha cinza")."""
     if pair_key.startswith("cobble"):
         return GT.cobble(1)
+    if pair_key.startswith("sand"):
+        return GT.sand(1)
     return GT.grass(1)
 
 
 def make_piece(pair_key, piece, hi_pal, lo_pal, is_water):
     mask = _mask_for_piece(pair_key, piece)
-    rnd = GT.Rnd((abs(hash(pair_key + piece)) % 90000) + 3)
+    rnd = GT.Rnd((_stable_hash(pair_key + piece) % 90000) + 3)
     mask = _dither_edge(mask, rnd)
 
     tex = _texture_hi(pair_key, hi_pal)
@@ -322,7 +345,7 @@ def build(sheet_only=False):
     all_imgs = {}
     n = 0
     for pk, (hi_pal, lo_pal) in PAIRS.items():
-        is_water = pk == "grass_water"
+        is_water = pk in WATER_EDGE_PAIRS
         for piece in PIECES:
             img = make_piece(pk, piece, hi_pal, lo_pal, is_water)
             img = GT.outline(img)

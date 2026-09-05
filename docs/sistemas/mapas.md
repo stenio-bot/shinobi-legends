@@ -561,6 +561,10 @@ alto de todos, o par foi implementado como `cobble_dirt` — cobblestone
 invadindo terra —, e não o contrário, para não contradizer a própria
 hierarquia que define o algoritmo.)
 
+> **v2 (2026-09-05)**: mais 2 pares (`grass_sand`, `sand_water`) e a
+> hierarquia ganhou `areia` entre água e lama — ver "Decoração de praia e
+> mobiliário do santuário (v2)" no final deste arquivo.
+
 As 12 peças base por par: `n, s, e, w` (bordas retas), `cnw, cne, csw, cse`
 (cantos EXTERNOS: o alto só toca a diagonal, uma língua curta) e `icnw,
 icne, icsw, icse` (cantos INTERNOS: o alto cerca as duas laterais que formam
@@ -738,6 +742,12 @@ ficam em `assets-src/sprites/tiles_decor.json` (mesmo esquema do
 listas antes de rodar `tools/spr/allocate_ids.py` (que só lê `tiles.json`) —
 por isso as entradas de `tiles_decor.json` **não têm `server_id`/`client_id`**
 ainda.
+
+> **v2 (2026-09-05)**: cadeira, estátua de santuário, lanterna de pedra e
+> decor de praia (concha, pedra molhada, poste de amarração, madeira
+> encalhada) entraram direto em `tiles.json` (sem o arquivo separado — não
+> havia edição concorrente de bordas desta vez). Ver "Decoração de praia e
+> mobiliário do santuário (v2)" no final deste arquivo.
 
 ### Arte (`tools/spr/gen_decor.py`)
 
@@ -1019,24 +1029,21 @@ arquivo compartilhado enquanto a outra sessão ainda estava ativa.
 
 ### Pendências da v2.1 (2026-09-04/05)
 
-- **Item vanilla 1442 ("statue") e 1650 ("wooden chair") não renderizam no
-  cliente real** deste projeto (ficam invisíveis ou viram um losango cinza
-  genérico), apesar de presentes corretamente no `.otbm` (conferido lendo o
-  arquivo instalado) e de terem client id dentro da faixa normal de outros
-  itens que renderizam bem. A estátua foi trocada por `CAMPFIRE` (1428,
-  confirmado renderizando) no altar do templo; a cadeira da Taverna
-  (`build_tavern_interior`) foi mantida mesmo assim, por ser só decoração
-  não-bloqueante. Suspeita: lacuna no `Tibia.dat`/`.spr` próprio do projeto
-  (`tools/spr/`) para ids vanilla nunca antes colocados no mapa — fora do
-  escopo de `tools/map/`; recomendo o agente de sprites conferir a cobertura
-  desses 2 ids (e de qualquer outro item "nunca usado" antes de plantar no
-  mapa) antes de reaproveitar.
-- **Fronteira grama↔areia da Costa das Marés é um corte reto** — não existe
-  par de borda `grass_sand` em `assets-src/sprites/tiles.json` (só
-  `grass_dirt`, `grass_water`, `grass_mud`, `cobble_dirt`). Documentado
-  conforme instrução da missão; se um agente de sprites quiser, o par
-  seguiria a mesma receita de `tools/spr/gen_borders.py` (curva-base +
-  derivação das 12 peças).
+- ~~Item vanilla 1442 ("statue") e 1650 ("wooden chair") não renderizam no
+  cliente real~~ **Resolvido (missão "decor v2", 2026-09-05)** — causa raiz
+  encontrada (não era só suspeita): os dois clientIds apontavam para o
+  **mesmo** sprite quase vazio no `Tibia.spr` do projeto (25 de 1024px
+  opacos, um pontinho de ~2px — visto exportando com `sprformat.py`/
+  `dump_dat.py --thing`), não um buraco de cobertura. Os dois foram
+  substituídos por itens NOVOS com arte de verdade: `shrine_statue_gray` no
+  altar do templo e `wood_chair_east`/`wood_chair_west` na Taverna. Ver
+  "Decoração de praia e mobiliário do santuário (v2)" abaixo.
+- ~~Fronteira grama↔areia da Costa das Marés é um corte reto~~ **Resolvido
+  (missão "decor v2", 2026-09-05)** — pares `grass_sand`/`sand_water` novos
+  em `tools/spr/gen_borders.py`, mesma receita (curva-base + derivação das 12
+  peças) dos 4 pares existentes; a areia também ganhou textura própria
+  (`gen_terrain.sand()`) no lugar do quadrado cinza genérico. Ver seção
+  "Autoborder" (hierarquia atualizada) e "Decoração de praia..." abaixo.
 - **Mestre de Tarefas Umi/Kuro (Costa das Marés / Covil) não aparecem no
   jogo**, mesmo com x/y atualizados em `data/npcs/*.json`: nenhum "Mestre de
   Tarefas" do jogo tem NPC XML exportado ainda (`server/tfs/data/npc/` não
@@ -1055,3 +1062,96 @@ arquivo compartilhado enquanto a outra sessão ainda estava ativa.
 - A Arena do boss da Costa das Marés e o Covil da Nuvem Vermelha não têm
   waypoint OTBM próprio ainda (só as zonas antigas do Vale da Folha têm,
   ver "Waypoints gravados" acima) — cosmético, não afeta jogabilidade.
+
+## Decoração de praia e mobiliário do santuário (v2, 2026-09-05)
+
+Resposta ao tour in-game do mapa v2.1 (3 lacunas: cadeira/estátua vanilla
+invisíveis, sem borda de areia, Costa das Marés pobre em decoração — ver
+"Pendências da v2.1" acima, agora marcadas resolvidas).
+
+### Itens novos (`tools/spr/gen_decor.py` + `assets-src/sprites/tiles.json`)
+
+| Chave | O quê | Grupo/flags |
+|---|---|---|
+| `wood_chair_east` / `wood_chair_west` | cadeira de madeira, 2 orientações (encosto do lado oposto a quem senta) | `furniture`, `walkable: false` |
+| `shrine_statue_gray` / `shrine_statue_mossy` | estátua de guardião de santuário (jizo), pedra crua / com musgo | `decoration`, `walkable: false`, `has_height: true` |
+| `stone_lantern` | lanterna de pedra (toro) acesa, 2 fases de chama | `decoration`, `walkable: false`, `has_height: true`, `light` (igual a `street_torch`) |
+| `seashell_spiral` / `seashell_fan` | conchas (cone/caramujo e leque/vieira) | `decoration`, `walkable: true`, `pickupable: true` |
+| `wet_rock` | pedra escura molhada pela maré, com poça rasa | `decoration`, `walkable: true` |
+| `mooring_post` | poste de amarração do cais, com corda enrolada | `decoration`, `walkable: false`, `has_height: true` |
+| `driftwood` | galho de madeira encalhado, esbranquiçado pelo sal | `decoration`, `walkable: true` |
+
+10 itens novos, server ids 30376–30385 (client ids 24102–24111,
+`assets-src/sprites/allocations.json`). Substituem o uso dos ids VANILLA
+1442 ("statue") e 1650 ("wooden chair") em `tools/map/build_regions.py`
+(`build_tavern_interior`, `upgrade_village`).
+
+**Causa raiz do bug antigo** (não só suspeita, confirmada): exportando os
+sprites de clientId 2025 (1442) e 2358 (1650) com
+`tools/spr/sprformat.py`/`dump_dat.py --thing`, os dois apontam para o
+**mesmo** sprite — um pontinho de ~2px opaco num quadro 32×32 quase
+inteiramente transparente (25 de 1024px). Não é um buraco de cobertura no
+`.dat` (o thing existe, tem grupo/flags corretos): é o placeholder genérico
+de `gen_placeholders.py` para itens sem regra de estilo compatível. Ficou
+fora do escopo desta missão consertar o placeholder genérico desses 2 ids
+vanilla especificamente (poderia afetar outros itens que usam o mesmo
+sprite); a solução adotada foi dar aos dois um substituto NOVO com arte de
+verdade.
+
+### Areia com textura própria (`gen_terrain.sand()` + `overrides/10_terrain.json`)
+
+A areia da Costa das Marés (ids vanilla 104/231/9059) não tinha NENHUM
+override em `overrides/10_terrain.json` — caía na regra de estilo genérica
+do `gen_placeholders.py` e virava um quadrado liso/pontilhado cinza (o "praia
+lisa com quadrados cinza" do relato). `gen_terrain.py` ganhou `P_SAND_V4` +
+`sand(v)` (mesma família de baixo contraste de `grass()`/`mud()`: campo fbm
+único, 3 tons próximos, decoração esparsa de grãos/sombra rasa) — 3 PNGs
+(`sand_0/1/2`), 2 usados via override (104→sand_0, 231+9059→sand_1, que já
+compartilham client id no OTB).
+
+### Autoborder: grama↔areia e areia↔água
+
+`tools/spr/gen_borders.py` ganhou os pares `grass_sand` e `sand_water` (16
+peças cada — 12 base + 4 variantes retas — mesma receita de curva-base única
+do v2, reusando `GT.sand(1)` como textura do material alto em `sand_water`).
+32 itens novos `border_grass_sand_*`/`border_sand_water_*` em
+`assets-src/sprites/tiles.json`, server ids 30344–30375 (client ids
+24070–24101). A hierarquia de materiais (ver "Autoborder" acima) passou de
+`água < lama < terra < grama < cobble` para **`água < areia < lama < terra <
+grama < cobble`**: `tools/map/build_valley.py` ganhou `SAND`/`_SAND_SET`,
+`classify_ground` reconhece areia, `BORDER_INVADERS["water"]` agora inclui
+`sand` (além de `grass`) e `BORDER_INVADERS["sand"] = ("grass",)`,
+`_MATERIAL_RANK` foi renumerado para caber `sand` entre `water` e `mud`.
+
+### `tools/map/build_regions.py`
+
+- `upgrade_village`: cadeiras da Taverna (2 mesas × 2 cadeiras) agora usam
+  `wood_chair_east`/`wood_chair_west` viradas para a mesa, no lugar do 1650.
+- Altar do templo: `shrine_statue_gray` atrás da `CAMPFIRE` (mantida — já
+  confirmada renderizando e "chama eterna diante do guardião" combina com o
+  nome do templo) + 2 `stone_lantern` flanqueando (no lugar das 2 tochas de
+  parede antigas), no lugar do 1442.
+- `build_coastal_tides`: decor de praia espalhado com densidade esparsa
+  (`rng.random() < 0.05` por tile de areia elegível, mesmo padrão de
+  `tools/map/decor.py.place_forest_decor`) — conchas/pedra molhada/madeira
+  encalhada — + 4 postes de amarração fixos junto ao cais (deslocados 2 tiles
+  da faixa central por onde se anda, não bloqueiam o caminho). 36 itens no
+  total nesta rodada de build.
+
+### Validação in-game (`client-otc/shinobirc.lua` temporário, 3 sessões)
+
+Login `god`/`god`, `/god` + `/tp x,y,z`, screenshots `screenshots/decor_v2_*.png`:
+
+| # | Ponto | Confirmado no screenshot |
+|---|---|---|
+| 01 | Taverna (interior) | 2 mesas + 4 cadeiras novas visíveis, orientadas para a mesa |
+| 02/03 | Templo (altar) | estátua cinza + fogueira acesa + 2 lanternas de pedra com brilho, todos visíveis |
+| 05 | Costa das Marés (praia) | areia com textura (não mais quadrados cinza) + conchas/pedra molhada/madeira encalhada/caixotes |
+| 06 | Costa das Marés (cais) | borda areia↔água ondulada (sem corte reto) + 2 postes de amarração |
+| 08 | Costa das Marés (trilha→praia) | borda grama↔areia ondulada, sem corte reto |
+
+Log do servidor sem novos `[Warning - Items::…]`. `tools/spr/dump_dat.py`
+(`validacao: OK, divergencias=0`), `tools/spr/test_otb_roundtrip.py`
+(`RESULTADO: OK`) e `tools/map/walk_audit.py` (0 divergências novas —
+as 2 únicas divergências reportadas são portas fechadas pré-existentes,
+não relacionadas a esta missão) rodados após o build.

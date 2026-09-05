@@ -38522,6 +38522,102 @@
 <item id="30343" name="borda cobblestone/terra (w, variante 2)">  
 	<attribute key="description" value="Borda de cobblestone/terra avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
 </item>
+<item id="30344" name="borda grama/areia (norte)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (norte)."/>
+</item>
+<item id="30345" name="borda grama/areia (sul)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (sul)."/>
+</item>
+<item id="30346" name="borda grama/areia (leste)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (leste)."/>
+</item>
+<item id="30347" name="borda grama/areia (oeste)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (oeste)."/>
+</item>
+<item id="30348" name="borda grama/areia (cnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto externo noroeste)."/>
+</item>
+<item id="30349" name="borda grama/areia (cne)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto externo nordeste)."/>
+</item>
+<item id="30350" name="borda grama/areia (csw)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto externo sudoeste)."/>
+</item>
+<item id="30351" name="borda grama/areia (cse)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto externo sudeste)."/>
+</item>
+<item id="30352" name="borda grama/areia (icnw)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto interno noroeste)."/>
+</item>
+<item id="30353" name="borda grama/areia (icne)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto interno nordeste)."/>
+</item>
+<item id="30354" name="borda grama/areia (icsw)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto interno sudoeste)."/>
+</item>
+<item id="30355" name="borda grama/areia (icse)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (canto interno sudeste)."/>
+</item>
+<item id="30356" name="borda grama/areia (norte, variante 2)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30357" name="borda grama/areia (sul, variante 2)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30358" name="borda grama/areia (leste, variante 2)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30359" name="borda grama/areia (oeste, variante 2)">  
+	<attribute key="description" value="Borda de grama avancando sobre areia (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30360" name="borda areia/agua (norte)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (norte)."/>
+</item>
+<item id="30361" name="borda areia/agua (sul)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (sul)."/>
+</item>
+<item id="30362" name="borda areia/agua (leste)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (leste)."/>
+</item>
+<item id="30363" name="borda areia/agua (oeste)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (oeste)."/>
+</item>
+<item id="30364" name="borda areia/agua (cnw)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto externo noroeste)."/>
+</item>
+<item id="30365" name="borda areia/agua (cne)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto externo nordeste)."/>
+</item>
+<item id="30366" name="borda areia/agua (csw)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto externo sudoeste)."/>
+</item>
+<item id="30367" name="borda areia/agua (cse)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto externo sudeste)."/>
+</item>
+<item id="30368" name="borda areia/agua (icnw)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto interno noroeste)."/>
+</item>
+<item id="30369" name="borda areia/agua (icne)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto interno nordeste)."/>
+</item>
+<item id="30370" name="borda areia/agua (icsw)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto interno sudoeste)."/>
+</item>
+<item id="30371" name="borda areia/agua (icse)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (canto interno sudeste)."/>
+</item>
+<item id="30372" name="borda areia/agua (norte, variante 2)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30373" name="borda areia/agua (sul, variante 2)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30374" name="borda areia/agua (leste, variante 2)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30375" name="borda areia/agua (oeste, variante 2)">  
+	<attribute key="description" value="Borda de areia avancando sobre agua (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
 <item id="30298" name="tábua da ponte">  
 	<attribute key="description" value="Tábuas firmes de uma ponte de madeira."/>
 </item>
@@ -38611,6 +38707,36 @@
 </item>
 <item id="30327" name="pedra do caminho">  
 	<attribute key="description" value="Uma pedra solta, parte de uma trilha."/>
+</item>
+<item id="30376" name="cadeira de madeira (leste)">  
+	<attribute key="description" value="Uma cadeira de madeira simples, virada para leste."/>
+</item>
+<item id="30377" name="cadeira de madeira (oeste)">  
+	<attribute key="description" value="Uma cadeira de madeira simples, virada para oeste."/>
+</item>
+<item id="30378" name="estatua de guardiao de santuario">  
+	<attribute key="description" value="Uma estatua de pedra em forma de guardiao de santuario, maos postas em oracao."/>
+</item>
+<item id="30379" name="estatua de guardiao de santuario (com musgo)">  
+	<attribute key="description" value="Uma estatua de pedra antiga, coberta de musgo nos ombros e no chapeu."/>
+</item>
+<item id="30380" name="lanterna de pedra">  
+	<attribute key="description" value="Uma lanterna de pedra (toro) num santuario, sempre acesa."/>
+</item>
+<item id="30381" name="concha em espiral">  
+	<attribute key="description" value="Uma concha em espiral, trazida pela mare."/>
+</item>
+<item id="30382" name="concha em leque">  
+	<attribute key="description" value="Uma concha em forma de leque, ainda umida."/>
+</item>
+<item id="30383" name="pedra molhada">  
+	<attribute key="description" value="Uma pedra escura, molhada pela mare, com uma poca rasa ao redor."/>
+</item>
+<item id="30384" name="poste de amarracao">  
+	<attribute key="description" value="Um poste de amarracao do cais, com uma corda enrolada."/>
+</item>
+<item id="30385" name="madeira encalhada">  
+	<attribute key="description" value="Um galho de madeira encalhado na praia, esbranquicado pelo sal."/>
 </item>
 <!-- NARUTO:END -->
 </items>

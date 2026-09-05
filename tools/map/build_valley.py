@@ -68,35 +68,44 @@ STONE_FLOOR = 431                                # stone floor (praça/templo)
 WOOD_FLOOR = 405                                 # wooden floor (interiores)
 MUD = [19947, 354, 355, 11145]                   # swamp mud / muddy floor
 WATER = 4608                                     # shallow water (bloqueia)
+SAND = [104, 231, 9059]                          # areia de praia (Costa das Mares)
 
 # --------------------------------------------------------- autoborder (chao)
-# Hierarquia agua < lama < terra < grama < cobble: o material mais ALTO manda
-# uma faixa ondulada (item border_<par>_<peca> de assets-src/sprites/tiles.json,
-# arte em tools/spr/gen_borders.py) por cima do tile do material mais BAIXO.
-# So os 4 pares com arte gerada sao tratados; qualquer outra vizinhanca (p.ex.
-# grama/cobble, chao de pedra/madeira dos predios) fica sem borda.
+# Hierarquia agua < areia < lama < terra < grama < cobble: o material mais
+# ALTO manda uma faixa ondulada (item border_<par>_<peca> de
+# assets-src/sprites/tiles.json, arte em tools/spr/gen_borders.py) por cima do
+# tile do material mais BAIXO. So os pares com arte gerada sao tratados;
+# qualquer outra vizinhanca (p.ex. grama/cobble, chao de pedra/madeira dos
+# predios) fica sem borda. grass_sand/sand_water (Costa das Mares) — antes um
+# corte reto, ver docs/sistemas/mapas.md#autoborder.
 _GRASS_SET = set(GRASS)
 _DIRT_SET = set(DIRT)
 _COBBLE_SET = set(COBBLE)
 _MUD_SET = set(MUD)
+_SAND_SET = set(SAND)
 
 BORDER_INVADERS = {
     "dirt": ("grass", "cobble"),
-    "water": ("grass",),
+    "water": ("grass", "sand"),
     "mud": ("grass",),
+    "sand": ("grass",),
 }
 BORDER_PAIR_KEY = {
     ("grass", "dirt"): "grass_dirt",
     ("grass", "water"): "grass_water",
     ("grass", "mud"): "grass_mud",
     ("cobble", "dirt"): "cobble_dirt",
+    ("grass", "sand"): "grass_sand",
+    ("sand", "water"): "sand_water",
 }
 BORDER_PIECES = ("n", "s", "e", "w", "cnw", "cne", "csw", "cse",
                  "icnw", "icne", "icsw", "icse")
-#: hierarquia agua < lama < terra < grama < cobble, para empilhar o material
-#: mais alto por cima quando mais de um invasor se aplica ao mesmo tile baixo
-#: (hoje só acontece em "dirt", invadido por grass E cobble).
-_MATERIAL_RANK = {"water": 0, "mud": 1, "dirt": 2, "grass": 3, "cobble": 4}
+#: hierarquia agua < areia < lama < terra < grama < cobble, para empilhar o
+#: material mais alto por cima quando mais de um invasor se aplica ao mesmo
+#: tile baixo (dirt invadido por grass E cobble; water invadido por grass E
+#: sand — se um tile de agua tiver vizinho grama E areia, a grama fica por
+#: cima, por ser mais alta na hierarquia).
+_MATERIAL_RANK = {"water": 0, "sand": 1, "mud": 2, "dirt": 3, "grass": 4, "cobble": 5}
 #: pecas retas (n/s/e/w) tem uma 2a variante (border_<par>_<peca>2) so pra a
 #: faixa nao ficar "carimbada" repetindo sempre a mesma peca numa trilha
 #: comprida; a escolha e por hash da POSICAO (deterministica, sem RNG externo,
@@ -122,6 +131,8 @@ def classify_ground(gid):
         return "cobble"
     if gid in _MUD_SET:
         return "mud"
+    if gid in _SAND_SET:
+        return "sand"
     if gid == WATER:
         return "water"
     return None

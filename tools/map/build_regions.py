@@ -180,21 +180,36 @@ def upgrade_village(b, sid, tpls, rng):
         n_signs += 1
     notes.append("vila v2.1: %d placas novas com texto (lojas + templo)" % n_signs)
 
-    # -- (4) templo: altar + tochas, sem tampar a posicao da town ----------
-    # NOTA: a 1a tentativa usou BV.STATUE (1442, "statue" vanilla) — o
-    # tour in-game (screenshots/mapa_v21_03_templo_altar.png) mostrou que
-    # esse item NAO renderiza neste build do Tibia.dat/.spr do projeto (fica
-    # invisivel; item confirmado presente no OTBM, entao e' um gap do
-    # cliente/sprite, nao do gerador — fora de tools/map/, nao mexido aqui).
-    # Trocado por CAMPFIRE (1428): ja' confirmado renderizando (acampamento
-    # dos bandidos) e encaixa melhor no nome do templo ("Templo da Chama").
+    # -- (4) templo: altar + estatua + lanternas, sem tampar a posicao da
+    # town ----------------------------------------------------------------
+    # NOTA (historico): a 1a tentativa usou BV.STATUE (1442, "statue"
+    # vanilla) — o tour in-game (screenshots/mapa_v21_03_templo_altar.png)
+    # mostrou que esse item NAO renderiza neste build do Tibia.dat/.spr do
+    # projeto. Causa raiz encontrada (nao so' suspeita): o thing do 1442
+    # existe no .dat, mas o SPRITE que ele referencia e' um placeholder
+    # quase vazio (so' 25 de 1024px opacos, um pontinho de 2px — visto
+    # exportando com sprformat.py/dump_dat.py), nao um buraco de cobertura.
+    # A cadeira vanilla 1650 tinha o MESMO sprite quase-vazio. Corrigido de
+    # vez com itens NOVOS (tools/spr/gen_decor.py): shrine_statue (estatua de
+    # guardiao de pedra) no lugar do 1442, + 2 stone_lantern (toro aceso)
+    # flanqueando. A CAMPFIRE (1428) que substituiu o 1442 v2.1 continua —
+    # ja' confirmada renderizando e "chama eterna diante do guardiao" encaixa
+    # bem no nome do templo ("Templo da Chama").
     altar = (BV.TEMPLE_POS[0], BV.TEMPLE_POS[1] - 1)
     if altar != (BV.TEMPLE_POS[0], BV.TEMPLE_POS[1]):
+        statue_pos = (altar[0], altar[1] - 1)
+        c = b.cells.get(statue_pos)
+        if c is not None and not c.items:
+            b.put(statue_pos[0], statue_pos[1], sid["shrine_statue_gray"])
         b.clear_items(*altar)
         b.put(altar[0], altar[1], BV.CAMPFIRE)
-        b.put(altar[0] - 2, altar[1], BV.TORCH)
-        b.put(altar[0] + 2, altar[1], BV.TORCH)
-    notes.append("vila v2.1: altar (chama eterna + 2 tochas) dentro do templo em %r" % (altar,))
+        for lx in (altar[0] - 2, altar[0] + 2):
+            c = b.cells.get((lx, altar[1]))
+            if c is not None:
+                b.clear_items(lx, altar[1])
+                b.put(lx, altar[1], sid["stone_lantern"])
+    notes.append("vila v2.1: altar (estatua de guardiao + chama eterna + 2 lanternas de "
+                 "pedra) dentro do templo em %r" % (altar,))
 
     # -- (3) interior da Taverna (mesas, cadeiras, balcao, barris) ----------
     tavern_door = v21.get("tavern_door")
@@ -292,10 +307,15 @@ def build_tavern_interior(b, sid, rect, door):
     for (tx, ty) in ((x0 + 2, y1 - 2), (x1 - 2, y1 - 2)):
         b.clear_items(tx, ty)
         b.put(tx, ty, BV.SHOP_TABLE)
-        for (cx, cy) in ((tx - 1, ty), (tx + 1, ty)):
+        # cadeira NOVA (tools/spr/gen_decor.py chair) virada para a mesa: a
+        # vanilla 1650 "wooden chair" tem thing no Tibia.dat mas o sprite e'
+        # um placeholder quase vazio (25 de 1024px opacos — visto exportando
+        # com sprformat.py) e ficava invisivel no cliente, ver docs/sistemas/
+        # mapas.md#pendências-da-v21.
+        for (cx, cy, key) in ((tx - 1, ty, "wood_chair_east"), (tx + 1, ty, "wood_chair_west")):
             c = b.cells.get((cx, cy))
             if c is not None and not c.items:
-                b.put(cx, cy, 1650)   # wooden chair (vanilla)
+                b.put(cx, cy, sid[key])
     for (bx, by) in ((x0 + 1, y1 - 1), (x1 - 1, y1 - 1)):
         c = b.cells.get((bx, by))
         if c is not None and not c.items:
@@ -379,7 +399,7 @@ def build_coastal_tides(b, sid, tpls, rng):
             if y >= 1155:
                 b.ground(x, y, BV.WATER)
             elif y >= 1140:
-                b.ground(x, y, [104, 231, 9059])       # sand (vanilla)
+                b.ground(x, y, BV.SAND)                # areia (vanilla)
             else:
                 b.ground(x, y, BV.GRASS)
 
@@ -397,7 +417,7 @@ def build_coastal_tides(b, sid, tpls, rng):
         ("blue_house", COAST_PATH_X + 6, 1150),
     ]
     for (key, cx, cy) in cabins:
-        BV.stamp_building(b, tpls, sid, key, cx, cy, ground=[104, 231])
+        BV.stamp_building(b, tpls, sid, key, cx, cy, ground=BV.SAND[:2])
         # redes/caixotes de pesca encostados em cada cabana (nao ha item
         # "rede de pesca" vanilla catalogado; caixote/barril fazem o papel
         # de equipamento de pesca guardado, como pedido na missao)
@@ -413,6 +433,35 @@ def build_coastal_tides(b, sid, tpls, rng):
         c = b.cells.get((bx, by))
         if c is not None and not c.items:
             b.put(bx, by, 3587)
+
+    # decor de praia (conchas/pedra molhada/madeira encalhada) espalhados pela
+    # areia — mesmo padrao de densidade esparsa de tools/map/decor.py
+    # place_forest_decor (rng.random() < densidade, por tile elegivel, evita
+    # tile com item). A praia estava "lisa" (so' areia + 2 cabanas) segundo o
+    # tour in-game; aqui NAO mexe em layout/spawn/NPC, so' decoracao solta.
+    _BEACH_POOL = [sid[k] for k in ("seashell_spiral", "seashell_fan", "wet_rock", "driftwood")]
+    _BEACH_DENSITY = 0.05
+    n_beach = 0
+    for y in range(1140, 1155):
+        for x in range(x0, x1 + 1):
+            c = b.cells.get((x, y))
+            if c is None or c.ground not in BV._SAND_SET or c.items:
+                continue
+            if rng.random() < _BEACH_DENSITY:
+                b.put(x, y, rng.choice(_BEACH_POOL))
+                n_beach += 1
+    # postes de amarracao (bloqueiam 1 tile) junto ao cais, sem tampar a
+    # faixa central por onde se anda (COAST_PATH_X, que vira o cais, fica
+    # livre — o pier propriamente dito e' construido mais abaixo nesta
+    # funcao, mas usa a MESMA coordenada COAST_PATH_X).
+    for (px, py) in ((COAST_PATH_X - 2, 1149), (COAST_PATH_X + 2, 1149),
+                     (COAST_PATH_X - 2, 1160), (COAST_PATH_X + 2, 1160)):
+        c = b.cells.get((px, py))
+        if c is not None and not c.items and c.ground in BV._SAND_SET:
+            b.put(px, py, sid["mooring_post"])
+            n_beach += 1
+    notes.append("costa das mares: %d itens de decor de praia (conchas/pedra molhada/"
+                 "madeira encalhada/postes de amarracao)" % n_beach)
 
     npcs = [
         ("Mercador Itsuki", (COAST_PATH_X - 3, 1145)),
@@ -455,9 +504,10 @@ def build_coastal_tides(b, sid, tpls, rng):
             b.ground(unfin_x, y, sid["bridge_wood_center"])
     sign(b, unfin_x + 1, 1150, "Obra da ponte - sabotada pelos mercenarios da guilda rival")
 
-    notes.append("costa das mares: sem borda dedicada grama/areia (par nao existe em "
-                 "assets-src/sprites/tiles.json) — fronteira e' um corte reto, "
-                 "documentado em docs/sistemas/mapas.md")
+    notes.append("costa das mares: fronteira grama/areia e areia/agua agora tem "
+                 "autoborder proprio (border_grass_sand_*/border_sand_water_*, "
+                 "tools/spr/gen_borders.py) — aplicado pelo passe apply_borders() "
+                 "do build_valley.py, nao aqui")
 
     # -- spawns ---------------------------------------------------------
     spec = SpawnSpec()

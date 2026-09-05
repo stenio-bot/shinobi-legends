@@ -35,6 +35,10 @@
    "name": "water", "frames": ["water_0.png", "water_1.png", "water_2.png"],
    "duration": 420, "server_ids": [4608]},
 
+  {"_g": "areia de praia (Costa das Mares, tools/map/build_regions.py build_coastal_tides): antes sem override nenhum -> gen_placeholders.py caia na regra de estilo generica e virava quadrado liso/pontilhado cinza (o bug reportado no tour in-game v2.1). 9059 e 231 ja compartilham client id no items.otb (mesmo sprite_hash), entao uma unica entrada cobre os dois.",
+   "name": "sand_0", "src": "sand_0.png", "server_ids": [104]},
+  {"name": "sand_1", "src": "sand_1.png", "server_ids": [231, 9059]},
+
   {"_g": "==================== ARVORES (64x64 = 2x2 tiles) ===================="},
   {"name": "tree_fir", "src": "tree_fir.png", "tiles": 2, "server_ids": [2700]},
   {"name": "tree_sycamore", "src": "tree_sycamore.png", "tiles": 2, "server_ids": [2701]},

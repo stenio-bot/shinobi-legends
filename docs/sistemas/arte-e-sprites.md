@@ -1017,6 +1017,10 @@ itens novos, server ids 30328–30343/client 24054–24069) — o autoborder em
 determinístico (CRC32) da posição do tile, pra uma trilha comprida não
 repetir sempre a mesma peça "carimbada".
 
+> **v2 (2026-09-05)**: mais 2 pares, `grass_sand` e `sand_water` (32 itens
+> novos, server ids 30344–30375/client 24070–24101) — ver "Decoração v2..."
+> perto do final deste arquivo.
+
 ## Decoração de cenário (`gen_decor.py` + `tiles_decor.json`)
 
 Ponte de madeira, pedras, tocos, flores, tufos de grama alta, cogumelos,
@@ -1057,6 +1061,11 @@ O `tools/map/decor.py` correspondente (funções `place_bridge`,
 `place_forest_decor`, `place_camp_decor`, `place_village_decor`) e a
 integração no mapa estão documentados em
 **`docs/sistemas/mapas.md#decoração-e-ponte`**.
+
+> **v2 (2026-09-05)**: 10 itens novos (cadeira, estátua de santuário,
+> lanterna de pedra, decor de praia) + areia com textura própria + 2 pares de
+> autoborder novos (`grass_sand`, `sand_water`) — ver "Decoração v2..." perto
+> do final deste arquivo.
 
 ## Extração de screenshots (`extract_screenshot.py` + `overrides/20_screenshot.json`)
 
@@ -1565,3 +1574,111 @@ A missão citava "hoje 25?" — não confirmado: no estado atual do repo já sã
 **54** jutsus em `data/jutsus/*.json` (katon 6, suiton 5, raiton 8, doton 4,
 fuuton 5, neutral/personal 26) e `jutsus.png` já tem 54 ícones (1728×32px),
 gerados e validados por este trabalho. Não havia nenhum jutsu sem ícone.
+
+## Decoração v2: cadeira/estátua/lanterna + areia + praia (2026-09-05)
+
+Resposta às 3 lacunas do tour in-game do mapa v2.1
+(`screenshots/mapa_v21_*.png`, ver `docs/sistemas/mapas.md#pendências-da-v21`):
+item vanilla invisível (estátua/cadeira), sem autoborder de areia, Costa das
+Marés pobre em decoração.
+
+### Causa raiz do item vanilla "invisível" (1442/1650)
+
+Não era um buraco de cobertura no `.dat` (o item existe, com grupo/flags
+corretos e client id dentro da faixa normal). Exportando os sprites com
+`tools/spr/sprformat.py` (`spr_get_sprite` + `decode_sprite`, contando pixels
+de alpha != 0) e conferindo com `dump_dat.py --thing item:<clientId>`:
+
+```
+item:2025 (statue, 1442)        -> 1º sprite id 4  -> 25 de 1024px opacos
+item:2358 (wooden chair, 1650)  -> 1º sprite id 4  -> 25 de 1024px opacos (MESMO sprite)
+```
+
+Os dois clientIds apontam para o **mesmo** sprite: um pontinho de ~2px opaco
+num quadro 32×32 quase inteiramente transparente — o placeholder genérico que
+`gen_placeholders.py` usa quando nenhuma regra de estilo (`manifest.json`)
+casa bem com o item. Não é um bug de `tools/spr/build_assets.py` nem do
+`.dat`/`.spr` em si (a "regra de ouro de cobertura de ids" continua
+cumprida — todo id tem um thing); é que o thing aponta pra uma arte
+efetivamente vazia. Consertar a regra de estilo genérica para esses 2 ids
+vanilla especificamente ficou fora do escopo (poderia mudar a arte de outros
+itens que caem na mesma regra); a solução foi criar substitutos NOVOS com
+arte de verdade (abaixo) e trocar os 2 usos no mapa
+(`tools/map/build_regions.py`).
+
+### Itens novos (`gen_decor.py`)
+
+Reaproveita `P_STONE`/`P_WOOD`/`P_BARK`/`Rnd`/`ellipse`/`rect`/`outline`/
+`shade` de `gen_terrain.py`, como o resto deste arquivo. Paletas próprias
+novas (não existem em `gen_terrain.py`): `_MOSS` (musgo verde da estátua),
+`_P_SHELL`/`_P_DRIFTWOOD`/`_P_WET` (decor de praia) e `_BEACH_SHADOW` — a
+sombra padrão do arquivo (`GT.SHADOW`) é esverdeada (pensada pra grama) e
+destoava muito sobre areia na 1ª rodada de revisão visual (a base do galho
+encalhado lia como uma mancha verde).
+
+| Função | Item(ns) | Notas de design |
+|---|---|---|
+| `chair(facing)` | `wood_chair_east`/`_west` | encosto do lado OPOSTO a `facing` — quem senta olha pra `facing`; 3 ripas verticais + assento de 2 tons |
+| `shrine_statue(mossy)` | `shrine_statue_gray`/`_mossy` | corpo em elipse (túnica), mãos unidas em bloco central mais claro, capuz/chapéu achatado por cima; variante com musgo pinta 3 manchas verdes (topo do chapéu, ombros) |
+| `stone_lantern(phase)` | `stone_lantern` (2 fases) | toro: base + haste + câmara vazada com o brilho por dentro (2 tons de laranja/dourado) + capitel; luz igual a `street_torch` |
+| `seashell(v)` | `seashell_spiral`/`_fan` | v0 = bandas horizontais estreitando pro topo (silhueta de cone/caramujo, com abertura num tom mais escuro do lado) — a 1ª versão (elipses concêntricas deslocadas) virou um blob redondo sem leitura nenhuma de concha, teve que ser redesenhada; v1 = leque com nervuras (vieira) |
+| `wet_rock()` | `wet_rock` | mais escura que `stone_*`, brilho especular frio (reflexo de água) + poça rasa translúcida-opaca na base |
+| `mooring_post()` | `mooring_post` | poste + corda enrolada (4 elipses alternando 2 tons) + ponta solta caindo |
+| `driftwood()` | `driftwood` | tronco de 4px de espessura (a 1ª versão tinha só 1px e a sombra dominava a leitura, virando uma mancha em vez de um galho) + toco de galho quebrado numa ponta |
+
+10 PNGs em `assets-src/sprites/terrain/decor/`. Registrados em
+`assets-src/sprites/tiles.json` (não precisou do arquivo separado
+`tiles_decor.json` desta vez — nenhuma edição concorrente de bordas). Server
+ids 30376–30385, client ids 24102–24111.
+
+### Areia (`gen_terrain.sand()`)
+
+`P_SAND_V4` (3 tons próximos, mesma filosofia de baixo contraste de
+`grass()`/`mud()` — "Grama v4") + `sand(v)`: campo `fbm` único (evita o
+xadrez de tiles claros/escuros entre variantes, mesmo raciocínio de
+`P_GRASS_V4`), grãos/conchinhas claras esparsas, sombra rasa ocasional e uma
+ondulação sutil de vento numa das 3 variantes. Ligada aos ids vanilla
+104→`sand_0`, 231+9059→`sand_1` (231 e 9059 já compartilham client id no
+`items.otb`) via `assets-src/sprites/overrides/10_terrain.json` — antes
+**não havia override nenhum** pra esses 3 ids, e a Costa das Marés usava o
+placeholder genérico (quadrado liso/pontilhado cinza — a causa raiz do
+"praia lisa com quadrados cinza" do relato).
+
+### Autoborder de areia (`gen_borders.py`)
+
+Pares `grass_sand` (grama invade areia, contorno de contato = sombra escura,
+mesma regra dos pares terrosos) e `sand_water` (areia invade água, contorno
+de contato = espuma clara `FOAM`, mesma regra de `grass_water`) — textura do
+material alto reaproveita `GT.sand(1)` quando o par começa com `"sand"`
+(`_texture_hi`), pela mesma razão dos outros pares: casar pixel a pixel com o
+chão de verdade. 32 PNGs novos (16 por par), `WATER_EDGE_PAIRS` generalizado
+de `pk == "grass_water"` pra incluir `"sand_water"`.
+
+### Teste in-game (`client-otc/shinobirc.lua`, 3 sessões — confirmado sem
+### shinobirc.lua compartilhado ativo antes de cada uma)
+
+Login `god`/`god`, `/god` + `/tp x,y,z`, `screenshots/decor_v2_*.png`:
+cadeiras da Taverna visíveis e viradas pra mesa (`decor_v2_01`), altar do
+templo com estátua + fogueira + 2 lanternas acesas (`decor_v2_02/03`), praia
+com areia texturizada + conchas/pedra molhada/madeira encalhada/caixotes
+(`decor_v2_05`), cais com borda areia↔água ondulada + postes de amarração
+(`decor_v2_06`), trilha→praia com borda grama↔areia ondulada
+(`decor_v2_08`). `dump_dat.py` (`validacao: OK, divergencias=0`),
+`test_otb_roundtrip.py` (`RESULTADO: OK`) e `tools/map/walk_audit.py` (0
+divergências novas) rodados depois do build. Detalhe completo (screenshots
+ponto a ponto) em `docs/sistemas/mapas.md#decoração-de-praia-e-mobiliário-do-santuário-v2-2026-09-05`.
+
+### Limitações honestas
+
+- A estátua/lanterna/cadeira leem bem a 32px mas não foram testadas em
+  ângulos de câmera diferentes (o jogo só tem uma projeção); a variante
+  "musgo" da estátua é sutil a distância (3 manchas de poucos pixels).
+- Não foi feita nenhuma tentativa de consertar o placeholder genérico de
+  `gen_placeholders.py` para OUTROS itens vanilla que possam ter o mesmo
+  problema (sprite quase vazio) — só os 2 citados no relato (1442/1650) foram
+  investigados. Um agente futuro plantando item "nunca usado antes" no mapa
+  deveria conferir a cobertura real (`dump_dat.py --thing`) antes de confiar
+  no placeholder.
+- `seashell_spiral`/`seashell_fan` ficaram com `pickupable: true` (dá pra
+  pegar) — decisão de bom senso (concha de praia é o tipo de bugiganga que
+  faz sentido catalogar/vender), não um pedido explícito da missão.

@@ -6414,6 +6414,710 @@
    }
   },
   {
+   "key": "border_grass_sand_n",
+   "name": "borda grama/areia (norte)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_n.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (norte)."
+   }
+  },
+  {
+   "key": "border_grass_sand_s",
+   "name": "borda grama/areia (sul)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_s.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (sul)."
+   }
+  },
+  {
+   "key": "border_grass_sand_e",
+   "name": "borda grama/areia (leste)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_e.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (leste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_w",
+   "name": "borda grama/areia (oeste)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_w.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (oeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_cnw",
+   "name": "borda grama/areia (cnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_cnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto externo noroeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_cne",
+   "name": "borda grama/areia (cne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_cne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto externo nordeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_csw",
+   "name": "borda grama/areia (csw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_csw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto externo sudoeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_cse",
+   "name": "borda grama/areia (cse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_cse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto externo sudeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_icnw",
+   "name": "borda grama/areia (icnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_icnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto interno noroeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_icne",
+   "name": "borda grama/areia (icne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_icne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto interno nordeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_icsw",
+   "name": "borda grama/areia (icsw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_icsw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto interno sudoeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_icse",
+   "name": "borda grama/areia (icse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_icse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (canto interno sudeste)."
+   }
+  },
+  {
+   "key": "border_grass_sand_n2",
+   "name": "borda grama/areia (norte, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_n2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (norte, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_grass_sand_s2",
+   "name": "borda grama/areia (sul, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_s2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (sul, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_grass_sand_e2",
+   "name": "borda grama/areia (leste, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_e2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (leste, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_grass_sand_w2",
+   "name": "borda grama/areia (oeste, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    140,
+    150,
+    88
+   ],
+   "frames": [
+    "terrain/borders/grass_sand_w2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de grama avancando sobre areia (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_sand_water_n",
+   "name": "borda areia/agua (norte)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_n.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (norte)."
+   }
+  },
+  {
+   "key": "border_sand_water_s",
+   "name": "borda areia/agua (sul)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_s.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (sul)."
+   }
+  },
+  {
+   "key": "border_sand_water_e",
+   "name": "borda areia/agua (leste)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_e.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (leste)."
+   }
+  },
+  {
+   "key": "border_sand_water_w",
+   "name": "borda areia/agua (oeste)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_w.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (oeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_cnw",
+   "name": "borda areia/agua (cnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_cnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto externo noroeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_cne",
+   "name": "borda areia/agua (cne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_cne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto externo nordeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_csw",
+   "name": "borda areia/agua (csw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_csw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto externo sudoeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_cse",
+   "name": "borda areia/agua (cse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_cse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto externo sudeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_icnw",
+   "name": "borda areia/agua (icnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_icnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto interno noroeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_icne",
+   "name": "borda areia/agua (icne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_icne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto interno nordeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_icsw",
+   "name": "borda areia/agua (icsw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_icsw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto interno sudoeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_icse",
+   "name": "borda areia/agua (icse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_icse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (canto interno sudeste)."
+   }
+  },
+  {
+   "key": "border_sand_water_n2",
+   "name": "borda areia/agua (norte, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_n2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (norte, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_sand_water_s2",
+   "name": "borda areia/agua (sul, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_s2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (sul, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_sand_water_e2",
+   "name": "borda areia/agua (leste, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_e2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (leste, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
+   "key": "border_sand_water_w2",
+   "name": "borda areia/agua (oeste, variante 2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    188,
+    172,
+    130
+   ],
+   "frames": [
+    "terrain/borders/sand_water_w2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de areia avancando sobre agua (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."
+   }
+  },
+  {
    "key": "bridge_wood_center",
    "name": "tábua da ponte",
    "group": "ground",
@@ -6909,8 +7613,180 @@
    "xml": {
     "description": "Uma pedra solta, parte de uma trilha."
    }
+  },
+  {
+   "key": "wood_chair_east",
+   "name": "cadeira de madeira (leste)",
+   "group": "furniture",
+   "frames": [
+    "terrain/decor/chair_east.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "movable": true,
+    "pickupable": false
+   },
+   "xml": {
+    "description": "Uma cadeira de madeira simples, virada para leste."
+   }
+  },
+  {
+   "key": "wood_chair_west",
+   "name": "cadeira de madeira (oeste)",
+   "group": "furniture",
+   "frames": [
+    "terrain/decor/chair_west.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "movable": true,
+    "pickupable": false
+   },
+   "xml": {
+    "description": "Uma cadeira de madeira simples, virada para oeste."
+   }
+  },
+  {
+   "key": "shrine_statue_gray",
+   "name": "estatua de guardiao de santuario",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/shrine_statue_plain.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Uma estatua de pedra em forma de guardiao de santuario, maos postas em oracao."
+   }
+  },
+  {
+   "key": "shrine_statue_mossy",
+   "name": "estatua de guardiao de santuario (com musgo)",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/shrine_statue_mossy.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Uma estatua de pedra antiga, coberta de musgo nos ombros e no chapeu."
+   }
+  },
+  {
+   "key": "stone_lantern",
+   "name": "lanterna de pedra",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/stone_lantern_0.png",
+    "terrain/decor/stone_lantern_1.png"
+   ],
+   "animation": {
+    "durations": [
+     [
+      500,
+      500
+     ],
+     [
+      420,
+      420
+     ]
+    ]
+   },
+   "light": {
+    "level": 6,
+    "r": 255,
+    "g": 184,
+    "b": 96
+   },
+   "flags": {
+    "walkable": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Uma lanterna de pedra (toro) num santuario, sempre acesa."
+   }
+  },
+  {
+   "key": "seashell_spiral",
+   "name": "concha em espiral",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/seashell_0.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "pickupable": true
+   },
+   "xml": {
+    "description": "Uma concha em espiral, trazida pela mare."
+   }
+  },
+  {
+   "key": "seashell_fan",
+   "name": "concha em leque",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/seashell_1.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "pickupable": true
+   },
+   "xml": {
+    "description": "Uma concha em forma de leque, ainda umida."
+   }
+  },
+  {
+   "key": "wet_rock",
+   "name": "pedra molhada",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/wet_rock.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Uma pedra escura, molhada pela mare, com uma poca rasa ao redor."
+   }
+  },
+  {
+   "key": "mooring_post",
+   "name": "poste de amarracao",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/mooring_post.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "has_height": true
+   },
+   "xml": {
+    "description": "Um poste de amarracao do cais, com uma corda enrolada."
+   }
+  },
+  {
+   "key": "driftwood",
+   "name": "madeira encalhada",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/driftwood.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Um galho de madeira encalhado na praia, esbranquicado pelo sal."
+   }
   }
  ],
  "_doc_buildings": "As chaves bld_* sao geradas por tools/spr/slice_buildings.py a partir de assets-src/import/village_buildings.png (material privado, nao versionado). Nao edite a mao: rode o slicer de novo. A arte fica em assets-src/sprites/tiles/buildings/ e os templates em buildings.json.",
- "_doc_borders": "As chaves border_<par>_<peca> sao o autoborder do chao (grass_dirt, grass_water, grass_mud, cobble_dirt), 12 pecas por par (n/s/e/w + 4 cantos externos c* + 4 cantos internos ic*). Convencao <alto>_<baixo>: o material ALTO da hierarquia agua<lama<terra<grama<cobble invade o tile do material BAIXO. Arte em tools/spr/gen_borders.py, PNGs em assets-src/sprites/terrain/borders/. Colocados pelo passe apply_borders de tools/map/build_valley.py, um item de decoracao (on_top, top_order 1, walkable) por cima do chao real. Ver docs/sistemas/mapas.md#autoborder."
+ "_doc_borders": "As chaves border_<par>_<peca> sao o autoborder do chao (grass_dirt, grass_water, grass_mud, cobble_dirt, grass_sand, sand_water), 12 pecas por par (n/s/e/w + 4 cantos externos c* + 4 cantos internos ic*). Convencao <alto>_<baixo>: o material ALTO da hierarquia agua<areia<lama<terra<grama<cobble invade o tile do material BAIXO. Arte em tools/spr/gen_borders.py, PNGs em assets-src/sprites/terrain/borders/. Colocados pelo passe apply_borders de tools/map/build_valley.py, um item de decoracao (on_top, top_order 1, walkable) por cima do chao real. Ver docs/sistemas/mapas.md#autoborder."
 }

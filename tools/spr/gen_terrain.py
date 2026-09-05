@@ -255,6 +255,14 @@ P_MUD_V4 = [(72, 66, 48, 255), (78, 72, 52, 255), (84, 78, 56, 255)]
 P_MUD = P_MUD_V4
 P_PUDDLE = [(42, 48, 42, 255), (52, 60, 50, 255), (66, 76, 62, 255)]
 
+#: areia de praia — mesma regra de baixo contraste da grama/lama v4 (3 tons
+#: proximos, base unica ~(198,178,138) +-6%): a Costa das Mares usava os ids
+#: vanilla 104/231/9059 sem NENHUM override proprio (gen_placeholders.py cai
+#: na regra de estilo generica -> quadrado liso), causa raiz do "praia lisa
+#: com quadrados cinza" reportado no tour in-game.
+P_SAND_V4 = [(186, 166, 128, 255), (198, 178, 138, 255), (210, 190, 148, 255)]
+P_SAND = P_SAND_V4
+
 P_WATER = [(34, 62, 84, 255), (44, 76, 100, 255), (56, 92, 116, 255),
            (70, 108, 132, 255), (92, 130, 152, 255)]
 
@@ -489,6 +497,32 @@ def mud(v):
         x, y = rnd.i(CELL), rnd.i(CELL)
         put(img, x, y, shade(P_MUD_V4[2], 6))
         put(img, x + 1, y, shade(P_MUD_V4[2], -4))
+    return img
+
+
+SAND_V4_OCTAVES = ((3, 1.0), (8, 0.4))
+SAND_V4_SEED = 61040
+
+
+def sand(v):
+    """v4 (mesma familia grass/mud v4) — areia de praia: TODAS as variantes
+    usam o MESMO campo fbm (evita o xadrez de tiles claros/escuros, ver docs
+    secao "Grama v4"), paleta de 3 tons proximos e decoracao esparsa
+    (conchinhas/pontos de sombra) para nao virar mancha bege lisa."""
+    f = fbm(CELL, SAND_V4_SEED, SAND_V4_OCTAVES)
+    img = quantize(f, P_SAND_V4, dither=0.045)
+    rnd = Rnd(3300 + v * 61)
+    for _ in range(10):                   # graozinhos/conchinhas claras
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, shade(P_SAND_V4[2], 20))
+    for _ in range(5):                    # sombra rasa (pegada/depressao)
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, shade(P_SAND_V4[0], -14))
+    if v == 1:                            # ondulacao sutil de vento em 1 das 3
+        for x in range(0, CELL, 4):
+            y = (10 + int(2.0 * math.sin(x / 6.0))) % CELL
+            put(img, x, y, shade(P_SAND_V4[0], -8))
+            put(img, (x + 1) % CELL, y, shade(P_SAND_V4[0], -8))
     return img
 
 
@@ -1012,6 +1046,9 @@ def build():
     for p in range(3):
         save(water(p), "water_%d" % p)
         bump("agua (fases)")
+    for v in range(3):
+        save(sand(v), "sand_%d" % v)
+        bump("areia")
 
     for k in ("fir", "sycamore", "willow", "beech", "pine"):
         save(tree(k), "tree_%s" % k)

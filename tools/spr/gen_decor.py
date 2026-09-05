@@ -395,6 +395,246 @@ def stepping_stone_2():
     return stepping_stone(2)
 
 
+# =========================================================== MOBILIARIO (v2)
+#: cadeira/estatua/lanterna pedidas pelo tour in-game do mapa v2.1: os itens
+#: VANILLA usados ate agora (1650 "wooden chair", 1442 "statue") tem thing no
+#: Tibia.dat mas o sprite e' um placeholder quase vazio (so' 25 de 1024px
+#: opacos, um pontinho de 2px — visto exportando o sprite com dump_dat.py/
+#: sprformat.py) — a causa raiz do "invisivel"/"losango cinza" reportado em
+#: docs/sistemas/mapas.md, nao um buraco no .dat em si. Em vez de tentar
+#: consertar o placeholder generico de 2 ids vanilla especificos, os itens
+#: entram como NOVOS (mesmo fluxo dos demais deste arquivo), com arte de
+#: verdade e sem depender do gerador de placeholders.
+def chair(facing):
+    """Cadeira de madeira, vista 3/4 — encosto do lado OPOSTO a `facing`
+    (quem senta olha para `facing`). 2 orientacoes: 'east'/'west'."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 27, 8, 3, GT.SHADOW)
+    east = facing == "east"
+    back_x = 10 if east else 22                  # encosto do lado de tras
+    # pernas
+    for lx, ly in ((11, 22), (20, 22), (11, 26), (20, 26)):
+        GT.rect(img, lx, ly, lx + 1, 27, GT.P_WOOD[0])
+    # assento
+    GT.rect(img, 9, 18, 22, 21, GT.P_WOOD[2])
+    GT.rect(img, 9, 18, 22, 19, GT.P_WOOD[3])
+    GT.rect(img, 9, 20, 22, 21, GT.shade(GT.P_WOOD[1], -6))
+    # encosto (ripas verticais), mais alto do lado `back_x`
+    for k in range(3):
+        x = back_x + (k - 1) * 4 * (1 if east else -1)
+        GT.rect(img, x - 1, 6, x + 1, 18, GT.P_WOOD[1])
+        GT.rect(img, x - 1, 6, x - 1, 18, GT.P_WOOD[0])
+    GT.rect(img, back_x - 6 if east else back_x - 2, 5,
+            back_x + 2 if east else back_x + 6, 7, GT.P_WOOD[3])
+    return GT.outline(img)
+
+
+def chair_east():
+    return chair("east")
+
+
+def chair_west():
+    return chair("west")
+
+
+#: estatua de guardiao de santuario (estilo jizo/oni-menor) — pedra em 3 tons,
+#: rosto simplificado, base retangular. v=0 pedra crua, v=1 com musgo (manchas
+#: verdes no topo/ombros, onde a chuva escorre menos e o musgo pega).
+_MOSS = [(74, 100, 52, 255), (96, 124, 66, 255)]
+
+
+def shrine_statue(mossy):
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    rnd = GT.Rnd(6600 + (1 if mossy else 0))
+    GT.ellipse(img, 16, 29, 9, 3, GT.SHADOW)
+    # base/pedestal
+    GT.rect(img, 9, 25, 23, 29, GT.P_STONE[0])
+    GT.rect(img, 9, 25, 23, 26, GT.P_STONE[1])
+    GT.rect(img, 9, 28, 23, 29, GT.shade(GT.P_STONE[0], -14))
+    # corpo (tunica/robe), mais estreito no topo
+    GT.ellipse(img, 16, 17, 7, 9, GT.P_STONE[2])
+    GT.ellipse(img, 16, 16, 6, 8, GT.P_STONE[3])
+    GT.rect(img, 12, 17, 20, 25, GT.P_STONE[2])
+    GT.rect(img, 12, 17, 13, 25, GT.shade(GT.P_STONE[1], -6))
+    GT.rect(img, 19, 17, 20, 25, GT.shade(GT.P_STONE[1], -10))
+    # maos unidas (gesto de oracao) — bloco central mais claro
+    GT.rect(img, 14, 19, 18, 22, GT.P_STONE[3])
+    GT.rect(img, 15, 20, 17, 21, GT.shade(GT.P_STONE[4], 6))
+    # cabeca (redonda, sem tracos — leitura de pedra, nao de rosto humano)
+    GT.ellipse(img, 16, 8, 5, 5, GT.P_STONE[3])
+    GT.ellipse(img, 15, 7, 2, 2, GT.shade(GT.P_STONE[4], 10))
+    # chapeu/capuz do jizo — disco achatado por cima da cabeca
+    GT.ellipse(img, 16, 4, 6, 2, GT.P_STONE[1])
+    GT.ellipse(img, 16, 3, 5, 1, GT.shade(GT.P_STONE[2], 8))
+    # rachaduras finas (idade)
+    for _ in range(3):
+        x, y = 12 + rnd.i(8), 12 + rnd.i(10)
+        GT.put(img, x, y, GT.shade(GT.P_STONE[0], -16), wrap=False)
+    if mossy:
+        for (mx, my, mr) in ((16, 4, 3), (13, 18, 2), (19, 26, 2)):
+            GT.ellipse(img, mx, my, mr, mr * 0.6, _MOSS[0])
+            GT.ellipse(img, mx, my - 1, mr - 1, mr * 0.4, _MOSS[1])
+    return GT.outline(img)
+
+
+def shrine_statue_plain():
+    return shrine_statue(False)
+
+
+def shrine_statue_mossy():
+    return shrine_statue(True)
+
+
+def stone_lantern(phase):
+    """Toro (lanterna de pedra japonesa), acesa — 2 fases de chama, luz quente
+    igual a `street_torch` (ver tiles.json)."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 29, 8, 3, GT.SHADOW)
+    # base
+    GT.rect(img, 12, 26, 20, 29, GT.P_STONE[0])
+    GT.rect(img, 13, 24, 19, 26, GT.P_STONE[1])
+    # haste
+    GT.rect(img, 14, 18, 18, 24, GT.P_STONE[2])
+    GT.rect(img, 14, 18, 15, 24, GT.shade(GT.P_STONE[1], -6))
+    # camara da luz (o "farol" do toro) — vazada, mostra o brilho por dentro
+    GT.rect(img, 10, 11, 22, 18, GT.P_STONE[3])
+    GT.rect(img, 12, 13, 20, 16, (70, 56, 40, 255))
+    k = 0 if phase == 0 else 1
+    GT.ellipse(img, 16, 14 - k, 3, 3 + k, (238, 160, 60, 255))
+    GT.ellipse(img, 16, 14 - k, 2, 2, (252, 210, 130, 255))
+    # telhado (capitel) em 2 aguas, mais largo que a camara
+    GT.rect(img, 8, 8, 24, 11, GT.P_STONE[1])
+    GT.rect(img, 8, 8, 24, 9, GT.shade(GT.P_STONE[2], 8))
+    GT.ellipse(img, 16, 8, 9, 2, GT.P_STONE[2])
+    # remate no topo
+    GT.rect(img, 15, 5, 17, 8, GT.P_STONE[3])
+    GT.ellipse(img, 16, 5, 2, 2, GT.shade(GT.P_STONE[4], 6))
+    return img
+
+
+def stone_lantern_0():
+    return stone_lantern(0)
+
+
+def stone_lantern_1():
+    return stone_lantern(1)
+
+
+# =========================================================== DECOR DE PRAIA
+#: paleta propria (nao vem de gen_terrain.py: nada la cobre conchas/madeira
+#: encalhada com o tom certo de "bege claro/lavado pelo sal").
+_P_SHELL = [(224, 206, 182, 255), (238, 222, 200, 255), (198, 158, 148, 255), (250, 240, 226, 255)]
+_P_DRIFTWOOD = [(118, 110, 96, 255), (138, 130, 114, 255), (156, 148, 130, 255), (172, 164, 146, 255)]
+_P_WET = [(58, 66, 68, 255), (78, 88, 90, 255), (100, 112, 114, 255)]
+#: sombra propria para decor de praia: `GT.SHADOW` tem tom ESVERDEADO (pensada
+#: para grama) e destoa muito sobre areia — 1a rodada de revisao visual
+#: (`driftwood`/`mooring_post`) mostrou uma mancha verde estranha na base.
+_BEACH_SHADOW = (64, 56, 42, 255)
+
+
+def seashell(v):
+    """v=0: concha em cone/caramujo (bandas horizontais estreitando pro topo,
+    silhueta em gota — a 1a versao era um blob redondo sem leitura nenhuma de
+    concha); v=1: concha em leque (vieira)."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 22, 7, 2, _BEACH_SHADOW)
+    if v == 0:
+        cx = 16
+        # bandas empilhadas, estreitando pro topo (silhueta de cone/caramujo)
+        bands = [(24, 8, 0), (22, 7.4, 1), (20, 6.4, 0), (18, 5.2, 1),
+                 (16, 3.8, 0), (14, 2.6, 1), (12, 1.6, 0)]
+        for (y, half_w, tone) in bands:
+            c = _P_SHELL[tone]
+            GT.ellipse(img, cx, y, half_w, 2.4, c)
+            GT.ellipse(img, cx - 1, y - 1, half_w - 1, 1.6, GT.shade(c, 12))
+        GT.ellipse(img, cx, 11, 1.3, 1, _P_SHELL[3])           # apice
+        # abertura (aperture) da concha, lado direito, tom mais escuro
+        GT.ellipse(img, cx + 4, 22, 2.4, 5, _P_SHELL[2])
+        GT.ellipse(img, cx + 4, 22, 1.3, 4, GT.shade(_P_SHELL[2], -18))
+    else:
+        cx, cy = 16, 20
+        GT.ellipse(img, cx, cy, 7, 5, _P_SHELL[0])
+        GT.ellipse(img, cx, cy - 1, 6, 4, _P_SHELL[1])
+        for i in range(-3, 4):                 # nervuras em leque
+            x = cx + i * 2
+            GT.rect(img, x, cy - 4, x, cy + 3, GT.shade(_P_SHELL[2], 4 if i % 2 else -6))
+        GT.ellipse(img, cx, cy - 4, 2, 1, _P_SHELL[3])
+    return GT.outline(img)
+
+
+def seashell_0():
+    return seashell(0)
+
+
+def seashell_1():
+    return seashell(1)
+
+
+def wet_rock():
+    """Pedra molhada na maré — mais escura que `stone_*`, com brilho
+    especular frio (reflexo de agua) e uma poça rasa na base."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    rnd = GT.Rnd(7700)
+    cx, cy = 16, 20
+    GT.ellipse(img, cx, cy + 5, 11, 4, _BEACH_SHADOW)
+    GT.ellipse(img, cx, cy + 6, 10, 3, (70, 92, 96, 200))   # poça rasa na base
+    for i, c in enumerate(_P_WET):
+        rr = 9 - i * 2.4
+        GT.ellipse(img, cx - i, cy - i, rr, rr * 0.8, c)
+    for _ in range(5):                          # brilho especular (molhado)
+        x = cx - 4 + rnd.i(9)
+        y = cy - 6 + rnd.i(5)
+        GT.put(img, x, y, GT.shade(_P_WET[2], 60), wrap=False)
+    GT.put(img, cx - 2, cy - 5, (232, 240, 240, 255), wrap=False)
+    return GT.outline(img)
+
+
+def mooring_post():
+    """Poste de amarração do cais, com corda enrolada — item, bloqueia
+    1 tile (rotateable nao se aplica; e' decoracao vertical fixa)."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 29, 5, 2, _BEACH_SHADOW)
+    GT.rect(img, 13, 8, 19, 28, GT.P_WOOD[2])
+    GT.rect(img, 13, 8, 14, 28, GT.shade(GT.P_WOOD[1], -6))
+    GT.rect(img, 18, 8, 19, 28, GT.shade(GT.P_WOOD[0], -4))
+    GT.ellipse(img, 16, 8, 4, 2, GT.P_WOOD[3])
+    rope = (198, 168, 108, 255)
+    for i, y in enumerate((13, 16, 19, 22)):                 # corda enrolada
+        GT.ellipse(img, 16, y, 4, 2, rope if i % 2 == 0 else GT.shade(rope, -18))
+        GT.ellipse(img, 16, y, 3, 1, GT.shade(rope, 16))
+    # ponta solta da corda caindo
+    for k in range(6):
+        GT.put(img, 20 + (k % 2), 23 + k, rope, wrap=False)
+    return GT.outline(img)
+
+
+def driftwood():
+    """Galho de madeira encalhado, esbranquiçado pelo sal (paleta propria,
+    mais clara/acinzentada que `P_BARK`/`P_WOOD`). 1a versao usava so' 1px de
+    espessura de tronco contra uma sombra grande — a sombra dominava a
+    leitura e o galho lia como uma mancha esverdeada; agora o tronco tem 4-5px
+    de espessura (silhueta reconhecivel de longe) e a sombra encolheu."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 25, 11, 2, _BEACH_SHADOW)
+    rnd = GT.Rnd(4100)
+    for i in range(23):
+        x = 5 + i
+        yc = 20 - int(3.0 * math.sin(i / 23.0 * math.pi))
+        for dy in (-2, -1, 0, 1):                # tronco grosso (4px)
+            tone = _P_DRIFTWOOD[1] if dy <= -1 else _P_DRIFTWOOD[0]
+            if dy == -2:
+                tone = _P_DRIFTWOOD[3]
+            GT.put(img, x, yc + dy, tone, wrap=False)
+    for (x, y) in ((8, 15), (25, 13)):                       # toco de galho quebrado
+        GT.rect(img, x, y, x + 2, y + 4, _P_DRIFTWOOD[1])
+        GT.rect(img, x, y, x + 2, y + 1, _P_DRIFTWOOD[3])
+    for _ in range(5):                                       # rachaduras secas
+        x = 7 + rnd.i(18)
+        yc = 20 - int(3.0 * math.sin((x - 5) / 23.0 * math.pi))
+        GT.put(img, x, yc, GT.shade(_P_DRIFTWOOD[0], -18), wrap=False)
+    return GT.outline(img)
+
+
 # ------------------------------------------------------------------ escrita
 def save(img, name):
     path = os.path.join(OUT_DIR, name + ".png")
@@ -462,6 +702,31 @@ def build():
     for v, fn in enumerate((stepping_stone_0, stepping_stone_1, stepping_stone_2)):
         save(fn(), "stepping_stone_%d" % v)
     bump("caminho de pedras soltas", 3)
+
+    save(chair_east(), "chair_east")
+    save(chair_west(), "chair_west")
+    bump("cadeira de madeira", 2)
+
+    save(shrine_statue_plain(), "shrine_statue_plain")
+    save(shrine_statue_mossy(), "shrine_statue_mossy")
+    bump("estatua de santuario", 2)
+
+    save(stone_lantern_0(), "stone_lantern_0")
+    save(stone_lantern_1(), "stone_lantern_1")
+    bump("lanterna de pedra (fases)", 2)
+
+    save(seashell_0(), "seashell_0")
+    save(seashell_1(), "seashell_1")
+    bump("concha", 2)
+
+    save(wet_rock(), "wet_rock")
+    bump("pedra molhada", 1)
+
+    save(mooring_post(), "mooring_post")
+    bump("poste de amarracao", 1)
+
+    save(driftwood(), "driftwood")
+    bump("madeira encalhada", 1)
 
     total = sum(n.values())
     print("decoracao -> %s" % OUT_DIR)
