@@ -168,6 +168,7 @@ NarutoItems = {
 	{id = 15619, key = 'trophy_boss_crimson_ancestor', type = 'material', slot = '', level = 1, stack = 1, atk = 0, def_ = 0},
 	{id = 2404, key = 'kunai_iron', type = 'weapon', slot = 'weapon', level = 1, stack = 1, atk = 8, def_ = 0},
 	{id = 2379, key = 'tanto_steel', type = 'weapon', slot = 'weapon', level = 8, stack = 1, atk = 16, def_ = 0},
+	{id = 2384, key = 'wakizashi_temperado', type = 'weapon', slot = 'weapon', level = 15, stack = 1, atk = 21, def_ = 0},
 	{id = 2412, key = 'katana_ronin', type = 'weapon', slot = 'weapon', level = 20, stack = 1, atk = 28, def_ = 0},
 	{id = 7378, key = 'shuriken_iron', type = 'weapon', slot = 'weapon', level = 1, stack = 100, atk = 6, def_ = 0},
 	{id = 7368, key = 'fuuma_shuriken', type = 'weapon', slot = 'weapon', level = 25, stack = 1, atk = 30, def_ = 0},

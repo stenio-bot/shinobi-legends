@@ -111,7 +111,16 @@ NarutoAchievements.zoneBounds = {
 	covil_nuvem_vermelha = {1400, 1000, 1449, 1049},
 }
 
+-- Dentro da muralha da Vila da Folha (build_valley.py V_X0..V_Y1 = 1010,1030..1049,1069) NAO conta
+-- como "pisou na Floresta da Vila" (playtest r4: a conquista destravava no login, na praca).
+NarutoAchievements.zoneExclude = { {1010, 1030, 1049, 1069} }
+
 function NarutoAchievements.zoneAt(pos)
+	for _, e in ipairs(NarutoAchievements.zoneExclude) do
+		if pos.x >= e[1] and pos.x <= e[3] and pos.y >= e[2] and pos.y <= e[4] then
+			return nil
+		end
+	end
 	for zone, b in pairs(NarutoAchievements.zoneBounds) do
 		if pos.x >= b[1] and pos.x <= b[3] and pos.y >= b[2] and pos.y <= b[4] then
 			return zone

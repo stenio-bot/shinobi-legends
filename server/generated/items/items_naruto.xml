@@ -994,6 +994,14 @@
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 8: aplicar via movements.xml (level) -->
 </item>
+<item id="2384" name="wakizashi temperado">  <!-- wakizashi_temperado (uncommon) -->
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade."/>
+	<attribute key="attack" value="21"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 15: aplicar via movements.xml (level) -->
+</item>
 <item id="2412" name="katana do ronin">  <!-- katana_ronin (uncommon) -->
 	<attribute key="weight" value="500"/>
 	<attribute key="description" value="Encontrada em ninjas renegados."/>

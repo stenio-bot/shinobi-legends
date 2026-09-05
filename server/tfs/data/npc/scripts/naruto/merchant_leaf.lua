@@ -55,6 +55,7 @@ shopModule:addSellableItem({'calça do batedor'}, 9928, 192, 'calça do batedor'
 shopModule:addSellableItem({'senbon de ferro'}, 2399, 96, 'senbon de ferro')
 shopModule:addSellableItem({'kunai de ferro'}, 2404, 20, 'kunai de ferro')
 shopModule:addSellableItem({'tantō de aço'}, 2379, 160, 'tantō de aço')
+shopModule:addSellableItem({'wakizashi temperado'}, 2384, 720, 'wakizashi temperado')
 shopModule:addSellableItem({'shuriken de ferro'}, 7378, 1, 'shuriken de ferro')
 shopModule:addSellableItem({'luvas de combate'}, 2172, 480, 'luvas de combate')
 npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {trade} para ver o que tenho.")

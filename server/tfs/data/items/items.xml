@@ -3051,13 +3051,6 @@
 		<attribute key="attack" value="7" />
 		<attribute key="weaponType" value="club" />
 	</item>
-	<item id="2384" article="a" name="rapier">
-		<attribute key="weight" value="1500" />
-		<attribute key="defense" value="8" />
-		<attribute key="attack" value="10" />
-		<attribute key="weaponType" value="sword" />
-		<attribute key="extradef" value="1" />
-	</item>
 	<item id="2385" article="a" name="sabre">
 		<attribute key="weight" value="2500" />
 		<attribute key="defense" value="10" />
@@ -37527,6 +37520,14 @@
 	<attribute key="weight" value="300"/>
 	<attribute key="description" value="Lâmina curta e rápida."/>
 	<attribute key="attack" value="16"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2384" name="wakizashi temperado">  
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade."/>
+	<attribute key="attack" value="21"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	

@@ -96,6 +96,7 @@ shopModule:addSellableItem({'botas anbu negras'}, 11240, 6144, 'botas anbu negra
 shopModule:addSellableItem({'senbon anbu negro'}, 8849, 20480, 'senbon anbu negro')
 shopModule:addSellableItem({'kunai de ferro'}, 2404, 20, 'kunai de ferro')
 shopModule:addSellableItem({'tantō de aço'}, 2379, 160, 'tantō de aço')
+shopModule:addSellableItem({'wakizashi temperado'}, 2384, 720, 'wakizashi temperado')
 shopModule:addSellableItem({'katana do ronin'}, 2412, 1000, 'katana do ronin')
 shopModule:addSellableItem({'shuriken de ferro'}, 7378, 1, 'shuriken de ferro')
 shopModule:addSellableItem({'fūma shuriken'}, 7368, 2400, 'fūma shuriken')

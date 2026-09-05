@@ -13,7 +13,7 @@ local area = {
 combat:setArea(createCombatArea(area))
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 27.0 + level * 2.691 + maglevel * 0.81
+	local base = 38.99 + level * 3.886 + maglevel * 1.17
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
