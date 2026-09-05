@@ -101,15 +101,17 @@ function NarutoCharacters.apply(player, characterId, elementId, opts)
 	player:addOutfit(char.looktype)
 
 	for jname in pairs(NarutoCharacters.allJutsuNames) do
-		player:forgetSpell(jname)
+		-- Nomes de spell no TFS (spells.xml/player_spells) sao UTF-8; o Lua gerado e' cp1252 (playtest r6: learnSpell
+		-- com bytes cp1252 quebrava o INSERT em player_spells e abortava o save do jogador).
+		player:forgetSpell(NarutoText.cp1252ToUtf8(jname))
 	end
 	local learned = {}
 	for _, j in ipairs(char.jutsus) do
-		player:learnSpell(j.name)
+		player:learnSpell(NarutoText.cp1252ToUtf8(j.name))
 		learned[#learned + 1] = j.name
 	end
 	for _, j in ipairs(element.jutsus) do
-		player:learnSpell(j.name)
+		player:learnSpell(NarutoText.cp1252ToUtf8(j.name))
 		learned[#learned + 1] = j.name
 	end
 
