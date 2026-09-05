@@ -140,11 +140,7 @@ end}
 -- keyword pra chamar direto nos testes).
 NpcSystem = {parseParameters = function() end}
 
-FocusModule = {}
-function FocusModule.new() return {} end
-FocusModule.__index = FocusModule
-setmetatable(FocusModule, {__call = function() return FocusModule end})
-FocusModule.new = function(_) return {} end
+FocusModule = {new = function() return {} end}
 
 ShopModule = {}
 function ShopModule:new()
@@ -154,20 +150,26 @@ function ShopModule:new()
 	}})
 end
 
+-- Cada npc/scripts/naruto/<id>.lua gerado cria SEU PRÓPRIO `local keywordHandler`/`npcHandler` no
+-- topo do arquivo (não exposto globalmente) — como os testes fazem dofile() de UM script de npc
+-- por vez, o stub guarda a ÚLTIMA instância criada em M.lastKeywordHandler/lastNpcHandler logo
+-- após o dofile retornar, e o teste lê essas globais pra disparar keywords diretamente.
 KeywordHandler = {}
 function KeywordHandler:new()
-	return setmetatable({keywords = {}}, {__index = {
+	local obj = setmetatable({keywords = {}}, {__index = {
 		addKeyword = function(self, keys, callback, params)
 			local kw = keys[1]
 			self.keywords[kw] = self.keywords[kw] or {}
 			table.insert(self.keywords[kw], callback)
 		end,
 	}})
+	M.lastKeywordHandler = obj
+	return obj
 end
 
 NpcHandler = {}
 function NpcHandler:new(kh)
-	return setmetatable({keywordHandler = kh, focused = true, lastSaid = {}}, {__index = {
+	local obj = setmetatable({keywordHandler = kh, focused = true, lastSaid = {}}, {__index = {
 		isFocused = function(self) return self.focused end,
 		say = function(self, msg, cid) self.lastSaid[cid or 0] = msg end,
 		setMessage = function() end,
@@ -185,11 +187,14 @@ function NpcHandler:new(kh)
 			return false
 		end,
 	}})
+	M.lastNpcHandler = obj
+	return obj
 end
 
---- Helper de teste: dispara a keyword `word` no NPC `npcState` (o módulo local do arquivo
---- gerado não é exposto por dofile, então testamos via o keywordHandler capturado globalmente —
---- ver comentário em test_quests_headless.lua sobre como cada npc dofile'd é isolado).
+--- Helper de teste: dispara a keyword `word` no keywordHandler capturado (M.lastKeywordHandler
+--- logo após o dofile do script do npc) — chama, em ordem, cada callback registrado para essa
+--- keyword até um retornar true (mesma semântica de fallthrough do keywordhandler.lua real do
+--- TFS, ver server/tfs/data/npc/lib/npcsystem/keywordhandler.lua:processNodeMessage).
 function M.sayKeyword(keywordHandlerObj, word, cid)
 	local kws = keywordHandlerObj.keywords[word]
 	if not kws then return nil end

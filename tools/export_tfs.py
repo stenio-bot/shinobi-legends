@@ -2169,11 +2169,14 @@ function NarutoQuests.progressText(player, q)
 	if st == NarutoQuests.DONE then return "Concluída" end
 	if st < 0 then return "Disponível" end
 	if q.kind == 'collect_item' then
-		local have = 0
+		-- soma por UNIDADE (não por tipo de item) — "3/5 itens" quando falta trazer 2 de 5
+		-- unidades de um único item, igual ao exemplo do requisito 8 da extensão de missões.
+		local have, needed = 0, 0
 		for _, it in ipairs(q.collectItems) do
-			if player:getItemCount(it.id) >= it.count then have = have + 1 end
+			needed = needed + it.count
+			have = have + math.min(player:getItemCount(it.id), it.count)
 		end
-		return have .. "/" .. #q.collectItems .. " itens"
+		return have .. "/" .. needed .. " itens"
 	elseif q.kind == 'keyword_quiz' then
 		return st .. "/" .. q.count .. " acertos"
 	elseif q.kind == 'reach' then

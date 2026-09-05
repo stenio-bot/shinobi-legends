@@ -513,3 +513,56 @@ nas demais).
 Ver o relatório final da missão (mensagem de encerramento da sessão) para os resultados
 in-game (kill de teste, entrega de tarefa, `/conquista` forçado, aba aberta mostrando X/55,
 `!conquistas`) e screenshots — não duplicado aqui para não desincronizar as duas fontes.
+
+## 10. Extensão de tipos de missão (`collect_item` avançado, `talk_to`, `reach`, `requires`, diálogo condicionado, recompensas extras)
+
+Estende `tools/export_tfs.py` (seção "lib + quests") e `data/schemas/quest.schema.json` para os
+tipos de `objective.kind` que a história precisa, mantendo 100% de compatibilidade com as 45
+missões existentes (nenhum campo novo é obrigatório; ausente = comportamento/texto de antes,
+byte-idêntico — confirmado por diff do Lua gerado antes/depois desta extensão). Guia completo,
+com um exemplo de JSON por tipo, fluxo de diálogo e como testar: **`docs/sistemas/missoes.md`**.
+
+Resumo do que é novo (detalhes no guia):
+
+- `objective.kind`: `collect_item` ganha `drops_from` (drop condicional por monstro, via
+  `onKill` — o TFS não tem loot condicional por quest no `monster/*.xml`); `kill` ganha `any_of`
+  (lista de monstros, qualquer um conta) e `boss` (metadado de UI); dois `kind` novos:
+  `talk_to` (completa ao falar com OUTRO npc) e `reach` (completa ao chegar num `pos`+`radius`,
+  via `GlobalEvent` próprio de 7s, `NarutoQuestReachPoll` — mesmo padrão do poll de conquistas,
+  arquivo/lib separado para `naruto_quests` continuar autocontido).
+- `requires` (level/rank/quests, cruzando NPCs) + `locked_text` — checado só ao ACEITAR; a cadeia
+  continua sequencial por NPC por padrão (não muda a UX de hoje quando o campo não é usado).
+- Diálogo condicionado: `progress_text`/`done_text`/`locked_text` com placeholders `{count}`,
+  `{needed}`, `{player}` (fallback = texto padrão de sempre).
+- `reward.storage`/`outfit`/`addon`/`title` além de xp/ryo/items já existentes.
+- `item.schema.json` ganha `quest_item: true` (item de missão nunca entra em lista de venda de
+  NPC, mesmo que o tipo esteja em `buys_types`).
+- Cliente: `missionsProgressJson` (opcode 210, `get_progress`) ganha `kind`/`progress`/`boss` por
+  missão — `progress` é `NarutoQuests.progressText(player, q)`, texto curto tipo "3/5 itens".
+
+### Storages
+
+**Nenhum storage novo por-quest foi necessário** — `reach`/`talk_to` reusam o MESMO storage
+por-quest que `kill`/`collect_item` já usavam (`base + i`, `data/tfs_mapping.json
+storage_base` = 50000; `NarutoQuests.DONE` = 50500). A única faixa nova é para
+`reward.storage` (destrava diálogo/gate arbitrário escolhido por quem escreve a quest):
+
+| Storage | Conteúdo |
+|---|---|
+| `66000`-`66999` | reservado para `reward.storage.key` de missões (destrava diálogo condicionado em outro NPC/script). Nenhuma quest usa isso ainda (campo opcional, nenhuma missão real foi editada por esta extensão). |
+
+Confirmado sem colisão com as faixas já documentadas nas seções 1-9 acima: `45001-45005`
+(gates de rank, fora deste arquivo), `50000-50500` (quests, `DONE`=50500), `60000-60002`
+(personagem/elemento), `60010` (rank), `60020-60026` (diárias), `61001-61114`/`63001-63114`
+(progresso/cooldown de tarefas), `64000+`/`65000+` (conquistas) — `62000-62999` e `66000+`
+seguem livres além da faixa reservada acima.
+
+### Testes
+
+`tools/tests/test_quests_headless.lua` (+ `tools/tests/run_quests_tests.sh`, `tools/tests/
+tfs_stub.lua`): 63 checagens em `luajit` puro, sem o servidor rodando — carrega os arquivos
+REAIS gerados (`lib/naruto_quests.lua`, `lib/naruto_ranks.lua`, `scripts/naruto/quests_kill.lua`,
+um npc real) contra um stub das APIs do TFS, cobrindo regressão (kill/collect_item/keyword_quiz
+reais produzem as mesmas mensagens de antes) e cada tipo novo via fixtures (não commitadas em
+`data/npcs/*.json` — só no teste e na doc, por pedido explícito da missão). Ver
+`docs/sistemas/missoes.md` para instruções de como rodar.

@@ -91,6 +91,9 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 ## Como adicionar conteúdo
 - Monstro: entrada em `data/monsters/<area>.json` + spawn em `data/maps/forest_valley.json` + cor em `Monster._color_for`.
 - Missão: entrada em `quests` do NPC em `data/npcs/leaf.json` (sequenciais na ordem da lista).
+  Tipos suportados (`kill`/`any_of`/`boss`, `collect_item`+`drops_from`, `keyword_quiz`,
+  `talk_to`, `reach`), `requires`, diálogo condicionado e recompensas extras: ver
+  `docs/sistemas/missoes.md`.
 - Jutsu: `data/jutsus/<elemento>.json`; tier 1 é aprendido automaticamente por level/vila, tier 2+ via pergaminho.
 - Sempre rode `.venv/bin/python tools/validate_data.py` e o smoke test depois.
 - Balanceamento (HP/dano de monstro, dano de jutsu, TTK, XP/h, ryo/h): `python3 tools/balance/sim.py --matrix --json /tmp/matrix.json` roda a matriz nível x monstro x build (~30s, fórmulas reais do TFS) — ver `tools/balance/README.md` e `docs/sistemas/balanceamento-relatorio.md`.
