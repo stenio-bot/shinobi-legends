@@ -33,32 +33,32 @@ dos monstros comuns, porque é o único item desta lista que pode gerar takedown
 | Lobo (`wolf`) | Floresta da Vila | 4 direções × 3 fases de andar × 1 tamanho = 12 | — | **procedural (concluído 2026-09-05)** — looktype 940 dedicado, 4 direções reais + andar, `tools/spr/gen_animals.py`/`animal_art.py` | já feito | 0 |
 | Cervo (`forest_deer`) | Floresta da Vila | 12 (mesmo padrão) | — | **procedural (concluído 2026-09-05)** — looktype 941 dedicado (não recolore mais o Lobo), chifres e silhueta esguia próprios | já feito | 0 |
 | Cobra da Floresta (`forest_snake`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05)** — looktype 943 (`tools/spr/gen_animals.py`), layers=2: verde-floresta; compartilha o looktype com `lesser_serpent`/`magma_serpent` mas agora com MÁSCARA de cor de verdade (cada uma tem head/body/legs/feet próprios em `data/tfs_mapping.json`) | já feito | 0 |
-| Bandido (`bandit`) | Floresta da Vila | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 956, marrom, recolor por hue-shift de `tools/spr/gen_humanoid_variants.py` (base 129 "ninja_bandit"); ainda sem direção/andar reais (limitação da arte importada) | encomenda (arte com direção própria) | 5 |
-| Bandido Arqueiro (`bandit_archer`) | Floresta da Vila | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 946, verde-oliva, distinto do Bandido | encomenda (arte com direção própria) | 5 |
-| Chefe dos Bandidos (`boss_bandit_chief`) | Floresta da Vila (boss) | 12 + pose especial | P1 | **variante de paleta (concluído 2026-09-05)** — looktype 957, vermelho/preto, distinto do Guardião da Neblina e do Marionetista (todos vinham do mesmo 131); ainda sem pose especial de boss | encomenda (pose especial + direção própria) | 8 |
-| Mercenário da Ponte (`mercenary_bridge`) | Costa das Marés | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 947, azul-marinho escuro, distinto do Bandido | encomenda (arte com direção própria) | 5 |
-| Batedor da Névoa (`mist_scout`) | Costa das Marés | 12 | P1 | **variante de paleta (concluído 2026-09-05)** — looktype 949, verde-azulado enevoado; antes usava o MESMO looktype (128) do outfit padrão do jogador — corrigido | encomenda (arte com direção própria) | 5 |
-| Guardião da Neblina (`mist_guardian`) | Costa das Marés | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 951, cinza-azulado de aço, distinto do Chefe dos Bandidos e do Marionetista | encomenda (arte com direção própria) | 5 |
+| Bandido (`bandit`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 956, marrom, boneco 100% procedural (`tools/spr/humanoid_art.py`, capuz), 4 direções reais + 3 fases de andar (deixou de ser hue-shift de PNG importado) | já feito | 0 |
+| Bandido Arqueiro (`bandit_archer`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 946, verde-oliva, boneco procedural com arco visível + aljava nas costas, 4 direções reais + andar | já feito | 0 |
+| Chefe dos Bandidos (`boss_bandit_chief`) | Floresta da Vila (boss) | 12 + pose especial | P2 | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 957, vermelho/preto, manto longo, 4 direções reais + andar; ainda sem pose especial de boss (fúria/baixo HP) | encomenda (pose especial de boss) | 4 |
+| Mercenário da Ponte (`mercenary_bridge`) | Costa das Marés | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 947, azul-marinho escuro, ombreira de metal + lança curta, 4 direções reais + andar | já feito | 0 |
+| Batedor da Névoa (`mist_scout`) | Costa das Marés | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 949, verde-azulado enevoado, máscara cobrindo o rosto, 4 direções reais + andar | já feito | 0 |
+| Guardião da Neblina (`mist_guardian`) | Costa das Marés | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 951, cinza-azulado de aço, chapéu cônico largo, 4 direções reais + andar | já feito | 0 |
 | Aprendiz Mascarado (`masked_apprentice`) | Costa das Marés (mini-boss) | 12 + pose especial | P0 | importado lateral (looktype 130 "ninja_pale") — mantido no looktype base (já pálido, combina com Haku); `spectral_warrior` foi para uma variante própria (953) em 2026-09-05, então não são mais idênticos, mas `masked_apprentice` ainda não tem pose especial nem cor própria | encomenda (pose especial + paleta própria) | 7 |
 | Espadachim da Névoa (`boss_mist_swordsman`) | Costa das Marés (boss) | 12 + 2 fases de fúria | P0 | importado lateral (looktype 132 "ninja_white", único na sheet) | encomenda | 12 |
 | Sanguessuga Gigante (`leech`) | Floresta da Morte | 12 | — | **procedural (concluído 2026-09-05)** — looktype 945 (`tools/spr/gen_animals.py`), verme fino ondulando com ventosas, silhueta bem diferente da cobra | já feito | 0 |
 | Sapo Gigante (`giant_toad`) | Floresta da Morte | 12 | — | **procedural (concluído 2026-09-05)** — looktype 944 dedicado (`tools/spr/gen_animals.py`), não compartilha mais com `boss_elder_toad` | já feito | 0 |
-| Ninja Renegado (`rogue_ninja`) | Floresta da Morte | 12 | P1 | **variante de paleta (concluído 2026-09-05)** — looktype 950, cinza-ardósia; antes usava o MESMO looktype (128) do outfit padrão do jogador — corrigido | encomenda (arte com direção própria) | 5 |
+| Ninja Renegado (`rogue_ninja`) | Floresta da Morte | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 950, cinza-ardósia, cachecol no rosto + lâminas cruzadas nas costas, 4 direções reais + andar | já feito | 0 |
 | Serpente Menor (`lesser_serpent`) | Floresta da Morte | 12 | — | **procedural (concluído 2026-09-05)** — looktype 943 (compartilhado com Cobra da Floresta/Serpente de Magma), mas agora verde-veneno DIFERENTE de verdade via máscara de cor | já feito | 0 |
 | Rival do Exame — Pedra/Som/Névoa (`exam_rival_*`) | Floresta da Morte | 12 × 3 = 36 | P2 | importado lateral (looktypes 128/129/130, reaproveitados) | encomenda (baixa urgência, aparecem só no exame) | 15 |
 | Sapo Ancião (`boss_elder_toad`) | Floresta da Morte (boss) | 12 + pose especial | P1 | importado lateral (looktype 60, 2×2) — dedicado desde 2026-09-05 (Sapo Gigante saiu para o looktype 944 procedural), então não é mais idêntico a nada, mas ainda não tem pose especial de boss nem recolor próprio | encomenda (pose especial) | 8 |
 | Serpente Branca (`boss_white_serpent`) | Floresta da Morte (boss de arco) | 12 humano + 12 forma serpente 2×2 + 3 fases | P0 | **importado MUGEN (916, Sasuke Rinnegan)** — violação ADR-002 | encomenda urgente | 16 |
-| Marionete de Combate (`ruin_puppet`) | Ruínas | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 948, tom de madeira, reforça que é um boneco | encomenda (arte com direção própria) | 5 |
+| Marionete de Combate (`ruin_puppet`) | Ruínas | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 948, tom de madeira, juntas visíveis nos ombros/joelhos, 4 direções reais + andar | já feito | 0 |
 | Sentinela de Pedra (`stone_sentinel`) | Ruínas | 12 | P1 | importado lateral (looktype 61 "stone_golem", único) | encomenda | 8 |
-| Guerreiro Espectral (`spectral_warrior`) | Ruínas | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 953, roxo-pálido, distinto do Aprendiz Mascarado | encomenda (arte com direção própria) | 5 |
+| Guerreiro Espectral (`spectral_warrior`) | Ruínas | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 953, roxo-pálido, auréola de partículas ao redor do corpo, 4 direções reais + andar | já feito | 0 |
 | Xamã da Maldição (`curse_shaman`) | Ruínas | 12 | P1 | importado lateral (looktype 138 "hooded_purple", partilhado com `boss_curse_partner`) | encomenda | 7 |
 | Desertor de Elite (`elite_deserter`) | Ruínas (mini-boss) | 12 + pose especial | P0 | **importado MUGEN (915, Sasuke Akatsuki)** — violação ADR-002 | encomenda urgente | 12 |
-| Marionetista das Ruínas (`boss_puppeteer`) | Ruínas (boss) | 12 + pose especial | P0 | importado lateral (looktype 131, idêntico ao Chefe dos Bandidos) | encomenda | 12 |
+| Marionetista das Ruínas (`boss_puppeteer`) | Ruínas (boss) | 12 + pose especial | P2 | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 952, violeta, barra de controle erguida com fios, 4 direções reais + andar; ainda sem pose especial de boss | encomenda (pose especial de boss) | 4 |
 | Águia do Trovão (`thunder_eagle`) | Montanha do Trovão | 12 | — | **procedural (concluído 2026-09-05)** — looktype 942 (`tools/spr/gen_animals.py`), sempre em voo (asas abertas, sombra deslocada), não é mais lobo recolorido | já feito | 0 |
-| Oni da Geleira (`glacier_oni`) | Montanha do Trovão | 12 | P2 | **variante de paleta (concluído 2026-09-05)** — looktype 955, azul-gelo, caixa reduzida de 3×3 para 2×2 (a raposa de origem era grande demais); distinto do Oni Ancestral (que ficou vermelho, no 12 original) | encomenda (arte com direção própria) | 6 |
+| Oni da Geleira (`glacier_oni`) | Montanha do Trovão | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 955, azul-gelo, chifres + presas, caixa 2×2, 4 direções reais + andar | já feito | 0 |
 | Monge da Tempestade (`storm_monk`) | Montanha do Trovão | 12 | P1 | importado lateral (looktype 137 "elder_red", partilhado com 2 NPCs) | encomenda | 7 |
 | Serpente de Magma (`magma_serpent`) | Montanha do Trovão | 12 | — | **procedural (concluído 2026-09-05)** — looktype 943 (compartilhado), vermelho-magma DIFERENTE de verdade via máscara de cor | já feito | 0 |
-| O Sócio Eterno (`boss_curse_partner`) | Montanha do Trovão (boss) | 12 + 3 fases (75/50/25%) | P1 | **variante de paleta (concluído 2026-09-05)** — looktype 954, vermelho, contraste com o roxo escuro do Xamã da Maldição (que ficou no 138 original); ainda sem as 3 fases de boss nem pose especial | encomenda (fases de boss + pose especial) | 11 |
+| O Sócio Eterno (`boss_curse_partner`) | Montanha do Trovão (boss) | 12 + 3 fases (75/50/25%) | P1 | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 954, vermelho, marcas/olhos brilhantes + aura escura, 4 direções reais + andar; ainda sem as 3 fases de boss (75/50/25%) | encomenda (fases de boss) | 6 |
 | Oni Ancestral (`boss_ancestral_oni`) | Montanha do Trovão (boss final) | 12 + pose especial | P0 | **importado MUGEN (913, Madara)** — violação ADR-002 | encomenda urgente | 14 |
 | Clone Branco (`white_clone`) | Covil da Nuvem Vermelha | 12 | P1 | importado lateral (looktype 130, idêntico ao Aprendiz Mascarado) | encomenda | 8 |
 | Ninja Elite da Aurora (`elite_cloud_guard`) | Covil da Nuvem Vermelha | 12 | P1 | importado lateral (looktype 129 "ninja_bandit" cru, sem recolor) — desde 2026-09-05 os outros 4 monstros do grupo (Bandido/Arqueiro/Mercenário/Marionete) ganharam variante de cor própria e saíram do 129, então este é o ÚNICO monstro que ainda usa o looktype base sem tratamento | encomenda (ou aplicar `gen_humanoid_variants.py` de novo com uma cor nova) | 6 |
@@ -75,16 +75,25 @@ com máscara de cor de verdade (verde-floresta/verde-veneno/vermelho-magma); Sap
 Gigante ganhou looktype próprio (944), deixando o Sapo Ancião sozinho no 60; e 10
 monstros humanoides que compartilhavam looktype importado (129/128/131/130/138/12)
 ganharam variante de PALETA por hue-shift (`tools/spr/gen_humanoid_variants.py`,
-looktypes 946–957) — ver tabela acima. Restam sem tratamento: `masked_apprentice` (fica
-no 130 original, ainda idêntico visualmente ao antigo estado — só ganhou "vizinhos"
-diferentes), `curse_shaman`/`boss_ancestral_oni` (ficam nos looktypes base 138/12,
-mas já não têm mais nenhum outro monstro idêntico, então não são mais duplicados) e
-`elite_cloud_guard`/`exam_rival_*` (fora do escopo desta passada, ainda no looktype
-importado cru). Nenhum desses 12 novos looktypes ganhou direção/ciclo de andar
-REAIS — a arte-base é importada (mesma pose nas 4 direções, mesmo quadro nas 3 fases
-de andar); só a cor mudou. Isso ainda é o motivo prático mais visível de "o jogo
-parece incompleto" para quem joga — encomendar arte com direção própria para os
-humanoides é o próximo passo de maior ganho percebido por hora de trabalho.
+looktypes 946–957) — mas com a pose "presa" (mesma pose nas 4 direções, mesmo quadro
+nas 3 fases de andar), a limitação mais visível do jogo. **Atualização
+2026-09-05 (2ª passada):** esses mesmos 12 looktypes (946–957) foram REDESENHADOS do
+zero em pixel-art 100% procedural (`tools/spr/humanoid_art.py`, chamado por
+`tools/spr/gen_humanoid_variants.py` — deixou de fazer hue-shift de PNG importado):
+agora têm 4 direções DE VERDADE (Norte sem rosto, Sul com rosto, Leste/Oeste em
+perfil espelhado com braço/perna da frente avançados) e 3 fases de andar reais
+(pernas/braços deslocados 1–2px), além de um adereço por classe (capuz, arco, arco+
+aljava, ombreira+lança, juntas de madeira, máscara, cachecol+lâminas, chapéu, barra
+de controle, manto, auréola, marcas amaldiçoadas, chifres) — ver tabela acima e a
+folha de revisão `screenshots/humanoides_v2_review.png`. Restam sem tratamento:
+`masked_apprentice` (fica no 130 original, ainda idêntico visualmente ao antigo
+estado — só ganhou "vizinhos" diferentes), `curse_shaman`/`boss_ancestral_oni`
+(ficam nos looktypes base 138/12, mas já não têm mais nenhum outro monstro
+idêntico, então não são mais duplicados) e `elite_cloud_guard`/`exam_rival_*` (fora
+do escopo desta passada, ainda no looktype importado cru, mesma pose presa). Os 3
+bosses do grupo (`boss_bandit_chief`, `boss_puppeteer`, `boss_curse_partner`) ainda
+não têm pose especial de fúria/baixo-HP — próximo passo de maior ganho percebido
+por hora de trabalho agora que a direção/andar já foram resolvidos.
 
 ## NPCs (21 já implementados em `data/npcs/*.json`)
 
@@ -207,11 +216,15 @@ girando; jutsus "pessoais" sem elemento reaproveitam `fx_melee_hit`/
    (Bandido/Arqueiro/Mercenário/Marionete no 129; Batedor da Névoa/Renegado no 128;
    Guardião/Chefe/Marionetista no 131; Espectral no 130; Sócio Eterno no 138; Oni da
    Geleira no 12; e as 3 serpentes/Sapo Gigante via looktype procedural) agora têm cor
-   própria — ver `tools/spr/gen_humanoid_variants.py` e `gen_animals.py`. **Próximo
-   passo de maior ganho por hora:** encomendar arte com DIREÇÃO e ciclo de andar reais
-   para esses mesmos 10 humanoides (hoje só a cor mudou; a pose ainda é uma só,
-   repetida nas 4 direções) — e resolver `elite_cloud_guard`/`exam_rival_*`, que
-   ficaram de fora desta passada.
+   própria — ver `tools/spr/gen_humanoid_variants.py` e `gen_animals.py`. **Feito em
+   2026-09-05 (2ª passada):** esses mesmos 12 humanoides (946–957) ganharam DIREÇÃO e
+   ciclo de andar REAIS (4 direções distintas + 3 fases de andar), redesenhados do
+   zero em pixel-art procedural (`tools/spr/humanoid_art.py`) em vez de hue-shift de
+   PNG importado — ver folha de revisão `screenshots/humanoides_v2_review.png`.
+   **Próximo passo de maior ganho por hora:** pose especial de fúria/baixo-HP para os
+   3 bosses do grupo (`boss_bandit_chief`, `boss_puppeteer`, `boss_curse_partner`) e
+   resolver `elite_cloud_guard`/`exam_rival_*`, que ficaram de fora desta passada
+   (ainda no looktype importado cru, pose presa).
 3. **Os 44 quadros de armadura com variação no boneco (paperdoll)** são o item de maior
    volume (60h) mas também o que mais comunica progressão de level pro jogador — sem
    isso, vestir o "Manto do Kage" parece igual a vestir o "Vest Genin" de level 1.

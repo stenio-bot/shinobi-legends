@@ -296,7 +296,15 @@ local function missionsProgressJson(player)
 		else
 			status = 'in_progress'
 		end
-		out[#out + 1] = {id = q.id, name = q.name, npc = q.npcName or q.npc, status = status}
+		-- NOVO (docs/sistemas/missoes.md, requisito 8 da extensão de tipos de missão): 'kind' e
+		-- 'progress' (texto curto, "3/5 itens"/"Chegou!"/etc. — NarutoQuests.progressText) para a
+		-- aba Missões do menu Shinobi mostrar o tipo/progresso sem precisar falar com o NPC.
+		-- 'boss' só existe (e só é true) em quests kind='kill' com objective.boss — ausente nas
+		-- demais, então um cliente antigo que ignora o campo continua funcionando igual.
+		out[#out + 1] = {
+			id = q.id, name = q.name, npc = q.npcName or q.npc, status = status,
+			kind = q.kind, progress = NarutoQuests.progressText(player, q), boss = q.boss or false,
+		}
 	end
 	return out
 end

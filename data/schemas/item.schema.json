@@ -31,6 +31,10 @@
       "stat":{"type":"string"}
     }},
     "teaches_jutsu": {"type":"string"},
-    "sprite": {"type":"string"}
+    "sprite": {"type":"string"},
+    "quest_item": {
+      "type": "boolean",
+      "description": "NOVO (docs/sistemas/missoes.md). Item usado em objective.kind='collect_item' de alguma quest: tools/export_tfs.py o exclui de QUALQUER lista de venda gerada (shopModule:addSellableItem, todos os NPCs 'shop'), mesmo que o tipo do item esteja em buys_types do NPC. Não altera 'sells' (compra) — não coloque um quest_item na lista 'sells' de um NPC (tools/validate_data.py acusa). Sobre 'não dropa ao morrer': o script de perda de itens do TFS (droploot.lua) só afeta os slots EQUIPADOS (CONST_SLOT_HEAD..CONST_SLOT_AMMO); itens de missão ficam na mochila, então já não são afetados por padrão — não use quest_item em um item equipável se quiser essa garantia."
+    }
   }
 }

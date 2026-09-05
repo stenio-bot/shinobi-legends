@@ -1,9 +1,54 @@
 {
   "format": 1,
-  "_doc": "Variantes de PALETA (hue-shift) para looktypes humanoides importados que ficariam com cor identica compartilhando o mesmo looktype base (veja assets-src/sprites/imports.json:creatures) — gerado por tools/spr/gen_humanoid_variants.py. Mesmo mecanismo de overrides/60_animals.json ('creature_sheets', aplicado por build_assets.py via imports.apply()), mas aqui layers=1 (arte importada ja colorida: a cor final vem GRAVADA no pixel na hora da geracao, nao de data/tfs_mapping.json head/body/legs/feet — esses campos nao tem efeito em looktype layers=1). Nao editar a mao: rode tools/spr/gen_humanoid_variants.py de novo.",
+  "_doc": "Looktypes humanoides (946-957) em pixel-art procedural PROPRIA (tools/spr/humanoid_art.py) — 4 direcoes reais (Norte sem rosto, Leste/Oeste perfil espelhado com braco/perna da frente avancados, Sul com rosto) + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py. Mesmo mecanismo de overrides/60_animals.json ('creature_sheets', aplicado por build_assets.py via imports.py:apply()), mas layers=1 (cor final gravada no pixel — a paleta de cada classe vem de tools/spr/tibia_colors.py:RAW, NAO de data/tfs_mapping.json head/body/legs/feet, que nao tem efeito em looktype layers=1 — ver FORMATO.md 3.5). Nao editar a mao: rode tools/spr/gen_humanoid_variants.py de novo.",
   "root": "assets-src/sprites",
   "build_dir": "assets-src/sprites/creatures",
   "creature_sheets": [
+    {
+      "category": "creature",
+      "id": 956,
+      "name": "variant_bandit_956",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 1,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_956.png"
+      ],
+      "_doc": "Bandido — marrom, capuz cobrindo o rosto. Procedural (tools/spr/humanoid_art.py, gear=hood) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+    },
     {
       "category": "creature",
       "id": 946,
@@ -47,7 +92,7 @@
       "sheets": [
         "creatures/look_946.png"
       ],
-      "_doc": "Bandido Arqueiro — verde-oliva (recolor de 129 'ninja_bandit').. Base: looktype 129 (ninja_bandit, monsters_sheet/12.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Bandido Arqueiro — verde-oliva, arco visivel na mao/costas. Procedural (tools/spr/humanoid_art.py, gear=bow) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -92,7 +137,7 @@
       "sheets": [
         "creatures/look_947.png"
       ],
-      "_doc": "Mercenário da Ponte — azul-marinho escuro (recolor de 129).. Base: looktype 129 (ninja_bandit, monsters_sheet/12.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Mercenário da Ponte — azul-marinho, ombreira de metal + lança curta. Procedural (tools/spr/humanoid_art.py, gear=spear_pauldron) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -137,52 +182,7 @@
       "sheets": [
         "creatures/look_948.png"
       ],
-      "_doc": "Marionete de Combate — tom de madeira (recolor de 129), reforça que é um boneco, não um humano.. Base: looktype 129 (ninja_bandit, monsters_sheet/12.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
-    },
-    {
-      "category": "creature",
-      "id": 956,
-      "name": "variant_bandit_956",
-      "width": 1,
-      "height": 1,
-      "exact_size": 32,
-      "layers": 1,
-      "pattern_x": 4,
-      "pattern_y": 1,
-      "pattern_z": 1,
-      "frame_groups": [
-        {
-          "type": 0,
-          "phases": 1
-        },
-        {
-          "type": 1,
-          "phases": 3,
-          "animation": {
-            "async": false,
-            "loop_count": 0,
-            "start_phase": 0,
-            "durations": [
-              [
-                220,
-                220
-              ],
-              [
-                220,
-                220
-              ],
-              [
-                220,
-                220
-              ]
-            ]
-          }
-        }
-      ],
-      "sheets": [
-        "creatures/look_956.png"
-      ],
-      "_doc": "Bandido — marrom (recolor de 129), o próprio nome do looktype vanilla ('ninja_bandit') sugeria marrom mas a arte real é azul.. Base: looktype 129 (ninja_bandit, monsters_sheet/12.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Marionete de Combate — tom de madeira, juntas visiveis nos ombros/joelhos, sem expressao facial (reforça que é um boneco, não um humano). Procedural (tools/spr/humanoid_art.py, gear=puppet_joints) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -227,7 +227,7 @@
       "sheets": [
         "creatures/look_949.png"
       ],
-      "_doc": "Batedor da Névoa — verde-azulado enevoado (recolor de 128).. Base: looktype 128 (ninja_blue, monsters_sheet/0.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Batedor da Névoa — verde-azulado enevoado, máscara cobrindo o rosto. Procedural (tools/spr/humanoid_art.py, gear=mask) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -272,7 +272,7 @@
       "sheets": [
         "creatures/look_950.png"
       ],
-      "_doc": "Ninja Renegado — cinza-ardósia (recolor de 128); antes usava o mesmo looktype do outfit do jogador, o que confundia em jogo.. Base: looktype 128 (ninja_blue, monsters_sheet/0.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Ninja Renegado — cinza-ardósia, cachecol no rosto + lâminas cruzadas nas costas. Procedural (tools/spr/humanoid_art.py, gear=scarf) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -317,7 +317,7 @@
       "sheets": [
         "creatures/look_951.png"
       ],
-      "_doc": "Guardião da Neblina — cinza-azulado de aço (recolor de 131).. Base: looktype 131 (ninja_chief, monsters_sheet/9.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Guardião da Neblina — cinza-azulado de aço, chapéu cônico largo. Procedural (tools/spr/humanoid_art.py, gear=hat) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -362,7 +362,7 @@
       "sheets": [
         "creatures/look_952.png"
       ],
-      "_doc": "Marionetista das Ruínas — violeta (recolor de 131).. Base: looktype 131 (ninja_chief, monsters_sheet/9.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Marionetista das Ruínas — violeta, barra de controle erguida com fios. Procedural (tools/spr/humanoid_art.py, gear=strings) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -407,7 +407,7 @@
       "sheets": [
         "creatures/look_957.png"
       ],
-      "_doc": "Chefe dos Bandidos — vermelho/preto (recolor de 131); distingue do Guardião da Neblina e do Marionetista, que também usam 131.. Base: looktype 131 (ninja_chief, monsters_sheet/9.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Chefe dos Bandidos — vermelho/preto, manto longo. Procedural (tools/spr/humanoid_art.py, gear=cloak) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -452,7 +452,7 @@
       "sheets": [
         "creatures/look_953.png"
       ],
-      "_doc": "Guerreiro Espectral — roxo-pálido (recolor de 130).. Base: looktype 130 (ninja_pale, monsters_sheet/18.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Guerreiro Espectral — roxo-pálido, auréola de partículas claras ao redor. Procedural (tools/spr/humanoid_art.py, gear=aura) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -497,7 +497,7 @@
       "sheets": [
         "creatures/look_954.png"
       ],
-      "_doc": "O Sócio Eterno — vermelho (recolor de 138), contraste com o roxo escuro do Xamã da Maldição (a outra metade da Dupla Imortal).. Base: looktype 138 (hooded_purple, npcs_sheet/7.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "O Sócio Eterno — vermelho, olhos/marcas brilhantes + tendril de aura escura. Procedural (tools/spr/humanoid_art.py, gear=curse_marks) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     },
     {
       "category": "creature",
@@ -542,7 +542,7 @@
       "sheets": [
         "creatures/look_955.png"
       ],
-      "_doc": "Oni da Geleira — azul-gelo (recolor de 12 'oni_fox'), caixa reduzida de 3x3 para 2x2 (a raposa de origem é grande demais pro monstro de nível baixo que ele é).. Base: looktype 12 (oni_fox, monsters_sheet/25.png). Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
+      "_doc": "Oni da Geleira — azul-gelo, chifres + presas, caixa 2x2 (maior que os demais, condizente com um oni). Procedural (tools/spr/humanoid_art.py, gear=horns) — 4 direcoes reais + 3 fases de andar. Gerado por tools/spr/gen_humanoid_variants.py — nao editar a mao."
     }
   ]
 }

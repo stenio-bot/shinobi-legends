@@ -116,10 +116,16 @@ for v in villages:
         if j not in jutsu_ids: errors.append(f"vila {v['id']}: jutsu desconhecido '{j}'")
     for i in v["starting_items"]:
         if i not in item_ids: errors.append(f"vila {v['id']}: item desconhecido '{i}'")
+items_by_id = {it["id"]: it for it in items}
 for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
     for n in load(path):
         for i in n.get("sells", []):
             if i not in item_ids: errors.append(f"npc {n['id']}: item desconhecido '{i}'")
+            # NOVO (docs/sistemas/missoes.md): item quest_item=true nunca deveria ser vendido por
+            # nenhum NPC (tools/export_tfs.py já exclui de addSellableItem; 'sells'/compra é
+            # manual, então avisamos aqui em vez de silenciosamente deixar o dado inconsistente).
+            elif items_by_id.get(i, {}).get("quest_item"):
+                errors.append(f"npc {n['id']}: item de missão (quest_item) '{i}' não deveria estar em 'sells'")
         for q in n.get("quests", []):
             k = q["objective"].get("kill")
             if k and k not in monster_ids: errors.append(f"quest {q['id']}: monstro desconhecido '{k}'")
@@ -175,6 +181,97 @@ for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
                 for i, qq in enumerate(quiz):
                     if not qq.get("keywords"):
                         errors.append(f"quest {q['id']}: pergunta {i+1} do quiz sem 'keywords'")
+
+# NOVO (docs/sistemas/missoes.md): validação completa contra data/schemas/quest.schema.json
+# (schema é aditivo/permissivo, sem additionalProperties:false — nenhuma quest existente é
+# rejeitada por campos que já tinha) + referências cruzadas dos tipos novos (collect_item,
+# talk_to, reach, kill+any_of/boss, requires) que os checks ad-hoc acima não cobriam.
+quest_schema = load(os.path.join(ROOT, "schemas", "quest.schema.json"))
+all_quests = {}  # quest id -> (quest dict, npc id que a oferece) — requires.quests/ciclos
+for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
+    for n in load(path):
+        for q in n.get("quests", []):
+            if q["id"] in all_quests:
+                errors.append(f"quest {q['id']}: id duplicado (aparece em mais de um NPC)")
+            all_quests[q["id"]] = (q, n["id"])
+
+for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
+    for n in load(path):
+        for q in n.get("quests", []):
+            if V:
+                for e in V(quest_schema).iter_errors(q):
+                    errors.append(f"quest {q['id']} (npc {n['id']}): {e.message}")
+            obj = q.get("objective", {})
+            kind = obj.get("kind", "kill")
+            if kind == "kill":
+                targets = ([obj["kill"]] if obj.get("kill") else []) + obj.get("any_of", [])
+                if not targets:
+                    errors.append(f"quest {q['id']}: objective.kind=kill sem 'kill' nem 'any_of'")
+                for mid in targets:
+                    if mid not in monster_ids:
+                        errors.append(f"quest {q['id']}: monstro desconhecido '{mid}' (objective.kill/any_of)")
+            elif kind == "collect_item":
+                item_keys_in_obj = set()
+                for it in obj.get("items", []):
+                    item_keys_in_obj.add(it.get("item_id"))
+                    if it.get("item_id") not in item_ids:
+                        errors.append(f"quest {q['id']}: item desconhecido '{it.get('item_id')}' (objective.items)")
+                for d in obj.get("drops_from", []):
+                    if d.get("monster_id") not in monster_ids:
+                        errors.append(f"quest {q['id']}: monstro desconhecido '{d.get('monster_id')}' (objective.drops_from)")
+                    if d.get("item_id") not in item_keys_in_obj:
+                        errors.append(f"quest {q['id']}: drops_from.item_id '{d.get('item_id')}' não está em objective.items")
+                    ch = d.get("chance")
+                    if not isinstance(ch, (int, float)) or not (0 <= ch <= 1):
+                        errors.append(f"quest {q['id']}: drops_from.chance inválida (precisa 0..1) em '{d.get('item_id')}'")
+            elif kind == "talk_to":
+                target = obj.get("npc")
+                if target not in npc_ids:
+                    errors.append(f"quest {q['id']}: npc alvo desconhecido '{target}' (objective.npc)")
+                elif target == n["id"]:
+                    errors.append(f"quest {q['id']}: objective.npc não pode ser o mesmo NPC que dá a missão")
+            elif kind == "reach":
+                pos = obj.get("pos")
+                if not pos or any(k not in pos for k in ("x", "y", "z")):
+                    errors.append(f"quest {q['id']}: objective.pos incompleto (precisa x/y/z)")
+                if not obj.get("radius"):
+                    errors.append(f"quest {q['id']}: objective.kind=reach sem 'radius'")
+            req = q.get("requires")
+            if req:
+                if req.get("rank") and rank_ids and req["rank"] not in rank_ids:
+                    errors.append(f"quest {q['id']}: requires.rank desconhecido '{req['rank']}'")
+                for rq in req.get("quests", []):
+                    if rq not in all_quests:
+                        errors.append(f"quest {q['id']}: requires.quests referencia quest desconhecida '{rq}'")
+            rew = q.get("reward", {})
+            if rew.get("storage") and ("key" not in rew["storage"] or "value" not in rew["storage"]):
+                errors.append(f"quest {q['id']}: reward.storage precisa de 'key' e 'value'")
+            if rew.get("addon") is not None and rew.get("outfit") is None:
+                errors.append(f"quest {q['id']}: reward.addon sem reward.outfit (addon sozinho não faz nada)")
+
+# NOVO: ciclos em requires.quests (DFS, 3 estados: branco/não visitado, cinza/'visiting' = na
+# pilha atual, preto/'done' = já totalmente explorado sem ciclo) — uma quest não pode exigir a si
+# mesma, direta ou indiretamente através de outras quests.
+def _quest_requires_cycle(qid, visiting, done):
+    if qid in done:
+        return False
+    if qid in visiting:
+        return True
+    visiting.add(qid)
+    entry = all_quests.get(qid)
+    if entry:
+        q, _npc = entry
+        for rq in q.get("requires", {}).get("quests", []):
+            if rq in all_quests and _quest_requires_cycle(rq, visiting, done):
+                return True
+    visiting.discard(qid)
+    done.add(qid)
+    return False
+
+_quest_cycle_done = set()
+for qid in all_quests:
+    if qid not in _quest_cycle_done and _quest_requires_cycle(qid, set(), _quest_cycle_done):
+        errors.append(f"quest {qid}: ciclo em requires.quests (pré-requisito circular)")
 
 # data/tasks.json (docs/sistemas/progressao-servidor.md): tarefas repetíveis estilo Tibia tasks.
 # Arquivo opcional (tools/export_tfs.py ignora o sistema de tarefas se não existir).

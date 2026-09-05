@@ -23,7 +23,7 @@ NarutoQuests.list = {
 	{id = 'q_lair_3_rings_bearer', npc = 'quest_giver_akatsuki_lair', npcName = 'Capitã Anbu Suzu', name = 'Exame Kage (1/2) — O Portador dos Seis Caminhos', text = 'Só um Kage de verdade encara o próximo guardião e vive para contar. Derrote O Portador dos Seis Caminhos.', kind = 'kill', monster = 'O Portador dos Seis Caminhos', count = 1, storage = 50005, reward = {xp = 85000, ryo = 22000, items = {{id = 8472, count = 1}}}, grantsRankProgress = 'kage'},
 	{id = 'q_lair_4_crimson_ancestor', npc = 'quest_giver_akatsuki_lair', npcName = 'Capitã Anbu Suzu', name = 'Exame Kage (2/2) — O Ancestral da Nuvem Vermelha', text = 'O fundador da organização te espera no salão final. Vença, e a vila vai te chamar de Kage.', kind = 'kill', monster = 'O Ancestral da Nuvem Vermelha', count = 1, storage = 50006, reward = {xp = 120000, ryo = 40000, items = {{id = 6938, count = 1}}}, grantsRank = 'kage'},
 	{id = 'q_coastal_mercenaries', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'A ponte ameaçada', text = 'Mercenários contratados por uma guilda rival atacam quem trabalha na ponte. Afaste-os. Mate 8.', kind = 'kill', monster = 'Mercenário da Ponte', count = 8, storage = 50007, reward = {xp = 900, ryo = 250, items = {{id = 7618, count = 1}}}},
-	{id = 'q_coastal_supplies', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'Abastecendo os pescadores', text = 'A vila de pescadores está sem suprimentos com a ponte bloqueada. Entregue 5 poções de vida pequenas ao Ancião Tazu.', kind = 'collect_item', monster = '', count = 0, storage = 50008, reward = {xp = 700, ryo = 200, items = {{id = 2210, count = 1}}}, collectItems = {{id = 7618, count = 5, name = 'Poção de Vida Pequena'}}},
+	{id = 'q_coastal_supplies', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'Abastecendo os pescadores', text = 'A vila de pescadores está sem suprimentos com a ponte bloqueada. Entregue 5 poções de vida pequenas ao Ancião Tazu.', kind = 'collect_item', monster = '', count = 0, storage = 50008, reward = {xp = 700, ryo = 200, items = {{id = 2210, count = 1}}}, collectItems = {{id = 7618, count = 5, name = 'Poção de Vida Pequena', itemKey = 'health_potion_small'}}},
 	{id = 'q_coastal_scouts', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'Olhos na neblina', text = 'Batedores vigiam a estrada da costa. Mate 8.', kind = 'kill', monster = 'Batedor da Névoa', count = 8, storage = 50009, reward = {xp = 1300, ryo = 350, items = {{id = 7378, count = 1}}}},
 	{id = 'q_coastal_guardians', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'Quebrando a linha', text = 'Guardiões da neblina bloqueiam a entrada da vila. Derrube 8.', kind = 'kill', monster = 'Guardião da Neblina', count = 8, storage = 50010, reward = {xp = 1800, ryo = 500, items = {{id = 7588, count = 1}}}},
 	{id = 'q_coastal_apprentice', npc = 'quest_giver_coastal', npcName = 'Ancião Tazu', name = 'O aprendiz mascarado', text = 'Antes de chegar ao Espadachim, alguém precisa afastar o aprendiz que protege os flancos dele. Mate 6.', kind = 'kill', monster = 'Aprendiz Mascarado', count = 6, storage = 50011, reward = {xp = 3200, ryo = 900, items = {{id = 9928, count = 1}}}},
@@ -32,11 +32,11 @@ NarutoQuests.list = {
 	{id = 'q_forest_snakes', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'Presas na relva', text = 'As cobras da floresta andam mordendo quem passa perto do riacho. Mate 8.', kind = 'kill', monster = 'Cobra da Floresta', count = 8, storage = 50014, reward = {xp = 260, ryo = 90, items = {{id = 2126, count = 1}}}},
 	{id = 'q_bandits_1', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'Limpando a estrada', text = 'Bandidos na estrada leste. Mate 10.', kind = 'kill', monster = 'Bandido', count = 10, storage = 50015, reward = {xp = 400, ryo = 200, items = {{id = 1949, count = 1}}}},
 	{id = 'q_bandit_archers', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'Flechas na copa das árvores', text = 'Bandidos arqueiros se escondem nas árvores para emboscar viajantes. Mate 8.', kind = 'kill', monster = 'Bandido Arqueiro', count = 8, storage = 50016, reward = {xp = 500, ryo = 220, items = {{id = 7378, count = 1}}}},
-	{id = 'q_forest_supplies', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'Abastecendo a vila', text = 'Antes de ir atrás do Chefe, a vila precisa de suprimentos: entregue 5 peles de lobo à Capitã Rin.', kind = 'collect_item', monster = '', count = 0, storage = 50017, reward = {xp = 350, ryo = 150, items = {{id = 7618, count = 1}}}, collectItems = {{id = 5897, count = 5, name = 'Pele de Lobo'}}},
+	{id = 'q_forest_supplies', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'Abastecendo a vila', text = 'Antes de ir atrás do Chefe, a vila precisa de suprimentos: entregue 5 peles de lobo à Capitã Rin.', kind = 'collect_item', monster = '', count = 0, storage = 50017, reward = {xp = 350, ryo = 150, items = {{id = 7618, count = 1}}}, collectItems = {{id = 5897, count = 5, name = 'Pele de Lobo', itemKey = 'wolf_pelt'}}},
 	{id = 'q_bandit_chief', npc = 'quest_giver_leaf', npcName = 'Capitã Rin', name = 'O Chefe', text = 'Acabe com o Chefe dos Bandidos no sudeste da floresta.', kind = 'kill', monster = 'Chefe dos Bandidos', count = 1, storage = 50018, reward = {xp = 1500, ryo = 800, items = {{id = 1988, count = 1}}}},
 	{id = 'q_leeches', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Sangue ruim', text = 'Sanguessugas infestam a margem. Mate 8.', kind = 'kill', monster = 'Sanguessuga Gigante', count = 8, storage = 50019, reward = {xp = 900, ryo = 300, items = {{id = 8473, count = 1}, {id = 8473, count = 1}}}},
 	{id = 'q_lesser_serpents', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Ninhada de serpentes', text = 'Serpentes menores se multiplicaram perto do santuário abandonado. Mate 10.', kind = 'kill', monster = 'Serpente Menor', count = 10, storage = 50020, reward = {xp = 1400, ryo = 400, items = {{id = 5917, count = 1}}}},
-	{id = 'q_forest_death_collect', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Peles curtidas', text = 'Rastreador Goro precisa de peles de sapo curtidas para reforçar equipamentos. Traga 6.', kind = 'collect_item', monster = '', count = 0, storage = 50021, reward = {xp = 1200, ryo = 350, items = {{id = 7589, count = 1}}}, collectItems = {{id = 5880, count = 6, name = 'Pele de Sapo'}}},
+	{id = 'q_forest_death_collect', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Peles curtidas', text = 'Rastreador Goro precisa de peles de sapo curtidas para reforçar equipamentos. Traga 6.', kind = 'collect_item', monster = '', count = 0, storage = 50021, reward = {xp = 1200, ryo = 350, items = {{id = 7589, count = 1}}}, collectItems = {{id = 5880, count = 6, name = 'Pele de Sapo', itemKey = 'toad_skin'}}},
 	{id = 'q_toads', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Coaxar da morte', text = 'Mate 10 sapos gigantes.', kind = 'kill', monster = 'Sapo Gigante', count = 10, storage = 50022, reward = {xp = 2000, ryo = 600, items = {{id = 2463, count = 1}}}},
 	{id = 'q_elder_toad_hunt', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'O sapo que não deveria existir', text = 'Antes do Exame, prove que sobrevive ao Sapo Ancião sozinho — sem pergaminho em jogo, só glória.', kind = 'kill', monster = 'Sapo Ancião', count = 1, storage = 50023, reward = {xp = 4000, ryo = 1500, items = {{id = 2642, count = 1}}}},
 	{id = 'q_rogues', npc = 'quest_giver_swamp', npcName = 'Rastreador Goro', name = 'Desertores', text = 'Traga a cabeça de 8 ninjas renegados.', kind = 'kill', monster = 'Ninja Renegado', count = 8, storage = 50024, reward = {xp = 3500, ryo = 1200, items = {{id = 1948, count = 1}}}},
@@ -48,13 +48,13 @@ NarutoQuests.list = {
 	{id = 'exam_chunin_3b_rival_som', npc = 'exam_proctor_forest', npcName = 'Instrutora Ibuki', name = 'Exame Chunin — Torneio (2/3)', text = 'Seu segundo oponente veio da Vila do Som.', kind = 'kill', monster = 'Rival do Exame — Som', count = 1, storage = 50030, reward = {xp = 300, ryo = 50, items = {}}},
 	{id = 'exam_chunin_3c_rival_mist', npc = 'exam_proctor_forest', npcName = 'Instrutora Ibuki', name = 'Exame Chunin — Torneio (3/3)', text = 'Seu último oponente veio da Vila da Névoa. Vença e você será Chunin.', kind = 'kill', monster = 'Rival do Exame — Névoa', count = 1, storage = 50031, reward = {xp = 5000, ryo = 2000, items = {{id = 2464, count = 1}}}, grantsRank = 'chunin'},
 	{id = 'q_mountain_eagles', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'Céu limpo', text = 'As águias do trovão não deixam ninguém subir a trilha. Abata 15.', kind = 'kill', monster = 'Águia do Trovão', count = 15, storage = 50032, reward = {xp = 20000, ryo = 6000, items = {{id = 7591, count = 1}}}},
-	{id = 'q_mountain_relics', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'Penas de valor', text = 'Mestra Yuki comercia penas de águia do trovão com ferreiros da vila. Traga 8.', kind = 'collect_item', monster = '', count = 0, storage = 50033, reward = {xp = 18000, ryo = 5000, items = {{id = 3965, count = 1}}}, collectItems = {{id = 5891, count = 8, name = 'Pena do Trovão'}}},
+	{id = 'q_mountain_relics', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'Penas de valor', text = 'Mestra Yuki comercia penas de águia do trovão com ferreiros da vila. Traga 8.', kind = 'collect_item', monster = '', count = 0, storage = 50033, reward = {xp = 18000, ryo = 5000, items = {{id = 3965, count = 1}}}, collectItems = {{id = 5891, count = 8, name = 'Pena do Trovão', itemKey = 'thunder_feather'}}},
 	{id = 'q_mountain_oni', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'O que desce do gelo', text = 'Onis da geleira invadiram o acampamento. Mate 10.', kind = 'kill', monster = 'Oni da Geleira', count = 10, storage = 50034, reward = {xp = 32000, ryo = 10000, items = {{id = 2646, count = 1}}}},
 	{id = 'q_mountain_serpents', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'As fendas quentes', text = 'As serpentes de magma estão abrindo o pico por dentro. Mate 10.', kind = 'kill', monster = 'Serpente de Magma', count = 10, storage = 50035, reward = {xp = 48000, ryo = 16000, items = {{id = 6119, count = 1}}}},
 	{id = 'q_mountain_lore', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'O pacto que não morre', text = 'Mestra Yuki quer garantir que você entende o que vai enfrentar no topo da montanha antes de deixá-lo subir.', kind = 'keyword_quiz', monster = '', count = 2, storage = 50036, reward = {xp = 40000, ryo = 12000, items = {{id = 2161, count = 1}}}, quiz = {{question = 'O que acontece quando um dos dois seres do topo morre sozinho?', keywords = {'absorve', 'absorver', 'furia', 'fúria'}}, {question = 'Quem cobra um preço por cada vida que consome?', keywords = {'sócio eterno', 'socio eterno', 'boss_curse_partner'}}, {question = 'Quem lançou essa dupla imortal contra vilas inteiras na guerra?', keywords = {'nuvem vermelha', 'organizacao', 'organização'}}}, quizMin = 2},
 	{id = 'q_mountain_curse_partner', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'O Sócio Eterno', text = 'Uma dupla amaldiçoada divide esta montanha. A metade que ainda parece gente não sabe morrer — mas sabe sangrar. Enfrente O Sócio Eterno.', kind = 'kill', monster = 'O Sócio Eterno', count = 1, storage = 50037, reward = {xp = 65000, ryo = 22000, items = {{id = 5952, count = 1}}}, grantsRankProgress = 'anbu'},
 	{id = 'q_mountain_boss', npc = 'quest_giver_mountain', npcName = 'Mestra Yuki', name = 'A raiva antiga', text = 'Dentro do pico dorme o Oni Ancestral, a outra metade da dupla amaldiçoada. Ele não vai dormir para sempre.', kind = 'kill', monster = 'Oni Ancestral', count = 1, storage = 50038, reward = {xp = 90000, ryo = 30000, items = {{id = 2169, count = 1}}}, grantsRankProgress = 'anbu'},
-	{id = 'q_ruins_intro', npc = 'quest_giver_ruins', npcName = 'Ancião Kaito', name = 'Primeiras peças', text = 'Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete.', kind = 'collect_item', monster = '', count = 0, storage = 50039, reward = {xp = 4500, ryo = 1000, items = {{id = 7588, count = 1}}}, collectItems = {{id = 5901, count = 8, name = 'Junta de Marionete'}}},
+	{id = 'q_ruins_intro', npc = 'quest_giver_ruins', npcName = 'Ancião Kaito', name = 'Primeiras peças', text = 'Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete.', kind = 'collect_item', monster = '', count = 0, storage = 50039, reward = {xp = 4500, ryo = 1000, items = {{id = 7588, count = 1}}}, collectItems = {{id = 5901, count = 8, name = 'Junta de Marionete', itemKey = 'puppet_joint'}}},
 	{id = 'q_ruins_puppets', npc = 'quest_giver_ruins', npcName = 'Ancião Kaito', name = 'Ordens antigas', text = 'As marionetes ainda patrulham o pátio. Destrua 12 delas.', kind = 'kill', monster = 'Marionete de Combate', count = 12, storage = 50040, reward = {xp = 6000, ryo = 1500, items = {{id = 7588, count = 1}}}},
 	{id = 'q_ruins_sentinels', npc = 'quest_giver_ruins', npcName = 'Ancião Kaito', name = 'Quebrando o portão', text = 'Sentinelas de pedra bloqueiam o portão interno. Derrube 10.', kind = 'kill', monster = 'Sentinela de Pedra', count = 10, storage = 50041, reward = {xp = 9000, ryo = 2400, items = {{id = 2645, count = 1}}}},
 	{id = 'q_ruins_curse_lore', npc = 'quest_giver_ruins', npcName = 'Ancião Kaito', name = 'Os selos que não se apagam', text = 'Antes de enfrentar os xamãs, Ancião Kaito testa o que você já sabe sobre a maldição do clã.', kind = 'keyword_quiz', monster = '', count = 2, storage = 50042, reward = {xp = 3000, ryo = 600, items = {{id = 2201, count = 1}}}, quiz = {{question = 'O que mantém os bonecos do clã \'vivos\' até hoje?', keywords = {'selo', 'selos', 'maldicao', 'maldição'}}, {question = 'Quem mantém os selos de maldição ativos há gerações?', keywords = {'xama', 'xamã', 'curse_shaman'}}, {question = 'Para onde o gênio desertor pretende fugir depois das Ruínas?', keywords = {'toca do som', 'som'}}}, quizMin = 2},
@@ -66,10 +66,62 @@ NarutoQuests.byNpc = {}
 -- storage -> quest (índice reverso usado pela aba Missões do menu Shinobi, opcode 210
 -- get_progress, para listar os requisitos pendentes do próximo rank por nome/NPC).
 NarutoQuests.byStorage = {}
+-- NOVO (docs/sistemas/missoes.md): índice por id da quest — usado por requires.quests (pré-
+-- requisito cruzando NPCs) e por NarutoQuests.completeTalkTo (achar a quest pelo storage já
+-- basta lá, mas byId fica disponível pra qualquer outro script que precise).
+NarutoQuests.byId = {}
 for _, q in ipairs(NarutoQuests.list) do
 	NarutoQuests.byNpc[q.npc] = NarutoQuests.byNpc[q.npc] or {}
 	table.insert(NarutoQuests.byNpc[q.npc], q)
 	NarutoQuests.byStorage[q.storage] = q
+	NarutoQuests.byId[q.id] = q
+end
+
+--- NOVO (docs/sistemas/missoes.md): placeholders {count}/{needed}/{player} em text/
+--- progress_text/done_text/locked_text. tpl nil (campo não usado na quest) retorna nil — quem
+--- chama decide o texto padrão (fallback). Sem nenhum placeholder no texto, gsub não altera nada
+--- (no-op seguro para todo texto de quest já existente, que nunca usa essas chaves).
+local function renderTemplate(tpl, player, q, count)
+	if not tpl then return nil end
+	local out = tpl:gsub('{count}', tostring(count or 0)):gsub('{needed}', tostring(q.count or 0))
+	if player then out = out:gsub('{player}', player:getName()) end
+	return out
+end
+
+--- NOVO: requires.level/rank/quests (docs/sistemas/missoes.md). Sem 'requires' (todas as quests
+--- de hoje), retorna sempre true — zero mudança de comportamento pras quests existentes.
+local function requirementsMet(player, q)
+	local req = q.requires
+	if not req then return true end
+	if req.level and player:getLevel() < req.level then return false end
+	if req.rank and NarutoRanks then
+		local cur = NarutoRanks.get(player)
+		local needed = NarutoRanks.byRank[req.rank]
+		if needed and cur.index < needed.index then return false end
+	end
+	if req.quests then
+		for _, qid in ipairs(req.quests) do
+			local rq = NarutoQuests.byId[qid]
+			if rq and player:getStorageValue(rq.storage) ~= NarutoQuests.DONE then return false end
+		end
+	end
+	return true
+end
+
+--- NOVO: fala padrão pt-BR quando 'requires' não foi satisfeito e a quest não definiu
+--- locked_text — lista o que falta (nível/rank/missões anteriores) de forma genérica.
+local function defaultLockedText(q)
+	local req = q.requires or {}
+	local parts = {}
+	if req.level then parts[#parts + 1] = "level " .. req.level end
+	if req.rank and NarutoRanks and NarutoRanks.byRank[req.rank] then
+		parts[#parts + 1] = "rank " .. NarutoRanks.byRank[req.rank].title
+	end
+	if req.quests and #req.quests > 0 then
+		parts[#parts + 1] = #req.quests .. " missão(ões) anterior(es)"
+	end
+	local falta = #parts > 0 and table.concat(parts, ", ") or "cumprir os requisitos"
+	return "Volte quando estiver pronto: falta " .. falta .. "."
 end
 
 --- Checa progressão de rank (grants_rank/grants_rank_progress) depois de marcar uma quest
@@ -88,15 +140,23 @@ local function grantQuestRankIfReady(player, q)
 	return nil
 end
 
---- Marca a quest DONE, aplica a recompensa e checa rank. Usada pelas 3 formas de conclusão
---- (kill, keyword_quiz, collect_item) para não duplicar a lógica de recompensa.
+--- Marca a quest DONE, aplica a recompensa (xp/ryo/items + NOVO storage/outfit/addon, ver
+--- reward.storage/outfit/addon do schema) e checa rank. Usada por TODAS as formas de conclusão
+--- (kill, keyword_quiz, collect_item, reach, talk_to) para não duplicar a lógica de recompensa.
 local function completeQuest(player, q)
 	player:setStorageValue(q.storage, NarutoQuests.DONE)
 	local xp = q.reward.xp
 	if xp > 0 then player:addExperience(xp, true) end
 	if q.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, q.reward.ryo) end
 	for _, it in ipairs(q.reward.items) do player:addItem(it.id, it.count) end
-	local msg = "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída."
+	-- NOVO: reward.storage (destrava diálogo/gate) e reward.outfit/addon.
+	if q.reward.storageKey then player:setStorageValue(q.reward.storageKey, q.reward.storageValue) end
+	if q.reward.outfit then
+		player:addOutfit(q.reward.outfit)
+		if q.reward.addon and q.reward.addon > 0 then player:addOutfitAddon(q.reward.outfit, q.reward.addon) end
+	end
+	-- NOVO: done_text (fallback = mensagem padrão de sempre).
+	local msg = renderTemplate(q.doneText, player, q) or ("Bom trabalho, ninja. Missão '" .. q.name .. "' concluída.")
 	local rankMsg = grantQuestRankIfReady(player, q)
 	if rankMsg then msg = msg .. " " .. rankMsg end
 	-- conquista quest_chain_complete (docs/sistemas/progressao-servidor.md): só quando TODAS as
@@ -111,23 +171,39 @@ local function completeQuest(player, q)
 	return msg
 end
 
+--- NOVO: usada pelo NPC ALVO de objective.kind='talk_to' (bloco TALK_TO_QUESTS injetado em TODO
+--- npc gerado, ver npc_files() em tools/export_tfs.py). Retorna a mensagem de conclusão, ou nil
+--- se não há nada a fazer aqui (deixa a keyword cair pro próximo handler desse NPC — ex.: o
+--- 'missao' normal, se o NPC alvo também for um NPC de quests).
+function NarutoQuests.completeTalkTo(player, q)
+	local st = player:getStorageValue(q.storage)
+	if st == NarutoQuests.DONE or st < 0 then return nil end
+	return completeQuest(player, q)
+end
+
 function NarutoQuests.talk(player, quests)
 	for _, q in ipairs(quests) do
 		local st = player:getStorageValue(q.storage)
 		if st ~= NarutoQuests.DONE then
+			-- NOVO: requires só é checado ao ACEITAR (st < 0) — sem 'requires' (compat: nenhuma
+			-- quest de hoje usa o campo), requirementsMet sempre retorna true e este bloco nunca
+			-- dispara.
+			if st < 0 and not requirementsMet(player, q) then
+				return renderTemplate(q.lockedText, player, q) or defaultLockedText(q), false
+			end
 			if q.kind == 'keyword_quiz' then
 				if st < 0 then
 					player:setStorageValue(q.storage, 0)
-					return q.text .. " (Missão aceita: " .. q.name .. "). Diga {prova} quando estiver pronto para responder.", false
+					return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. "). Diga {prova} quando estiver pronto para responder.", false
 				elseif st < q.count then
-					return "Prova ainda não feita. Diga {prova} para começar: " .. q.name .. ".", false
+					return renderTemplate(q.progressText, player, q, st) or ("Prova ainda não feita. Diga {prova} para começar: " .. q.name .. "."), false
 				else
 					return completeQuest(player, q), true
 				end
 			elseif q.kind == 'collect_item' then
 				if st < 0 then
 					player:setStorageValue(q.storage, 0)
-					return q.text .. " (Missão aceita: " .. q.name .. ")", false
+					return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. ")", false
 				end
 				local missing = {}
 				for _, it in ipairs(q.collectItems) do
@@ -136,19 +212,55 @@ function NarutoQuests.talk(player, quests)
 					end
 				end
 				if #missing > 0 then
-					return "Ainda falta trazer: " .. table.concat(missing, ", ") .. ".", false
+					return renderTemplate(q.progressText, player, q, #missing) or ("Ainda falta trazer: " .. table.concat(missing, ", ") .. "."), false
 				end
 				for _, it in ipairs(q.collectItems) do player:removeItem(it.id, it.count) end
 				return completeQuest(player, q), true
 			elseif st >= q.count then
 				return completeQuest(player, q), true
 			elseif st >= 0 then
-				return "Ainda não terminou? " .. q.name .. ": " .. st .. "/" .. q.count .. " " .. q.monster .. ".", false
+				-- NOVO: progress_text (fallback por kind) — reach/talk_to nunca tinham mensagem
+				-- própria antes (não existiam), kill/any_of mantém a mensagem padrão de sempre.
+				if q.progressText then
+					return renderTemplate(q.progressText, player, q, st), false
+				elseif q.kind == 'reach' then
+					return "Ainda não chegou lá. Vá até o local indicado.", false
+				elseif q.kind == 'talk_to' then
+					return "Vá falar com " .. (q.targetNpcName or "a pessoa certa") .. ".", false
+				else
+					return "Ainda não terminou? " .. q.name .. ": " .. st .. "/" .. q.count .. " " .. q.monster .. ".", false
+				end
 			else
 				player:setStorageValue(q.storage, 0)
-				return q.text .. " (Missão aceita: " .. q.name .. ")", false
+				return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. ")", false
 			end
 		end
 	end
 	return "Não tenho mais nada para você por enquanto.", false
+end
+
+--- NOVO (docs/sistemas/missoes.md, requisito 8): texto curto de progresso pro cliente (aba
+--- Missões, opcode 210 get_progress — ver missionsProgressJson em scripts/naruto/
+--- character_switch.lua) — "3/5 itens", "Chegou!", etc. Não usado pelo diálogo do NPC (que usa
+--- NarutoQuests.talk/progress_text acima); é só para a UI mostrar progresso sem precisar falar
+--- com o NPC.
+function NarutoQuests.progressText(player, q)
+	local st = player:getStorageValue(q.storage)
+	if st == NarutoQuests.DONE then return "Concluída" end
+	if st < 0 then return "Disponível" end
+	if q.kind == 'collect_item' then
+		local have = 0
+		for _, it in ipairs(q.collectItems) do
+			if player:getItemCount(it.id) >= it.count then have = have + 1 end
+		end
+		return have .. "/" .. #q.collectItems .. " itens"
+	elseif q.kind == 'keyword_quiz' then
+		return st .. "/" .. q.count .. " acertos"
+	elseif q.kind == 'reach' then
+		return (st >= q.count) and "Chegou! Fale com o NPC" or "A caminho"
+	elseif q.kind == 'talk_to' then
+		return "Fale com " .. (q.targetNpcName or "?")
+	else
+		return st .. "/" .. q.count .. (q.boss and " (chefe)" or "")
+	end
 end

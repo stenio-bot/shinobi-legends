@@ -1295,7 +1295,15 @@ local function missionsProgressJson(player)
 		else
 			status = 'in_progress'
 		end
-		out[#out + 1] = {id = q.id, name = q.name, npc = q.npcName or q.npc, status = status}
+		-- NOVO (docs/sistemas/missoes.md, requisito 8 da extensão de tipos de missão): 'kind' e
+		-- 'progress' (texto curto, "3/5 itens"/"Chegou!"/etc. — NarutoQuests.progressText) para a
+		-- aba Missões do menu Shinobi mostrar o tipo/progresso sem precisar falar com o NPC.
+		-- 'boss' só existe (e só é true) em quests kind='kill' com objective.boss — ausente nas
+		-- demais, então um cliente antigo que ignora o campo continua funcionando igual.
+		out[#out + 1] = {
+			id = q.id, name = q.name, npc = q.npcName or q.npc, status = status,
+			kind = q.kind, progress = NarutoQuests.progressText(player, q), boss = q.boss or false,
+		}
 	end
 	return out
 end
@@ -1532,6 +1540,46 @@ def npc_files(n):
            "function onCreatureAppear(cid) npcHandler:onCreatureAppear(cid) end",
            "function onCreatureDisappear(cid) npcHandler:onCreatureDisappear(cid) end",
            "function onThink() npcHandler:onThink() end", ""]
+    # NOVO (docs/sistemas/missoes.md): objective.kind='talk_to' completa quando o jogador fala a
+    # keyword (default 'missao') com o NPC ALVO (obj.npc), que pode ser QUALQUER npc do jogo (shop,
+    # tasks, dailies, quest...), não só o NPC que deu a missão — por isso este bloco entra em TODO
+    # npc gerado, não só nos type='quest'. NarutoQuests.list já está populado quando este script
+    # carrega (dofile de data/lib/naruto_quests.lua roda antes de data/npc/scripts/naruto/*.lua no
+    # boot do TFS — ver docs/03-decisoes-tecnicas.md/armadilhas do CLAUDE.md), então o filtro abaixo
+    # roda uma vez, na carga do script. Se nenhuma quest do jogo mirar este npc (sempre o caso hoje,
+    # nenhuma quest real usa talk_to ainda), TALK_TO_QUESTS fica vazio e NADA é registrado — zero
+    # mudança de comportamento pros NPCs existentes.
+    lua.append(f"""local TALK_TO_QUESTS = {{}}
+if NarutoQuests then
+	for _, q in ipairs(NarutoQuests.list) do
+		if q.kind == 'talk_to' and q.targetNpc == {lua_q(n['id'])} then
+			TALK_TO_QUESTS[#TALK_TO_QUESTS + 1] = q
+		end
+	end
+end
+if #TALK_TO_QUESTS > 0 then
+	local function narutoTalkToCallback(cid, message, keywords, parameters, node)
+		if not npcHandler:isFocused(cid) then return false end
+		local player = Player(cid)
+		if not player then return false end
+		for _, q in ipairs(TALK_TO_QUESTS) do
+			local msg = NarutoQuests.completeTalkTo(player, q)
+			if msg then
+				npcHandler:say(msg, cid)
+				return true
+			end
+		end
+		return false
+	end
+	local narutoTalkToSeen = {{}}
+	for _, q in ipairs(TALK_TO_QUESTS) do
+		local kw = q.keyword or 'missao'
+		if not narutoTalkToSeen[kw] then
+			narutoTalkToSeen[kw] = true
+			keywordHandler:addKeyword({{kw}}, narutoTalkToCallback, {{}})
+		end
+	end
+end""")
     needs_custom_say = False
     if n["type"] == "shop":
         lua.append("local shopModule = ShopModule:new()\nnpcHandler:addModule(shopModule)")
@@ -1543,8 +1591,12 @@ def npc_files(n):
         # ~130 entradas — e a lista com buy=-1 estourava o range check do openShopWindow).
         cap = SHOP_LEVEL_CAP.get(n.get("_region"), 100)
         for it in items.values():
+            # NOVO (docs/sistemas/missoes.md): item quest_item=true (usado num objective.kind=
+            # 'collect_item') nunca entra na lista de venda de nenhum mercador, mesmo se o tipo
+            # dele estiver em buys_types — senão o jogador venderia o item antes de entregar.
             if it["type"] in n.get("buys_types", []) and it["sell_price"] > 0 and item_id(it["id"]) \
-                    and it.get("required_level", 0) <= cap and not it["id"].startswith("trophy_"):
+                    and it.get("required_level", 0) <= cap and not it["id"].startswith("trophy_") \
+                    and not it.get("quest_item"):
                 lua.append(f"shopModule:addSellableItem({{'{it['name'].lower()}'}}, {item_id(it['id'])}, {it['sell_price']}, '{it['name'].lower()}')")
         lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{trade}} para ver o que tenho.")')
     elif n["type"] == "quest":
@@ -1810,41 +1862,109 @@ for n in npcs.values():
             if r:
                 rank_groups.setdefault(r, []).append(storage)
         extra_field = ""
+        monster_name = ""
+        count = 0
         if kind == "keyword_quiz":
             quiz = obj.get("quiz", [])
             quiz_min = max(1, math.ceil(len(quiz) * 0.6))
             quiz_lua_rows = []
             for qq in quiz:
-                kws = ", ".join(f"'{k.replace(chr(39), chr(92)+chr(39))}'" for k in qq.get("keywords", []))
-                quiz_lua_rows.append(f"{{question = '{qq['question'].replace(chr(39), chr(92)+chr(39))}', keywords = {{{kws}}}}}")
+                kws = ", ".join(lua_q(k) for k in qq.get("keywords", []))
+                quiz_lua_rows.append(f"{{question = {lua_q(qq['question'])}, keywords = {{{kws}}}}}")
             count = quiz_min  # para keyword_quiz, 'count' = mínimo de acertos (ver NPC gerado / npc_files)
-            monster_name = ""
             extra_field = f", quiz = {{{', '.join(quiz_lua_rows)}}}, quizMin = {quiz_min}"
         elif kind == "collect_item":
-            # entrega de itens (docs/lore/progressao.md/quest.schema.json): sem contador de
-            # mortes — a etapa checa, na hora de falar {missao}, se o jogador TEM os itens.
+            # entrega de itens (docs/sistemas/missoes.md): sem contador de mortes — a etapa checa,
+            # na hora de falar {missao}, se o jogador TEM os itens.
             col_rows = []
             for it in obj.get("items", []):
                 iid = item_id(it["item_id"])
                 nm = items[it["item_id"]]["name"] if it["item_id"] in items else it["item_id"]
-                col_rows.append(f"{{id = {iid}, count = {it['count']}, name = '{nm}'}}")
+                col_rows.append(f"{{id = {iid}, count = {it['count']}, name = {lua_q(nm)}, itemKey = {lua_q(it['item_id'])}}}")
             count = 0
-            monster_name = ""
             extra_field = f", collectItems = {{{', '.join(col_rows)}}}"
+            # NOVO (docs/sistemas/missoes.md): objective.drops_from — o TFS 1.4.2 não tem "loot
+            # condicional por quest" nativo em monster/*.xml (a tabela de loot é fixa por monstro,
+            # sem acesso ao storage do jogador que o matou); implementado em onKill
+            # (scripts/naruto/quests_kill.lua), não no monstro. 'itemKey' identifica qual entrada
+            # de collectItems o drop alimenta.
+            drops = obj.get("drops_from", [])
+            if drops:
+                drop_rows = [
+                    f"{{itemKey = {lua_q(d['item_id'])}, monster = {lua_q(monsters[d['monster_id']]['name'])}, chance = {float(d['chance'])}}}"
+                    for d in drops
+                ]
+                extra_field += f", dropsFrom = {{{', '.join(drop_rows)}}}"
+        elif kind == "talk_to":
+            # NOVO: completa ao dizer a keyword (default 'missao') para OUTRO npc (obj.npc) — ver
+            # bloco TALK_TO_QUESTS injetado em TODO npc gerado (npc_files()) e
+            # NarutoQuests.completeTalkTo abaixo.
+            target = obj["npc"]
+            target_name = npcs[target]["name"] if target in npcs else target
+            keyword = obj.get("keyword", "missao")
+            count = 1
+            extra_field = f", targetNpc = {lua_q(target)}, targetNpcName = {lua_q(target_name)}, keyword = {lua_q(keyword)}"
+        elif kind == "reach":
+            # NOVO: completa ao chegar perto de objective.pos (poll de 7s, scripts/naruto/
+            # quests_kill.lua) — raio quadrado (Chebyshev), ver docs/sistemas/missoes.md.
+            pos = obj["pos"]
+            radius = int(obj.get("radius", 1))
+            count = 1
+            extra_field = f", pos = {{x = {int(pos['x'])}, y = {int(pos['y'])}, z = {int(pos['z'])}}}, radius = {radius}"
         else:
+            # kind == 'kill' (default, compat): objective.kill (um monstro) OU objective.any_of
+            # (NOVO: lista — qualquer um conta). objective.boss (NOVO) é só metadado de UI.
             count = obj["count"]
-            monster_name = monsters[obj["kill"]]["name"]
+            any_of = obj.get("any_of")
+            if any_of:
+                any_names = [monsters[m]["name"] for m in any_of]
+                monster_name = " ou ".join(any_names)
+                extra_field += ", anyOf = {" + ", ".join(lua_q(nm) for nm in any_names) + "}"
+            else:
+                monster_name = monsters[obj["kill"]]["name"]
+            if obj.get("boss"):
+                extra_field += ", boss = true"
         rank_fields = ""
         if grants_rank:
-            rank_fields += f", grantsRank = '{grants_rank}'"
+            rank_fields += f", grantsRank = {lua_q(grants_rank)}"
         if grants_rank_progress:
-            rank_fields += f", grantsRankProgress = '{grants_rank_progress}'"
+            rank_fields += f", grantsRankProgress = {lua_q(grants_rank_progress)}"
+        # NOVO (docs/sistemas/missoes.md): diálogo condicionado (fallback = comportamento de hoje
+        # quando ausente, ver NarutoQuests.talk/renderTemplate) e pré-requisitos cross-NPC.
+        text_fields = ""
+        if q.get("progress_text"):
+            text_fields += f", progressText = {lua_q(q['progress_text'])}"
+        if q.get("done_text"):
+            text_fields += f", doneText = {lua_q(q['done_text'])}"
+        if q.get("locked_text"):
+            text_fields += f", lockedText = {lua_q(q['locked_text'])}"
+        requires = q.get("requires")
+        if requires:
+            req_parts = []
+            if requires.get("level"):
+                req_parts.append(f"level = {int(requires['level'])}")
+            if requires.get("rank"):
+                req_parts.append(f"rank = {lua_q(requires['rank'])}")
+            if requires.get("quests"):
+                req_parts.append("quests = {" + ", ".join(lua_q(qid) for qid in requires["quests"]) + "}")
+            text_fields += f", requires = {{{', '.join(req_parts)}}}"
+        # NOVO: reward.storage/outfit/addon/title (fora de xp/ryo/items já existentes).
+        reward_extra = ""
+        rew_storage = q["reward"].get("storage")
+        if rew_storage:
+            reward_extra += f", storageKey = {int(rew_storage['key'])}, storageValue = {int(rew_storage['value'])}"
+        if q["reward"].get("outfit"):
+            reward_extra += f", outfit = {int(q['reward']['outfit'])}"
+        if q["reward"].get("addon"):
+            reward_extra += f", addon = {int(q['reward']['addon'])}"
+        if q["reward"].get("title"):
+            reward_extra += f", title = {lua_q(q['reward']['title'])}"
         quest_defs.append(
-            f"\t{{id = '{q['id']}', npc = '{n['id']}', npcName = '{n['name'].replace(chr(39), chr(92)+chr(39))}', "
-            f"name = '{q['name']}', text = '{q['text'].replace(chr(39), chr(92)+chr(39))}', "
-            f"kind = '{kind}', monster = '{monster_name}', count = {count}, "
-            f"storage = {storage}, reward = {{xp = {q['reward'].get('xp', 0)}, ryo = {q['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}"
-            f"{extra_field}{rank_fields}}},")
+            f"\t{{id = {lua_q(q['id'])}, npc = {lua_q(n['id'])}, npcName = {lua_q(n['name'])}, "
+            f"name = {lua_q(q['name'])}, text = {lua_q(q['text'])}, "
+            f"kind = {lua_q(kind)}, monster = {lua_q(monster_name)}, count = {count}, "
+            f"storage = {storage}, reward = {{xp = {q['reward'].get('xp', 0)}, ryo = {q['reward'].get('ryo', 0)}, items = {{{items_lua}}}{reward_extra}}}"
+            f"{extra_field}{rank_fields}{text_fields}}},")
 rank_groups_lua = "{\n" + "\n".join(
     f"\t['{r}'] = {{{', '.join(str(s) for s in storages)}}}," for r, storages in rank_groups.items()
 ) + "\n}"
@@ -1866,10 +1986,62 @@ NarutoQuests.byNpc = {{}}
 -- storage -> quest (índice reverso usado pela aba Missões do menu Shinobi, opcode 210
 -- get_progress, para listar os requisitos pendentes do próximo rank por nome/NPC).
 NarutoQuests.byStorage = {{}}
+-- NOVO (docs/sistemas/missoes.md): índice por id da quest — usado por requires.quests (pré-
+-- requisito cruzando NPCs) e por NarutoQuests.completeTalkTo (achar a quest pelo storage já
+-- basta lá, mas byId fica disponível pra qualquer outro script que precise).
+NarutoQuests.byId = {{}}
 for _, q in ipairs(NarutoQuests.list) do
 	NarutoQuests.byNpc[q.npc] = NarutoQuests.byNpc[q.npc] or {{}}
 	table.insert(NarutoQuests.byNpc[q.npc], q)
 	NarutoQuests.byStorage[q.storage] = q
+	NarutoQuests.byId[q.id] = q
+end
+
+--- NOVO (docs/sistemas/missoes.md): placeholders {{count}}/{{needed}}/{{player}} em text/
+--- progress_text/done_text/locked_text. tpl nil (campo não usado na quest) retorna nil — quem
+--- chama decide o texto padrão (fallback). Sem nenhum placeholder no texto, gsub não altera nada
+--- (no-op seguro para todo texto de quest já existente, que nunca usa essas chaves).
+local function renderTemplate(tpl, player, q, count)
+	if not tpl then return nil end
+	local out = tpl:gsub('{{count}}', tostring(count or 0)):gsub('{{needed}}', tostring(q.count or 0))
+	if player then out = out:gsub('{{player}}', player:getName()) end
+	return out
+end
+
+--- NOVO: requires.level/rank/quests (docs/sistemas/missoes.md). Sem 'requires' (todas as quests
+--- de hoje), retorna sempre true — zero mudança de comportamento pras quests existentes.
+local function requirementsMet(player, q)
+	local req = q.requires
+	if not req then return true end
+	if req.level and player:getLevel() < req.level then return false end
+	if req.rank and NarutoRanks then
+		local cur = NarutoRanks.get(player)
+		local needed = NarutoRanks.byRank[req.rank]
+		if needed and cur.index < needed.index then return false end
+	end
+	if req.quests then
+		for _, qid in ipairs(req.quests) do
+			local rq = NarutoQuests.byId[qid]
+			if rq and player:getStorageValue(rq.storage) ~= NarutoQuests.DONE then return false end
+		end
+	end
+	return true
+end
+
+--- NOVO: fala padrão pt-BR quando 'requires' não foi satisfeito e a quest não definiu
+--- locked_text — lista o que falta (nível/rank/missões anteriores) de forma genérica.
+local function defaultLockedText(q)
+	local req = q.requires or {{}}
+	local parts = {{}}
+	if req.level then parts[#parts + 1] = "level " .. req.level end
+	if req.rank and NarutoRanks and NarutoRanks.byRank[req.rank] then
+		parts[#parts + 1] = "rank " .. NarutoRanks.byRank[req.rank].title
+	end
+	if req.quests and #req.quests > 0 then
+		parts[#parts + 1] = #req.quests .. " missão(ões) anterior(es)"
+	end
+	local falta = #parts > 0 and table.concat(parts, ", ") or "cumprir os requisitos"
+	return "Volte quando estiver pronto: falta " .. falta .. "."
 end
 
 --- Checa progressão de rank (grants_rank/grants_rank_progress) depois de marcar uma quest
@@ -1888,15 +2060,23 @@ local function grantQuestRankIfReady(player, q)
 	return nil
 end
 
---- Marca a quest DONE, aplica a recompensa e checa rank. Usada pelas 3 formas de conclusão
---- (kill, keyword_quiz, collect_item) para não duplicar a lógica de recompensa.
+--- Marca a quest DONE, aplica a recompensa (xp/ryo/items + NOVO storage/outfit/addon, ver
+--- reward.storage/outfit/addon do schema) e checa rank. Usada por TODAS as formas de conclusão
+--- (kill, keyword_quiz, collect_item, reach, talk_to) para não duplicar a lógica de recompensa.
 local function completeQuest(player, q)
 	player:setStorageValue(q.storage, NarutoQuests.DONE)
 	local xp = q.reward.xp
 	if xp > 0 then player:addExperience(xp, true) end
 	if q.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, q.reward.ryo) end
 	for _, it in ipairs(q.reward.items) do player:addItem(it.id, it.count) end
-	local msg = "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída."
+	-- NOVO: reward.storage (destrava diálogo/gate) e reward.outfit/addon.
+	if q.reward.storageKey then player:setStorageValue(q.reward.storageKey, q.reward.storageValue) end
+	if q.reward.outfit then
+		player:addOutfit(q.reward.outfit)
+		if q.reward.addon and q.reward.addon > 0 then player:addOutfitAddon(q.reward.outfit, q.reward.addon) end
+	end
+	-- NOVO: done_text (fallback = mensagem padrão de sempre).
+	local msg = renderTemplate(q.doneText, player, q) or ("Bom trabalho, ninja. Missão '" .. q.name .. "' concluída.")
 	local rankMsg = grantQuestRankIfReady(player, q)
 	if rankMsg then msg = msg .. " " .. rankMsg end
 	-- conquista quest_chain_complete (docs/sistemas/progressao-servidor.md): só quando TODAS as
@@ -1911,23 +2091,39 @@ local function completeQuest(player, q)
 	return msg
 end
 
+--- NOVO: usada pelo NPC ALVO de objective.kind='talk_to' (bloco TALK_TO_QUESTS injetado em TODO
+--- npc gerado, ver npc_files() em tools/export_tfs.py). Retorna a mensagem de conclusão, ou nil
+--- se não há nada a fazer aqui (deixa a keyword cair pro próximo handler desse NPC — ex.: o
+--- 'missao' normal, se o NPC alvo também for um NPC de quests).
+function NarutoQuests.completeTalkTo(player, q)
+	local st = player:getStorageValue(q.storage)
+	if st == NarutoQuests.DONE or st < 0 then return nil end
+	return completeQuest(player, q)
+end
+
 function NarutoQuests.talk(player, quests)
 	for _, q in ipairs(quests) do
 		local st = player:getStorageValue(q.storage)
 		if st ~= NarutoQuests.DONE then
+			-- NOVO: requires só é checado ao ACEITAR (st < 0) — sem 'requires' (compat: nenhuma
+			-- quest de hoje usa o campo), requirementsMet sempre retorna true e este bloco nunca
+			-- dispara.
+			if st < 0 and not requirementsMet(player, q) then
+				return renderTemplate(q.lockedText, player, q) or defaultLockedText(q), false
+			end
 			if q.kind == 'keyword_quiz' then
 				if st < 0 then
 					player:setStorageValue(q.storage, 0)
-					return q.text .. " (Missão aceita: " .. q.name .. "). Diga {{prova}} quando estiver pronto para responder.", false
+					return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. "). Diga {{prova}} quando estiver pronto para responder.", false
 				elseif st < q.count then
-					return "Prova ainda não feita. Diga {{prova}} para começar: " .. q.name .. ".", false
+					return renderTemplate(q.progressText, player, q, st) or ("Prova ainda não feita. Diga {{prova}} para começar: " .. q.name .. "."), false
 				else
 					return completeQuest(player, q), true
 				end
 			elseif q.kind == 'collect_item' then
 				if st < 0 then
 					player:setStorageValue(q.storage, 0)
-					return q.text .. " (Missão aceita: " .. q.name .. ")", false
+					return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. ")", false
 				end
 				local missing = {{}}
 				for _, it in ipairs(q.collectItems) do
@@ -1936,21 +2132,57 @@ function NarutoQuests.talk(player, quests)
 					end
 				end
 				if #missing > 0 then
-					return "Ainda falta trazer: " .. table.concat(missing, ", ") .. ".", false
+					return renderTemplate(q.progressText, player, q, #missing) or ("Ainda falta trazer: " .. table.concat(missing, ", ") .. "."), false
 				end
 				for _, it in ipairs(q.collectItems) do player:removeItem(it.id, it.count) end
 				return completeQuest(player, q), true
 			elseif st >= q.count then
 				return completeQuest(player, q), true
 			elseif st >= 0 then
-				return "Ainda não terminou? " .. q.name .. ": " .. st .. "/" .. q.count .. " " .. q.monster .. ".", false
+				-- NOVO: progress_text (fallback por kind) — reach/talk_to nunca tinham mensagem
+				-- própria antes (não existiam), kill/any_of mantém a mensagem padrão de sempre.
+				if q.progressText then
+					return renderTemplate(q.progressText, player, q, st), false
+				elseif q.kind == 'reach' then
+					return "Ainda não chegou lá. Vá até o local indicado.", false
+				elseif q.kind == 'talk_to' then
+					return "Vá falar com " .. (q.targetNpcName or "a pessoa certa") .. ".", false
+				else
+					return "Ainda não terminou? " .. q.name .. ": " .. st .. "/" .. q.count .. " " .. q.monster .. ".", false
+				end
 			else
 				player:setStorageValue(q.storage, 0)
-				return q.text .. " (Missão aceita: " .. q.name .. ")", false
+				return (renderTemplate(q.text, player, q) or q.text) .. " (Missão aceita: " .. q.name .. ")", false
 			end
 		end
 	end
 	return "Não tenho mais nada para você por enquanto.", false
+end
+
+--- NOVO (docs/sistemas/missoes.md, requisito 8): texto curto de progresso pro cliente (aba
+--- Missões, opcode 210 get_progress — ver missionsProgressJson em scripts/naruto/
+--- character_switch.lua) — "3/5 itens", "Chegou!", etc. Não usado pelo diálogo do NPC (que usa
+--- NarutoQuests.talk/progress_text acima); é só para a UI mostrar progresso sem precisar falar
+--- com o NPC.
+function NarutoQuests.progressText(player, q)
+	local st = player:getStorageValue(q.storage)
+	if st == NarutoQuests.DONE then return "Concluída" end
+	if st < 0 then return "Disponível" end
+	if q.kind == 'collect_item' then
+		local have = 0
+		for _, it in ipairs(q.collectItems) do
+			if player:getItemCount(it.id) >= it.count then have = have + 1 end
+		end
+		return have .. "/" .. #q.collectItems .. " itens"
+	elseif q.kind == 'keyword_quiz' then
+		return st .. "/" .. q.count .. " acertos"
+	elseif q.kind == 'reach' then
+		return (st >= q.count) and "Chegou! Fale com o NPC" or "A caminho"
+	elseif q.kind == 'talk_to' then
+		return "Fale com " .. (q.targetNpcName or "?")
+	else
+		return st .. "/" .. q.count .. (q.boss and " (chefe)" or "")
+	end
 end
 """
 write("lib/naruto_quests.lua", lib)
@@ -1972,20 +2204,86 @@ function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
 	local name = target:getName()
 	for _, q in ipairs(NarutoQuests.list) do
-		-- kind='keyword_quiz' NAO conta mortes: a etapa avança só respondendo a prova (ver
-		-- npc/scripts/naruto/<npc>.lua, palavra-chave {prova}) — evita que matar o monstro
-		-- 'decorativo' do objective.kill de compat destrave a prova sem responder nada.
-		if q.kind ~= 'keyword_quiz' and q.monster == name then
+		if q.kind == 'kill' then
+			-- NOVO (docs/sistemas/missoes.md): objective.any_of — qualquer monstro da lista conta
+			-- pro mesmo contador, além do 'kill' único de sempre.
+			local matches = q.monster == name
+			if not matches and q.anyOf then
+				for _, mn in ipairs(q.anyOf) do
+					if mn == name then matches = true break end
+				end
+			end
+			if matches then
+				local st = player:getStorageValue(q.storage)
+				if st >= 0 and st < q.count then
+					player:setStorageValue(q.storage, st + 1)
+					player:sendTextMessage(MESSAGE_EVENT_ADVANCE, q.name .. ": " .. (st + 1) .. "/" .. q.count)
+				end
+			end
+		elseif q.kind == 'collect_item' and q.dropsFrom then
+			-- NOVO: objective.drops_from — o TFS 1.4.2 não tem "loot condicional por quest" no
+			-- monster/*.xml (a tabela de loot não enxerga o storage do jogador que matou), então o
+			-- drop extra é concedido aqui. Só dropa enquanto a missão está ATIVA (aceita, storage
+			-- >= 0, não concluída) e o jogador ainda não tem o suficiente desse item (não empilha
+			-- além do necessário pra entrega).
 			local st = player:getStorageValue(q.storage)
-			if st >= 0 and st < q.count then
-				player:setStorageValue(q.storage, st + 1)
-				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, q.name .. ": " .. (st + 1) .. "/" .. q.count)
+			if st >= 0 then
+				for _, drop in ipairs(q.dropsFrom) do
+					if drop.monster == name then
+						for _, it in ipairs(q.collectItems) do
+							if it.itemKey == drop.itemKey and player:getItemCount(it.id) < it.count and math.random() <= drop.chance then
+								player:addItem(it.id, 1)
+								player:sendTextMessage(MESSAGE_EVENT_ADVANCE, it.name .. " obtido(a)! (" .. q.name .. ")")
+							end
+						end
+					end
+				end
 			end
 		end
+		-- kind='keyword_quiz' NAO conta mortes (a etapa avança só respondendo a prova, palavra-
+		-- chave {prova}); kind='talk_to' avança só falando com o NPC alvo; kind='reach' avança só
+		-- chegando no local (poll abaixo). Nenhum dos três tem q.monster/q.anyOf preenchido, então
+		-- já cairiam fora do primeiro `if q.kind == 'kill'` mesmo sem checagem explícita — mas o
+		-- `if` já deixa isso impossível de qualquer forma.
 	end
 	return true
 end
 killEvent:register()
+
+-- NOVO (docs/sistemas/missoes.md): objective.kind='reach' completa a ETAPA (storage -> q.count)
+-- quando o jogador está a até 'radius' tiles (quadrado/Chebyshev: |dx|<=radius e |dy|<=radius, MESMO
+-- z) de 'pos'. Escolha de implementação: poll (igual ao GlobalEvent de conquistas,
+-- server/generated/scripts/naruto/achievements.lua) em vez de onStepIn/actionid de tile (exigiria
+-- editar o mapa por missão, fora do escopo de tools/export_tfs.py) ou MoveEvent (mesmo motivo —
+-- pediria uma entrada de tile por missão em vez de só um pos+radius no JSON). Poll PRÓPRIO (não
+-- reaproveita o de achievements.lua, arquivo/lib diferente) para manter naruto_quests autocontido.
+-- Ao chegar, só marca "pronto para entregar" — a recompensa é dada ao falar {missao} com o NPC que
+-- deu a missão (mesmo fluxo de kill/any_of, narrativamente "volte e me conte").
+local function narutoQuestPollReach(player)
+	for _, q in ipairs(NarutoQuests.list) do
+		if q.kind == 'reach' then
+			local st = player:getStorageValue(q.storage)
+			if st >= 0 and st < q.count then
+				local pos = player:getPosition()
+				if pos.z == q.pos.z and math.abs(pos.x - q.pos.x) <= q.radius and math.abs(pos.y - q.pos.y) <= q.radius then
+					player:setStorageValue(q.storage, q.count)
+					player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Chegou ao destino: " .. q.name .. " (diga {missao} para reportar)")
+				end
+			end
+		end
+	end
+end
+
+local reachPoll = GlobalEvent("NarutoQuestReachPoll")
+function reachPoll.onThink(interval, lastExecution)
+	if not NarutoQuests then return true end
+	for _, player in ipairs(Game.getPlayers()) do
+		narutoQuestPollReach(player)
+	end
+	return true
+end
+reachPoll:interval(7000)
+reachPoll:register()
 
 local login = CreatureEvent("NarutoQuestKillLogin")
 function login.onLogin(player)
