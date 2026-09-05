@@ -101,7 +101,11 @@ consumir isso no futuro para: (1) gerar uma mensagem de título ao completar a
 cálculo normal de `personagem-e-progressao.md`. Nada disso existe no
 `tools/export_tfs.py` hoje — ver pendências no relatório da missão.
 
-## Pendências técnicas (fora do escopo desta missão — não editei `tools/`)
+## Pendências técnicas (atualizado 2026-09-05)
+
+> Nota: `keyword_quiz`, `collect_item`, `talk_to`, confirmação de rank centralizada (`NarutoRanks.promote`) e bônus de status **já estão implementados** em `tools/export_tfs.py`/`naruto_quests.lua`/`naruto_ranks.lua` (ver `docs/design/auditoria-historia.md`, seção Sistemas). O texto original abaixo ficou como histórico.
+
+ (fora do escopo desta missão — não editei `tools/`)
 
 1. **Objetivo de quest novo `keyword_quiz`**: a prova teórica precisa de um
    NPC que aceite respostas por palavra-chave e só libere a missão seguinte
