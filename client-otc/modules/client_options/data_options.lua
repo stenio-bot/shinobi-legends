@@ -211,8 +211,10 @@ return {
             end
         end
     },
+    -- Musica ambiente desligada por padrao (docs/sistemas/audio.md): o projeto ainda nao
+    -- tem trilha propria, so os SFX gerados por tools/audio/gen_sfx.py.
     enableMusicSound                  = {
-        value = true,
+        value = false,
         action = function(value, options, controller, panels, extraWidgets)
             if g_sounds then
                 g_sounds.getChannel(SoundChannels.Music):setEnabled(value)
@@ -226,6 +228,23 @@ return {
                 g_sounds.getChannel(SoundChannels.Music):setGain(value / 100)
             end
             panels.soundPanel:recursiveGetChildById('musicSoundVolume'):setText(tr('Music volume: %d', value))
+        end
+    },
+    -- "Sons do jogo" (docs/sistemas/audio.md): SFX procedurais tocados por
+    -- modules/naruto_sounds (g_sounds.play direto, nao usa SoundChannel - por isso o
+    -- modulo le enableGameSound/gameSoundVolume de g_settings a cada tocada em vez de
+    -- um canal so ligar/desligar tudo). Ligado por padrao.
+    enableGameSound                   = {
+        value = true,
+        action = function(value, options, controller, panels, extraWidgets)
+            -- nada a fazer aqui: naruto_sounds.lua le g_settings.getBoolean('enableGameSound')
+            -- na hora de cada NarutoSounds.play(), entao a troca ja vale no proximo som.
+        end
+    },
+    gameSoundVolume                   = {
+        value = 100,
+        action = function(value, options, controller, panels, extraWidgets)
+            panels.soundPanel:recursiveGetChildById('gameSoundVolume'):setText(tr('Game sound volume: %d', value))
         end
     },
     enableLights                      = {

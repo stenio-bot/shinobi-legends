@@ -34,3 +34,27 @@ UIWidget
       @onSetup: |
         local value = modules.client_options.getOption('musicSoundVolume')
         self:setText(tr('Music volume: %d', value))
+
+  SmallReversedQtPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 7
+    height: 44
+
+    OptionCheckBox
+      id: enableGameSound
+      !text: tr('Enable game sounds')
+
+    OptionScaleScroll
+      id: gameSoundVolume
+      margin-top: 5
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      &minimumScrollValue: 1
+      &maximumScrollValue: 100
+      &scrollSize: 21
+      @onSetup: |
+        local value = modules.client_options.getOption('gameSoundVolume')
+        self:setText(tr('Game sound volume: %d', value))

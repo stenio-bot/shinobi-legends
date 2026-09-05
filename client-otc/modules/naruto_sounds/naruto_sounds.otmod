@@ -1,0 +1,15 @@
+Module
+  name: naruto_sounds
+  description: Sons do jogo - SFX gerados por sintese procedural para jutsus, combate e UI
+  author: Shinobi Legends
+  sandboxed: true
+  autoload: true
+  autoload-priority: 1150
+  reloadable: true
+  scripts: [ sfx_catalog, naruto_sounds ]
+  dependencies:
+    - corelib
+    - gamelib
+    - naruto_menu
+  @onLoad: init()
+  @onUnload: terminate()
