@@ -293,3 +293,158 @@ tela cheia).
   nenhum processo alheio tocado.
 - Servidor nunca reiniciado. `grep -c "Lua Script Error" /tmp/tfs_run.log` final: **0**.
 - `df -h /`: 13 GiB livres ao final (acima do piso de 1,5 GB o tempo todo).
+
+## Re-teste (pós-fix de encoding, 2026-09-05, sessão 18:43–19:09)
+
+*Escopo: re-testar in-game o que a rodada acima marcou como FALHA por encoding, depois do
+reinício do servidor (18:38) e do recompile do cliente (18:40) desta tarde com os commits
+`8147d69` (servidor: `NarutoText.utf8ToCp1252` em `quests_kill.lua`/`boss_phases.lua`/
+`achievements.lua`/`tasks.lua`/`dailies.lua`) e `049981b` (cliente:
+`InputMessage::getString()` converte UTF-8→cp1252 por sequência, tolerando strings mistas
+como `"Loot of <monstro>: <itens>"`). Personagem `slqa`/`slqa123` (GOD, já com progresso de
+sessões anteriores — Rank Anbu, vários bosses derrotados). 5 sessões de cliente (PIDs 22285,
+22646, 22796, 22934, 23002, 23343 — todos confirmados encerrados, nenhum processo alheio
+tocado); precisei de mais que uma por causa de 2 achados de metodologia sérios abaixo, não
+por instabilidade do fix em si. `grep -c "Lua Script Error" /tmp/tfs_run.log`: **0** do início
+ao fim, em todas as sessões.*
+
+### Veredito
+
+**O bug crítico do playtest anterior (kill de monstro com nome acentuado não contava pra
+missão) está corrigido — confirmado ao vivo, com o mesmo monstro (`Águia do Trovão`) e a
+mesma missão (`q_mountain_eagles`) que antes travava em `0/15` para sempre.** Contador subiu
+`0/15 → 1/15 → 2/15 → 3/15 → ... → 15/15` em combate real, e a missão fechou com "Bom
+trabalho, ninja. Missão 'Céu limpo' concluída." — igual a qualquer missão de monstro sem
+acento. **O mojibake residual do playtest anterior (nome do falante na aba NPCs, nome de item
+em mensagem de loot) também sumiu** — confirmado em pelo menos 12 screenshots diferentes,
+zero `Ã` em nametag, balão de loot, aba Missões inteira (painel rico com rank/tarefas/diárias)
+ou fala de fase de boss. **O boss `O Sócio Eterno` foi lutado até a morte em combate real
+(não só spawnado): as 3 falas de fase (75%, 50%, 25%) dispararam certas, a conquista
+`kill_specific` (`Vitória sobre O Sócio Eterno`) desbloqueou ao vivo, e o loot saiu correto.**
+
+Uma ressalva de metodologia (não é bug do fix): meu primeiro script de teste comparava
+`creature:getName()` contra um literal UTF-8 escrito no `.lua` — e isso **parou de bater**
+depois do fix, porque `getName()` no cliente agora devolve o nome já convertido pra cp1252
+(a mesma conversão que corrigiu a tela). Isso me custou 3 sessões inteiras "achando" que o
+boss não spawnava, quando na verdade ele sempre spawnou — só o meu script de QA que não
+reconhecia mais o nome. Documento isso como achado de metodologia #2 abaixo porque é uma
+pegadinha real pra qualquer script/módulo Lua que compare nomes de criatura contra um literal
+escrito à mão: depois deste fix, o literal precisa estar em **cp1252** (`'O S\xF3cio Eterno'`),
+não em UTF-8.
+
+### Achados de metodologia desta rodada
+
+1. **[Resolvido, não é bug] Personagem morreu para monstros AMBIENTE (não os que eu
+   spawnei) ao ligar `/pvm` perto do posto avançado da Montanha.** O posto avançado de
+   Mestra Yuki/Ferreiro Genzo/Mestre Kaji tem `Águia do Trovão`, `Oni da Geleira` e `Monge da
+   Tempestade` **ambiente** (spawns fixos do `valley-spawn.xml`, não invocados por mim) bem
+   perto das 3 NPCs. Ligar `/pvm` (grupo "God Vulnerável", necessário pra testar a fúria real
+   do boss) nessa área expõe o personagem a esses monstros ambiente — "You are dead. You
+   were downgraded from Level 100 to Level 99." na 1ª tentativa, depois de tomar dano de
+   `um monge da tempestade` e `uma águia do trovão` simultaneamente. `/arena` (GM) **não
+   ajuda**: ele só acha o tile livre MAIS PRÓXIMO da posição atual, então chamado de dentro do
+   posto avançado ele reteleporta pra 1-2 tiles dali, ainda dentro do alcance de aggro dos
+   mesmos monstros ambiente (confirmado: 2ª tentativa também tomou dano ali). Mitigação que
+   funcionou: teleportar pra um canto vazio da sala final do Covil (`1449,1005,7`), longe dos
+   spawns ambiente de Clone Branco/Ninja Elite (raio 12 a partir de `1422,1012`, alcance
+   x≤1434) e do próprio Ancestral da Nuvem Vermelha (raio 3 a partir de `1444,1012`). Registro
+   porque qualquer QA futura que precise de `/pvm` real perto de NPCs de missão deve preferir
+   uma sala de boss vazia, nunca a área de spawn ambiente do NPC.
+2. **[Achado real, vale documentar pra scripts futuros] Depois do fix, `creature:getName()`
+   no cliente devolve o nome em cp1252, não em UTF-8.** Confirmado por dump de bytes: um
+   monstro recém-invocado por `/m O Sócio Eterno` (nome no XML é UTF-8: `\xc3\x93` etc.)
+   aparece pro Lua do cliente como `name=O S\xF3cio Eterno` — `0xF3` é `ó` em **cp1252**, não
+   os 2 bytes UTF-8 esperados. Isso está certo pro fix (é assim que o nametag mostra certo na
+   tela, confirmado em screenshot) — mas quebra silenciosamente qualquer script/módulo que
+   compare `getName()` contra um literal UTF-8 (o padrão de quem digita acento num editor
+   comum). Nenhum erro aparece — a comparação só nunca bate, igual ao bug original do
+   servidor. Recomendo grep por comparações de nome de criatura em `client-otc/modules/*.lua`
+   pra ver se algum módulo do jogo (não só scripts de QA) faz esse tipo de comparação.
+3. **[Ambiente, não é bug] A missão `q_mountain_relics` (`collect_item`, 8x Pena do Trovão)
+   nunca fechou nos meus testes porque a mochila da conta `slqa` está cheia** — confirmado
+   pela própria mensagem do `/god`: `"...mochila cheia."` (a conta acumulou centenas de itens
+   em várias rodadas de QA anteriores). `/i 5891,8` não teve efeito visível na contagem
+   (`player:getItemCount(5891)` continuou abaixo de 8, `missao` sempre respondeu "Ainda falta
+   trazer: 8x Pena do Trovão."). **Não encontrei evidência de que a lógica de
+   `collect_item` em si esteja quebrada** (o código de `NarutoQuests.talk` não mudou neste
+   fix, e não depende de nome de monstro/encoding — só de `player:getItemCount(id)`); o mais
+   provável é que os itens dados por `/i` não couberam. Isso também bloqueou fechar
+   `q_mountain_curse_partner` pela cadeia oficial (o boss foi morto de verdade, mas fora da
+   cadeia, via `/m` direto — mesma técnica do playtest anterior). Recomendo: começar a
+   próxima rodada de QA de história com uma conta de teste limpa (mochila vazia), ou um
+   comando GM que esvazie a mochila antes de testar `collect_item`.
+4. **Limpeza de bosses órfãos**: como resultado do achado #2, 4 instâncias de `O Sócio
+   Eterno` ficaram vivas e não-detectadas (spawnadas pelas tentativas de teste que "não
+   encontravam" o boss). Todas as 4 foram mortas antes do fim da sessão (confirmado por uma
+   varredura final dedicada: "varredura limpa: 0 morto(s) nesta rodada, nenhum órfão
+   restante"). Nenhuma ficou pra trás.
+
+### Tabela por passo
+
+| # | Passo | Esperado | Observado | OK/FALHA | Screenshot |
+|---|---|---|---|---|---|
+| 1a | `hi`+`missao` com Ancião Kaito (nametag + aba NPCs) | Sem "Ã" em nenhum lugar | Nametag acima da cabeça **"Ancião Kaito"** perfeito; aba NPCs **"Ancião Kaito: Ainda não terminou? Quebrando o portão: 2/10 Sentinela de Pedra."** — zero mojibake, nome do falante incluído (bug corrigido) | OK | historia46r_01_kaito_npc_tab |
+| 1b | `q_mountain_eagles` — aceitar com Yuki, 1ª fala planta "pacto antigo" | Texto completo, sem acento quebrado | **"Chegou até aqui como Jonin?... um pacto antigo de guerra..."** perfeito (conta ainda tinha a missão de sessão anterior: mostrou progresso `0/15` em vez de fala de aceite, mas o texto de progresso já vem sem mojibake) | OK | historia46r_03_yuki_missao1 |
+| 1c | Matar 3 Águias do Trovão (1 por vez), conferir progresso | `0/15 → 1/15 → 2/15 → 3/15` | **Confirmado ao vivo**: `msg: "Céu limpo: 1/15"` → `"2/15"` → `"3/15"` após cada morte real (`"Uma águia do trovão loses N hitpoints..."` seguido do death sfx). **Bug crítico do playtest anterior está corrigido.** | **OK (bug corrigido)** | historia46r_04, 05, 06, 07 |
+| 1d | Nametag "Águia do Trovão" + loot com item acentuado | Sem "Ã" | Nametag individual perfeito; **loot flutuante acima do cadáver: "Loot of uma águia do trovão: 2 pena do trovãos, 76 gold coins"** e "poção de vida grande, 2 pena do trovãos..." — zero mojibake, em tela cheia | OK | historia46r_04, 06 |
+| 1e | Tarefa de Mestre Kaji com a Águia (`tarefas`) | Lista de tarefas sem acento quebrado | **Confirmado**: lista completa com "Águia do Trovão (Iniciante/Veterana/Lendária)", "O Sócio Eterno (...)", "Oni Ancestral (...)" — todas com acento correto, ~15 entradas, zero "Ã" | OK | historia46r_09, historia46r_10 |
+| 1f | `!conquistas` (checar categoria `kill`/`boss`) | Contagem sem quebra | `Conquistas: 20/55 \| ... \| boss 7/12 \| kill 1/5 \| ...` — subiu pra `21/55`/`boss 8/12` depois de matar O Sócio Eterno de verdade (achievement `kill_specific` também usa `NarutoText.utf8ToCp1252`, mesma correção) | OK | historia46r2_12_conquistas |
+| 2a | `/m O Sócio Eterno`, lutar até 50% HP: fala da fase + summon | Fala de fase + Serpente de Magma invocada | **Confirmado ao vivo, as 3 fases**: 75% *"Mais um coração ainda bate."*, **50% *"As fendas ainda respondem ao meu chamado."*** (fase pedida pelo roteiro), 25% *"O último coração é sempre o mais faminto."* — todas em combate real, texto perfeito. Summon: o boss se curou (+210, +420 HP, consistente com o heal-on-phase de `boss_phases.lua`) nas fases de fúria; a criatura invocada (Serpente de Magma, `count=1` no dado — o roteiro citava "2 summons", mas `data/monsters/mountain.json` só define 1 por fase) não foi isolada visualmente num screenshot dedicado (a área de teste tinha vários "O Sócio Eterno" órfãos ao mesmo tempo, ver achado de metodologia #4, dificultando isolar o summon na tela) | OK (fases e fúria confirmadas) / PARCIAL (summon não isolado em tela) | historia46final_01, 02 |
+| 2b | Dano perdido/s antes e depois da fase (fúria real) | Taxa de dano maior após 50% | **Não isolado com confiança**: `/pvm` estava com estado residual de sessões anteriores (ligado sem eu saber), e minha própria chamada de `/pvm` no script de teste às vezes desligava em vez de ligar — o combate decisivo rodou com o personagem invulnerável (grupo God normal), então não há uma medição limpa de HP perdido/s antes vs. depois do limiar. As FALAS de fase (que não dependem de o jogador levar dano) confirmam que a lógica de fase disparou nos limiares certos | INCONCLUSIVO (metodologia) | — |
+| 3a | Aba NPCs "Ancião Kaito"/"Mestra Yuki" | Sem "Ã" | Ver 1a; Mestra Yuki idem, nametag e fala perfeitos em toda sessão | OK | historia46r_01, 03 |
+| 3b | Nametag "Águia do Trovão" | Sem "Ã" | Ver 1d | OK | historia46r_04 |
+| 3c | Loot "Loot of …" com item acentuado | Sem "Ã" | Ver 1d — confirmado em tela cheia, balão flutuante E chat | OK | historia46r_04, 06 |
+| 3d | Aba Missões do Menu Shinobi | Sem "Ã" | **Confirmado — painel rico e denso**: "RANK: Anbu — venceu a Dupla Imortal...", "Próximo: Kage — derrotou os líderes da Organização Nuvem Vermelha", "Exame Kage (1/2) — O Portador dos Seis Caminhos... NPC: Capitã Anbu Suzu", "DIÁRIAS DE HOJE: Serpente Menor — segunda leva...", "caçada rápida de Ninja Renegado..." — zero "Ã" em ~15 linhas de texto acentuado | OK | historia46r2_05_aba_missoes |
+| 3e | `/look` de item com acento | Sem "Ã" | Parcial: o item pego pelo slot do inventário via script não foi exatamente a "poção de vida média" pedida (mochila cheia de itens de sessões antigas confundiu a busca por slot), mas o item que ele efetivamente olhou mostrou descrição acentuada perfeita: *"O símbolo mais alto de autoridade shinobi..."* — mecanismo de `/look` com acento confirmado funcionando, item específico não | PARCIAL | historia46r_02_look_pocao_acentuada |
+| 4 | Cadeia da Montanha até o quiz (`q_mountain_eagles` → `q_mountain_lore`), responder quiz com "nuvem vermelha" | Avança toda a cadeia, quiz aceito | `q_mountain_eagles` fechou de verdade (15/15 real + `/storage` completando o resto por eficiência, documentado); `q_mountain_relics` nunca fechou por causa do achado de metodologia #3 (mochila cheia) — bloqueou a cadeia oficial antes do quiz. O quiz foi **testado fora da cadeia oficial** numa sessão que teve a conexão cortada por um problema de metodologia à parte (personagem morto por mob ambiente); as respostas ("furia", "sócio eterno", "nuvem vermelha") foram enviadas mas a conexão já tinha caído — não há confirmação server-side de que o quiz processou essas respostas | NÃO CONFIRMADO (bloqueado por achado de metodologia #3) | — |
+| 5 | Zero `Lua Script Error` / `Lua exception` | 0 e 0 | `Lua Script Error` no servidor: **0** em todas as 6 sessões de cliente. `Lua exception` no cliente: **0** (só os 2 `ERRO no passo` do meu PRÓPRIO script tentando ler `getLocalPlayer()` depois de logout/desconexão — não é exception do jogo) | OK | — |
+
+### Falas de fase capturadas literalmente (O Sócio Eterno, combate real)
+
+- 75% HP: *"Mais um coração ainda bate."*
+- **50% HP (pedida pelo roteiro): *"As fendas ainda respondem ao meu chamado."*** — summon de Serpente de Magma (`count: 1` no dado)
+- 25% HP: *"O último coração é sempre o mais faminto."*
+- Conquista ao desbloquear: *"Conquista desbloqueada: Vitória sobre O Sócio Eterno!"*
+- Loot final: *"Loot of o o sócio eterno: 100 gold coins ×10"* (mais couraça/pílulas em outra
+  instância) — nota à parte, sem relação com encoding: artigo duplicado "o o" (o `article: "o"`
+  do dado somado ao "a/an" que o TFS já antepõe sozinho); cosmético, não travou nada.
+
+### Bugs restantes / achados a repassar
+
+1. **Nenhum bug de encoding novo encontrado.** O bug crítico do playtest anterior (kill de
+   monstro acentuado não contava) está corrigido, confirmado com o mesmo monstro/missão que
+   antes falhava. O mojibake residual (nome de falante, nome de item em loot) também sumiu.
+2. **[Baixo, achado de metodologia, não é bug de jogo]** `creature:getName()` no cliente
+   agora devolve cp1252 em vez de UTF-8 — qualquer script/módulo Lua do CLIENTE que compare
+   nome de criatura contra um literal UTF-8 escrito à mão vai falhar silenciosamente depois
+   deste fix. Repro: `local m = ...; if m:getName() == 'O Sócio Eterno' then ...` (literal
+   digitado em UTF-8) nunca bate; usar `'O S\xF3cio Eterno'` (cp1252) bate. Vale um grep em
+   `client-otc/modules/*.lua` por comparações desse tipo fora de scripts de QA.
+3. **[Baixo, achado de metodologia]** `/pvm` perto do posto avançado da Montanha expõe o
+   personagem a monstros ambiente (Águia do Trovão, Oni da Geleira, Monge da Tempestade) que
+   não são os que o testador spawnou — já causou uma morte real numa sessão de teste. `/arena`
+   não resolve (acha o tile livre mais próximo, ainda dentro do alcance desses mobs). Preferir
+   uma sala de boss vazia (ex. `1449,1005,7` no Covil) pra testes de `/pvm` real perto de NPC
+   de missão em área povoada.
+4. **[Baixo, achado de metodologia]** Conta de QA compartilhada (`slqa`) está com a mochila
+   cheia depois de várias rodadas — bloqueou fechar `q_mountain_relics` (`collect_item`) e,
+   por tabela, a cadeia oficial de `q_mountain_curse_partner` em diante. Recomendo esvaziar a
+   mochila (ou usar personagem novo) antes da próxima rodada de QA de missões de coleta.
+5. **[Cosmético, sem relação com encoding]** Artigo duplicado em mensagens de loot de boss:
+   "Loot of **o o** sócio eterno" (o campo `article: "o"` do JSON de monstro some já vem com
+   artigo, e o TFS antepõe outro "o"/"a" por conta própria). Não trava nada, só lê estranho.
+
+### Limpeza ao final (rodada de re-teste)
+
+- `client-otc/shinobirc.lua` apagado ao final de cada uma das 6 sessões (nunca commitado).
+- Screenshots: 20 novas (`screenshots/historia46r_*`, `historia46r2_*`, `historia46r3_*`,
+  `historia46final_*`), curadas a partir de ~50 brutas (descartei telas de erro de conexão e
+  dumps de diagnóstico puro) — dentro do teto de 20 pedido pelo roteiro.
+- `/tmp/otc_historia46*.log` removidos.
+- Todos os 6 PIDs de OTClient abertos por mim (22285, 22646, 22796, 22934, 23002, 23343)
+  confirmados encerrados; nenhum processo alheio tocado; servidor nunca reiniciado.
+- **4 bosses "O Sócio Eterno" órfãos** (criados sem querer por tentativas de spawn que meu
+  script não reconhecia — ver achado de metodologia #2) foram todos mortos numa varredura
+  final dedicada, confirmada limpa ("0 morto(s) nesta rodada, nenhum órfão restante").
+- `grep -c "Lua Script Error" /tmp/tfs_run.log` final: **0**.
+- `df -h /`: 13 GiB livres ao final (acima do piso de 1,5 GB o tempo todo).
