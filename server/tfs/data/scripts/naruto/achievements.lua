@@ -11,7 +11,9 @@ local killEvent = CreatureEvent("NarutoAchievementKill")
 function killEvent.onKill(player, target)
 	if not NarutoAchievements then return true end
 	if not target:isMonster() then return true end
-	NarutoAchievements.onKill(player, target:getName())
+	-- a.monsterName (naruto_achievements.lua, kill_specific) e' cp1252 gerado; getName() do TFS
+	-- e' UTF-8 -- converte antes (mesma regra de quests_kill.lua/tasks.lua/dailies.lua).
+	NarutoAchievements.onKill(player, NarutoText.utf8ToCp1252(target:getName()))
 	return true
 end
 killEvent:register()

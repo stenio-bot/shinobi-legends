@@ -3,7 +3,9 @@
 local killEvent = CreatureEvent("NarutoDailyKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	NarutoDailies.onKill(player, target:getName())
+	-- entry.monster (naruto_dailies.lua) e' cp1252 gerado; getName() do TFS e' UTF-8 -- converte
+	-- antes de entrar em NarutoDailies.onKill (mesma regra de quests_kill.lua/tasks.lua).
+	NarutoDailies.onKill(player, NarutoText.utf8ToCp1252(target:getName()))
 	return true
 end
 killEvent:register()

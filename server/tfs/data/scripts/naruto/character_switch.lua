@@ -401,6 +401,9 @@ local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoOpcode")
 	player:registerEvent("NarutoRegenAdvance")
+	-- fase de f\xFAria de boss multiplica dano de verdade (boss_phases.lua) \x97 precisa registrar aqui
+	-- porque onHealthChange n\xE3o dispara pro jogador sem opt-in expl\xEDcito (diferente de onLogin).
+	player:registerEvent("NarutoBossFury")
 	local firstTime = player:getStorageValue(STORAGE_ONBOARDED) < 1
 	-- Reserva de chakra inicial: o TFS cria o jogador com 0 de mana e as vocacoes dao +10/level,
 	-- mas os jutsus tier 1 custam 2,5-3,0% do pool (chakra_cost_percent, rodada 5) -- sem isso

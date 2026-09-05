@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spells>
 <!-- NARUTO:BEGIN -->
-<instant group="attack" name="Doton: Bala de Lama" words="doton bala lama" lvl="1" mana="0" manapercent="2" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="1" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/doton_bala_lama.lua">
+<instant group="attack" name="Doton: Bala de Lama" words="doton bala lama" lvl="1" mana="0" manapercent="13" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="1" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/doton_bala_lama.lua">
 	<vocation name="Vila da Folha"/>
 	<vocation name="Vila da Névoa"/>
 	<vocation name="Vila da Nuvem"/>
@@ -25,7 +25,7 @@
 	<vocation name="Vila da Nuvem"/>
 	<vocation name="Vila da Areia"/>
 </instant>
-<instant group="attack" name="Fuuton: Lâmina de Vento" words="fuuton lamina vento" lvl="1" mana="0" manapercent="2" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="5" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/fuuton_lamina_vento.lua">
+<instant group="attack" name="Fuuton: Lâmina de Vento" words="fuuton lamina vento" lvl="1" mana="0" manapercent="13" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="5" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/fuuton_lamina_vento.lua">
 	<vocation name="Vila da Folha"/>
 	<vocation name="Vila da Névoa"/>
 	<vocation name="Vila da Nuvem"/>
@@ -49,7 +49,7 @@
 	<vocation name="Vila da Nuvem"/>
 	<vocation name="Vila da Areia"/>
 </instant>
-<instant group="attack" name="Katon: Grande Bola de Fogo" words="katon goukakyuu" lvl="1" mana="0" manapercent="3" prem="0" range="5" needtarget="1" blockwalls="1" aggressive="1" spellid="9" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/katon_goukakyuu.lua">
+<instant group="attack" name="Katon: Grande Bola de Fogo" words="katon goukakyuu" lvl="1" mana="0" manapercent="14" prem="0" range="5" needtarget="1" blockwalls="1" aggressive="1" spellid="9" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/katon_goukakyuu.lua">
 	<vocation name="Vila da Folha"/>
 	<vocation name="Vila da Névoa"/>
 	<vocation name="Vila da Nuvem"/>
@@ -265,7 +265,7 @@
 	<vocation name="Vila da Nuvem"/>
 	<vocation name="Vila da Areia"/>
 </instant>
-<instant group="attack" name="Raiton: Agulha de Raio" words="raiton hari" lvl="1" mana="0" manapercent="2" prem="0" range="7" needtarget="1" blockwalls="1" aggressive="1" spellid="45" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/raiton_hari.lua">
+<instant group="attack" name="Raiton: Agulha de Raio" words="raiton hari" lvl="1" mana="0" manapercent="13" prem="0" range="7" needtarget="1" blockwalls="1" aggressive="1" spellid="45" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/raiton_hari.lua">
 	<vocation name="Vila da Folha"/>
 	<vocation name="Vila da Névoa"/>
 	<vocation name="Vila da Nuvem"/>
@@ -295,7 +295,7 @@
 	<vocation name="Vila da Nuvem"/>
 	<vocation name="Vila da Areia"/>
 </instant>
-<instant group="attack" name="Suiton: Projétil de Água" words="suiton mizudan" lvl="1" mana="0" manapercent="2" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="50" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/suiton_mizudan.lua">
+<instant group="attack" name="Suiton: Projétil de Água" words="suiton mizudan" lvl="1" mana="0" manapercent="12" prem="0" range="6" needtarget="1" blockwalls="1" aggressive="1" spellid="50" cooldown="9000" groupcooldown="2000" needlearn="1" script="naruto/suiton_mizudan.lua">
 	<vocation name="Vila da Folha"/>
 	<vocation name="Vila da Névoa"/>
 	<vocation name="Vila da Nuvem"/>
