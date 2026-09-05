@@ -54,7 +54,7 @@ local PHASES = {
 	['Serpente Branca'] = {
 		{hp = 100, mult = 1.0, message = 'Que curioso... um genin que ainda n\xE3o sabe correr.', summons = {}},
 		{hp = 60, mult = 1.0, message = 'Chega de fingir que sou gente. Vejam o que eu realmente sou!', looktype = 890, summons = {{name = 'Cobra da Floresta', count = 3}}},
-		{hp = 25, mult = 1.9, message = 'Minhas crias v\xE3o limpar o que sobrar de voc\xEA! Nem a organiza\xE7\xE3o que me expulsou quis ver o que eu virei \x97 e voc\xEAs v\xE3o descobrir por qu\xEA.', summons = {{name = 'Serpente Menor', count = 2}}},
+		{hp = 25, mult = 1.45, message = 'Minhas crias v\xE3o limpar o que sobrar de voc\xEA! Nem a organiza\xE7\xE3o que me expulsou quis ver o que eu virei \x97 e voc\xEAs v\xE3o descobrir por qu\xEA.', summons = {{name = 'Serpente Menor', count = 2}}},
 	},
 }
 

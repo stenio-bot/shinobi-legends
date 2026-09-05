@@ -310,26 +310,31 @@ HYBRID_NINJUTSU_FRAC = 0.4
 # assim que o escolhido atual é nerfado (testado: nerfar o "campeão" tier 2/3 de cada elemento faz
 # o híbrido migrar pro tier 1 projétil; nerfar esse também migra pro tier 2 "housenka"-like — nunca
 # fecha, só troca qual jutsu carrega o excedente).
-# Fix estrutural (não numérico por jutsu): o híbrido NÃO gasta uma ação decidida pra cada cast
-# como o ninjutsu puro (ele ataca com a arma na cadência normal E, por cima, casta sempre que
-# pronto/pagável — "arma entre casts", rodada 4) — mas um jogador de verdade que joga metade-
-# metade (`HYBRID_TAIJUTSU_FRAC`/`NINJUTSU_FRAC` = 0.4/0.4) não tem a MESMA atenção de rotação que
-# um caster puro: precisa recentralizar o alvo, timing de posicionamento etc. Com o cooldown de
-# tier 1 em 9,0s e o intervalo de arma em 2,0s (rodada 5), cabem 4-5 golpes de arma entre casts —
-# `HYBRID_JUTSU_CADENCE_FRAC` modela que o híbrido só efetivamente aproveita uma fração dessas
-# janelas de cast (o resto "perde o timing", preso na troca de golpe de arma), esticando o
-# cooldown EFETIVO do jutsu só pro build híbrido (a arma continua na cadência cheia, e o
-# ninjutsu PURO não é afetado — ele já paga o custo de rotação certo, dedicando a ação inteira
-# ao jutsu). Isso ataca a causa raiz (o jutsu aditivo é "de graça" demais) de um jeito uniforme,
-# que não depende de QUAL jutsu do kit está sendo usado — resolve o "whack-a-mole" acima sem
-# tocar em nenhum dano/custo calibrado nas rodadas 2-5. Combinado com o fix de rodada 6 nos 2
-# jutsus tier 1 de área de cooldown muito curto (`suiton_nevoa_cortante`/`raiton_corrente_estatica`,
-# 1,6s/1,3s -> 3,0s, igualando ao irmão `katon_sopro_brasas` — eram picks de DPS não-intencionais
-# por causa do cooldown curto, não da identidade de controle deles, ver relatório v6 §1). Sweep
-# testado (0,15-0,42): 0,22 é o maior valor (menor esticamento, ~4,5x o cooldown original) que
-# fecha os 6 bosses de referência dentro do teto de +15% sem nenhum ficar muito abaixo do
-# melhor puro (pior caso -4,6% em L12, dentro do razoável). Ver relatório v6 §1.
-HYBRID_JUTSU_CADENCE_FRAC = 0.22
+# Fix estrutural da rodada 6 (não numérico por jutsu): esticar artificialmente o cooldown EFETIVO
+# do jutsu escolhido por "melhor dps/cooldown" (`HYBRID_JUTSU_CADENCE_FRAC`, aplicado só ao build
+# híbrido) — resolvia o teto de +15% contra boss, mas a rodada 7 mediu o preço: numa hunt de 30
+# min o jutsu do híbrido virava raro demais pra QUALQUER custo criar pressão real de chakra
+# (0,0% de tempo sem chakra em todos os níveis, ver relatório v7 §5 — "não existe UM valor de
+# custo que empurre a razão gasto/regen perto de 1").
+#
+# RODADA 8 (substitui `HYBRID_JUTSU_CADENCE_FRAC` — item 2 da missão): modelo novo, "o jogador
+# casta o tier 1 sempre que o cooldown libera E tem chakra" — é assim que o playtest da rodada 5
+# mediu um jogador de verdade jogando híbrido (não uma seleção racional por "melhor dps/cooldown
+# do kit já desbloqueado" com cadência artificialmente esticada por cima). Duas mudanças:
+# (1) o jutsu do híbrido deixa de ser escolhido por `pick_ninjutsu_jutsu` (que migra pro tier 2/3
+#     assim que desbloqueia, rodada 7 §3) — é SEMPRE o tier 1 do elemento com vantagem (índice 0
+#     do kit, `ELEMENT_SETS[adv]["jutsus"][0]`), o "projétil barato" que a missão pede simular;
+# (2) o cooldown EFETIVO volta a ser o cooldown REAL do jutsu (sem dividir por nenhuma fração) —
+#     `HYBRID_JUTSU_CADENCE_FRAC` deixou de existir.
+# Isso resolve os dois lados ao mesmo tempo: contra boss, tier 1 tem `level_scale` mais baixo que
+# os campeões de tier 2/3 que o híbrido usava antes (calibrado desde a rodada 5 para ficar atrás
+# do burst de tier 2/3), então castar mais vezes (cooldown real, sem esticar) não estoura o teto
+# de +15% — ver recalibração de `chakra_cost_percent`/`cooldown_s` do tier 1 no relatório v8 §2
+# se o teto ainda estourar (a missão pede ajustar ESSA alavanca, não voltar pro modelo antigo).
+# Numa hunt de 30 min, o mesmo jutsu no cooldown real cria pressão de chakra de verdade (mesma
+# curva que a rodada 7 já tinha medido pro ninjutsu puro com `force_tier1=True`, 33-72% sem
+# pílula — ver relatório v7 §5 "segunda leitura"), o que finalmente dá uma alavanca (custo do
+# tier 1) pra mirar a faixa 15-25% pedida — ver relatório v8 §2.
 
 def typical_skills(level):
     """Skill 'típico' de um jogador médio no nível L: tries acumuladas = horas jogadas até esse
@@ -540,6 +545,79 @@ def estimate_weapon_dps(p, m_defense, m_armor):
     return max(0.0, avg_raw - mitig) / ATTACK_INTERVAL_S
 
 # ============================================================== combate: 1 monstro x 1 player
+def advantage_element(monster_element):
+    """Elemento com VANTAGEM sobre `monster_element` no ciclo (mesma regra de
+    `pick_ninjutsu_jutsu`/`element_kit`, extraída aqui pra reuso sem duplicar a seleção de jutsu
+    — usado pelo build híbrido desde a rodada 8, que não passa mais por `pick_ninjutsu_jutsu`)."""
+    if monster_element in ELEMENT_ORDER:
+        i = ELEMENT_ORDER.index(monster_element)
+        return ELEMENT_ORDER[(i - 1) % len(ELEMENT_ORDER)]
+    return "katon"
+
+def average_monster_dps_vs_player(monster, player_armor):
+    """RODADA 8 (fúria de fase, summons como 'pull adicional simples' — ver docstring de
+    `simulate_fight`): estimativa DETERMINÍSTICA (sem RNG, mesmo espírito de
+    `estimate_weapon_dps`) do dano/segundo médio que UM summon causaria no jogador, pra somar
+    como uma 'trickle' contínua de dano de fundo em vez de simular os summons um a um (que
+    exigiria todo o aparato de multi-alvo de `simulate_group_fight`, fora do escopo desta
+    simplificação). 'melee' sofre só a mitigação de armadura do jogador (defense=0 — nenhuma
+    arma tem atributo defense/shield neste jogo, ver `simulate_fight`); elemental/projectile
+    passam direto (só 'melee' seta blockArmor, monsters.cpp, mesma regra usada no dano real)."""
+    total = 0.0
+    for atk in monster.get("attacks", []):
+        avg_raw = (atk["damage_min"] + atk["damage_max"]) / 2.0
+        if atk["type"] == "melee":
+            mitig = 0.0
+            if player_armor > 3:
+                mitig = (player_armor // 2 + (player_armor - (player_armor % 2 + 1))) / 2.0
+            elif player_armor > 0:
+                mitig = 1.0
+            avg = max(0.0, avg_raw - mitig)
+        else:
+            avg = avg_raw
+        total += avg / atk["cooldown_s"]
+    return total
+
+def boss_phase_state_init():
+    """RODADA 8 (fúria real de fase — item 1 da missão): estado mutável de fase de um boss ao
+    longo de UMA luta, `{'idx': próxima fase a checar, 'mult': multiplicador de dano ATUAL do
+    boss}`. Espelha `fired[id]`/`NarutoBossPhases.state[id]` de `boss_phases.lua` (gerado por
+    `tools/export_tfs.py`): o índice só AVANÇA (nunca volta pra trás mesmo que uma cura de fase
+    empurre o HP de volta pra cima — mesmo comportamento do Lua real, que só compara pra frente)."""
+    return {"idx": 0, "mult": 1.0}
+
+def apply_boss_phase_tick(monster, monster_hp, monster_hp_max, state, extra_dps_ref, player_armor):
+    """RODADA 8: replica `NarutoBossPhases.onHealthChange` (server/generated/scripts/naruto/
+    boss_phases.lua) — chamar logo após CADA dano individual aplicado ao boss (um golpe de
+    arma, um cast de jutsu), nunca uma vez só por tick de 0.1s (o hook real dispara por golpe).
+    `pct` é um SNAPSHOT do HP pós-dano deste golpe e não é recalculado dentro do laço mesmo após
+    a cura de fase — mesmo comportamento do Lua real (a variável `pct` é lida uma vez só antes
+    do `while`), então um golpe grande o bastante pode cruzar mais de uma fase de uma vez.
+    Por fase cruzada: (1) se tiver `attack_multiplier`, vira o multiplicador de dano ATUAL
+    (fica valendo daqui pra frente) e aplica a cura pontual `+max_hp*(mult-1)*0,10` (mesma
+    fórmula do Lua real: `math.floor(getMaxHealth()*(mult-1)*0.10)`, aqui sem o floor porque o
+    HP do simulador já é tratado como float); (2) summons somam no 'DPS extra' de pull
+    simplificado (`average_monster_dps_vs_player`) — ver docstring de `simulate_fight` pra por
+    que summons não são simulados um a um. Retorna o `monster_hp` (pode ter subido pela cura,
+    capado em `monster_hp_max`)."""
+    phases = monster.get("phases")
+    if not phases:
+        return monster_hp
+    pct = monster_hp * 100.0 / monster_hp_max
+    while state["idx"] < len(phases) and pct <= phases[state["idx"]]["hp_percent"]:
+        ph = phases[state["idx"]]
+        state["idx"] += 1
+        if "attack_multiplier" in ph:
+            state["mult"] = ph["attack_multiplier"]
+            heal = monster_hp_max * (ph["attack_multiplier"] - 1.0) * 0.10
+            if heal > 0:
+                monster_hp = min(monster_hp_max, monster_hp + heal)
+        for s in ph.get("summons", []):
+            sm = MONSTERS.get(s["monster_id"])
+            if sm:
+                extra_dps_ref[0] += average_monster_dps_vs_player(sm, player_armor) * s.get("count", 1)
+    return monster_hp
+
 def pick_ninjutsu_jutsu(monster_element, level, ninjutsu_skill, taijutsu_dps_est=0.0, no_fallback=False):
     """Escolhe, para o build ninjutsu/híbrido: (1) o set elemental com VANTAGEM sobre o monstro
     se existir (jogador escolheria isso na criação de personagem); senão katon (arbitrário —
@@ -629,26 +707,42 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
     PURO continua no modelo de AÇÃO ÚNICA (jutsu OU arma, nunca os dois no mesmo intervalo) —
     é o "caster" que abre mão do ataque básico pra se concentrar em jutsu quando o jutsu vale a
     pena (mesma lógica de fallback da rodada 2/3: `pick_ninjutsu_jutsu`); é esse modelo exclusivo
-    que mantém a curva −15%/+10% de paridade sustentada calibrada nas rodadas 2/3."""
+    que mantém a curva −15%/+10% de paridade sustentada calibrada nas rodadas 2/3.
+
+    FÚRIA DE BOSS (rodada 8, item 1 da missão — `phases[].attack_multiplier`/`summons` de
+    `data/monsters/*.json`, antes ignorados aqui): replica `boss_phases.lua` gerado (ver
+    `boss_phase_state_init`/`apply_boss_phase_tick`) — ao cruzar o `hp_percent` de uma fase, o
+    multiplicador de dano do boss passa a valer de verdade sobre TODO ataque do boss (melee e
+    elemental, nunca sobre summons) daqui pra frente, com a mesma cura pontual do Lua real
+    (`+max_hp*(mult-1)*0,10`). `summons` viram uma trickle contínua de dano de fundo (ver
+    `average_monster_dps_vs_player`) — aproximação deliberada ("pull adicional simples" pedido
+    na missão): não simula os summons um a um (isso é o que `simulate_group_fight` já faz para
+    pulls de verdade), só soma o DPS médio deles ao dano recebido pelo jogador pelo resto da
+    luta."""
     p = SimPlayer(level, build, rng)
-    monster_hp = monster["hp"]
+    monster_hp_max = monster["hp"]
+    monster_hp = monster_hp_max
+    boss_phase = boss_phase_state_init()   # RODADA 8: fúria real de fase, ver docstring acima
+    extra_dps_summons = [0.0]              # RODADA 8: "pull adicional simples" dos summons
     m_defense = monster["defense"]
     m_armor = monster["defense"]  # export_tfs.py: <defenses armor=X defense=X/> (mesmo valor)
     attacks = monster["attacks"]
     next_monster_attack = [0.0] * len(attacks)
     player_element, jutsu = (None, None)
-    if build in ("ninjutsu", "hybrid"):
+    if build == "ninjutsu":
         taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
-        # HÍBRIDO (rodada 4): o jutsu é ADITIVO (camada por cima da arma, que já ataca sozinha
-        # na sua cadência — ver docstring), não um SUBSTITUTO da arma como no ninjutsu puro —
-        # então a checagem "só usa se bate o DPS de arma" (pensada pro modelo de ação única,
-        # ver `pick_ninjutsu_jutsu`) não faz sentido pro híbrido: até um jutsu com DPS "pior"
-        # que a arma ainda vale a pena quando ele não CUSTA nenhum turno de arma. Por isso o
-        # híbrido sempre usa `no_fallback=True` (pega o melhor jutsu do kit incondicionalmente);
-        # só o ninjutsu PURO respeita `no_fallback` (padrão False = decisão racional).
-        jutsu_no_fallback = True if build == "hybrid" else no_fallback
         player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
-                                                      taijutsu_dps_est, no_fallback=jutsu_no_fallback)
+                                                      taijutsu_dps_est, no_fallback=no_fallback)
+    elif build == "hybrid":
+        # RODADA 8 (substitui a seleção por `pick_ninjutsu_jutsu` + `HYBRID_JUTSU_CADENCE_FRAC`
+        # — ver comentário acima da constante removida): o híbrido sempre conjura o TIER 1 do
+        # elemento com vantagem, no cooldown REAL, sempre que pronto e pagável — "castar o tier
+        # 1 sempre que libera e tem chakra", o jeito que um jogador de verdade joga híbrido
+        # (medido no playtest da rodada 5), não uma seleção racional por "melhor dps/cooldown do
+        # kit já desbloqueado" com cadência artificialmente esticada por cima.
+        player_element = advantage_element(monster["element"])
+        eset = ELEMENT_SETS.get(player_element)
+        jutsu = JUTSUS[eset["jutsus"][0]] if eset else None
     interleave = (build == "hybrid")   # ver docstring acima
     next_player_action = 0.0   # modo exclusivo (taijutsu/ninjutsu/shuriken)
     next_weapon_action = 0.0   # modo híbrido: cadência da arma
@@ -702,8 +796,10 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                 dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                 monster_hp -= dmg
                 jutsu_dmg_total += dmg
-                # RODADA 6: cooldown efetivo esticado só pro híbrido (ver HYBRID_JUTSU_CADENCE_FRAC).
-                next_jutsu_action = t + jutsu["cooldown_s"] / HYBRID_JUTSU_CADENCE_FRAC
+                monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                    extra_dps_summons, p.armor)
+                # RODADA 8: cooldown REAL, sem esticamento (ver docstring/HYBRID_JUTSU_CADENCE_FRAC removida).
+                next_jutsu_action = t + jutsu["cooldown_s"]
                 if monster_hp <= 0:
                     return _result(died=False)
             # arma na sua própria cadência (independente do jutsu — "arma entre casts")
@@ -713,6 +809,8 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                 monster_hp -= dmg
                 melee_swings += 1
                 next_weapon_action = t + ATTACK_INTERVAL_S
+                monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                    extra_dps_summons, p.armor)
                 if monster_hp <= 0:
                     return _result(died=False)
         else:
@@ -725,6 +823,8 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                     dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                     monster_hp -= dmg
                     jutsu_dmg_total += dmg
+                    monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                        extra_dps_summons, p.armor)
                     next_player_action = t + jutsu["cooldown_s"]
                     used_jutsu = True
                 if not used_jutsu:
@@ -738,6 +838,8 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                     monster_hp -= dmg
                     melee_swings += 1
                     next_player_action = t + ATTACK_INTERVAL_S
+                    monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                        extra_dps_summons, p.armor)
                 if monster_hp <= 0:
                     return _result(died=False)
         # ataques do monstro
@@ -753,10 +855,22 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                     dmg = apply_mitigation(rng, raw, 0, p.armor)
                 else:
                     dmg = raw  # elemental: ignora armadura (monsters.cpp: só 'melee' seta BLOCKARMOR)
+                if boss_phase["mult"] > 1.0:
+                    # RODADA 8: fúria real — NarutoBossFury multiplica o dano recebido pelo
+                    # jogador (arredondado, mesma conta do Lua: floor(abs(x)*mult+0.5)).
+                    dmg = int(dmg * boss_phase["mult"] + 0.5)
                 p.hp -= dmg
                 dmg_taken_total += dmg
                 if p.hp <= 0:
                     return _result(died=True)
+        if extra_dps_summons[0] > 0:
+            # RODADA 8: summons como "pull adicional simples" — trickle contínua de dano de
+            # fundo (ver docstring/average_monster_dps_vs_player), não uma simulação por summon.
+            dmg = extra_dps_summons[0] * dt
+            p.hp -= dmg
+            dmg_taken_total += dmg
+            if p.hp <= 0:
+                return _result(died=True)
         t += dt
     t = max_seconds
     return _result(died=False, timeout=True)
@@ -1121,48 +1235,46 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                    pause_min_s=5.0, pause_max_s=15.0, force_tier1=False):
     """Sequência de pulls 1x1 do mesmo monstro comum, HP/chakra do player persistindo (com
     regen contínuo) entre uma luta e a próxima — ver cabeçalho da seção acima. Cada pull reusa
-    a MESMA lógica de ação de `simulate_fight` (híbrido intercalado / ninjutsu exclusivo), só
-    que sem recriar o SimPlayer a cada luta. Uma morte custa `DEATH_RECOVERY_S` + a pausa normal
-    (o personagem volta com HP/chakra cheios, confirmado no playtest — reconectar no templo).
+    a MESMA lógica de ação de `simulate_fight` (híbrido intercalado / ninjutsu exclusivo, fúria
+    de fase/summons desde a rodada 8 — ver `apply_boss_phase_tick`), só que sem recriar o
+    SimPlayer a cada luta. Uma morte custa `DEATH_RECOVERY_S` + a pausa normal (o personagem
+    volta com HP/chakra cheios, confirmado no playtest — reconectar no templo); fase de fúria e
+    summons resetam a cada novo pull (kill ou morte), igual ao `onDeath` real de `boss_phases.lua`.
 
-    `force_tier1` (RODADA 7, achado central da missão "chakra voltou a não ser um recurso"):
-    sem isso, o jutsu de fato conjurado é o de `pick_ninjutsu_jutsu` (maior dano/segundo do kit
-    JÁ DESBLOQUEADO), que abandona o tier 1 assim que o primeiro tier 2 do elemento desbloqueia
-    (`required_level` 12-26 conforme o elemento, ver `data/jutsus/*.json`) — verificado nesta
-    rodada: `nearest_common_monster(20)` já conjura `raiton_lanca_relampago` (tier 2, custo fixo
-    170), nunca mais `raiton_hari` (tier 1). Isso quer dizer que ajustar `chakra_cost_percent`
-    do tier 1 **não muda em nada** o chakra realmente gasto em L20+ nessa simulação — só move o
-    LIMIAR de comparação (`tier1_cost`) usado por `pct_time_without_chakra_for_tier1`, inflando
-    a métrica por um artefato de contabilidade, não por uso real. `force_tier1=True` conjura
-    SEMPRE o projétil tier 1 (índice 0 do kit elemental), ignorando a seleção por maior DPS —
-    é o cenário que a missão pede de fato medir ("chakra sustentável de tier 1 em TODOS os
-    níveis 5-100"): um jogador que usa o projétil barato como filler constante, não a build
-    ninjutsu racional que sempre usaria o jutsu mais forte disponível. `run_hunt_matrix` usa
-    `force_tier1=True` por padrão (ver constante abaixo); sem a flag (`force_tier1=False`,
-    default, preserva o comportamento das rodadas 4-6) continua medindo "quanto tempo o kit
-    INTEIRO fica sem chakra para pelo menos o tier 1", útil como segunda leitura mas não a
-    pergunta literal da missão."""
+    RODADA 8 (item 2 da missão — substitui `HYBRID_JUTSU_CADENCE_FRAC`): o build 'hybrid' SEMPRE
+    conjura o tier 1 (índice 0 do kit do elemento com vantagem) no cooldown REAL, sempre que
+    pronto e pagável — não passa mais por `pick_ninjutsu_jutsu` nem por nenhuma cadência
+    esticada (ver `simulate_fight`). `force_tier1` não tem mais efeito sobre o build 'hybrid'
+    (já é sempre tier 1); ele continua servindo só o build 'ninjutsu' puro, mantendo a leitura de
+    diagnóstico da rodada 7 (ver docstring abaixo e relatório v7 §5 "segunda leitura").
+
+    `force_tier1` (RODADA 7, achado central da missão "chakra voltou a não ser um recurso",
+    agora só relevante pro build 'ninjutsu'): sem isso, o jutsu de fato conjurado é o de
+    `pick_ninjutsu_jutsu` (maior dano/segundo do kit JÁ DESBLOQUEADO), que abandona o tier 1
+    assim que o primeiro tier 2 do elemento desbloqueia (`required_level` 12-26 conforme o
+    elemento, ver `data/jutsus/*.json`). `force_tier1=True` conjura SEMPRE o projétil tier 1
+    (índice 0 do kit elemental), ignorando a seleção por maior DPS."""
     rng = random.Random(seed)
     monster = MONSTERS[monster_id]
     p = SimPlayer(level, build, rng)
     m_defense = monster["defense"]
     m_armor = monster["defense"]
     player_element, jutsu = (None, None)
-    if build in ("ninjutsu", "hybrid"):
+    if build == "ninjutsu":
         taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
-        # força no_fallback quando force_tier1 também: sem isso, pick_ninjutsu_jutsu pode
-        # devolver jutsu=None (build ninjutsu pura, DPS do kit pior que a arma) e o override
-        # abaixo (`if force_tier1: jutsu = tier1`) ainda aplica — mas queremos o ELEMENTO certo
-        # mesmo nesse caminho, então simplesmente sempre pedimos o candidato (nunca None) aqui.
-        jutsu_no_fallback = True if (build == "hybrid" or force_tier1) else False
         player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
-                                                      taijutsu_dps_est, no_fallback=jutsu_no_fallback)
+                                                      taijutsu_dps_est, no_fallback=force_tier1)
+    elif build == "hybrid":
+        # RODADA 8: sempre tier 1 (ver docstring) — não passa por pick_ninjutsu_jutsu.
+        player_element = advantage_element(monster["element"])
     tier1 = None
     if player_element:
         eset = ELEMENT_SETS.get(player_element)
         if eset:
             tier1 = JUTSUS[eset["jutsus"][0]]   # índice 0 = sempre o projétil tier 1, ver header
-    if force_tier1 and tier1:
+    if build == "hybrid":
+        jutsu = tier1
+    elif force_tier1 and tier1:
         jutsu = tier1
     tier1_cost = jutsu_chakra_cost(tier1, p.chakra_max) if tier1 else None
     interleave = (build == "hybrid")
@@ -1186,7 +1298,10 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
     next_weapon_action = 0.0
     next_jutsu_action = 0.0
     next_player_action = 0.0
-    monster_hp = monster["hp"]
+    monster_hp_max = monster["hp"]
+    monster_hp = monster_hp_max
+    boss_phase = boss_phase_state_init()   # RODADA 8: fúria real de fase, ver simulate_fight
+    extra_dps_summons = [0.0]              # RODADA 8: "pull adicional simples" dos summons
     attacks = monster["attacks"]
     next_monster_attack = [0.0] * len(attacks)
     in_fight = True
@@ -1217,13 +1332,17 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                     dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                     monster_hp -= dmg
                     total_jutsu_dmg += dmg
-                    # RODADA 6: mesmo esticamento de HYBRID_JUTSU_CADENCE_FRAC do 1x1 (ver simulate_fight).
-                    next_jutsu_action = t + jutsu["cooldown_s"] / HYBRID_JUTSU_CADENCE_FRAC
+                    monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                        extra_dps_summons, p.armor)
+                    # RODADA 8: cooldown REAL, sem esticamento (ver docstring).
+                    next_jutsu_action = t + jutsu["cooldown_s"]
                 if monster_hp > 0 and t >= next_weapon_action:
                     raw = p.roll_weapon_damage()
                     dmg = apply_mitigation(rng, raw, m_defense, m_armor)
                     monster_hp -= dmg
                     next_weapon_action = t + ATTACK_INTERVAL_S
+                    monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                        extra_dps_summons, p.armor)
             else:
                 if t >= next_player_action:
                     used_jutsu = False
@@ -1234,6 +1353,8 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                         dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                         monster_hp -= dmg
                         total_jutsu_dmg += dmg
+                        monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                            extra_dps_summons, p.armor)
                         next_player_action = t + jutsu["cooldown_s"]
                         used_jutsu = True
                     if not used_jutsu:
@@ -1241,11 +1362,15 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                         dmg = apply_mitigation(rng, raw, m_defense, m_armor)
                         monster_hp -= dmg
                         next_player_action = t + ATTACK_INTERVAL_S
+                        monster_hp = apply_boss_phase_tick(monster, monster_hp, monster_hp_max, boss_phase,
+                                                            extra_dps_summons, p.armor)
             if monster_hp <= 0:
                 kills += 1
                 in_fight = False
                 resume_at = t + rng.uniform(pause_min_s, pause_max_s)
-                monster_hp = monster["hp"]
+                monster_hp = monster_hp_max
+                boss_phase = boss_phase_state_init()   # RODADA 8: reset por pull (onDeath real)
+                extra_dps_summons = [0.0]
                 next_monster_attack = [0.0] * len(attacks)
             else:
                 for i, atk in enumerate(attacks):
@@ -1253,6 +1378,8 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                         next_monster_attack[i] = t + atk["cooldown_s"]
                         raw = _normal_random(rng, atk["damage_min"], atk["damage_max"])
                         dmg = apply_mitigation(rng, raw, 0, p.armor) if atk["type"] == "melee" else raw
+                        if boss_phase["mult"] > 1.0:
+                            dmg = int(dmg * boss_phase["mult"] + 0.5)
                         p.hp -= dmg
                         if p.hp <= 0:
                             deaths += 1
@@ -1260,10 +1387,25 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                             p.chakra = p.chakra_max
                             in_fight = False
                             resume_at = t + rng.uniform(pause_min_s, pause_max_s) + DEATH_RECOVERY_S
-                            monster_hp = monster["hp"]
+                            monster_hp = monster_hp_max
+                            boss_phase = boss_phase_state_init()   # RODADA 8: reset por pull
+                            extra_dps_summons = [0.0]
                             next_monster_attack = [0.0] * len(attacks)
                             died_this_tick = True
                             break
+                if not died_this_tick and extra_dps_summons[0] > 0:
+                    dmg = extra_dps_summons[0] * dt
+                    p.hp -= dmg
+                    if p.hp <= 0:
+                        deaths += 1
+                        p.hp = p.hp_max
+                        p.chakra = p.chakra_max
+                        in_fight = False
+                        resume_at = t + rng.uniform(pause_min_s, pause_max_s) + DEATH_RECOVERY_S
+                        monster_hp = monster_hp_max
+                        boss_phase = boss_phase_state_init()
+                        extra_dps_summons = [0.0]
+                        next_monster_attack = [0.0] * len(attacks)
             if died_this_tick:
                 pass
         else:

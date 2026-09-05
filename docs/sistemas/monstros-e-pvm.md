@@ -107,11 +107,13 @@ sequenciais que acompanham a progressão de level da zona.
   3. `NarutoBossReset.onDeath` limpa `NarutoBossPhases.state[bossId]` (e o índice de fase) pra
      não vazar por `cid` reutilizado.
   Teste headless: `tools/tests/test_boss_fury_headless.lua` (`tools/tests/run_boss_fury_tests.sh`).
-  **Efeito colateral esperado**: como a cura/velocidade da fase já estavam calibradas pra
-  compensar a FALTA de dano real, somar o multiplicador de dano de verdade em cima sobe o TTK
-  efetivo dos bosses acima do calibrado em `balanceamento-relatorio-v6.md` — ver nota de
-  recalibração ali (rodada 7 deve cortar pela metade o excedente de `attack_multiplier`, ex.
-  1.5 → 1.25, em `data/monsters/*.json`).
+  **Recalibrado na rodada 8**: como a cura/velocidade da fase já estavam calibradas pra
+  compensar a FALTA de dano real, somar o multiplicador de dano de verdade em cima subia o TTK
+  efetivo acima do calibrado em `balanceamento-relatorio-v6.md`. `tools/balance/sim.py` passou a
+  modelar `phases[].attack_multiplier`/`summons` (antes ignorados) e a recalibração confirmou os
+  12 bosses com fase de fúria dentro de 1,3×-1,8× de dano recebido/s (fase final vs. fase 1) com
+  `death_rate` 0% (taijutsu solo, com poções, no level-alvo) — só a Serpente Branca (1,9→1,45)
+  precisou de ajuste. Ver `docs/sistemas/balanceamento-relatorio-v8.md` §1.
 - Loot com itens exclusivos (`legendary`/`rare`) e pergaminhos.
 
 ### Serpente Branca (Floresta da Morte, L25)
@@ -121,7 +123,7 @@ Ninja renegado pálido que abandona a forma humana quando encurralado. 4 600 HP,
 |---|---|---|
 | 1 — forma humana | 100% (primeiro dano) | fala de abertura; ataca com veneno (melee + névoa em `circle_r2` + cuspe ácido com slow) |
 | 2 — transformação | 60% | `looktype 890` (serpente 2×2), efeito verde, invoca **3 Cobras da Floresta** |
-| 3 — fúria | 25% | `attack_multiplier 1.9`: dano real ×1,9 (`NarutoBossFury`), cura pontual +9% + velocidade, efeito vermelho, invoca **2 Serpentes Menores** (summons não herdam o ×1,9) |
+| 3 — fúria | 25% | `attack_multiplier 1.45` (era 1.9, recalibrado na rodada 8): dano real ×1,45 (`NarutoBossFury`), cura pontual +4,5% + velocidade, efeito vermelho, invoca **2 Serpentes Menores** (summons não herdam o ×1,45) |
 
 Loot exclusivo: `white_serpent_fang` ("Presa da Serpente Branca", material raro, 100%) e
 `scroll_doku_kiri` (pergaminho tier 2 de `doku_kiri`, 25%).

@@ -343,12 +343,19 @@ o playtest r5 (`docs/qa/playtest-l1-20-r5.md`) mediu ao vivo que com 2,5–3,0% 
 de 108-110/110 em 9 casts seguidos no L1 (a regen entre casts, com cooldown 9,0s, já era maior
 que o próprio custo) — a rodada 7 escalou os 5 valores ~4,7× (proporção relativa entre elementos
 preservada) pra fechar a meta de 6-8 casts por pool cheio (era 36-55) sem tocar cooldown/regen.
-**Achado importante, não fechado**: numa caçada híbrida (arma+jutsu) sustentada de 30 min, o jutsu
-é lançado raro demais (cadência calibrada na rodada 6, `HYBRID_JUTSU_CADENCE_FRAC=0,22`) para
-qualquer custo dentro da faixa permitida criar pressão real de recurso — a meta de 15-25% do tempo
-sem chakra continua em 0% (ver relatório v7 §5 pra prova matemática e a alavanca que fecharia,
-ainda não aplicada). Pílulas de chakra (pequena/média/grande, ver seção 5) continuam o lever real
-de combate para estender uma rotação de jutsus tier 2/3 (custo fixo, inalterado) numa luta longa.
+**Cooldown do tier 1 subiu de 9,0s para 27,0s na rodada 8** (o custo percentual em si não mudou,
+continua 12-14% do pool, mantendo os 6-8 casts/pool do Genin L1): o modelo antigo do build
+híbrido (`HYBRID_JUTSU_CADENCE_FRAC=0,22`, uma cadência artificialmente esticada só pro híbrido)
+foi substituído por "castar o tier 1 sempre que o cooldown libera e tem chakra" — o jeito que um
+jogador de verdade joga híbrido — e no cooldown real de 9,0s isso tornava o híbrido forte demais
+contra boss (até -45% de TTK vs. o melhor build puro); o cooldown subiu pra 27,0s pra manter o
+híbrido ≤+15% (ver `docs/sistemas/balanceamento-relatorio-v8.md` §2). **Achado importante, não
+fechado**: mesmo com o modelo novo, a meta de 15-25% de tempo sem chakra numa hunt híbrida
+continua em 0% em todos os níveis — o custo que criaria essa pressão de recurso (≈3-5× o atual)
+quebraria a meta "Genin L1 6-8 casts/pool" (cai pra 1 cast/pool), um conflito estrutural entre as
+duas metas, não uma questão de achar o número certo (relatório v8 §2). Pílulas de chakra
+(pequena/média/grande, ver seção 5) continuam o lever real de combate para estender uma rotação
+de jutsus tier 2/3 (custo fixo, inalterado) numa luta longa.
 
 ---
 
@@ -458,10 +465,12 @@ limite matemático real: o dano de arma cresce como um PRODUTO skill×attack (su
 côncavo) — nenhum coeficiente fecha as duas pontas do range ao mesmo tempo sem quebrar a
 paridade de boss no meio (prova completa no relatório v5 §2). O build híbrido (arma+jutsu
 juntos) fica dentro do teto de +15% sobre o melhor build puro nos **6 de 6** bosses de
-referência (fechado na rodada 6, que precisou de um parâmetro novo de modelo — o jogador
-híbrido só "acerta o timing" de lançar o jutsu numa fração das janelas livres entre golpes de
-arma, não em todas — ver `docs/sistemas/balanceamento-relatorio-v6.md` §1; nenhuma fração de
-treino sozinha fechava isso). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
+referência — fechado na rodada 6 com um parâmetro de modelo artificial (o híbrido só "acertava
+o timing" de castar numa fração das janelas livres, cadência esticada ~4,5×) que a rodada 8
+substituiu pelo modelo real ("castar o tier 1 sempre que libera e tem chakra", cooldown sem
+esticamento — ver `docs/sistemas/balanceamento-relatorio-v8.md` §2); manter o teto de +15% com
+o novo modelo exigiu subir o cooldown do tier 1 de 9,0s para 27,0s (o custo percentual em si
+ficou igual). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
 L50–100 (números de dano dos jutsus "campeão" de cada elemento não mudaram na rodada 5) — bem
 mais apertado que a meta de ±10% pedida. Uma tensão real e documentada permanece sem solução
 fechada no cenário de GRUPO (3+ monstros): o mesmo número de dano que faz um jutsu tier 3
@@ -469,7 +478,12 @@ competir contra um boss de milhares de HP também consegue **apagar um pull inte
 de HP baixo** num único cast — ver `docs/sistemas/balanceamento-relatorio-v3.md` §6/§10 e
 `-v4.md` §10 para as opções de correção consideradas e por que nenhuma foi aplicada sem uma
 decisão de design explícita (fora do escopo declarado da rodada 5, que focou em economia de
-chakra e paridade 1×1).
+chakra e paridade 1×1). Nos pulls de 3 monstros medidos (`ruin_puppet` L27, `thunder_eagle`
+L54), ninjutsu foi recolocado em +30-60% sobre taijutsu na rodada 8 ajustando os jutsus de
+área/beam tier 2/3 (`katon_anel_chamas`, `fuuton_rajada_cortante`/`fuuton_tornado_cortante`),
+não o tier 1 — ver relatório v8 §3. O pull de `wolf` (L2, n=3) fica bem fora dessa faixa
+(nenhum jutsu de área existe ainda nesse nível — só o projétil tier 1), um limite estrutural
+do início de jogo, não corrigido.
 
 ### Regeneração natural (HP e chakra)
 
@@ -513,10 +527,14 @@ boss original. Cura percentual e aumento de velocidade continuam valendo em cima
 golpes por minuto). Testado em 19 casos headless (`tools/tests/test_boss_fury_headless.lua`,
 `tools/tests/run_boss_fury_tests.sh`). Exemplo completo: a **Serpente Branca** (L25, 4600 HP) tem
 3 fases — forma humana (ataque com veneno), transformação em serpente 2×2 a 60% de vida (invoca 3
-Cobras da Floresta) e fúria a 25% (`attack_multiplier 1,9`: dano real ×1,9 + cura pontual +9% +
-velocidade, invoca 2 Serpentes Menores). Efeito colateral: como cura/velocidade já compensavam a
-FALTA de dano real, somar o multiplicador de verdade em cima sobe o TTK de boss acima do
-calibrado nas rodadas 5/6 — recalibração de `attack_multiplier` fica para a rodada 8.
+Cobras da Floresta) e fúria a 25% (`attack_multiplier 1,45`, recalibrado na rodada 8 — era 1,9
+quando o multiplicador de dano ainda não tinha efeito real: dano real ×1,45 + cura pontual +4,5%
++ velocidade, invoca 2 Serpentes Menores). `tools/balance/sim.py` passou a modelar
+`phases[].attack_multiplier`/`summons` (rodada 8: dano do boss ×mult a partir do `hp_percent` da
+fase, summons como DPS extra simplificado — ver `docs/sistemas/balanceamento-relatorio-v8.md` §1)
+e a recalibração confirmou os 12 bosses com fase de fúria dentro de 1,3×-1,8× de dano recebido/s
+(fase final vs. fase 1) e `death_rate` 0% (taijutsu solo, com poções, no level-alvo) — só a
+**Serpente Branca** precisou de ajuste (1,9→1,45, único fora da faixa).
 
 ### Itens, tiers, loot e economia
 
@@ -726,7 +744,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Katon: Grande Bola de Fogo | projectile | 14,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + queimadura | `fx_fireball` · som `sfx_fire_whoosh` |
+| Katon: Grande Bola de Fogo | projectile | 14,0% do pool | 27,0s | 1 | burst à distância (projétil básico, kit) + queimadura | `fx_fireball` · som `sfx_fire_whoosh` |
 | Katon: Sopro de Brasas | area | 26 | 3,0s | 6 | área (reserva, fora do kit) + queimadura | `fx_ember_cone` · som `sfx_fire_puff` |
 | Katon: Flores de Fênix | area | 136 | 6,0s | 12 | área/cone (kit) + queimadura | `fx_fire_cone` · som `sfx_fire_burst` |
 | Katon: Anel de Chamas | area | 176 | 6,0s | 20 | utilitário/área (kit) + queimadura | `fx_fire_ring` · som `sfx_fire_burst` |
@@ -736,7 +754,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Suiton: Projétil de Água | projectile | 12,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_water_bullet` · som `sfx_splash` |
+| Suiton: Projétil de Água | projectile | 12,0% do pool | 27,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_water_bullet` · som `sfx_splash` |
 | Suiton: Névoa Cortante | area | 22 | 3,0s | 6 | controle de área rápido (kit) + lentidão | `fx_mist_cone` · som `sfx_mist` |
 | Suiton: Prisão de Água | target | 45 | 7,0s | 22 | controle/utilitário (kit) + paralisia | `fx_water_prison` · som `sfx_bubble` |
 | Suiton: Dragão de Água | beam | 184 | 6,0s | 25 | burst forte em linha (kit, teto do elemento) + lentidão | `fx_water_dragon` · som `sfx_wave` |
@@ -746,7 +764,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Raiton: Agulha de Raio | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + paralisia | `fx_lightning_needle` · som `sfx_zap` |
+| Raiton: Agulha de Raio | projectile | 13,0% do pool | 27,0s | 1 | burst à distância (projétil básico, kit) + paralisia | `fx_lightning_needle` · som `sfx_zap` |
 | Raiton: Corrente Estática | area | 20 | 3,0s | 6 | controle de área rápido (kit) + paralisia | `fx_static_cross` · som `sfx_zap` |
 | Raiton: Lança do Relâmpago | beam | 170 | 6,5s | 18 | burst forte em linha (kit, teto do elemento) + paralisia | `fx_lightning_lance` · som `sfx_thunder` |
 | Raiton: Armadura Elétrica | self | 42 | 16,0s | 24 | utilitário/buff (reserva, fora do kit) + cura contínua | `fx_lightning_armor` · som `sfx_zap_loop` |
@@ -756,7 +774,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Doton: Bala de Lama | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_mud_bullet` · som `sfx_splat` |
+| Doton: Bala de Lama | projectile | 13,0% do pool | 27,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_mud_bullet` · som `sfx_splat` |
 | Doton: Muralha de Pedra | self | 39 | 14,0s | 8 | utilitário/defensivo (kit) + cura contínua | `fx_stone_shell` · som `sfx_rock_rumble` |
 | Doton: Estacas de Terra | area | 166 | 6,0s | 22 | área/controle (kit) + paralisia | `fx_earth_spikes` · som `sfx_rock_crack` |
 | Doton: Colapso do Terreno | area | 268 | 9,0s | 48 | área forte (kit) + stun | `fx_earth_collapse` · som `sfx_quake` |
@@ -765,7 +783,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Fuuton: Lâmina de Vento | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) | `fx_wind_blade` · som `sfx_wind_cut` |
+| Fuuton: Lâmina de Vento | projectile | 13,0% do pool | 27,0s | 1 | burst à distância (projétil básico, kit) | `fx_wind_blade` · som `sfx_wind_cut` |
 | Fuuton: Rajada Cortante | area | 147 | 6,5s | 16 | área/cone (kit) + lentidão | `fx_wind_cone` · som `sfx_wind_burst` |
 | Fuuton: Redemoinho Prisão | target | 45 | 9,0s | 23 | controle/utilitário (kit) + paralisia | `fx_wind_prison` · som `sfx_wind_trap` |
 | Fuuton: Tornado Cortante | beam | 243 | 8,0s | 36 | burst forte em linha (kit) + lentidão | `fx_wind_tornado` · som `sfx_wind_roar` |
@@ -1053,11 +1071,17 @@ Comandos (GM) funcionando in-game, rank visível na janela de Atributos.
 
 ### Em andamento
 
-**Balanceamento rodada 8** (próxima, não iniciada): cortar pela metade o excedente de
-`attack_multiplier` nos bosses (a fúria real da rodada 7 somou dano em cima de cura/velocidade já
-calibradas pra compensar a FALTA de dano, subindo o TTK acima do calibrado — seção 5); resolver a
-meta de 15-25% de tempo sem chakra numa hunt híbrida (rodada 7 fechou casts/pool mas não essa,
-limite estrutural da cadência híbrida `HYBRID_JUTSU_CADENCE_FRAC=0,22` — ver relatório v7 §5).
+**Balanceamento rodada 8** (concluída — ver `docs/sistemas/balanceamento-relatorio-v8.md`):
+`tools/balance/sim.py` passou a modelar `phases[].attack_multiplier`/`summons` de boss (fúria
+real); Serpente Branca recalibrada (1,9→1,45, único boss fora de 1,3×-1,8× de dano recebido/s);
+`HYBRID_JUTSU_CADENCE_FRAC` substituído pelo modelo "castar o tier 1 sempre que libera e tem
+chakra" (cooldown real, sem esticamento artificial) — exigiu subir o cooldown do tier 1 de 9,0s
+para 27,0s pra manter o híbrido ≤+15% contra os 6 bosses de referência; a meta de 15-25% de
+tempo sem chakra numa hunt híbrida NÃO fechou (0% em todos os níveis) — conflito estrutural com
+a meta "Genin L1 6-8 casts por pool" (custo mais alto fecharia a scarcity mas quebraria os
+casts/pool), documentado como pendência honesta. `katon_anel_chamas`/`fuuton_rajada_cortante`/
+`fuuton_tornado_cortante` (área/beam tier 2/3) ajustados pra devolver ninjutsu a +30-60% sobre
+taijutsu nos pulls de 3 monstros de Ruínas e Montanha (a rodada 7 tinha derrubado isso).
 **Re-teste de história arcos 4–6** (pendente): o playtest de hoje rodou ANTES do fix de encoding
 049981b/8147d69 estar completamente validado em combate longo — confirmar que kills com nome
 acentuado contam de verdade pra missão/conquista numa sessão nova, do zero. Polimento de mapa
@@ -1066,8 +1090,10 @@ ainda sintetizada por código.
 
 ### Próximos passos (ordem de valor, conforme `01-roadmap.md`)
 
-1. Balanceamento rodada 8: recalibrar `attack_multiplier` de boss pós-fúria-real; buscar a
-   alavanca que fecha o tempo-sem-chakra em hunt híbrida (relatório v7 §5).
+1. Balanceamento rodada 9 (sugestão): achar uma alavanca real pra 15-25% de tempo sem chakra em
+   hunt híbrida sem violar "Genin L1 6-8 casts por pool" (pendência da rodada 8, ver
+   `docs/sistemas/balanceamento-relatorio-v8.md` §2); revisitar o pull L2 (`wolf`, n=3) que ficou
+   bem abaixo de -60% (sem jutsu de área disponível nesse nível).
 2. Re-teste de história arcos 4–6 numa sessão nova, do zero, confirmando o fix de encoding em
    combate real sustentado (não só os primeiros minutos pós-restart).
 3. Música ambiente (`tools/audio/gen_music.py`, ainda não escrita) — único item de som pendente.
@@ -1089,12 +1115,13 @@ ainda sintetizada por código.
   final.
 - **Sem música** — os 51 efeitos sonoros de combate/UI existem e tocam; trilha ambiente por
   vila/bioma não existe (seção 9).
-- **Fúria real de boss (hoje) ainda não recalibrada** — TTK de boss subiu acima do calibrado nas
-  rodadas 5/6 porque o multiplicador de dano de verdade soma em cima de cura/velocidade que já
-  compensavam a falta dele; rodada 8 corrige.
-- **Chakra do tier 1 fechou casts/pool mas não a meta de tempo-sem-chakra em hunt híbrida**
-  (0% medido contra meta 15-25%, relatório v7 §5) — limite estrutural do modelo híbrido, não
-  fechado ainda por nenhum custo dentro da faixa permitida.
+- **Fúria real de boss recalibrada na rodada 8** — `sim.py` agora modela `attack_multiplier`/
+  summons; só a Serpente Branca precisou de ajuste (1,9→1,45). Ver
+  `docs/sistemas/balanceamento-relatorio-v8.md` §1.
+- **Chakra do tier 1 ainda não fecha a meta de tempo-sem-chakra em hunt híbrida** (0% medido
+  contra meta 15-25%, mesmo depois de trocar o modelo de cadência na rodada 8) — conflito
+  estrutural real com "Genin L1 6-8 casts por pool" (o custo que fecharia a scarcity quebra os
+  casts/pool), não uma questão de calibração fina; ver relatório v8 §2.
 - **Playtests de história (arcos 1-6) validaram narrativa e falas, não combate sustentado**: os
   dois playtests do dia confirmaram texto/fases em tela, mas não uma sessão longa pós-fix de
   encoding — ver "Em andamento".
@@ -1171,14 +1198,12 @@ dois documentos discordavam, usei `data/` como fonte e anoto a divergência aqui
    Genin — dado órfão que só afeta o comando de debug de GM `/sl canenter <zona>`
    (`NarutoRanks.zoneMinIndex`), não o gate real (`rank_gate.lua` lê o actionid do tile, não essa
    tabela). Não corrigido hoje (edição de `data/ranks.json` fora do escopo do lote de mapa).
-6. **(novo, playtest arcos 4-6) O `attack_multiplier` de fase de boss precisa recalibração
-   pós-fúria-real.** Antes de hoje ele só simulava a fúria via cura+velocidade (compensando a
-   falta de dano de verdade); a rodada 7 de engenharia (`87c19a1`) fez o multiplicador também
-   aumentar o dano de verdade — mas os VALORES de `attack_multiplier` em `data/monsters/*.json`
-   continuam os mesmos calibrados pra rodada 5/6 (quando o multiplicador só afetava velocidade),
-   então o TTK de boss subiu além do calibrado. Sinalizado no próprio
-   `docs/sistemas/monstros-e-pvm.md` como pendência pra rodada 8; ainda não corrigido em nenhum
-   `data/monsters/*.json`.
+6. **(resolvido na rodada 8) O `attack_multiplier` de fase de boss foi recalibrado
+   pós-fúria-real.** `tools/balance/sim.py` agora modela `phases[].attack_multiplier`/`summons`
+   (antes ignorados); dos 12 bosses com fase de fúria, só a Serpente Branca (`data/monsters/
+   swamp.json`) precisou de ajuste (1,9→1,45) pra ficar dentro de 1,3×-1,8× de dano recebido/s
+   (fase final vs. fase 1) com `death_rate` 0% (taijutsu solo, com poções, no level-alvo). Ver
+   `docs/sistemas/balanceamento-relatorio-v8.md` §1.
 
 ### O que ficou faltando (não coberto por esta bíblia)
 

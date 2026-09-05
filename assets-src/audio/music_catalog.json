@@ -1,0 +1,107 @@
+{
+  "rate": 22050,
+  "peak_dbfs": -12.0,
+  "loop_fade_s": 3.0,
+  "resolve_order": [
+    "vila",
+    "floresta_morte",
+    "costa",
+    "ruinas",
+    "montanha",
+    "covil",
+    "floresta_vila"
+  ],
+  "tracks": {
+    "vila": {
+      "file": "naruto/music/vila.ogg",
+      "gain": 0.35,
+      "title": "Vila da Folha",
+      "priority": 10,
+      "duration_s": 76.0,
+      "region": {
+        "x1": 1010,
+        "x2": 1049,
+        "y1": 1030,
+        "y2": 1069
+      }
+    },
+    "floresta_vila": {
+      "file": "naruto/music/floresta_vila.ogg",
+      "gain": 0.32,
+      "title": "Floresta da Vila",
+      "priority": 1,
+      "duration_s": 76.0,
+      "region": {
+        "x1": 1000,
+        "x2": 1129,
+        "y1": 1000,
+        "y2": 1119
+      }
+    },
+    "costa": {
+      "file": "naruto/music/costa.ogg",
+      "gain": 0.38,
+      "title": "Costa das Mares",
+      "priority": 8,
+      "duration_s": 80.0,
+      "region": {
+        "x1": 1000,
+        "x2": 1049,
+        "y1": 1120,
+        "y2": 1169
+      }
+    },
+    "floresta_morte": {
+      "file": "naruto/music/floresta_morte.ogg",
+      "gain": 0.4,
+      "title": "Floresta da Morte",
+      "priority": 8,
+      "duration_s": 78.0,
+      "region": {
+        "x1": 1130,
+        "x2": 1199,
+        "y1": 1000,
+        "y2": 1119
+      }
+    },
+    "ruinas": {
+      "file": "naruto/music/ruinas.ogg",
+      "gain": 0.38,
+      "title": "Ruinas do Cla Marionetista",
+      "priority": 8,
+      "duration_s": 85.0,
+      "region": {
+        "x1": 1200,
+        "x2": 1249,
+        "y1": 1000,
+        "y2": 1049
+      }
+    },
+    "montanha": {
+      "file": "naruto/music/montanha.ogg",
+      "gain": 0.4,
+      "title": "Montanha do Trovao",
+      "priority": 8,
+      "duration_s": 80.0,
+      "region": {
+        "x1": 1200,
+        "x2": 1249,
+        "y1": 1060,
+        "y2": 1109
+      }
+    },
+    "covil": {
+      "file": "naruto/music/covil.ogg",
+      "gain": 0.42,
+      "title": "Covil da Nuvem Vermelha",
+      "priority": 8,
+      "duration_s": 80.0,
+      "region": {
+        "x1": 1400,
+        "x2": 1449,
+        "y1": 1000,
+        "y2": 1049
+      }
+    }
+  }
+}

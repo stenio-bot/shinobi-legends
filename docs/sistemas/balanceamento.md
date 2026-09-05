@@ -76,8 +76,11 @@ com monstro do mesmo level, que é exatamente o ritmo do conteúdo já existente
 A Serpente Branca é o boss **final** da faixa: 4 600 HP = 7× o `hp_base(25)` de 525 arredondado
 para cima (o Sapo Ancião fica em 4 000 e vira boss opcional). Dano: 40–62 no golpe primário
 (HP do player em L25 = 475 → 8–13%), névoa em área e cuspe ácido a ~90% do primário, como manda
-a regra de bosses. `attack_multiplier` de 1.9 na fase 3 vale, na prática, ~+45% de velocidade
-(ver a limitação do TFS em `monstros-e-pvm.md`).
+a regra de bosses. `attack_multiplier` na fase 3 é **1,45** (recalibrado na rodada 8, era 1,9 —
+ver `docs/sistemas/balanceamento-relatorio-v8.md` §1): desde o commit `87c19a1` ele multiplica o
+dano de verdade (`NarutoBossFury`), não só velocidade/cura — `tools/balance/sim.py` modela isso
+desde a rodada 8 (`apply_boss_phase_tick`), confirmando dano recebido/s na fase final em ~1,45×
+o da fase 1 (dentro da meta 1,3×-1,8×).
 
 > **"Broken" definido antes do playtest:** se um spot der menos de 3 ou mais de 12 kills
 > por level, o `ratio` da faixa está errado. O lever é `ratio`, nunca o HP.
@@ -229,6 +232,18 @@ em L5 deixou de existir (o tier 1 agora raramente precisa de pílula pra começo
 > custo aplicado a ninjutsu puro (sem o amortecedor) já cria scarcity real (33-72% sem pílula,
 > ≤0,1% com pílula) — confirma que o custo em si funciona; o gargalo é só o modelo híbrido.
 
+> **Atualizado na rodada 8** (`docs/sistemas/balanceamento-relatorio-v8.md` §2):
+> `HYBRID_JUTSU_CADENCE_FRAC` foi **removida** — o híbrido agora sempre conjura o tier 1 no
+> cooldown REAL (sem esticamento artificial), o modelo "castar sempre que libera e tem chakra"
+> medido no playtest da rodada 5. No cooldown original (9,0s) isso deixava o híbrido forte
+> demais contra boss (até -44% de TTK vs. melhor puro) — o cooldown dos 5 tier 1 subiu para
+> **27,0s** (custo do pool inalterado) pra manter o teto de +15%. A meta de 15-25% de tempo sem
+> chakra em hunt híbrida **continua não fechando** (0% em todos os níveis) — agora por um motivo
+> diferente: "Genin L1 6-8 casts/pool" e essa faixa de scarcity são matematicamente
+> incompatíveis sob o custo percentual fixo do pool (o custo que fecharia a scarcity, ×4-6,
+> quebra os casts/pool). Priorizado manter "6-8 casts/pool" (item da lista "Manter" da missão) e
+> o teto de boss (meta com lever nomeado) sobre a faixa de scarcity.
+
 **Material exclusivo de boss:** `sell_price ≈ 3 × (4.5 * L)` — a Presa da Serpente Branca (L25)
 vale 340, contra ~112 de um material comum da mesma faixa. Cai 100% (1–2), então é a renda
 garantida da luta; o resto do loot é chance.
@@ -333,13 +348,24 @@ dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 > burst (94/100) e personagens (9/9 dentro de ±15%, cancelamento algébrico do custo na fórmula
 > `valor()`) confirmados **inalterados**.
 
+> **Atualizado na rodada 8** (`docs/sistemas/balanceamento-relatorio-v8.md` §2-3):
+> `HYBRID_JUTSU_CADENCE_FRAC` **removida** — o híbrido agora conjura o tier 1 sempre que
+> pronto/pagável, no cooldown REAL (sem esticamento). Isso obrigou subir o `cooldown_s` do tier 1
+> de **9,0s para 27,0s** (custo do pool inalterado) pra manter o teto de +15% — testado e
+> descartado usar o custo (precisaria de ×4-6, quebrando "Genin L1 6-8 casts/pool"). A meta de
+> scarcity em hunt híbrida (15-25%) continua em 0% — conflito estrutural com "6-8 casts/pool",
+> não uma questão de achar o custo certo. Grupo 3+: `katon_anel_chamas` (dano ×1,2) e
+> `fuuton_rajada_cortante`/`fuuton_tornado_cortante` (dano ×0,65 cada) recolocaram `ruin_puppet`/
+> `thunder_eagle` em +30-60% sobre taijutsu (a rodada 7 tinha derrubado `ruin_puppet` a +3,7% como
+> efeito colateral do custo de tier 1 — ver §3 do relatório).
+
 Escala por tier (com `required_level` de referência e ninjutsu = magic level real, ver acima):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil (pós-rodada-7) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **12-14% do pool** (era 2,5-3,0%, rodada 5; 25-30 fixo antes disso) | 9,0 s (inalterado desde a rodada 5) |
+| 1 projétil (pós-rodada-8) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **12-14% do pool** (inalterado desde a rodada 7; era 2,5-3,0% na r5, 25-30 fixo antes) | **27,0 s** (era 9,0s desde a rodada 5 — subiu na rodada 8 pra manter o teto de híbrido ≤+15% com o cooldown REAL, ver `balanceamento-relatorio-v8.md` §2) |
 | 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus tier 1 de área — `raiton_corrente_estatica`/`suiton_nevoa_cortante` — subiram de 1,3-1,6s pra **3,0s** na rodada 6, ver acima) |
-| 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–38,99 (3 recalibrados na r4, ver acima) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
+| 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–43,2 (`katon_anel_chamas` subiu de 36,0 pra **43,2** na rodada 8, ver `balanceamento-relatorio-v8.md` §3) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
 | 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |
 | 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–245 | 7,0–9,0 s |
 
@@ -376,8 +402,9 @@ Fechando os `element_sets.json` (doton tinha só 3 jutsus, fuuton só 2) e as 36
 (valores pós-rodada-3 pro `fuuton_tornado_cortante` — era o jutsu tier 3 "nunca escolhido" da
 rodada 2; agora é o pick real de fuuton em bosses L54-100, ver relatório v3 §4. Os outros dois,
 inalterados desde a rodada 2 — ver nota acima da tabela de escala por tier. **`doton_bala_lama`
-foi recalibrado na rodada 5** junto com os outros 4 projéteis tier 1 elementais — valores atuais
-`chakra_cost_percent=2,75%`/`cooldown_s=9,0`/`base_damage=4,0`/`level_scale=5,35`/
+foi recalibrado na rodada 5, com o custo reajustado de novo na rodada 7 e o cooldown na rodada
+8** junto com os outros 4 projéteis tier 1 elementais — valores atuais
+`chakra_cost_percent=13,0%`/`cooldown_s=27,0`/`base_damage=4,0`/`level_scale=5,35`/
 `skill_scale=0,115`, ver tabela de escala por tier acima e `data/jutsus/doton.json`; a linha
 acima fica como registro histórico de quando o jutsu foi criado, não como valor atual.)
 

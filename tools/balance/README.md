@@ -37,7 +37,10 @@ python3 tools/balance/sim.py --matrix --trials 100 --json /tmp/matrix.json
 python3 tools/balance/sim.py --hunt --json /tmp/hunt.json
 
 # rodada 7: --no-force-tier1 volta ao comportamento das rodadas 4-6 (mede "tempo sem chakra pra
-# QUALQUER coisa do kit elemental", não especificamente o tier 1)
+# QUALQUER coisa do kit elemental", não especificamente o tier 1). RODADA 8: --no-force-tier1 só
+# tem efeito sobre o build ninjutsu puro — o build hybrid (padrão de `--hunt`) SEMPRE conjura o
+# tier 1 agora (ver "Build hybrid" acima), então --hunt e --hunt --no-force-tier1 dão o MESMO
+# resultado pra hybrid; a flag só muda a leitura do ninjutsu puro (diagnóstico da rodada 7 §5).
 python3 tools/balance/sim.py --hunt --no-force-tier1 --json /tmp/hunt_kitwide.json
 
 # hunt pontual (nível/monstro/build escolhidos), com pílula de chakra ligada
@@ -91,6 +94,15 @@ cooldown EFETIVO do jutsu só pro build híbrido (`cooldown_s / HYBRID_JUTSU_CAD
 mais devagar) — modela que um jogador dividindo atenção entre arma e jutsu não aproveita toda
 janela de cast livre entre golpes (cabem 4-5 golpes de arma no cooldown de 9,0s do tier 1). O
 ninjutsu PURO não usa esse parâmetro (não é `interleave`). Ver relatório v6 §1.
+
+**Substituído na rodada 8**: `HYBRID_JUTSU_CADENCE_FRAC` foi REMOVIDA — a rodada 7 mediu que ela
+deixava o cast de jutsu tão raro que nenhum custo criava scarcity real numa hunt de 30 min (ver
+achado abaixo). Modelo novo: o híbrido não passa mais por `pick_ninjutsu_jutsu`; sempre conjura o
+**tier 1** do elemento com vantagem (`advantage_element()`), no cooldown **real** (sem
+esticamento). Isso deixou o híbrido forte demais contra boss no cooldown original de 9,0s
+(até -44% de TTK vs. melhor puro) — o cooldown dos 5 tier 1 subiu para **27,0s** (custo
+percentual do pool inalterado, pra não quebrar "Genin L1 6-8 casts/pool") pra fechar o teto de
++15% de novo. Ver relatório v8 §2.
 
 ### Cenário multi-alvo (rodada 2)
 
@@ -619,3 +631,47 @@ seguidos de tier 1 no L1 sem sair de 108-110/110 de chakra (`docs/qa/playtest-l1
   com summons; proxy de personagens ainda não versionada como script próprio;
   `wolf`/`bandit`/`mercenary_bridge`/`mist_guardian`/`white_clone` seguem abaixo da faixa de
   grupo.
+
+## Achados da rodada 8 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v8.md`
+
+1. **`sim.py` passou a modelar `phases[].attack_multiplier`/`summons` de boss** (antes ignorados
+   por completo — o simulador só lia `hp`/`attacks` fixos). `boss_phase_state_init()`/
+   `apply_boss_phase_tick()` replicam `server/generated/scripts/naruto/boss_phases.lua`: ao
+   cruzar o `hp_percent` de uma fase (checado por golpe individual, não por tick), o multiplicador
+   passa a valer sobre TODO ataque do boss dali em diante (nunca some), com a mesma cura pontual
+   `+max_hp×(mult-1)×0,10`. `summons` viram uma trickle de dano de fundo (`average_monster_dps_
+   vs_player`, sem RNG) — aproximação deliberada, não simula os summons um a um.
+2. **Só a Serpente Branca precisou de recalibração de `attack_multiplier`** (1,9→1,45) — os
+   outros 11 bosses com fase de fúria já caíam dentro de 1,3×-1,8× de dano recebido/s (fase final
+   vs. fase 1) mesmo sem tocar o valor. `death_rate`≤10% (com poções) já era 0% em todos, com e
+   sem a fúria real — a folga de poção sempre cobriu isso.
+3. **`HYBRID_JUTSU_CADENCE_FRAC` foi REMOVIDA** — modelo novo: híbrido sempre conjura tier 1
+   (`advantage_element()`), cooldown real. Isso exigiu subir o cooldown do tier 1 (9,0s→27,0s,
+   custo do pool inalterado) pra manter o teto de boss ≤+15% — testado e descartado usar o
+   custo como lever (precisaria de ×4-6 pra tamponar o boss, o que quebra "Genin L1 6-8
+   casts/pool").
+4. **15-25% de tempo sem chakra em hunt híbrida CONTINUA não fechando (0% em todos os níveis)** —
+   agora por um motivo diferente da rodada 7: "Genin L1 6-8 casts/pool" e essa faixa de scarcity
+   são matematicamente incompatíveis sob o modelo de custo percentual fixo (o custo que fecha a
+   scarcity quebra os casts/pool). Ver relatório v8 §2 pra prova numérica completa.
+5. **Grupo 3+: `ruin_puppet` e `thunder_eagle` recolocados em +30-60%** ajustando os jutsus de
+   área/beam tier 2/3 do rotação (`katon_anel_chamas` ×1,2; `fuuton_rajada_cortante` e
+   `fuuton_tornado_cortante` ×0,65 cada — precisou nerfar os DOIS porque a rotação migra pro
+   outro assim que um é nerfado sozinho, mesma classe de achado "whack-a-mole" da rodada 6).
+   `wolf` L2 N=3 continua bem fora da faixa (-84,6%) — nenhum jutsu de área existe nesse nível,
+   fora do escopo da alavanca pedida.
+
+## Pendências honestas da rodada 8 (ver relatório v8 §7 pros números)
+
+- **Scarcity híbrida (15-25% sem chakra) continua em 0%** — conflito estrutural real com "Genin
+  L1 6-8 casts/pool" (não uma questão de achar o número certo). Resolver exigiria uma alavanca
+  fora da lista desta rodada (ex. custo crescente por cast dentro de uma janela, não um
+  percentual fixo do pool).
+- **`wolf` L2 N=3 fica em -84,6%** (fora de +30-60%) — sem jutsu de área desbloqueado nesse
+  nível; fora do escopo da alavanca "tier 2/3" pedida.
+- **Híbrido fora dos 6 bosses de referência tem variância bem maior que antes** (ex.
+  `stone_sentinel` +201,9%, `glacier_oni` +102,0%, em pares nível≈nível-do-monstro da matriz
+  completa) — o modelo antigo ficava sempre perto de zero por castar tão raro; fora do escopo
+  numérico desta rodada (só pede os 6 bosses de referência).
+- **Margem do teto de boss não é folgada** (pior caso -13,4% de -15%, ~1,6pp de sobra) — revisitar
+  se algum conteúdo futuro aumentar `level_scale` do tier 1 ou reduzir o cooldown de novo.
