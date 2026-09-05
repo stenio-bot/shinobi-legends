@@ -204,7 +204,7 @@
     "defense": 10,
     "speed": 5.0,
     "element": "doton",
-    "xp": 260,
+    "xp": 290,
     "behavior": "aggressive",
     "aggro_range": 5,
     "attack_range": 1,
@@ -451,7 +451,7 @@
       {
         "hp_percent": 25,
         "attack_multiplier": 1.9,
-        "message": "Minhas crias vão limpar o que sobrar de você!",
+        "message": "Minhas crias vão limpar o que sobrar de você! Nem a organização que me expulsou quis ver o que eu virei — e vocês vão descobrir por quê.",
         "summons": [
           {
             "monster_id": "lesser_serpent",

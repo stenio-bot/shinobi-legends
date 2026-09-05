@@ -40,7 +40,7 @@
         "id": "q_ruins_intro",
         "name": "Primeiras peças",
         "rank": "D",
-        "text": "Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete.",
+        "text": "Chunin, bem-vindo às Ruínas. Este templo servia à Vila da Areia até o clã que aqui vivia virar os próprios bonecos que empunhava — e ninguém sabe dizer se a alma deles ainda comanda a madeira ou se é o contrário. Comece trazendo 8 juntas de marionete: preciso entender como ainda se movem.",
         "objective": {
           "kind": "collect_item",
           "items": [
@@ -61,7 +61,7 @@
       {
         "id": "q_ruins_puppets",
         "name": "Ordens antigas",
-        "text": "As marionetes ainda patrulham o pátio. Destrua 12 delas.",
+        "text": "As marionetes ainda seguem ordens de alguém — patrulham o pátio como se o dono nunca tivesse morrido. Destrua 12 e ajude a descobrir quem ainda puxa os fios.",
         "objective": {
           "kill": "ruin_puppet",
           "count": 12
@@ -77,7 +77,7 @@
       {
         "id": "q_ruins_sentinels",
         "name": "Quebrando o portão",
-        "text": "Sentinelas de pedra bloqueiam o portão interno. Derrube 10.",
+        "text": "As sentinelas de pedra guardam o portão interno há gerações, fiéis a uma ordem que ninguém mais lembra quem deu. Derrube 10 e sigamos os rastros de quem ainda as comanda.",
         "objective": {
           "kill": "stone_sentinel",
           "count": 10
@@ -137,7 +137,7 @@
       {
         "id": "q_ruins_shamans",
         "name": "Selos que não se apagam",
-        "text": "Os xamãs mantêm a maldição viva. Silencie 8.",
+        "text": "Os xamãs mantêm os selos de maldição ativos há gerações — silenciá-los é o último passo antes de chegar ao gênio desertor. Silencie 8.",
         "objective": {
           "kill": "curse_shaman",
           "count": 8
@@ -169,7 +169,7 @@
       {
         "id": "q_ruins_boss",
         "name": "Quem puxa os fios",
-        "text": "No salão central alguém comanda tudo isso. Acabe com o Marionetista.",
+        "text": "No salão central, o Marionetista das Ruínas ainda dá as últimas ordens do clã extinto — e as marionetes obedecem como se ele nunca tivesse morrido. Acabe com ele antes que mais alguém desapareça sob a poeira deste templo.",
         "objective": {
           "kill": "boss_puppeteer",
           "count": 1
@@ -181,7 +181,8 @@
             "ring_stone_will"
           ]
         },
-        "grants_rank_progress": "jonin"
+        "grants_rank_progress": "jonin",
+        "done_text": "Metade do caminho. Se o Espadachim da Névoa também caiu, a Montanha do Trovão está esperando por você."
       }
     ]
   },
