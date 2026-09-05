@@ -468,6 +468,26 @@
       "legs": 22,
       "feet": 115,
       "_note": "looktype 941 (procedural, tools/spr/gen_animals.py) — cervo de verdade (chifres, pernas finas), dedicado (nao compartilha mais com o Lobo). Antes reaproveitava 21 (mon_wolf) so recolorido."
+    },
+    "crimson_echo": {
+      "looktype": 913,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 4/4, final do jogo): visual 913 (mugen 'Madara', liberado do Oni Ancestral) — boss de endgame, o mais forte do jogo."
+    },
+    "invoked_path": {
+      "looktype": 911,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 3/4): visual 911 (mugen 'Pain', liberado do Xamã da Maldição) — boss de endgame."
     }
   },
   "items": {

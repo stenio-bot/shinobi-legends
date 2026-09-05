@@ -68,6 +68,7 @@
         "id": "q_lair_1_illusive_eye",
         "name": "Exame Anbu (1/2) — O Vigia Ilusório",
         "text": "Ninguém que entra aqui como Chunin sai vivo. Prove que é Anbu: derrote O Vigia Ilusório.",
+        "done_text": "Um olho fechado. Falta o segundo guardião — e ele já sabe que vocês estão vindo.",
         "objective": {
           "kill": "boss_illusive_eye",
           "count": 1
@@ -85,6 +86,7 @@
         "id": "q_lair_2_masked_puppeteer",
         "name": "Exame Anbu (2/2) — O Mascarado das Sombras",
         "text": "O segundo guardião puxa os fios de longe. Encontre-o e encerre isso.",
+        "done_text": "Anbu de verdade, enfim. Mas os dois que faltam são os que fundaram tudo isso — não relaxem agora.",
         "objective": {
           "kill": "boss_masked_puppeteer",
           "count": 1
@@ -99,9 +101,54 @@
         "grants_rank": "anbu"
       },
       {
+        "id": "q_lair_lore_quiz",
+        "name": "O que ainda ecoa",
+        "rank": "S",
+        "text": "Serpente Branca, Marionetista das Ruínas, Sócio Eterno e Oni Ancestral já caíram para vocês. Antes de abrir o corredor do Portador dos Seis Caminhos, provem que prestaram atenção em quem enfrentaram até aqui.",
+        "objective": {
+          "kind": "keyword_quiz",
+          "quiz": [
+            {
+              "question": "A Serpente Branca de verdade nunca foi só uma cobra. O que ela era antes de abandonar a forma humana?",
+              "keywords": [
+                "ninja",
+                "humano",
+                "renegado"
+              ]
+            },
+            {
+              "question": "O Marionetista das Ruínas quase não lutava com o próprio corpo. O que ele usava para lutar em seu lugar?",
+              "keywords": [
+                "marionetes",
+                "marionete",
+                "bonecos",
+                "fios"
+              ]
+            },
+            {
+              "question": "Da dupla amaldiçoada da Montanha do Trovão, o que acontece quando um dos dois morre sozinho?",
+              "keywords": [
+                "absorve",
+                "absorver",
+                "furia",
+                "fúria"
+              ]
+            }
+          ]
+        },
+        "reward": {
+          "xp": 78000,
+          "ryo": 20000,
+          "items": [
+            "health_potion_large"
+          ]
+        }
+      },
+      {
         "id": "q_lair_3_rings_bearer",
         "name": "Exame Kage (1/2) — O Portador dos Seis Caminhos",
         "text": "Só um Kage de verdade encara o próximo guardião e vive para contar. Derrote O Portador dos Seis Caminhos.",
+        "done_text": "Ele multiplicava a própria vontade em vários corpos e ainda assim caiu para um só. Falta o fundador de tudo isso.",
         "objective": {
           "kill": "boss_rings_bearer",
           "count": 1
@@ -119,6 +166,7 @@
         "id": "q_lair_4_crimson_ancestor",
         "name": "Exame Kage (2/2) — O Ancestral da Nuvem Vermelha",
         "text": "O fundador da organização te espera no salão final. Vença, e a vila vai te chamar de Kage.",
+        "done_text": "Você fez o que nenhum Kage sozinho tinha conseguido: derrubou os líderes da Nuvem Vermelha. A vila vai te chamar de Kage a partir de hoje — e vai ser verdade.",
         "objective": {
           "kill": "boss_crimson_ancestor",
           "count": 1

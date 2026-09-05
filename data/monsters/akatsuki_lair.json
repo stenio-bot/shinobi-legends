@@ -345,11 +345,11 @@
         "hp_percent": 60,
         "summons": [
           {
-            "monster_id": "elite_cloud_guard",
+            "monster_id": "invoked_path",
             "count": 2
           }
         ],
-        "message": "Meus caminhos não lutam sozinhos."
+        "message": "Minha vontade não cabe em um corpo só. Vejam com seus próprios olhos."
       },
       {
         "hp_percent": 25,
@@ -454,12 +454,18 @@
       {
         "hp_percent": 60,
         "attack_multiplier": 1.3,
-        "message": "Você acha mesmo que chegou ao fim?"
+        "message": "A Grande Guerra nunca terminou. Só mudou de nome."
       },
       {
         "hp_percent": 25,
         "attack_multiplier": 1.7,
-        "message": "Então prove que merece o título que veio buscar."
+        "summons": [
+          {
+            "monster_id": "crimson_echo",
+            "count": 1
+          }
+        ],
+        "message": "As vilas dizem que venceram aquela guerra. Mentira que contam há uma geração — e o eco que vocês veem agora é a prova de que nada acabou."
       }
     ],
     "loot": [
@@ -516,6 +522,104 @@
     "ryo_max": 12000,
     "respawn_s": 14400,
     "sprite": "mon_boss_crimson_ancestor",
+    "article": "o"
+  },
+  {
+    "id": "invoked_path",
+    "name": "Caminho Invocado",
+    "description": "Cópia de vontade reduzida que O Portador dos Seis Caminhos projeta de si mesmo em combate — não um sentinela genérico, um pedaço dele mesmo. PENDENTE (Lote C, registrado no relatório): precisa do MESMO looktype de 'boss_rings_bearer' (911, ver data/tfs_mapping.json) para renderizar como cópia visual do boss; sem entrada própria em tfs_mapping.monsters, cai no fallback padrão (looktype 128) até alguém com posse do arquivo adicionar a entrada.",
+    "level": 88,
+    "hp": 5000,
+    "attack": 95,
+    "defense": 48,
+    "speed": 4.0,
+    "element": "doton",
+    "xp": 4200,
+    "behavior": "aggressive",
+    "aggro_range": 9,
+    "attack_range": 3,
+    "attacks": [
+      {
+        "name": "Eco da Dor",
+        "damage_min": 70,
+        "damage_max": 110,
+        "cooldown_s": 3.0,
+        "type": "projectile"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "health_potion_large",
+        "chance": 0.4,
+        "min": 1,
+        "max": 3
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 0.4,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "shuriken_aurora_carmesim",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 600,
+    "ryo_max": 1200,
+    "respawn_s": 60,
+    "sprite": "mon_invoked_path",
+    "article": "o"
+  },
+  {
+    "id": "crimson_echo",
+    "name": "Eco Carmesim",
+    "description": "Sombra de vontade que O Ancestral da Nuvem Vermelha projeta de si mesmo na fase final da luta — o mesmo fundador, em miniatura. PENDENTE (Lote C, registrado no relatório): precisa do MESMO looktype de 'boss_crimson_ancestor' (913, ver data/tfs_mapping.json) para renderizar como eco visual do boss; sem entrada própria em tfs_mapping.monsters, cai no fallback padrão (looktype 128) até alguém com posse do arquivo adicionar a entrada.",
+    "level": 92,
+    "hp": 6500,
+    "attack": 110,
+    "defense": 55,
+    "speed": 4.4,
+    "element": "raiton",
+    "xp": 6000,
+    "behavior": "aggressive",
+    "aggro_range": 10,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Eco do Golpe do Fundador",
+        "damage_min": 90,
+        "damage_max": 140,
+        "cooldown_s": 2.4,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_fragment_crimson",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 0.5,
+        "min": 2,
+        "max": 4
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 0.5,
+        "min": 1,
+        "max": 3
+      }
+    ],
+    "ryo_min": 800,
+    "ryo_max": 1600,
+    "respawn_s": 60,
+    "sprite": "mon_crimson_echo",
     "article": "o"
   }
 ]

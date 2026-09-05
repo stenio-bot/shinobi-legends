@@ -37,7 +37,7 @@
       {
         "id": "q_mountain_eagles",
         "name": "Céu limpo",
-        "text": "As águias do trovão não deixam ninguém subir a trilha. Abata 15.",
+        "text": "Chegou até aqui como Jonin? Bem-vindo à Montanha do Trovão. Isso aqui não é como a floresta lá embaixo: no topo do pico vive uma dupla amaldiçoada por um pacto antigo de guerra, e as águias do trovão são só o primeiro aviso de quem não deveria subir. Abata 15, se quiser provar que aguenta a trilha.",
         "objective": {
           "kill": "thunder_eagle",
           "count": 15
@@ -108,7 +108,7 @@
         "id": "q_mountain_lore",
         "name": "O pacto que não morre",
         "rank": "A",
-        "text": "Mestra Yuki quer garantir que você entende o que vai enfrentar no topo da montanha antes de deixá-lo subir.",
+        "text": "Mestra Yuki quer garantir que você entende o que vai enfrentar no topo da montanha antes de deixá-lo subir. Vocês vão enfrentar uma dupla que a Nuvem Vermelha já usou contra vilas inteiras, há uma geração, ainda na Grande Guerra. Prove que prestou atenção.",
         "objective": {
           "kind": "keyword_quiz",
           "kill": "storm_monk",
@@ -153,6 +153,7 @@
         "id": "q_mountain_curse_partner",
         "name": "O Sócio Eterno",
         "text": "Uma dupla amaldiçoada divide esta montanha. A metade que ainda parece gente não sabe morrer — mas sabe sangrar. Enfrente O Sócio Eterno.",
+        "done_text": "Um coração já parou. O outro vai acordar mais furioso do que nunca — não vá sozinho contra o Oni Ancestral.",
         "objective": {
           "kill": "boss_curse_partner",
           "count": 1
@@ -170,6 +171,7 @@
         "id": "q_mountain_boss",
         "name": "A raiva antiga",
         "text": "Dentro do pico dorme o Oni Ancestral, a outra metade da dupla amaldiçoada. Ele não vai dormir para sempre.",
+        "done_text": "Isso é só metade do que te espera no Covil da Nuvem Vermelha — e agora vocês já sabem o nome de quem enfrentam.",
         "objective": {
           "kill": "boss_ancestral_oni",
           "count": 1
