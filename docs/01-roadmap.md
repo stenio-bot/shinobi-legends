@@ -39,7 +39,7 @@ Objetivo: o loop de progressão fecha.
 - [x] Missões sequenciais de caça em 2 NPCs (aceitar, progresso no HUD, entregar, recompensa)
 - [x] Linha de visão (árvores bloqueiam aggro e ataques à distância)
 - [x] Peso e capacidade; drop de 30% dos itens da mochila ao morrer (ficam no seu corpo)
-- [ ] Áreas 25–50, 50–80, 80–100 (Ruínas, Montanha, Fortaleza)
+- [x] Áreas 25–50, 50–80, 80–100 no mapa (Ruínas, Montanha do Trovão, Covil da Nuvem Vermelha) — v2.1, 2026-09-05
 - [x] Vila da Areia (Fuuton/Doton) e jutsus Doton/Fuuton
 - [x] Áreas 25–50 (Ruínas do Clã) e 50–80 (Montanha do Trovão) no JSON
 - [ ] Arte própria substituindo placeholders
@@ -101,7 +101,7 @@ verdade. Resolvido:
       **Serpente Branca** (Floresta da Morte, L25) — 3 fases, outfit 132 → 890, 3+2 invocações
 
 ## OT-3 — Multiplayer de verdade
-- [ ] Contas, site de registro (ou AAC), hospedagem
+- [x] Contas + site de registro (AAC em `tools/aac`, porta 8080, sobe com `play.sh`) — hospedagem pendente
 - [ ] Party com XP compartilhada, clãs (guilds do TFS), chat
 - [ ] Balanceamento com jogadores reais
 
@@ -112,6 +112,24 @@ verdade. Resolvido:
 - [ ] Sincronização de posição e combate
 - [ ] Chat
 - [ ] Party/clã, XP compartilhada
+
+## Fila autônoma (2026-09-05) — "o melhor Narutibia do mundo"
+Estado: checkpoint `fff60df`. Sistemas de rank/exame/tarefas/diárias/achievements no servidor; mapa v2.1
+com 6 regiões; walk-cycle validado por filtro geométrico; 173 itens, 54 jutsus, 38 monstros, 21+8 NPCs.
+
+Em andamento (agentes paralelos, eu reviso):
+- [ ] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água; regen do mapa
+- [ ] Cliente UX: aba "Missões" no Menu Shinobi (rank, tarefas, diárias, história) via opcode 210 `get_progress`; rank na tela; login temático; mensagens de sistema em pt-BR
+- [ ] Balanceamento: simulador `tools/balance/sim.py` com fórmulas reais do TFS; matriz L1–100 × monstros × 2 builds; ajustes nos JSONs
+
+Próximos (ordem de valor):
+- [ ] Mapa: posicionar NPCs novos (6 Mestres de Tarefas, Quadro de Missões, Instrutora Ibuki) e aplicar actionid 45001–45005 nos tiles de entrada das regiões (gate de rank)
+- [ ] Arte de região: Ruínas (piso quebrado, pilares, entulho), Montanha (rocha/neve/lava), Covil (pedra escura, tochas vermelhas) — hoje tudo é o mesmo cobble liso
+- [ ] Playtest L1–20 como jogador comum (conta `teste`): fricções, tempo real por level, bugs de quest
+- [ ] VFX de jutsus (efeitos próprios no .dat) e sons procedurais
+- [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
+- [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
+- [ ] Party com XP compartilhada, clãs, PvP em arena
 
 ## Marco 5 — Pós-lançamento
 - [ ] PvP em áreas específicas
