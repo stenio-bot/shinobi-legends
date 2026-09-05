@@ -1,0 +1,91 @@
+<title>Estrutura jogo Narutibia PvM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#F3F4F0;--panel:#E9EBE4;--ink:#1B1F24;--ink2:#4B5159;--mute:#7C838E;--line:#D3D6CE;--accent:#D9701F;--accent2:#4F7F3A;--code:#E4E7DF;--sel:#FBE9DA}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15181C;--panel:#1C2025;--ink:#E6E4DD;--ink2:#B9B6AC;--mute:#858B96;--line:#2C3138;--accent:#E8863A;--accent2:#7FB463;--code:#22262C;--sel:#3A2A1E}}
+:root[data-theme="dark"]{--bg:#15181C;--panel:#1C2025;--ink:#E6E4DD;--ink2:#B9B6AC;--mute:#858B96;--line:#2C3138;--accent:#E8863A;--accent2:#7FB463;--code:#22262C;--sel:#3A2A1E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,Segoe UI,sans-serif;font-size:16px;line-height:1.55}
+header{display:flex;align-items:baseline;gap:18px;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
+header h1{font-family:"Zen Antique",Georgia,serif;font-weight:400;font-size:26px;margin:0;letter-spacing:.2px}
+header .meta{color:var(--mute);font-size:13px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.2px}
+header .meta b{color:var(--accent);font-weight:500}
+.wrap{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:calc(100vh - 62px)}
+nav{border-right:1px solid var(--line);padding:16px 12px 40px;background:var(--panel);position:sticky;top:0;height:100vh;overflow:auto}
+nav .cat{margin-bottom:14px}
+nav h3{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 4px 10px;font-weight:500}
+nav ul{list-style:none;margin:0;padding:0}
+nav li a{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:5px 10px;border-radius:4px;color:var(--ink2);text-decoration:none;font-size:14px;border-left:2px solid transparent}
+nav li a small{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+nav li a:hover{background:var(--sel);color:var(--ink)}
+nav li a.active{background:var(--sel);color:var(--ink);border-left-color:var(--accent)}
+nav li a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+main{padding:30px 40px 80px;max-width:900px}
+.crumb{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--mute);margin-bottom:6px}
+.crumb b{color:var(--accent2);font-weight:500}
+article{max-width:74ch}
+article h1{font-family:"Zen Antique",Georgia,serif;font-weight:400;font-size:34px;line-height:1.15;margin:0 0 18px;text-wrap:balance}
+article h2{font-family:"Zen Antique",Georgia,serif;font-weight:400;font-size:24px;margin:38px 0 10px;padding-top:14px;border-top:1px solid var(--line);text-wrap:balance}
+article h3{font-size:18px;font-weight:600;margin:26px 0 6px}
+article h4{font-size:16px;font-weight:600;margin:18px 0 4px}
+article p{margin:0 0 12px}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+article a:hover{border-bottom-color:var(--accent)}
+article code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em;background:var(--code);padding:1px 5px;border-radius:3px}
+article pre{background:var(--code);padding:12px 14px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.45}
+article pre code{background:none;padding:0}
+article blockquote{margin:0 0 12px;padding:6px 14px;border-left:3px solid var(--accent2);color:var(--ink2)}
+article ul,article ol{padding-left:22px;margin:0 0 12px}
+article li{margin:2px 0}
+.tbl{overflow-x:auto;margin:0 0 16px}
+article table{border-collapse:collapse;font-size:14px;min-width:100%}
+article th,article td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:var(--panel);font-weight:600}
+article td{font-variant-numeric:tabular-nums}
+article hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+article img{max-width:100%}
+.tree{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13px;line-height:1.6;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px 18px;margin:0 0 26px;overflow-x:auto;white-space:pre;color:var(--ink2)}
+.tree b{color:var(--accent);font-weight:500}
+.tree i{font-style:normal;color:var(--accent2)}
+@media (max-width:820px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:22px 18px 60px}}
+@media (prefers-reduced-motion:no-preference){article{animation:fade .25s ease-out}@keyframes fade{from{opacity:.6}to{opacity:1}}}
+</style>
+<header><h1>Estrutura jogo Narutibia PvM</h1><span class="meta"><b>Shinobi Legends</b> · {{NDOCS}} documentos · {{WORDS}} palavras · commit {{COMMIT}}</span></header>
+<div class="wrap">
+<nav id="nav">{{NAV}}</nav>
+<main><div class="crumb" id="crumb"></div><article id="doc"></article></main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script id="docs" type="application/json">{{PAYLOAD}}</script>
+<script>
+(function(){
+  var docs = JSON.parse(document.getElementById('docs').textContent);
+  var byPath = {}; docs.forEach(function(d){ byPath[d.path]=d; });
+  var tree = '{{TREE}}';
+  marked.setOptions({gfm:true, breaks:false});
+  function fixLinks(html, base){
+    return html.replace(/href="([^"]+)"/g, function(m, href){
+      if (/^(https?:|#|mailto:)/.test(href)) return m;
+      var clean = href.split('#')[0];
+      var dir = base.split('/').slice(0,-1);
+      clean.split('/').forEach(function(seg){ if(seg==='..') dir.pop(); else if(seg!=='.' && seg!=='') dir.push(seg); });
+      var p = dir.join('/');
+      return byPath[p] ? 'href="#'+p+'"' : 'href="#" data-missing="1" title="arquivo fora desta coleção: '+p+'"';
+    });
+  }
+  function show(path){
+    var d = byPath[path] || docs[0];
+    var html = marked.parse(d.md);
+    html = fixLinks(html, d.path).replace(/<table>/g,'<div class="tbl"><table>').replace(/<\/table>/g,'</table></div>');
+    if (d.path==='docs/ESTRUTURA.md') html = '<div class="tree">'+tree+'</div>' + html;
+    document.getElementById('doc').innerHTML = html;
+    document.getElementById('crumb').innerHTML = '<b>'+d.cat+'</b> › '+d.path+' · '+d.words.toLocaleString('pt-BR')+' palavras';
+    document.querySelectorAll('nav a').forEach(function(a){ a.classList.toggle('active', a.dataset.path===d.path); });
+    window.scrollTo(0,0);
+  }
+  function route(){ var p = decodeURIComponent(location.hash.slice(1)); show(byPath[p] ? p : 'docs/ESTRUTURA.md'); }
+  window.addEventListener('hashchange', route);
+  document.getElementById('doc').addEventListener('click', function(e){ var a=e.target.closest('a'); if(a && a.dataset.missing){ e.preventDefault(); } });
+  route();
+})();
+</script>
