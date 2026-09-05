@@ -691,8 +691,13 @@ def build(tpls, sid):
                wood=False, doors=[TEMPLE_DOOR])
     b.flag_rect(PLAZA[0], PLAZA[1], PLAZA[2], PLAZA[3],
                 TILEFLAG_PROTECTIONZONE)
-    b.flag_rect(TEMPLE[0], TEMPLE[1], TEMPLE[2], TEMPLE[3],
-                TILEFLAG_PROTECTIONZONE | TILEFLAG_NOLOGOUT)
+    # Playtest r6 (2026-09-05): o templo e' o ponto de nascimento/retorno — jogador precisa poder
+    # deslogar ali (NOLOGOUT dava "You can not logout here") e sair sem "abrir" porta: a porta do
+    # templo fica ABERTA (1211) em vez de fechada (1210).
+    b.flag_rect(TEMPLE[0], TEMPLE[1], TEMPLE[2], TEMPLE[3], TILEFLAG_PROTECTIONZONE)
+    for it in b.cell(TEMPLE_DOOR[0], TEMPLE_DOOR[1]).items:
+        if it.id == DOOR_STONE_H:
+            it.id = 1211  # open door (par de 1210)
     b.put(TEMPLE[0] + 1, TEMPLE[3] + 1, TORCH)
     b.put(TEMPLE[2] - 1, TEMPLE[3] + 1, TORCH)
     b.put(PLAZA[0] + 1, PLAZA[1] + 1, SIGN, text="Vila da Folha - Templo da Chama")
