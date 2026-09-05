@@ -152,6 +152,20 @@ conveniência e não eficiência.
 | Pílula de Chakra Grande | 350 CK | 250 | 1,40 |
 | Pílula do Soldado | 500 HP + 500 CK | 900 | 1,11 (contando os dois) |
 
+**Economia de chakra (checada na rodada 3):** regen passivo é `gainmanaticks=5 gainmanaamount=3`
+(0,6 chakra/s, igual em toda vila, **não escala com level** — `tools/export_tfs.py`) contra um
+pool de `50+level*10`. Com os custos de tier 2/3 da rodada 3 (105–245, ver tabela de escala por
+tier acima), a rotação de ninjutsu "seca" (chakra insuficiente pro jutsu que estava usando) bem
+antes dos 30s em quase todo nível — L15 seca em 4s, L30 em 12s, L60 em 24s, L100 em 40s (jutsu
+tier 1 "de sustento", mais barato, aguenta mais: 12–20s em L5–10). Isso é **intencional, não bug**:
+é o mecanismo que faz o burst de tier 2/3 (calibrado pra bater o dano de arma num boss) não virar
+DPS sustentado de graça — o resto da luta (que dura minutos contra um boss) é taijutsu. Regen
+natural do zero ao cheio leva de 250s (L10) a 1750s (L100) — trickle entre lutas, não um lever de
+combate. O lever de combate real são as **pílulas de chakra**: uma Pílula Grande (350 CK, req
+L30) dá ~1,7 cast extra de tier 3 no meio de uma luta longa. `tools/balance/sim.py` ainda não
+simula o jogador bebendo pílula de chakra em combate (só HP) — pendência documentada em
+`balanceamento-relatorio-v3.md` §8.
+
 **Material exclusivo de boss:** `sell_price ≈ 3 × (4.5 * L)` — a Presa da Serpente Branca (L25)
 vale 340, contra ~112 de um material comum da mesma faixa. Cai 100% (1–2), então é a renda
 garantida da luta; o resto do loot é chance.
@@ -166,28 +180,39 @@ o ryo direto é os outros 60%.
 dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 ```
 
-> **Atualizado na rodada 2 de balanceamento** (`docs/sistemas/balanceamento-relatorio-v2.md`):
-> o simulador (`tools/balance/sim.py`) mostrou que os valores originais desta tabela deixavam
-> ninjutsu 56-76% mais rápido que taijutsu contra boss de nível 12-19 (jutsu ignora armadura +
-> reserva de chakra inicial grande o bastante pra durar quase a luta inteira nesses níveis) —
-> quebrando a meta "taijutsu ≥ ninjutsu em 1×1 longo por margem ≤15%". A tabela abaixo já reflete
-> o fix: **tier 1 ofensivo (projétil e área) × 0,35** e **tier 2/3 × 0,9** sobre `base_damage`/
-> `level_scale`/`skill_scale`, aplicados uniformemente aos 5 elementos a partir do baseline
-> original. Ver o relatório v2 pro raciocínio completo (por que o lever do 1×1 é sempre tier 1,
-> por que tier 2/3 só importa pra grupo, e os 2 pontos que ficaram fora da meta mesmo assim).
+> **Atualizado na rodada 3 de balanceamento** (`docs/sistemas/balanceamento-relatorio-v3.md`):
+> a rodada 2 tinha alcançado paridade 1×1 em bosses L12–25, mas o próprio relatório admitia que
+> "de L50 em diante o build ninjutsu empata só porque degenera em taijutsu puro" — o magic level
+> (= skill "ninjutsu") ficava preso por `manamultiplier=1.3` (`vocation.cpp:149 getReqMana`,
+> `tools/export_tfs.py`), crescendo quase reto (~16 no L15 a ~34 no L100) enquanto o dano de
+> arma cresce ~40× no mesmo intervalo. FIX: **`manamultiplier=1.1`** (igual às outras skills,
+> `data/skills.json`) faz o magic level crescer de ~23 (L5) a ~83 (L100) — mesma ordem de
+> grandeza do taijutsu (skill ~40→~101) — e o `level_scale`/`skill_scale` de todo jutsu tier 2/3
+> foi recalibrado em cima dessa mudança (o "jutsu de Kage" agora escala de verdade com o nível:
+> `level_scale` de tier 3 subiu 5–7,5× sobre o valor pós-rodada-2). O `chakra_cost` de tier 2/3
+> também subiu (~2,4–3,5×) para que o burst continue pago por um recurso finito, não de graça —
+> ver relatório v3 §2–3 pro raciocínio completo (por que baixar só o `manamultiplier` sem
+> recalibrar as escalas OU sem subir o chakra teria quebrado o 1×1 pra outro lado). `raiton`
+> ganhou um tier 3 de verdade no kit (`raiton_punho_trovao` trocou de lugar com
+> `raiton_armadura_eletrica` em `data/element_sets.json`) — sem isso, o elemento não tinha como
+> acompanhar katon/doton/fuuton em L50+ (só `suiton` continua sem tier 3 no kit, por design; seu
+> tier 2 `suiryuudan` recebeu compensação extra). Números **pós-rodada-3** abaixo.
 
-Escala por tier (com `required_level` de referência e ninjutsu ≈ level+10):
+Escala por tier (com `required_level` de referência e ninjutsu = magic level real, ver acima):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil | 7–9 | 0,385–0,42 | 0,28–0,315 | 12–16 | 2,0 s |
-| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 16–28 | 2,5–3,0 s |
-| 2 | 16–39,6 | 0,72–1,35 | 0,63–0,99 | 34–45 | 4,5–9,0 s |
-| 3 | 63–81 | 1,8–1,98 | 1,08–1,17 | 50–72 | 7,0–9,0 s |
+| 1 projétil | 7–9 | 0,385–0,42 | 0,28–0,315 | 12–16 | 2,0 s (inalterado na rodada 3) |
+| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus ganharam CD menor, ver §4 do relatório v3) |
+| 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 16–37,8 | 2,07–3,1 | 0,63–0,9 | 105–147 | 4,0–6,0 s |
+| 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |
+| 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–245 | 7,0–9,0 s |
 
 Regras que mantêm o tier 3 sendo o "show" sem virar obrigatório:
 - **dano por chakra** cai de tier 1 pra tier 3, mas o **dano por cooldown** sobe — tier 3 é
-  burst, tier 1 é sustentado.
+  burst, tier 1 é sustentado. Na rodada 3 essa diferença ficou bem mais extrema (chakra de tier
+  3 sobe pra ~245 contra pool de 50+level×10 — um Kage L100 tem 1050 de chakra e dá ~5 casts de
+  tier 3 antes de secar, ~40s de burst puro numa luta que dura 100s+; o resto é taijutsu).
 - Formas de área custam ~30% mais chakra que um projétil de dano equivalente.
 - Jutsus `self` não causam dano; o custo compra sobrevivência (`heal_over_time`).
 - Multiplicador elemental (×1.5 / ×0.75) é aplicado **depois**, então uma vantagem
@@ -195,7 +220,10 @@ Regras que mantêm o tier 3 sendo o "show" sem virar obrigatório:
   trocar de jutsu por área em vez de spammar o mais caro.
 - Em grupo (pull de N monstros), a rotação escolhe o jutsu de maior `(dano×hits)/cooldown` —
   é aí que tier 2/3 (área/beam) compensam o dano/cooldown menor que tier 1: cada hit extra
-  (até `min(N, area_capacity(shape))` alvos) multiplica o valor do cast inteiro.
+  (até `min(N, area_capacity(shape))` alvos) multiplica o valor do cast inteiro. Na rodada 3
+  isso ficou forte demais em alguns pulls pequenos com HP baixo (ver relatório v3 §6/§10 —
+  o mesmo número calibrado pro 1×1 de boss vira "apaga o grupo inteiro num cast só" quando o
+  grupo tem pouco HP total).
 
 ### Jutsus novos criados (Personagem + Elemento: 4 + 4)
 
@@ -207,10 +235,12 @@ Fechando os `element_sets.json` (doton tinha só 3 jutsus, fuuton só 2) e as 36
 | id | Tier | Tipo | chakra | cooldown_s | base_damage | level_scale | skill_scale | Efeito |
 |---|---|---|---|---|---|---|---|---|
 | `doton_bala_lama` | 1 | projectile | 14 | 2,0 | 8,05 | 0,385 | 0,297 | slow 30% / 3s |
-| `fuuton_tornado_cortante` | 3 | beam (line_6) | 62 | 8,0 | 67,5 | 1,8 | 1,08 | slow 60% / 4s |
+| `fuuton_tornado_cortante` | 3 | beam (line_6) | 217 | 8,0 | 54,0 | 10,8 | 0,086 | slow 60% / 4s |
 | `fuuton_redemoinho_prisao` | 2 | target (controle) | 38 | 9,0 | 18,0 | 0,72 | 0,9 | paralyze 75% / 3s |
 
-(valores pós-rodada-2 — ver nota acima da tabela de escala por tier)
+(valores pós-rodada-3 pro `fuuton_tornado_cortante` — era o jutsu tier 3 "nunca escolhido" da
+rodada 2; agora é o pick real de fuuton em bosses L54-100, ver relatório v3 §4. Os outros dois,
+inalterados desde a rodada 2 — ver nota acima da tabela de escala por tier)
 
 `doton_bala_lama` fecha a categoria "projétil básico" que faltava no elemento (os outros 3
 jutsus de doton já existiam: muralha de pedra self, estacas de terra área, colapso do terreno
@@ -227,7 +257,7 @@ já existentes, ver `docs/sistemas/vilas-e-clas.md`):**
 
 | id | Tier | Tipo | chakra | cooldown_s | base_damage | Efeito |
 |---|---|---|---|---|---|---|
-| `fuuton_rasteira_vento` | 1 | area (cone_2) | 14 | 3.0 | 12 | slow 40% / 2s |
+| `fuuton_rasteira_vento` | 1 | area (cone_2) | 14 | 3.0 | 55,7 (pós-r3) | slow 40% / 2s |
 | `vigor_teimoso` | 1 | self | 30 | 18.0 | 0 | heal_over_time 7/s por 6s |
 | `foco_ocular` | 1 | self | 26 | 14.0 | 0 | heal_over_time 5/s por 5s |
 | `agulhas_incendiarias` | 1 | projectile | 14 | 2.0 | 19 | burn 30% / 4s |
@@ -245,12 +275,15 @@ já existentes, ver `docs/sistemas/vilas-e-clas.md`):**
 | `salto_do_selo` | 1 | self | 28 | 10.0 | 0 | teleporte até a marca |
 | `explosao_do_selo` | 2 | area (circle_r1) | 46 | 7.0 | 48 | stun 40% / 1s |
 | `barreira_protetora` | 2 | self | 38 | 18.0 | 0 | heal_over_time 9/s por 8s |
-| `selo_de_exorcismo` | 2 | target | 34 | 6.0 | 30 | paralyze 40% / 2s |
-| `circulo_de_selos` | 2 | area (circle_r2) | 44 | 8.0 | 26 | paralyze 50% / 2.5s |
+| `selo_de_exorcismo` | 2 | target | 34 | 6.0 | 109,2 (pós-r3) | paralyze 40% / 2s |
+| `circulo_de_selos` | 2 | area (circle_r2) | 44 | 8.0 | 94,6 (pós-r3) | paralyze 50% / 2.5s |
 
 Todos seguem a regra da seção acima: `self`/utilitário sem dano compra sobrevivência
 (`heal_over_time`) ou controle (`paralyze`/`stun`/`slow`), nunca os dois ao mesmo tempo; tier 2
-custa ~2× o chakra do tier 1 pelo dobro (ou mais) de `base_damage`.
+custa ~2× o chakra do tier 1 pelo dobro (ou mais) de `base_damage`. `fuuton_rasteira_vento`/
+`selo_de_exorcismo`/`circulo_de_selos` tiveram `base_damage`/`level_scale` reajustados na rodada
+3 (ver relatório v3 §7) porque o `manamultiplier` menor mudou o "preço" implícito de jutsus
+utilitários usados como proxy de valor — não porque o design do personagem mudou.
 
 ## 7. Distribuição elemental por área
 

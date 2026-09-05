@@ -6,7 +6,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 81.0 + level * 1.98 + maglevel * 1.17
+	local base = 62.37 + level * 9.1476 + maglevel * 0.1802
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

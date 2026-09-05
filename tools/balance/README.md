@@ -14,7 +14,12 @@ python3 tools/balance/sim.py --level 25 --monster boss_white_serpent --build nin
 # multi-alvo: mesmo nível x monstro, N cópias do monstro (pull)
 python3 tools/balance/sim.py --level 44 --monster curse_shaman --n-monsters 2 --build ninjutsu
 
-# matriz completa 1x1 (todos os MATRIX_LEVELS x todos os monstros x 3 builds), ~57s
+# diagnóstico (rodada 3): força a build ninjutsu a NUNCA desistir do jutsu (mesmo quando ele
+# faz menos dano/s que a arma) — mede a curva PURA de jutsu, não a decisão racional de fallback.
+# Só vale pra --level/--monster (1x1); --matrix/--group-matrix continuam com fallback racional.
+python3 tools/balance/sim.py --level 60 --monster boss_ancestral_oni --build ninjutsu --no-fallback
+
+# matriz completa 1x1 (todos os MATRIX_LEVELS x todos os monstros x 3 builds), ~60s
 python3 tools/balance/sim.py --matrix --json /tmp/matrix.json
 
 # matriz multi-alvo: pull por região (GROUP_SCENARIOS) + boss 1x1 lado a lado, ~1.5s
@@ -26,7 +31,10 @@ python3 tools/balance/sim.py --matrix --trials 100 --json /tmp/matrix.json
 
 Saída de cada simulação (`simulate()`): `ttk_s_mean`/`ttk_s_p10` (tempo até matar, só contando
 tentativas que terminam em morte do monstro), `dmg_taken_mean`, `death_rate`, `chakra_spent_mean`,
-`chakra_efficiency` (dano de jutsu / chakra gasto), `potions_per_kill`, `xp_per_hour`,
+`chakra_efficiency` (dano de jutsu / chakra gasto), `jutsu_dps_pure_mean` (rodada 3: dano feito
+só via jutsu / duração da luta, por tentativa vitoriosa — a métrica "DPS só de jutsus" pedida na
+missão da rodada 3; combine com `--no-fallback` pra medir a curva pura sem a build desistir do
+jutsu no meio da conta), `potions_per_kill`, `xp_per_hour`,
 `ryo_per_hour` (líquido, já descontando poções compradas), `ryo_per_hour_gross`,
 `loot_value_per_kill`. `simulate_group()` (usado por `--group-matrix` e por `--n-monsters`>1)
 troca `ttk_s_mean` por `clear_s_mean` (tempo até zerar TODOS os N monstros), acrescenta
@@ -202,3 +210,110 @@ em execução, por instrução explícita desta sessão).
   taijutsu puro em L50+); trocar a fórmula exigiria recalibrar tudo de novo sem orçamento.
 - Costa das Marés e Covil da Nuvem Vermelha não têm mapa físico ainda — N=2 usado no cenário de
   grupo dessas regiões é um placeholder conservador, não medição real.
+
+## Achados da rodada 3 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v3.md`
+
+Continuação direta da pendência #4 da rodada 2 ("magic level estruturalmente baixo"). A missão
+pediu pra diagnosticar com `--no-fallback` (adicionado nesta sessão, ver acima) a curva PURA de
+ninjutsu 1×1 de L5 a L100, sem deixar a build desistir do jutsu — e ela realmente degenera:
+com o `manamultiplier=1.3` da rodada 1/2, um boss L100 mostrava ninjutsu ~117% MAIS LENTO que
+taijutsu no modo puro (contra ~0% no modo com fallback racional, que simplesmente para de usar
+jutsu). "Empatar desistindo do jutsu" não é o mesmo que "empatar competindo".
+
+1. **`manamultiplier`: 1.3 → 1.1** (`tools/export_tfs.py`, `tools/balance/sim.py` `MANA_MULT`)
+   — igual às outras skills (`data/skills.json`). `getReqMana(ML)=1600*mult^(ML-1)`
+   (`vocation.cpp:149`, base 1600 fixo no C++) faz o magic level crescer de ~16 (L15) a ~34
+   (L100) com mult=1.3 — quase reto, contra um dano de arma que cresce ~40× no mesmo intervalo
+   (`weapons.cpp:135`, depende de skill/4+1 × attack da arma de tier, que sobe em degraus
+   grandes a cada tier de `data/items/*.json`). Com mult=1.1, magic level vai de ~23 (L5) a ~83
+   (L100) — mesma ordem de grandeza do taijutsu (skill ~40→~101, mesmo mult=1.1 desde a rodada
+   1). Essa é a correção estrutural (a) pedida na missão.
+2. **Bug encontrado durante a validação**: `_maglevel_from_mana` (linha ~176) tinha um teto de
+   iteração `ml > 60` que nunca bindava com o `manamultiplier=1.3` das rodadas 1/2 (magic level
+   real ficava em ~34), mas passou a truncar SILENCIOSAMENTE o magic level assim que o
+   `manamultiplier` caiu pra 1.1 nesta sessão (o valor real quer chegar a ~83 no L100). Corrigido
+   pra `ml > 300` (mesmo espírito do `skill > 200` de `_skill_from_tries`, uma trava de segurança
+   que nunca deve bindar de verdade) — sem esse fix, a calibração de tier 2/3 desta sessão teria
+   sido feita contra um magic level artificialmente baixo em L60+.
+3. **`level_scale`/`skill_scale` de todo jutsu tier 2/3 elemental recalibrado** (correção (b) da
+   missão, "aumentar level_scale dos tiers 2/3") em cima do `manamultiplier` novo — tier 2 dos
+   elementos que TÊM tier 3 no kit (katon/doton/fuuton) só precisou de um ajuste moderado
+   (`level_scale` ×2,07–3,1); os tier 3 (`katon_karyuu_endan`, `doton_colapso_terreno`,
+   `fuuton_tornado_cortante`) e o novo tier 3 de raiton (`raiton_punho_trovao`, ver item 4)
+   subiram bem mais (`level_scale` ×9,0–11,9) porque são o único lever pra acompanhar o dano de
+   arma em L50-100; `suiton_suiryuudan` (tier 2 SEM tier 3 atrás, ver item 4) recebeu uma
+   compensação própria maior (`level_scale` ×7,0) pra cobrir sozinho o papel de "teto do
+   elemento" que os outros dividem entre tier 2 e tier 3. `chakra_cost` de todos esses jutsus
+   subiu ~2,4–3,5× junto — sem isso, o mesmo `level_scale` maior deixava o burst "de graça"
+   (dano/chakra alto demais), quebrando a paridade de grupo pra qualquer pull com HP total baixo
+   (ver §10). Números completos e o processo de calibração (por que um multiplicador uniforme
+   por tier não fecha sozinho — a resposta de cada monstro/elemento à mesma mudança não é
+   uniforme) estão no relatório v3 §2-3.
+4. **`raiton` ganhou um tier 3 de verdade no kit**: `data/element_sets.json` tinha
+   `raiton_armadura_eletrica` (self, `base_damage=0`, nunca é candidato de dano) na 4ª vaga em
+   vez de `raiton_punho_trovao` (tier 3, req 30) — um jutsu que já existia em `data/jutsus/
+   raiton.json` e já tinha pergaminho mapeado (`scroll_raiton_punho_trovao` em
+   `data/tfs_mapping.json`), só nunca tinha sido colocado no kit "livre" do elemento (a
+   documentação de `combate-e-jutsus.md` já explicava isso como decisão deliberada — "candidato
+   a loot/pergaminho de bônus no futuro" — mas isso deixava raiton SEM NENHUM tier 3 no kit,
+   capado no tier 2 igual suiton, sem compensação). Troquei `raiton_armadura_eletrica` por
+   `raiton_punho_trovao` no set — `armadura_eletrica` continua um jutsu válido (só fora do kit
+   automático agora, igual os outros "sobressalentes" documentados). Isso sozinho consertou boa
+   parte da degeneração em bosses de elemento doton (ex.: L82 foi de -35% pra +3% de diferença
+   1×1 nos testes intermediários desta sessão — ver relatório v3 §2).
+5. **Paridade elemental recalibrada** (meta ±10%): depois do item 3, os 5 elementos ficaram
+   entre -30% e +30% de desvio entre si (raiton/fuuton ficaram fortes demais, suiton fraco
+   demais) porque cada tier 3/tier 2 "teto" foi calibrado contra um boss DIFERENTE (elemento
+   diferente por boss). Um segundo passe de correção por elemento (multiplicador só no jutsu
+   "campeão" de cada kit: `katon_karyuu_endan` ×1,14, `fuuton_tornado_cortante` ×0,80,
+   `raiton_punho_trovao` ×0,77, `doton_colapso_terreno` ×1,12, `suiton_suiryuudan` ×1,45) trouxe
+   os 5 pra dentro de ±3% entre L50 e L100 — bem mais apertado que a meta de ±10%.
+6. **2 dos 3 jutsus "nunca escolhidos" da rodada 2 resolvidos**: `fuuton_tornado_cortante`
+   (tier 3) virou o pick de verdade em bosses/monstros L54-100 de elemento raiton via número
+   (item 3). `raiton_corrente_estatica` e `suiton_nevoa_cortante` (tier 1 de área) mudaram de
+   FORMA em vez de número: cooldown cortado quase pela metade (2,5s→1,3s / 3,0s→1,6s, contra
+   2,0s do projétil irmão), shape mais largo (`cross_r1`→`cross_r2`, `cone_2`→`cone_3`) e efeito
+   de controle bem mais forte (paralyze 20%/1s→50%/2s; slow 35%/3s→60%/5s) — viram a opção de
+   controle de área rápida do kit tier 1, não competem em DPS puro por design (mesmo raciocínio
+   que a rodada 2 já aplicava a `fuuton_redemoinho_prisao`/`suiton_prisao_agua`).
+   `raiton_corrente_estatica` já aparece escolhido em pelo menos 1 cenário de `--group-matrix`
+   depois da mudança; `suiton_nevoa_cortante` não tem nenhum monstro de elemento katon no nível
+   6-24 nos `GROUP_SCENARIOS` atuais pra exercitar (lacuna de cobertura de cenário, não do
+   jutsu — ver relatório v3 §4/§10).
+7. **9 personagens recalibrados de novo** (meta ±15%, mesma métrica-proxy da rodada 2): o
+   `manamultiplier` mais baixo deixou `doku_kiri` (jutsu neutro usado só por `kunoichi_armas`,
+   `skill=ninjutsu`) puxar seu valor pra +22,5% (magic level maior = mais dano de graça sem
+   nenhum número seu ter mudado) — nerf de `base_damage`/`level_scale` ×0,55 e `skill_scale`
+   ×0,2. O deslocamento também empurrou `sabio_cerimonial` e `genin_laranja` pra fora por baixo
+   (a métrica de jutsu utilitário usa a média de dano/chakra de TODOS os jutsus de dano como
+   proxy — e essa média subiu com o rebalanceamento de tier 2/3) — buff em `selo_de_exorcismo`/
+   `circulo_de_selos` (×1,4) e `fuuton_rasteira_vento` (×1,6), os únicos jutsus não-compartilhados
+   desses 2 personagens. Os 9 ficaram entre -8,6% e +10,2% (relatório v3 §7).
+
+## Pendências honestas da rodada 3 (ver relatório v3 §10 pros números)
+
+- **Boss L19 continua fora da meta** (-25,8% no modo `--no-fallback`, o mesmo platô de tier de
+  arma em L15-20 já documentado na rodada 2 — `data/items/*.json`, fora do escopo desta sessão).
+- **Tensão real entre paridade 1×1 de boss e paridade de grupo pra pulls de HP baixo**: o mesmo
+  `level_scale` de tier 2/3 calibrado pra bater o dano de arma de um BOSS (HP na casa de
+  milhares) vira um "apaga o grupo inteiro num cast só" contra um pull de monstros comuns com
+  HP total baixo (`thunder_eagle` L54 N=3: +442% de XP/h ninjutsu vs taijutsu, bem acima da meta
+  de +30-60%) — nem reduzir cooldown, nem subir `chakra_cost` resolve, porque a luta acaba rápido
+  demais pro chakra chegar a faltar. `wolf` (N=3, tier 1 só) continua abaixo da meta (+11,5%),
+  igual a rodada 2 já reportava. `ruin_puppet` (N=3) ficou perto (+24,6%, meta é +30 a +60%).
+  Não achei uma forma de resolver isso só com os arquivos `jutsus/element_sets/characters`
+  (precisaria ou de HP de monstro maior nesses pulls especificamente — `data/monsters`, fora do
+  escopo — ou de uma regra de dano decrescente contra alvos de HP baixo, que exigiria mudança de
+  engine/C++, não só dado).
+- **`suiton_nevoa_cortante`** mudou de forma (item 6) mas não tem nenhum cenário nos
+  `GROUP_SCENARIOS` atuais que o exercite (nenhum monstro comum de elemento katon no nível 6-24)
+  — mudança de forma bem fundamentada, mas não confirmada pelo simulador nesta sessão.
+- **`tools/balance/sim.py` não simula o jogador bebendo pílula de chakra em combate** (só poção
+  de HP, ver `_HP_POTIONS`/`use_potions`) — a checagem de "a rotação seca em <30s" (missão item
+  4) foi feita analiticamente (ver `docs/sistemas/balanceamento.md`, seção de consumíveis), não
+  pelo Monte Carlo. Adicionar isso é natural pra uma rodada 4 (mesmo padrão de `_HP_POTIONS`).
+- **Regen de chakra não escala com level** (`gainmanaticks`/`gainmanaamount` fixos em toda vila,
+  `tools/export_tfs.py`) — vira irrelevante em nível alto (0,6 chakra/s contra um pool de 1050 no
+  L100: 1750s pra regenerar do zero). Não mexi nisso nesta sessão porque toda a calibração de
+  chakra_cost (item 3) assumiu esse regen como está; subir o regen sem recalibrar de novo
+  desfaria a paridade 1×1 recém-alcançada.

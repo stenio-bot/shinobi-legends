@@ -492,21 +492,26 @@ for vid, v in villages.items():
     vm = M["villages"][vid]
     mults = {0: 1.1, 1: 1.1, 2: 1.1, 3: 1.1, 4: 1.1, 5: 1.1, 6: 1.1}
     bonus = v["bonus_skill"]
-    # manamultiplier: era 4.0 (padrão de vocação de mago do TFS/Tibia clássico, nunca calibrado
-    # pra este jogo). getReqMana(ML) = 1600*mult^(ML-1) (vocation.cpp:149, base 1600 fixo no
-    # C++, não editável por aqui) — com mult=4.0 o magic level (= skill "ninjutsu" nas fórmulas
-    # de jutsu, ver data/skills.json) mal sai do single-digit no jogo inteiro. tools/balance/
-    # sim.py mediu isso: jutsus tier 2/3 (base_damage + level*level_scale + maglevel*skill_scale)
-    # ficam com dano por segundo PIOR que o ataque de arma de taijutsu a partir de ~L15-20,
-    # quebrando a identidade "ninjutsu = burst" no meio/fim de jogo. mult=1.3 deixa o magic
-    # level crescer numa faixa comparável (em "poder ganho por hora jogada") às outras skills
-    # (agora 1.1) sem tornar o início de jogo (onde o magic level já é baixo de qualquer jeito)
-    # mais forte que o já medido.
-    mana_mult = 1.3
+    # manamultiplier: era 4.0 na versão original (padrão de vocação de mago do TFS/Tibia clássico,
+    # nunca calibrado pra este jogo), depois 1.3 (rodada 1 do balanceamento). getReqMana(ML) =
+    # 1600*mult^(ML-1) (vocation.cpp:149, base 1600 fixo no C++, não editável por aqui). FIX
+    # RODADA 3: com mult=1.3, tools/balance/sim.py mediu o magic level crescendo de forma quase
+    # RETA (~16 no L15 a ~34 no L100, menos de 2.2x em 85 níveis) enquanto o dano de arma
+    # (weapons.cpp:135, depende de skill/4+1 × attack da arma de tier) cresce ~40x no mesmo
+    # intervalo — magic level baixo estruturalmente impedia jutsu tier 2/3 (que dependem de
+    # maglevel*skill_scale) de acompanhar a curva de arma em L50+, fazendo o build ninjutsu
+    # degenerar em taijutsu puro nesse trecho (achado central da rodada 3, ver
+    # docs/sistemas/balanceamento-relatorio-v3.md §1-2). mult=1.1 (igual às outras skills,
+    # data/skills.json) faz o magic level crescer de ~23 (L5) a ~83 (L100) — mesma ordem de
+    # grandeza do taijutsu (skill ~40 a ~101) pela primeira vez, permitindo que skill_scale volte
+    # a ser um lever de verdade. O level_scale/skill_scale de cada jutsu tier 2/3 (data/jutsus/
+    # *.json) foi recalibrado nesta rodada assumindo esse novo mult=1.1 — não troque um sem o
+    # outro.
+    mana_mult = 1.1
     if bonus in skill_ids:
         mults[skill_ids[bonus]] = round(mults[skill_ids[bonus]] / 1.2, 2)
     elif bonus == "ninjutsu":
-        mana_mult = 1.3 / 1.2
+        mana_mult = 1.1 / 1.2
     voc.append(f'\t<vocation id="{vm["vocation_id"]}" clientid="{vm["vocation_id"]}" name="{escape(v["name"])}" description="um ninja da {escape(v["name"])}" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="{mana_mult:.2f}" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="{vm["vocation_id"]}">')
     voc.append('\t\t<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>')
     voc.append("\t\t" + "".join(f'<skill id="{i}" multiplier="{m}"/>' for i, m in mults.items()))

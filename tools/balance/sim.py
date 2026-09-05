@@ -70,10 +70,17 @@ RATE_LOOT = 2
 SKILL_MULT = {"taijutsu": 1.1, "shuriken": 1.1, "defense": 1.1}   # sword, distance, shield
 SKILL_BASE = {"taijutsu": 50, "shuriken": 50, "defense": 100}     # skillBase[] em vocation.cpp:139
 MIN_SKILL = 10          # server/tfs/src/const.h MINIMUM_SKILL_LEVEL (mesmo valor do Tibia clássico)
-MANA_MULT = 1.3         # manamultiplier gerado por vocação (sem bônus de vila). FIX nesta sessão:
-                        # era 4.0 (padrão TFS de mago nunca calibrado); com maglevel travado em
-                        # single-digit por 1000h, ninjutsu tier2/3 ficava pior que taijutsu já
-                        # em ~L15-20 (achado do simulador, ver tools/export_tfs.py e relatório).
+MANA_MULT = 1.1         # manamultiplier gerado por vocação (sem bônus de vila). FIX rodada 3
+                        # (era 1.3 desde a rodada 1 — já uma melhoria sobre o 4.0 original, mas
+                        # ainda maior que as outras skills): rodada 2 mediu maglevel preso em
+                        # ~16-34 do L5 ao L100 com mult=1.3, quase reto (cresce só ~2x em 95
+                        # níveis) enquanto o dano de arma cresce ~40x no mesmo intervalo — jutsu
+                        # tier2/3 (que dependem de maglevel*skill_scale) não tinha como acompanhar.
+                        # Com mult=1.1 (igual a SKILL_MULT das outras skills), maglevel cresce de
+                        # ~23 (L5) a ~83 (L100) — mesma ordem de grandeza do taijutsu (skill ~40 a
+                        # ~101) pela primeira vez. Ver docs/sistemas/balanceamento-relatorio-v3.md
+                        # §1-2 pros números completos (curva antes/depois) e tools/export_tfs.py
+                        # (gerador de vocations.xml) pro mesmo fix aplicado no jogo real.
 MANA_BASE = 1600        # vocation.cpp:149 getReqMana: 1600 * mult^(magLevel-1)
 
 # vocations.xml gerado: gainhpticks=5 gainhpamount=2, gainmanaticks=5 gainmanaamount=3, para
@@ -167,12 +174,21 @@ def _skill_from_tries(total_tries, mult, base):
     return skill
 
 def _maglevel_from_mana(total_mana):
-    """Inverte vocation.cpp:149 getReqMana: reqMana(ML) = 1600*4^(ML-1)."""
+    """Inverte vocation.cpp:149 getReqMana: reqMana(ML) = 1600*mult^(ML-1).
+
+    O teto de iteração (`ml > 300`) é só uma trava de segurança contra loop infinito — igual
+    ao `skill > 200` de `_skill_from_tries` — NUNCA deve ser alcançado de verdade. FIX rodada 3:
+    era `ml > 60`, um valor que não binda com `MANA_MULT=1.3` (maglevel real batia ~34 no L100,
+    round 1/2) mas passou a truncar silenciosamente o maglevel real assim que `MANA_MULT` caiu
+    pra 1.1 nesta rodada (maglevel real chega a ~83 no L100 — ver
+    docs/sistemas/balanceamento-relatorio-v3.md §1) — um jogador L70+ tinha o magic level
+    subestimado pelo simulador, o que teria feito a calibração de tier2/3 desta rodada
+    inconsistente com o jogo real se não corrigido antes da validação final."""
     ml = 0
     remaining = total_mana
     while True:
         need = MANA_BASE * (MANA_MULT ** ml)   # custo para ir de ml -> ml+1
-        if remaining < need or ml > 60:
+        if remaining < need or ml > 300:
             break
         remaining -= need
         ml += 1
@@ -399,7 +415,7 @@ def estimate_weapon_dps(p, m_defense, m_armor):
     return max(0.0, avg_raw - mitig) / ATTACK_INTERVAL_S
 
 # ============================================================== combate: 1 monstro x 1 player
-def pick_ninjutsu_jutsu(monster_element, level, ninjutsu_skill, taijutsu_dps_est=0.0):
+def pick_ninjutsu_jutsu(monster_element, level, ninjutsu_skill, taijutsu_dps_est=0.0, no_fallback=False):
     """Escolhe, para o build ninjutsu/híbrido: (1) o set elemental com VANTAGEM sobre o monstro
     se existir (jogador escolheria isso na criação de personagem); senão katon (arbitrário —
     todo elemento tem exatamente 1 vantagem e 1 desvantagem, então sempre há uma vantagem real
@@ -415,7 +431,14 @@ def pick_ninjutsu_jutsu(monster_element, level, ninjutsu_skill, taijutsu_dps_est
     alto, o único jutsu do elemento com vantagem já desbloqueado às vezes é pior que a arma, e
     'gastar' a ação nele natualmente PIORA o TTK ao invés de ajudar). Devolve jutsu=None quando
     nenhum candidato bate a arma — o build então luta como taijutsu puro pro resto da luta, o
-    que é o que um jogador racional faria."""
+    que é o que um jogador racional faria.
+
+    `no_fallback` (rodada 3): desliga essa checagem — devolve sempre o melhor jutsu do kit
+    (nunca `None`), mesmo que ele faça menos dano/s que a arma. Usado só para o DIAGNÓSTICO
+    "curva pura de ninjutsu" (`--no-fallback`/`--build ninjutsu`) pedido na missão da rodada 3:
+    mede o que a build ninjutsu FAZ quando obrigada a lutar 100% de jutsu (chakra permitindo),
+    em vez de medir o que ela faz quando o jogador racionalmente desiste do jutsu — as duas
+    perguntas são diferentes e a rodada 2 só respondia a segunda."""
     if monster_element in ELEMENT_ORDER:
         i = ELEMENT_ORDER.index(monster_element)
         adv_element = ELEMENT_ORDER[(i - 1) % len(ELEMENT_ORDER)]
@@ -431,7 +454,7 @@ def pick_ninjutsu_jutsu(monster_element, level, ninjutsu_skill, taijutsu_dps_est
                                                   + ninjutsu_skill * j["skill_scale"]) / j["cooldown_s"])
     best_rate = mult * (best["base_damage"] + level * best["level_scale"]
                          + ninjutsu_skill * best["skill_scale"]) / best["cooldown_s"]
-    if best_rate <= taijutsu_dps_est:
+    if not no_fallback and best_rate <= taijutsu_dps_est:
         return adv_element, None
     return adv_element, best
 
@@ -451,7 +474,7 @@ def best_potion(level, potions):
 POTION_HEAL_THRESHOLD = 0.35   # bebe poção de HP quando abaixo de 35% da vida máxima
 POTION_DRINK_COOLDOWN_S = 1.0  # exhaustion de consumível (aproximação; TFS usa ~1s)
 
-def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=True):
+def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=True, no_fallback=False):
     """Simulação por eventos (dt discreto de 0.1s é suficiente pra granularidade de cooldowns
     de 1.5-10s deste jogo). Retorna dict com ttk_s, dmg_taken, chakra_spent, died(bool).
 
@@ -469,7 +492,8 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
     player_element, jutsu = (None, None)
     if build in ("ninjutsu", "hybrid"):
         taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
-        player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu, taijutsu_dps_est)
+        player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
+                                                      taijutsu_dps_est, no_fallback=no_fallback)
     next_player_action = 0.0
     t = 0.0
     dt = 0.1  # granularidade suficiente p/ cooldowns de 1.5-10s deste jogo; mantém a matriz <60s
@@ -549,10 +573,10 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
     }
 
 # ============================================================== agregação Monte Carlo
-def simulate(level, monster_id, build, trials=60, seed=1234):
+def simulate(level, monster_id, build, trials=60, seed=1234, no_fallback=False):
     monster = MONSTERS[monster_id]
     rng = random.Random(seed)
-    results = [simulate_fight(level, monster, build, rng) for _ in range(trials)]
+    results = [simulate_fight(level, monster, build, rng, no_fallback=no_fallback) for _ in range(trials)]
     kill_results = [r for r in results if not r["died"] and not r.get("timeout")]
     death_results = [r for r in results if r["died"]]
     dmg_taken = [r["dmg_taken"] for r in results]
@@ -562,6 +586,13 @@ def simulate(level, monster_id, build, trials=60, seed=1234):
     chakra_spent_sum = sum(chakra_spent)
     chakra_efficiency = (jutsu_dmg_total / chakra_spent_sum) if chakra_spent_sum > 0 else 0.0
     ttk_kill_mean = statistics.mean([r["ttk_s"] for r in kill_results]) if kill_results else None
+    # "DPS só de jutsus" (rodada 3, item 1 da missão): dano feito só via jutsu / tempo de luta,
+    # por tentativa vitoriosa — diferente de dividir jutsu_dmg_total pelo ttk médio agregado
+    # (isso mistura fights com proporções de fallback diferentes). Com no_fallback=True e chakra
+    # suficiente, tende a ttk_kill "quase só jutsu"; sem chakra, cai pro que sobrou de taijutsu
+    # de qualquer forma (ver oom_s equivalente em simulate_group).
+    jutsu_dps_per_fight = [r.get("jutsu_dmg_total", 0.0) / r["ttk_s"] for r in kill_results if r["ttk_s"] > 0]
+    jutsu_dps_pure_mean = round(statistics.mean(jutsu_dps_per_fight), 2) if jutsu_dps_per_fight else 0.0
     # XP/h real: soma o tempo de TODAS as tentativas (mortes incluídas, que custam tempo e não
     # dão XP) + downtime só nos kills bem-sucedidos; se o jogador morre sempre, xp/h -> 0 (não
     # "explode" com um ttk curto de morte, que seria o bug óbvio de só usar ttk_mean).
@@ -596,6 +627,7 @@ def simulate(level, monster_id, build, trials=60, seed=1234):
         "timeout_rate": round(timeouts / trials, 3),
         "chakra_spent_mean": round(statistics.mean(chakra_spent), 1) if chakra_spent else 0.0,
         "chakra_efficiency": round(chakra_efficiency, 2),
+        "jutsu_dps_pure_mean": jutsu_dps_pure_mean,
         "potions_per_kill": round(potions_per_kill, 2),
         "xp_per_hour": round(xp_per_hour),
         "ryo_per_hour": round(ryo_per_hour_net),
@@ -885,6 +917,12 @@ def main():
     ap.add_argument("--monster")
     ap.add_argument("--n-monsters", type=int, default=1, help="tamanho do pull (--monster vira N cópias)")
     ap.add_argument("--build", choices=["taijutsu", "ninjutsu", "hybrid", "shuriken"], default="taijutsu")
+    ap.add_argument("--no-fallback", action="store_true",
+                     help="diagnóstico (rodada 3): força a build ninjutsu/híbrido a usar sempre o "
+                          "melhor jutsu do kit elemental, mesmo quando ele faz menos dano/s que a "
+                          "arma — mede a curva PURA de jutsu (chakra permitindo), não a decisão "
+                          "racional de desistir do jutsu. Só afeta --level/--monster (1x1); "
+                          "--matrix/--group-matrix continuam com a rotação racional (fallback).")
     ap.add_argument("--trials", type=int, default=30)
     ap.add_argument("--json", help="salva resultado em arquivo JSON")
     ap.add_argument("-v", "--verbose", action="store_true")
@@ -926,7 +964,7 @@ def main():
         return
 
     if args.level and args.monster:
-        r = simulate(args.level, args.monster, args.build, trials=args.trials)
+        r = simulate(args.level, args.monster, args.build, trials=args.trials, no_fallback=args.no_fallback)
         print(json.dumps(r, ensure_ascii=False, indent=2))
         if args.verbose:
             skills = typical_skills(args.level)
