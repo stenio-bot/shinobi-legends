@@ -121,7 +121,9 @@ Em andamento (agentes paralelos, eu reviso):
 - [x] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água (`215721f`)
 - [x] Cliente UX: aba "Missões" no Menu Shinobi via opcode 210 `get_progress`; rank na janela de atributos; mensagens de sistema em pt-BR + fix cp1252 (`e0e683f`)
 - [x] Balanceamento rodada 1: simulador `tools/balance/sim.py`; stages de XP desligadas (eram 5–7×), skill mult 1.1, mana mult 1.3 (`eada82c`)
-- [ ] Balanceamento rodada 2 (em andamento): identidade ninjutsu vs taijutsu com simulador multi-alvo
+- [x] Balanceamento rodada 2: bug do seletor no simulador, N de grupo por monstro, tier 1 ×0.35, paridade elemental/pessoal (`d1d96f8`)
+- [x] Balanceamento rodada 3: manamultiplier 1.1, tier 2/3 recalibrados, ninjutsu puro competitivo em L50–100 (`b9cd0ad`)
+- [ ] Balanceamento rodada 4 (decidir após o playtest): "burst" de tier 1 (hit ≥1,3× arma) é incompatível com paridade sustentada quando cooldown = intervalo de ataque; opção: cooldown 3–4s com hit maior e híbrido (arma entre casts) como jogo natural; modelar pílula de chakra no simulador; platô de arma L15→L20 (boss L19)
 
 Próximos (ordem de valor):
 - [x] Mapa v3: 8 NPCs posicionados, gates de rank 45001–45005, identidade visual de Ruínas/Montanha/Covil, bordas dirt_sand e snow_rock (`b8b8ded`)
