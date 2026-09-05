@@ -1,0 +1,284 @@
+{
+  "format": 1,
+  "_doc": "Looktypes NOVOS de animal (wolf/deer/eagle/snake/toad/leech), gerados por tools/spr/gen_animals.py em pixel-art procedural propria (ADR-002). Mesmo mecanismo de overrides/30_player.json e overrides/40_mugen.json (aplicado por build_assets.py via imports.apply(), em ordem de nome de arquivo), mas com uma chave propria 'creature_sheets': ao contrario de 'creatures' (que le PNGs crus de personagem e monta a folha na hora, sempre layers=1), aqui as folhas ja saem prontas de gen_animals.py (camada 0 = base clara, camada 1 = mascara de cor) e sao layers=2 — assim varios monstros no MESMO looktype (as 3 serpentes, por exemplo) ficam com cores DIFERENTES via data/tfs_mapping.json. Nao editar a mao: rode tools/spr/gen_animals.py de novo.",
+  "root": "assets-src/sprites",
+  "build_dir": "assets-src/sprites/creatures",
+  "creature_sheets": [
+    {
+      "category": "creature",
+      "id": 940,
+      "name": "animal_wolf_940",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_940_l0.png",
+        "creatures/look_940_l1.png"
+      ],
+      "_doc": "Lobo (wolf) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    },
+    {
+      "category": "creature",
+      "id": 941,
+      "name": "animal_deer_941",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_941_l0.png",
+        "creatures/look_941_l1.png"
+      ],
+      "_doc": "Cervo (deer) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    },
+    {
+      "category": "creature",
+      "id": 942,
+      "name": "animal_eagle_942",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_942_l0.png",
+        "creatures/look_942_l1.png"
+      ],
+      "_doc": "Aguia do Trovao (eagle) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    },
+    {
+      "category": "creature",
+      "id": 943,
+      "name": "animal_snake_943",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_943_l0.png",
+        "creatures/look_943_l1.png"
+      ],
+      "_doc": "Serpente (snake) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    },
+    {
+      "category": "creature",
+      "id": 944,
+      "name": "animal_toad_944",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_944_l0.png",
+        "creatures/look_944_l1.png"
+      ],
+      "_doc": "Sapo (toad) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    },
+    {
+      "category": "creature",
+      "id": 945,
+      "name": "animal_leech_945",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_945_l0.png",
+        "creatures/look_945_l1.png"
+      ],
+      "_doc": "Sanguessuga (leech) — procedural, tools/spr/gen_animals.py. layers=2: data/tfs_mapping.json escolhe head/body/legs/feet por monstro no mesmo looktype."
+    }
+  ]
+}

@@ -530,6 +530,23 @@ def apply(manifest, cfg, root, sheet_root):
                 by_key[k] = len(manifest["things"])
                 manifest["things"].append(spec)
 
+    # "creature_sheets": things de creature JA MONTADOS por um gerador proprio
+    # (tools/spr/gen_animals.py, tools/spr/gen_humanoid_variants.py) — ao contrario
+    # de "creatures" (que le PNGs crus em `root` e monta a folha aqui), essas entradas
+    # ja trazem "sheets" apontando para PNGs prontos em assets-src/sprites/creatures/,
+    # entao sao copiadas para o manifesto sem nenhum processamento de imagem. Permite
+    # layers=2 (mascara de cor) num override, o que "creatures"/"creature_dirs" nao
+    # suportam (sempre gravam layers=1, pensado pra arte importada ja colorida).
+    for e in cfg.get("creature_sheets", []):
+        spec = dict(e)
+        k = ("creature", spec["id"])
+        if k in by_key:
+            manifest["things"][by_key[k]] = spec
+        else:
+            by_key[k] = len(manifest["things"])
+            manifest["things"].append(spec)
+        imp.applied["creatures"] += 1
+
     ov = manifest["items"]["overrides"]
     by_sid = None
     for e in cfg.get("items", []):

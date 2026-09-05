@@ -87,3 +87,4 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - `var x := dict["k"]` não compila (tipo não inferível). Use `var x: float = dict["k"]`.
 - Headless roda frames mais rápido que tempo real: testes não podem depender de "N frames = N/60 s".
 - Jutsu "self" tem lógica por id em `JutsuExecutor._cast_self` (kawarimi, bunshin).
+- **Disco**: a máquina de dev vive perto de 100% (`df -h /System/Volumes/Data`). Antes de `build_assets.py`, sessões de screenshots ou agentes paralelos, confira que há >2 GB livres; com ENOSPC até o harness dos agentes para de funcionar. Limpezas seguras: `~/Library/Application Support/shinobi/.shinobi/*.png`, `/tmp/otc_*.log`, `brew cleanup -s`, `~/vcpkg/downloads`.

@@ -129,9 +129,10 @@ Próximos (ordem de valor):
 - [x] Mapa v3: 8 NPCs posicionados, gates de rank 45001–45005, identidade visual de Ruínas/Montanha/Covil, bordas dirt_sand e snow_rock (`b8b8ded`)
 - [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [x] Playtest L1–20 rodada 1 (`docs/qa/playtest-l1-20.md`): achou 2 P0 (sem kit inicial; loja com erro Lua) — corrigidos em `1e4f280`
-- [ ] Playtest rodada 2 (em andamento): validar P0s, medir XP/h e chakra por level (`docs/qa/playtest-l1-20-r2.md`)
+- [x] Playtest rodada 2 (`docs/qa/playtest-l1-20-r2.md`): achou kit pela metade (firstitems.lua vanilla) e saudação só em inglês — corrigidos em `92166a7`; sem dados de combate (disco cheio interrompeu)
+- [ ] Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
 - [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`); sons ficam para depois
-- [ ] Criaturas procedurais (em andamento): lobo/cervo/águia/serpente/sapo/sanguessuga com 4 direções reais + variantes de paleta para humanoides que hoje compartilham looktype
+- [ ] Criaturas procedurais (parcial, bloqueado por disco cheio — `gen_animals.py` e folhas 940–945 prontas; faltam variantes humanoides, mapping e validação in-game): lobo/cervo/águia/serpente/sapo/sanguessuga com 4 direções reais + variantes de paleta para humanoides que hoje compartilham looktype
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
 - [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
 - [ ] Party com XP compartilhada, clãs, PvP em arena
