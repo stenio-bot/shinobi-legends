@@ -47,7 +47,7 @@ COWARDLY: se hp < 20% → FLEE por 5s, depois volta a CHASE
 | Sanguessuga, Sapo Gigante, Ninja Renegado, Serpente Menor, bosses da Floresta da Morte | aggressive/ranged conforme JSON | ver `data/monsters/swamp.json` |
 | Marionete de Combate, Sentinela de Pedra, Guerreiro Espectral, Xamã da Maldição, bosses das Ruínas | aggressive/ranged | ver `data/monsters/ruins.json` |
 | Águia do Trovão, Oni da Geleira, Monge da Tempestade, Serpente de Magma, bosses da Montanha | aggressive/ranged | ver `data/monsters/mountain.json` |
-| **Cervo (`forest_deer`)** | **passive** | **novo (2026-09-04): monstro de teste da categoria "passivo".** Nível 2, 30 HP, não inicia combate, spawn em `data/maps/forest_valley.json` perto do templo (Floresta da Vila). Reaproveita o sprite do Lobo (`looktype 21`, `mon_wolf`) recolorido — ver nota em `data/tfs_mapping.json` — para não depender de arte nova. |
+| **Cervo (`forest_deer`)** | **passive** | **novo (2026-09-04): monstro de teste da categoria "passivo".** Nível 2, 30 HP, não inicia combate, spawn em `data/maps/forest_valley.json` perto do templo (Floresta da Vila). Sprite próprio procedural (looktype 941, `tools/spr/gen_animals.py`) desde 2026-09-05; antes reaproveitava o placeholder do Lobo (looktype 21). |
 
 Nenhum outro monstro do jogo era passivo antes disso — daí o sintoma "não existe categoria
 agressivo/não agressivo" reportado: a categoria sempre existiu no schema/exportador, só não havia
