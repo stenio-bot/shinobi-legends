@@ -24,7 +24,7 @@
     ],
     "animation": "fx_lightning_needle",
     "sfx": "sfx_zap",
-    "chakra_cost_percent": 2.75
+    "chakra_cost_percent": 13.0
   },
   {
     "id": "raiton_punho_trovao",

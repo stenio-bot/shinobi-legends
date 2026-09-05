@@ -58,6 +58,13 @@ local PHASES = {
 	},
 }
 
+-- Estado por boss vivo: creatureId -> {name = string, mult = number (fase atual)}. Chave por
+-- getId() (n\xE3o por nome) porque dois bosses do mesmo tipo podem existir ao mesmo tempo; o campo
+-- `name` \xE9 revalidado no CreatureEvent de jogador abaixo para n\xE3o vazar dano se o id for
+-- reciclado para OUTRO monstro depois que o boss morre (getId() do TFS \xE9 reaproveitado).
+NarutoBossPhases = NarutoBossPhases or {}
+NarutoBossPhases.state = NarutoBossPhases.state or {}
+
 local fired = {}  -- monsterId -> \xEDndice da \xFAltima fase disparada
 local ev = CreatureEvent("NarutoBossPhases")
 function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
@@ -87,13 +94,11 @@ function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secon
 			creature:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
 		end
 		if ph.mult > 1.0 then
-			-- LIMITA\xC7\xC3O: o onHealthChange n\xE3o consegue alterar o dano dos <attack> do monstro
-			-- em runtime (o TFS 1.4.2 l\xEA a spell list uma vez, no carregamento do XML). A fase
-			-- de "f\xFAria" \xE9 aproximada por: (1) cura percentual, (2) aumento de velocidade, que
-			-- faz o boss alcan\xE7ar e bater mais vezes por minuto, e (3) registro em NarutoBossMult
-			-- para quem quiser ler o multiplicador de fora (nenhum onThink \xE9 necess\xE1rio).
-			NarutoBossMult = NarutoBossMult or {}
-			NarutoBossMult[id] = ph.mult
+			-- Fase de "f\xFAria": cura pontual + acelera (o boss alcan\xE7a o alvo e bate mais vezes por
+			-- minuto) E, de verdade, multiplica o dano \x97 o onHealthChange do MONSTRO (aqui) n\xE3o
+			-- consegue reescrever a lista de <attack>/spells j\xE1 carregada do XML, ent\xE3o quem
+			-- aplica o multiplicador \xE9 o CreatureEvent NarutoBossFury, registrado no onHealthChange
+			-- do JOGADOR (o lado que recebe o golpe), lendo NarutoBossPhases.state[id].mult.
 			local heal = math.floor(creature:getMaxHealth() * (ph.mult - 1.0) * 0.10)
 			if heal > 0 then creature:addHealth(heal) end
 			creature:changeSpeed(math.floor(creature:getBaseSpeed() * (ph.mult - 1.0) * 0.5))
@@ -101,11 +106,39 @@ function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secon
 		end
 	end
 	fired[id] = idx
+	-- Publica o multiplicador da fase atual pro NarutoBossFury ler quando o jogador apanhar.
+	NarutoBossPhases.state[id] = {name = creature:getName(), mult = (idx > 0 and list[idx].mult) or 1.0}
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
 end
 ev:register()
 
+-- Multiplica de verdade o dano (melee E de spell do boss \x97 os dois chegam aqui com `attacker` =
+-- o boss) recebido pelo JOGADOR enquanto o atacante est\xE1 numa fase de f\xFAria (mult > 1). Summons
+-- invocados na fase N\xC3O s\xE3o afetados: eles nunca ganham entrada em NarutoBossPhases.state (s\xF3 o
+-- id do boss original tem), ent\xE3o `state` fica nil pra eles e a fun\xE7\xE3o devolve o dano original.
+local fury = CreatureEvent("NarutoBossFury")
+function fury.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
+	if not attacker then return primaryDamage, primaryType, secondaryDamage, secondaryType end
+	local state = NarutoBossPhases.state[attacker:getId()]
+	if not state or state.mult <= 1.0 or state.name ~= attacker:getName() then
+		-- sem estado, fase 1.0x, ou id reciclado para outro monstro depois que o boss morreu.
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+	local mult = state.mult
+	-- abs()+arredonda: o retorno \xE9 sempre positivo de prop\xF3sito \x97 o TFS (CreatureEvent::
+	-- executeHealthChange) reaplica o sinal certo por conta pr\xF3pria a partir de primaryType.
+	local newPrimary = math.floor(math.abs(primaryDamage) * mult + 0.5)
+	local newSecondary = math.floor(math.abs(secondaryDamage) * mult + 0.5)
+	return newPrimary, primaryType, newSecondary, secondaryType
+end
+fury:register()
+
 local reset = CreatureEvent("NarutoBossReset")
-function reset.onDeath(creature) fired[creature:getId()] = nil return true end
+function reset.onDeath(creature)
+	local id = creature:getId()
+	fired[id] = nil
+	NarutoBossPhases.state[id] = nil  -- limpa pra n\xE3o vazar o mult se o id for reciclado
+	return true
+end
 reset:register()
 

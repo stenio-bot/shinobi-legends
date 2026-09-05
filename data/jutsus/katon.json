@@ -26,7 +26,7 @@
     ],
     "animation": "fx_fireball",
     "sfx": "sfx_fire_whoosh",
-    "chakra_cost_percent": 3.0
+    "chakra_cost_percent": 14.0
   },
   {
     "id": "katon_housenka",

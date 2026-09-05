@@ -31,8 +31,14 @@ python3 tools/balance/sim.py --matrix --trials 100 --json /tmp/matrix.json
 # rodada 4: cenário de "hunt de 30 min" (sequência de pulls do monstro comum mais próximo do
 # nível, pausas de 5-15s entre lutas) — mede chakra sustentável de verdade, não numa luta só.
 # Sozinho roda HUNT_LEVELS (rodada 5: de 5 em 5, L5-L100, 20 pontos) x build hybrid, com e sem
-# pílula de chakra.
+# pílula de chakra. RODADA 7: por padrão conjura sempre o tier 1 (force_tier1=True, ver seção
+# "Achados da rodada 7" — sem isso, o jutsu real conjurado vira tier 2/3 a partir de L12-26 e a
+# métrica de chakra do tier 1 passa a medir o custo de um jutsu que não é mais usado).
 python3 tools/balance/sim.py --hunt --json /tmp/hunt.json
+
+# rodada 7: --no-force-tier1 volta ao comportamento das rodadas 4-6 (mede "tempo sem chakra pra
+# QUALQUER coisa do kit elemental", não especificamente o tier 1)
+python3 tools/balance/sim.py --hunt --no-force-tier1 --json /tmp/hunt_kitwide.json
 
 # hunt pontual (nível/monstro/build escolhidos), com pílula de chakra ligada
 python3 tools/balance/sim.py --hunt --level 15 --monster mist_scout --build hybrid --chakra-pills --minutes 30
@@ -40,6 +46,11 @@ python3 tools/balance/sim.py --hunt --level 15 --monster mist_scout --build hybr
 # --chakra-pills também funciona em --level/--monster sem --hunt (luta única)
 python3 tools/balance/sim.py --level 60 --monster boss_ancestral_oni --build hybrid --chakra-pills
 ```
+
+`simulate_hunt()`/o resultado de `--hunt` também trazem duas métricas ANALÍTICAS novas da
+rodada 7 (não precisam do Monte Carlo, são conta fechada a partir do nível/jutsu):
+`casts_per_full_pool` (quantos casts seguidos o pool CHEIO aguenta, sem regen — pior caso) e
+`time_to_full_pool_s` (segundos parado, sem gastar, até o pool voltar a encher do zero).
 
 Saída de cada simulação (`simulate()`): `ttk_s_mean`/`ttk_s_p10` (tempo até matar, só contando
 tentativas que terminam em morte do monstro), `dmg_taken_mean`, `death_rate`, `chakra_spent_mean`,
@@ -532,3 +543,79 @@ do Covil da Nuvem Vermelha.
   `tools/balance/character_value.py` (ou equivalente) na rodada 7 pra não perder de novo.
 - **`wolf`/`bandit`/`mercenary_bridge`/`mist_guardian`/`white_clone`** seguem abaixo da faixa
   de grupo, herdado, não coberto pelas mudanças desta rodada.
+
+## Achados da rodada 7 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v7.md`
+
+Tema único: "o chakra voltou a não ser um recurso" — playtest ao vivo confirmou 9 casts
+seguidos de tier 1 no L1 sem sair de 108-110/110 de chakra (`docs/qa/playtest-l1-20-r5.md`).
+
+1. **`chakra_cost_percent` dos 5 projéteis tier 1 subiu ~4,7×** (2,5-3,0% → 12-14%,
+   `data/jutsus/{katon,fuuton,raiton,doton,suiton}.json`) — `cooldown_s`/dano intocados.
+   Fecha **6-8 casts por pool cheio em TODO nível 1-100 e nos 5 elementos** (era 33-55) e
+   recuperação do pool do zero em 73,3-83,3s em qualquer nível (regen não mudou, já fechava a
+   meta de 60-90s no L1 desde a rodada 5).
+2. **Métricas analíticas novas**: `casts_per_full_pool(jutsu, chakra_max)` e
+   `time_to_refill_pool_s(level, chakra_max)` — não rodam Monte Carlo, respondem direto as duas
+   perguntas de design da missão; incluídas no resultado de `simulate_hunt`/`--hunt`.
+3. **Achado de modelo (o mais importante desta rodada)**: `pick_ninjutsu_jutsu()` escolhe o
+   jutsu de maior dano/segundo do kit JÁ DESBLOQUEADO, não necessariamente o tier 1 — a partir
+   do primeiro tier 2 do elemento (`required_level` 12-26 conforme o elemento), o tier 1 nunca
+   mais é conjurado de verdade pela build ninjutsu/híbrida "racional". Isso significa que a
+   métrica de "tempo sem chakra pro tier 1" das rodadas 4-6, em L20+, media o efeito colateral
+   de gastar chakra em tier 2/3 (fixo, caro desde a rodada 5) — não o custo do tier 1, que é do
+   que a missão desta rodada realmente precisava. **Fix**: `force_tier1` (novo parâmetro de
+   `simulate_hunt`, default de `--hunt` agora — `--no-force-tier1` volta ao comportamento
+   antigo) força o jutsu conjurado a ser sempre o tier 1, medindo o cenário certo em qualquer
+   nível.
+4. **Avaliado e descartado**: `cooldown_s` 9,0s→6,0s (e testado até 1,0s) no build híbrido —
+   `HYBRID_JUTSU_CADENCE_FRAC=0,22` (rodada 6) estica o cooldown efetivo o bastante para que a
+   diferença seja irrelevante numa hunt de 30 min; só cooldowns abaixo de ~2,0s (menor que o
+   intervalo de ataque da arma) mostram alguma diferença — e essa faixa quebraria a paridade de
+   boss ninjutsu/híbrida calibrada nas rodadas 5-6. `cooldown_s` mantido em 9,0s.
+5. **Meta "15-25% de tempo sem chakra numa hunt híbrida sustentada, todo nível 5-100" NÃO
+   fechou** — achado estrutural, não falta de tentativa: com `force_tier1=True` e o custo do
+   item 1, a razão gasto/regen numa hunt de 30 min fica em ~0,24 em QUALQUER nível (pool e
+   regen crescem na mesma proporção), bem abaixo do ponto de transição ≈1 onde a scarcity deixa
+   de ser ~0% e passa a ser ~50-80% (a faixa intermediária pedida, 15-25%, é uma zona muito
+   estreita, não um platô — testado com sweep de cooldown 1,0-9,0s e regen 1-10× mais lenta, ver
+   relatório v7 §5/§6). Sem o amortecedor híbrido, ninjutsu puro com tier 1 forçado JÁ mostra
+   33-72% de scarcity sem pílula e ≤0,1% com pílula — confirma que o custo funciona; o gargalo é
+   só o modelo híbrido especificamente (calibrado do jeito que está para não estourar boss
+   parity, ver achado 4 da rodada 6). Recomendação para destravar isso: aumentar
+   `HYBRID_JUTSU_CADENCE_FRAC`, mas só como parte de uma rodada nova que também re-calibre boss
+   parity híbrida (reabriria a pendência que a rodada 6 fechou) — não é um número isolado.
+6. **Regen (só recomendação, não aplicada)**: slowdown de regen testado em memória (fator
+   1-10× mais lento) tem o mesmo problema do item 5 (a razão é dominada por
+   `frac/cooldown`, não pela regen) — e o fator que criaria alguma scarcity (4-5×) faria a
+   recuperação do pool em L1 saltar de 73s pra 220-290s, violando a própria meta de 60-90s
+   desta rodada. `chakra_regen_amount_per_tick` (`3+level//4` a cada 2s) **não mudou** em
+   `tools/balance/sim.py` nem foi recomendado mudar em `tools/export_tfs.py`.
+7. **Tier 2/3/personagens: avaliado, não reescalado**. A fórmula de "valor de personagem"
+   (`(chakra_cost/cooldown)×dano_por_chakra`) CANCELA o `chakra_cost` algebricamente
+   (`valor=dano_médio/cooldown_s`) — os 9 personagens continuam exatamente onde a rodada 6
+   deixou, confirmado sem precisar rerodar a proxy. **Achado colateral fora do escopo desta
+   rodada**: no cenário de pull 3+ (`simulate_group_fight`, que considera custo na escolha do
+   jutsu), 3 dos 12 cenários mudaram de XP/h ninjutsu (`ruin_puppet` +56,9%→+3,7%, saiu da
+   faixa 30-60% que a rodada 6 tinha fechado) porque o tier 1 deixa de ser filler grátis entre
+   cooldowns de tier 2/3 — consequência esperada de tornar o tier 1 um recurso de verdade, não
+   corrigido (reescalar tier 2/3 reabriria a paridade de boss 1×1, compartilhada com os
+   cenários de grupo).
+8. **Boss parity (6/6), burst (94/100) e personagens (9/9 dentro de ±15%) confirmados
+   inalterados** (byte-a-byte idênticos à rodada 6) — nenhum dos 6 bosses de referência usa o
+   tier 1 elemental como pick de DPS, e nenhum campo de dano/cooldown foi tocado.
+
+## Pendências honestas da rodada 7 (ver relatório v7 §5-7 pros números)
+
+- **Scarcity de tier 1 no build híbrido continua ~0% em toda hunt de 30 min** — a meta de
+  15-25% não fechou por limite estrutural do `HYBRID_JUTSU_CADENCE_FRAC` da rodada 6 (ver
+  achado 5 acima). Não é uma pendência de calibração fina; precisa de uma decisão de design
+  (relaxar qual das duas metas — scarcity híbrida ou boss parity híbrida) antes de mexer de
+  novo nisso.
+- **Grupo 3+ piorou em 1 dos 2 cenários que a rodada 6 tinha fechado** (`ruin_puppet`,
+  +56,9%→+3,7%, saiu da faixa 30-60%) — efeito colateral do item 1, não corrigido (ver achado 7
+  acima). Continua não-uniforme (10-11/12 fora da faixa), mesma causa raiz da rodada 6 (não
+  resolvida antes desta).
+- **Pendências herdadas da rodada 6 sem mudança**: `boss_curse_partner` acima de +20% de TTK
+  com summons; proxy de personagens ainda não versionada como script próprio;
+  `wolf`/`bandit`/`mercenary_bridge`/`mist_guardian`/`white_clone` seguem abaixo da faixa de
+  grupo.

@@ -207,6 +207,28 @@ o tempo sem chakra pro tier 1 cai pra ≤0,4% em todos os níveis 5-100 testados
 dentro da meta de ≤5%; o déficit de "não dá pra bancar pílulas suficiente" que a rodada 4 achou
 em L5 deixou de existir (o tier 1 agora raramente precisa de pílula pra começo de conversa).
 
+> **Atualizado na rodada 7** (`docs/sistemas/balanceamento-relatorio-v7.md`): o número "20,7%
+> em L20" acima (rodada 5) media o cenário ERRADO a partir de L20 — `pick_ninjutsu_jutsu()`
+> abandona o tier 1 assim que o primeiro tier 2 do elemento desbloqueia (L12-26 conforme o
+> elemento) e nunca mais volta a conjurá-lo; o número media só o efeito colateral de gastar
+> chakra em tier 2/3 (fixo, ~60%+ do pool desde a rodada 5), não uso real do tier 1. Achado
+> real desta rodada, confirmado com playtest ao vivo (`docs/qa/playtest-l1-20-r5.md`): o custo
+> real do tier 1 (2,5-3,0% do pool) era baixo demais para QUALQUER cooldown/regen razoável
+> criar gestão de recurso — 9 casts seguidos sem sair de 108-110/110 no L1. FIX: `chakra_cost_
+> percent` subiu ~4,7× (2,5-3,0% → 12-14%, `data/jutsus/{katon,fuuton,raiton,doton,suiton}.json`
+> — `cooldown_s`/dano intocados) e `tools/balance/sim.py` ganhou `force_tier1` (novo parâmetro
+> de `simulate_hunt`, agora o padrão de `--hunt`) para medir o tier 1 de verdade em todo nível,
+> não o que a rotação "racional" escolhe. Resultado: **6-8 casts por pool cheio em TODO nível
+> 1-100 e nos 5 elementos** (era 33-55) e recuperação do zero em 73,3-83,3s em qualquer nível
+> (era igual — regen não foi tocado). A meta de "15-25% de tempo sem chakra numa hunt híbrida
+> sustentada" **não fechou** — achado estrutural: `HYBRID_JUTSU_CADENCE_FRAC=0,22` (rodada 6)
+> torna o cast de jutsu tão raro no build híbrido que nenhum custo dentro de 6-8 casts/pool cria
+> pressão real (a razão gasto/regen numa hunt de 30 min fica em ~0,24, bem abaixo do ponto de
+> transição ≈1 — ver relatório v7 §5 pra prova completa e pro sweep de cooldown/regen que
+> descarta as outras duas alavancas dentro dos limites seguros). Sem build híbrido, o mesmo
+> custo aplicado a ninjutsu puro (sem o amortecedor) já cria scarcity real (33-72% sem pílula,
+> ≤0,1% com pílula) — confirma que o custo em si funciona; o gargalo é só o modelo híbrido.
+
 **Material exclusivo de boss:** `sell_price ≈ 3 × (4.5 * L)` — a Presa da Serpente Branca (L25)
 vale 340, contra ~112 de um material comum da mesma faixa. Cai 100% (1–2), então é a renda
 garantida da luta; o resto do loot é chance.
@@ -290,11 +312,32 @@ dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 > `CONDITION_EXHAUST_WEAPON`/`_COMBAT` estão "unused" nesta build do TFS 1.4.2; não é o lever do
 > híbrido, subido de 1000ms→2000ms só como piso de segurança (inerte pro kit atual).
 
+> **Atualizado na rodada 7** (`docs/sistemas/balanceamento-relatorio-v7.md`): tema único "o
+> chakra voltou a não ser um recurso" — playtest ao vivo (`docs/qa/playtest-l1-20-r5.md`)
+> confirmou que com 2,5-3,0% do pool (rodada 5), 9 casts seguidos de tier 1 no L1 não tiravam o
+> chakra de 108-110/110. FIX: `chakra_cost_percent` dos 5 projéteis tier 1 subiu ~4,7× (2,5-3,0%
+> → **12-14%**), preservando a proporção relativa entre elementos — `cooldown_s`/`base_damage`/
+> `level_scale`/`skill_scale` (burst) **intocados**. Resultado: **6-8 casts por pool cheio em
+> TODO nível 1-100** (era 33-55) e recuperação do pool do zero em 73,3-83,3s (era igual — regen
+> não mudou). `tools/balance/sim.py` ganhou duas métricas analíticas novas
+> (`casts_per_full_pool`/`time_to_refill_pool_s`) e um achado de modelo: `pick_ninjutsu_jutsu()`
+> abandona o tier 1 assim que o primeiro tier 2 do elemento desbloqueia (L12-26), então a
+> métrica antiga de "tempo sem chakra" media o custo de tier 2/3 em L20+, não o tier 1 — novo
+> parâmetro `force_tier1` (default de `--hunt` agora) conjura sempre o tier 1 pra medir o
+> cenário certo. Avaliado e **descartado**: `cooldown_s` 9,0s→6,0s não muda nada no build
+> híbrido (o amortecedor `HYBRID_JUTSU_CADENCE_FRAC=0,22` da rodada 6 domina a conta — só
+> cooldowns abaixo de 2,0s, inviáveis, criariam pressão real, e quebrariam a paridade de boss).
+> A meta de "15-25% de tempo sem chakra numa hunt híbrida sustentada, todo nível 5-100" **não
+> fechou** por esse mesmo motivo estrutural (build ninjutsu puro, sem o amortecedor, já mostra
+> 33-72% — confirma que o custo funciona; só o modelo híbrido neutraliza). Boss parity (6/6),
+> burst (94/100) e personagens (9/9 dentro de ±15%, cancelamento algébrico do custo na fórmula
+> `valor()`) confirmados **inalterados**.
+
 Escala por tier (com `required_level` de referência e ninjutsu = magic level real, ver acima):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil (pós-rodada-5) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **2,5-3,0% do pool** (era 25-30 fixo) | **9,0 s** (era 3,5 s) |
+| 1 projétil (pós-rodada-7) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **12-14% do pool** (era 2,5-3,0%, rodada 5; 25-30 fixo antes disso) | 9,0 s (inalterado desde a rodada 5) |
 | 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus tier 1 de área — `raiton_corrente_estatica`/`suiton_nevoa_cortante` — subiram de 1,3-1,6s pra **3,0s** na rodada 6, ver acima) |
 | 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–38,99 (3 recalibrados na r4, ver acima) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
 | 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |

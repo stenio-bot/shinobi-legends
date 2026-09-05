@@ -299,6 +299,40 @@ fechar (ou chegar perto d)o ±20% de TTK:
   rodada). `death_rate=0,00` confirma que a luta continua **vencível** solo, só mais longa que o
   ideal — não é um bloqueador de progressão, é um desvio de ritmo.
 
+### Addendum 2026-09-05: `attack_multiplier` agora aumenta dano de verdade — recalibrar na rodada 7
+
+O achado do §4 acima (`attack_multiplier` de fase NÃO aumentava o dano dos ataques do boss) foi
+**corrigido**: `boss_phases.lua` (gerado por `tools/export_tfs.py`) ganhou um segundo
+`CreatureEvent`, `NarutoBossFury`, registrado no `onHealthChange` do JOGADOR (login, via
+`character_switch.lua`), que multiplica `primaryDamage`/`secondaryDamage` de verdade (arredondado)
+quando quem bateu é um boss na fase de fúria atual (`mult > 1`, lido de
+`NarutoBossPhases.state[bossId]`, publicado pelo `onHealthChange` do MONSTRO de sempre) — cobre
+dano melee e de spell do boss, não afeta summons. Detalhe completo em
+`docs/sistemas/monstros-e-pvm.md` §Bosses. Validado headless (sem instalar/reiniciar o servidor
+do playtest): `tools/tests/test_boss_fury_headless.lua` / `tools/tests/run_boss_fury_tests.sh`
+(19/19, boss fictício com fases {100%: mult 1.0, 50%: mult 1.5} — dano ×1,5 confirmado ao cruzar
+50%, outro monstro não afetado, limpeza no `onDeath` confirmada).
+
+**Isto NÃO foi reavaliado pelo `tools/balance/sim.py`** — como o §4 já registrou, o simulador
+oficial não modela `phases`/summons (só `hp`/`attacks` fixos por `MONSTERS[id]`), então os TTKs
+de boss deste relatório (e da rodada 5/6 anteriores) foram medidos **sem** o multiplicador de
+dano real — só com a cura pontual (`+(mult−1)×10%` do HP máximo) e o aumento de velocidade, que
+continuam acontecendo (não foram removidos). Na prática, **o TTK real dos 12 bosses do jogo na
+fase de fúria vai subir** a partir de agora — a fração de dano extra na fase de fúria é
+proporcional a `mult` (ex. Serpente Branca `mult 1.9` = quase o dobro de dano nos ~25% finais de
+vida dela), e como esse dano nunca foi contabilizado nas simulações de TTK/death_rate acima, os
+valores atuais de `attack_multiplier` em `data/monsters/*.json` foram calibrados (rodadas 1–6)
+**pressupondo que o multiplicador não fazia nada** — ou seja, estão mais altos do que deveriam
+agora que fazem.
+
+**Recomendação pra rodada 7 (NÃO aplicada nesta sessão — só JSON de fases, `data/monsters/`, não
+foi tocado)**: cortar pela metade o excedente de cada `attack_multiplier` acima de 1.0 (ex.
+`1.5 → 1.25`, `1.9 → 1.45`, `1.3 → 1.15`) em todos os bosses com fase de fúria, depois rodar uma
+simulação bespoke (mesmo molde do §4, já que `sim.py` não modela fases) medindo TTK/death_rate
+COM o multiplicador de dano real aplicado, e reajustar caso a caso contra a mesma meta de ±20% de
+TTK usada no §4. `boss_curse_partner` (já **acima** da meta mesmo antes deste fix, ver pendência
+logo acima) deve ser o primeiro a testar — o dano real de fúria só piora a folga que já faltava.
+
 ## 5. `validate_data.py` / `export_tfs.py` / `luajit` / timing
 
 ```

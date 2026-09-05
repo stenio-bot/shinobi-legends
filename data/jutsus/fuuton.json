@@ -17,7 +17,7 @@
     "tier": 1,
     "animation": "fx_wind_blade",
     "sfx": "sfx_wind_cut",
-    "chakra_cost_percent": 2.75
+    "chakra_cost_percent": 13.0
   },
   {
     "id": "fuuton_rajada_cortante",

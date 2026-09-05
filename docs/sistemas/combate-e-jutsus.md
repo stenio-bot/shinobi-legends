@@ -16,6 +16,11 @@ crítico      = 5% base, dano * 1.5
 ```
 Dano mínimo sempre 1.
 
+No servidor TFS, dano recebido de um boss em fase de "fúria" (`attack_multiplier` de
+`data/monsters/*.json`) é multiplicado de verdade no `onHealthChange` do jogador (`NarutoBossFury`
+em `boss_phases.lua` — ver `docs/sistemas/monstros-e-pvm.md` §Bosses); não modela essas fórmulas
+do protótipo Godot acima.
+
 ## Elementos e afinidade
 ```
 Katon (fogo)  > Fuuton (vento) > Raiton (raio) > Doton (terra) > Suiton (água) > Katon

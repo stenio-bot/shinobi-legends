@@ -108,6 +108,13 @@ MESSAGE_EVENT_ADVANCE = 1
 MESSAGE_INFO_DESCR = 2
 MESSAGE_GREET = 3
 CONST_ME_FIREWORK_YELLOW = 1
+CONST_ME_MAGIC_GREEN = 2
+CONST_ME_MAGIC_RED = 3
+TALKTYPE_MONSTER_YELL = 4
+COMBAT_PHYSICALDAMAGE = 0
+COMBAT_HEALING = 1
+COMBAT_NONE = 2
+ORIGIN_MELEE = 0
 
 function CreatureEvent(name)
 	local ev = {}
@@ -134,6 +141,52 @@ Game = {getPlayers = function()
 	for _, p in pairs(M.players) do list[#list + 1] = p end
 	return list
 end}
+-- só usado pelos summons de boss_phases.lua (fora do escopo do teste de fúria: fixture de teste
+-- não usa summons) — devolve nil, igual a uma falha silenciosa de spawn no TFS real.
+function Game.createMonster(name, pos, extended, force) return nil end
+
+-- ------------------------------------------------------------------ Monster/Creature genérico
+-- (usado por tools/tests/test_boss_fury_headless.lua para simular o boss e outros monstros que
+-- passam por CreatureEvent onHealthChange/onDeath — boss_phases.lua/NarutoBossFury).
+local MonsterMeta = {}
+MonsterMeta.__index = MonsterMeta
+
+local nextMonsterId = 10000  -- faixa separada dos ids de player pra não colidir por acidente
+
+function M.newMonster(name, opts)
+	opts = opts or {}
+	local id = opts.id or nextMonsterId
+	if not opts.id then nextMonsterId = nextMonsterId + 1 end
+	local pos = opts.pos or {x = 500, y = 500, z = 7}
+	pos.sendMagicEffect = pos.sendMagicEffect or function() end
+	local m = setmetatable({
+		_id = id, _name = name, _health = opts.health or 1000, _maxHealth = opts.maxHealth or opts.health or 1000,
+		_baseSpeed = opts.baseSpeed or 200, _speed = opts.baseSpeed or 200, _pos = pos,
+		_outfit = opts.outfit or {lookType = 128}, _said = {}, _speedChanges = {},
+	}, MonsterMeta)
+	return m
+end
+
+function MonsterMeta:getId() return self._id end
+function MonsterMeta:getName() return self._name end
+function MonsterMeta:isPlayer() return false end
+function MonsterMeta:isMonster() return true end
+function MonsterMeta:getHealth() return self._health end
+function MonsterMeta:getMaxHealth() return self._maxHealth end
+function MonsterMeta:addHealth(amount)
+	self._health = math.min(self._maxHealth, self._health + amount)
+	return true
+end
+function MonsterMeta:getBaseSpeed() return self._baseSpeed end
+function MonsterMeta:changeSpeed(delta)
+	self._speed = self._speed + delta
+	self._speedChanges[#self._speedChanges + 1] = delta
+end
+function MonsterMeta:getPosition() return self._pos end
+function MonsterMeta:setTarget(creature) self._target = creature end
+function MonsterMeta:say(msg, kind) self._said[#self._said + 1] = {msg = msg, kind = kind} end
+function MonsterMeta:getOutfit() return self._outfit end
+function MonsterMeta:setOutfit(out) self._outfit = out end
 
 -- ------------------------------------------------------------------ npcsystem stub (bem simples:
 -- só o suficiente pra dofile de npc/scripts/naruto/*.lua funcionar e capturar callbacks de

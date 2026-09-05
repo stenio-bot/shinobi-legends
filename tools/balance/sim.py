@@ -202,6 +202,27 @@ def jutsu_chakra_cost(jutsu, chakra_max):
         return (chakra_max * pct) // 100
     return jutsu["chakra_cost"]
 
+# RODADA 7 (item "métrica nova" da missão — Entregas): duas contas ANALÍTICAS (não precisam
+# rodar `simulate_hunt`) que respondem direto às duas perguntas de design da missão: "quantos
+# casts o pool cheio aguenta" e "quanto tempo parado até o pool voltar a encher".
+def casts_per_full_pool(jutsu, chakra_max):
+    """Quantos casts seguidos de `jutsu` o pool CHEIO aguenta, sem regen (pior caso, chão
+    conservador; com regen ligado o número real de casts numa janela de tempo é maior, ver
+    `simulate_hunt`/`chakra_spent_total`). `chakra_max // custo`, custo já truncado por
+    `jutsu_chakra_cost` (mesma divisão inteira do servidor, ver docstring acima)."""
+    cost = jutsu_chakra_cost(jutsu, chakra_max)
+    return (chakra_max // cost) if cost > 0 else None
+
+def time_to_refill_pool_s(level, chakra_max, from_amount=0):
+    """Segundos parado (sem gastar) para o chakra ir de `from_amount` até `chakra_max`, usando
+    a MESMA condição de regen contínua do servidor (`chakra_regen_amount_per_tick`/
+    `CHAKRA_REGEN_TICK_S`, replicada em `SimPlayer.regen_tick`) — conta fechada (não
+    Monte Carlo): regen é linear no tempo (sem RNG), `déficit / (amount/tick_s)`."""
+    rate = chakra_regen_amount_per_tick(level) / CHAKRA_REGEN_TICK_S   # chakra/s
+    if rate <= 0:
+        return None
+    return (chakra_max - from_amount) / rate
+
 # ============================================================== skill "jogador médio" no nível L
 def _skill_from_tries(total_tries, mult, base):
     """Inverte vocation.cpp:141 getReqSkillTries: reqTries(L->L+1) = base*mult^(L-10) para L>=10.
@@ -1097,12 +1118,30 @@ def nearest_common_monster(level):
     return min(candidates, key=lambda m: abs(m["level"] - level))["id"]
 
 def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, seed=1234,
-                   pause_min_s=5.0, pause_max_s=15.0):
+                   pause_min_s=5.0, pause_max_s=15.0, force_tier1=False):
     """Sequência de pulls 1x1 do mesmo monstro comum, HP/chakra do player persistindo (com
     regen contínuo) entre uma luta e a próxima — ver cabeçalho da seção acima. Cada pull reusa
     a MESMA lógica de ação de `simulate_fight` (híbrido intercalado / ninjutsu exclusivo), só
     que sem recriar o SimPlayer a cada luta. Uma morte custa `DEATH_RECOVERY_S` + a pausa normal
-    (o personagem volta com HP/chakra cheios, confirmado no playtest — reconectar no templo)."""
+    (o personagem volta com HP/chakra cheios, confirmado no playtest — reconectar no templo).
+
+    `force_tier1` (RODADA 7, achado central da missão "chakra voltou a não ser um recurso"):
+    sem isso, o jutsu de fato conjurado é o de `pick_ninjutsu_jutsu` (maior dano/segundo do kit
+    JÁ DESBLOQUEADO), que abandona o tier 1 assim que o primeiro tier 2 do elemento desbloqueia
+    (`required_level` 12-26 conforme o elemento, ver `data/jutsus/*.json`) — verificado nesta
+    rodada: `nearest_common_monster(20)` já conjura `raiton_lanca_relampago` (tier 2, custo fixo
+    170), nunca mais `raiton_hari` (tier 1). Isso quer dizer que ajustar `chakra_cost_percent`
+    do tier 1 **não muda em nada** o chakra realmente gasto em L20+ nessa simulação — só move o
+    LIMIAR de comparação (`tier1_cost`) usado por `pct_time_without_chakra_for_tier1`, inflando
+    a métrica por um artefato de contabilidade, não por uso real. `force_tier1=True` conjura
+    SEMPRE o projétil tier 1 (índice 0 do kit elemental), ignorando a seleção por maior DPS —
+    é o cenário que a missão pede de fato medir ("chakra sustentável de tier 1 em TODOS os
+    níveis 5-100"): um jogador que usa o projétil barato como filler constante, não a build
+    ninjutsu racional que sempre usaria o jutsu mais forte disponível. `run_hunt_matrix` usa
+    `force_tier1=True` por padrão (ver constante abaixo); sem a flag (`force_tier1=False`,
+    default, preserva o comportamento das rodadas 4-6) continua medindo "quanto tempo o kit
+    INTEIRO fica sem chakra para pelo menos o tier 1", útil como segunda leitura mas não a
+    pergunta literal da missão."""
     rng = random.Random(seed)
     monster = MONSTERS[monster_id]
     p = SimPlayer(level, build, rng)
@@ -1111,7 +1150,11 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
     player_element, jutsu = (None, None)
     if build in ("ninjutsu", "hybrid"):
         taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
-        jutsu_no_fallback = True if build == "hybrid" else False   # ver simulate_fight
+        # força no_fallback quando force_tier1 também: sem isso, pick_ninjutsu_jutsu pode
+        # devolver jutsu=None (build ninjutsu pura, DPS do kit pior que a arma) e o override
+        # abaixo (`if force_tier1: jutsu = tier1`) ainda aplica — mas queremos o ELEMENTO certo
+        # mesmo nesse caminho, então simplesmente sempre pedimos o candidato (nunca None) aqui.
+        jutsu_no_fallback = True if (build == "hybrid" or force_tier1) else False
         player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
                                                       taijutsu_dps_est, no_fallback=jutsu_no_fallback)
     tier1 = None
@@ -1119,6 +1162,8 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
         eset = ELEMENT_SETS.get(player_element)
         if eset:
             tier1 = JUTSUS[eset["jutsus"][0]]   # índice 0 = sempre o projétil tier 1, ver header
+    if force_tier1 and tier1:
+        jutsu = tier1
     tier1_cost = jutsu_chakra_cost(tier1, p.chakra_max) if tier1 else None
     interleave = (build == "hybrid")
     hp_potion = best_potion(level, _HP_POTIONS)
@@ -1229,9 +1274,14 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                 next_player_action = t
         t += dt
     pct_below = time_below_tier1 / t if t > 0 else 0.0
+    # RODADA 7 (métrica nova pedida na missão): "casts por pool cheio" e "tempo até pool cheio"
+    # são ANALÍTICOS (não dependem de rodar a hunt inteira) — ver funções abaixo, reusadas aqui
+    # só para não duplicar a conta na tabela do relatório.
+    casts_per_pool = casts_per_full_pool(tier1, p.chakra_max) if tier1 else None
+    time_to_full_s = time_to_refill_pool_s(level, p.chakra_max) if tier1 else None
     return {
         "level": level, "monster_id": monster_id, "build": build, "minutes": minutes,
-        "use_chakra_pills": use_chakra_pills,
+        "use_chakra_pills": use_chakra_pills, "force_tier1": force_tier1,
         "kills": kills, "deaths": deaths,
         "chakra_spent_total": round(total_chakra_spent, 1),
         "jutsu_dmg_total": round(total_jutsu_dmg, 1),
@@ -1242,6 +1292,8 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
         "pct_time_without_chakra_for_tier1": round(pct_below, 3),
         "tier1_jutsu": tier1["id"] if tier1 else None,
         "tier1_chakra_cost": tier1_cost,
+        "casts_per_full_pool": casts_per_pool,
+        "time_to_full_pool_s": time_to_full_s,
     }
 
 # RODADA 5: era [5, 15, 30, 60, 100] — a missão pede a meta de sustentabilidade verificada em
@@ -1250,15 +1302,22 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
 # (L20-23, monstro `exam_rival_stone` com HP acima da média da faixa — ver relatório v5 §1).
 HUNT_LEVELS = list(range(5, 101, 5))
 
-def run_hunt_matrix(minutes=30, seed=1234):
+def run_hunt_matrix(minutes=30, seed=1234, force_tier1=True):
     """Roda a hunt de 30 min em HUNT_LEVELS, build 'hybrid' (a build que a missão pede medir —
-    'o híbrido não fica >20% do tempo sem chakra'), com E sem pílula de chakra."""
+    'o jogador gerencia o chakra do tier 1'), com E sem pílula de chakra.
+
+    `force_tier1=True` (RODADA 7, default — ver docstring de `simulate_hunt`): conjura sempre o
+    projétil tier 1, não o "melhor DPS do kit" (que vira tier 2/3 a partir de L12-26 e torna a
+    métrica de chakra do tier 1 um artefato de contabilidade, não uso real — achado desta
+    rodada). `force_tier1=False` preserva o comportamento das rodadas 4-6 (métrica antiga,
+    'tempo sem chakra pra QUALQUER coisa do kit', não só tier 1)."""
     out = []
     for level in HUNT_LEVELS:
         mid = nearest_common_monster(level)
         for use_pills in (False, True):
             out.append(simulate_hunt(level, mid, "hybrid", minutes=minutes,
-                                      use_chakra_pills=use_pills, seed=seed))
+                                      use_chakra_pills=use_pills, seed=seed,
+                                      force_tier1=force_tier1))
     return out
 
 # ============================================================== CLI
@@ -1276,6 +1335,11 @@ def main():
     ap.add_argument("--chakra-pills", action="store_true",
                      help="--hunt/--level+--monster: simula o jogador bebendo pílula de chakra "
                           "quando não consegue pagar o tier 1 (ver _CHAKRA_POTIONS)")
+    ap.add_argument("--no-force-tier1", action="store_true",
+                     help="--hunt: RODADA 7, desliga force_tier1 (volta ao comportamento das "
+                          "rodadas 4-6: conjura o melhor DPS do kit, não sempre o tier 1 — ver "
+                          "docstring de simulate_hunt). Por padrão --hunt já roda com "
+                          "force_tier1=True (sozinho e com --level/--monster).")
     ap.add_argument("--level", type=int)
     ap.add_argument("--monster")
     ap.add_argument("--n-monsters", type=int, default=1, help="tamanho do pull (--monster vira N cópias)")
@@ -1323,12 +1387,13 @@ def main():
 
     if args.hunt:
         t0 = time.time()
+        force_tier1 = not args.no_force_tier1
         if args.level and args.monster:
             mid = args.monster
             res = simulate_hunt(args.level, mid, args.build, minutes=args.minutes,
-                                 use_chakra_pills=args.chakra_pills)
+                                 use_chakra_pills=args.chakra_pills, force_tier1=force_tier1)
         else:
-            res = run_hunt_matrix(minutes=args.minutes)
+            res = run_hunt_matrix(minutes=args.minutes, force_tier1=force_tier1)
         dt = time.time() - t0
         print(f"# hunt: em {dt:.2f}s", file=sys.stderr)
         if args.json:

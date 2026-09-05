@@ -25,7 +25,7 @@
     ],
     "animation": "fx_mud_bullet",
     "sfx": "sfx_splat",
-    "chakra_cost_percent": 2.75
+    "chakra_cost_percent": 13.0
   },
   {
     "id": "doton_muralha_pedra",

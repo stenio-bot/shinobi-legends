@@ -86,16 +86,32 @@ sequenciais que acompanham a progressão de level da zona.
   `boss_phases.lua`, que faz `creature:setOutfit({lookType = N})` quando a fase é atingida
   (zera head/body/legs/feet/addons para o outfit novo não herdar cores do humano).
   Usado pela Serpente Branca: outfit humano 132 → serpente 2x2 890.
-- **Limitação do `attack_multiplier`.** O evento `onHealthChange` do TFS 1.4.2 não consegue
-  alterar o dano dos `<attack>` do monstro em runtime — a lista de ataques é lida uma única vez,
-  no carregamento do XML. A fase de "fúria" é então aproximada por três coisas:
-  1. **cura percentual**: `+ (mult - 1) * 10%` do HP máximo (mult 1.9 → +9%, 414 HP na Serpente Branca);
-  2. **velocidade**: `creature:changeSpeed(baseSpeed * (mult - 1) * 0.5)` — o boss alcança o alvo
-     e desfere mais golpes por minuto, que é o efeito prático de "bater mais forte";
-  3. **registro** em `NarutoBossMult[monsterId] = mult`, para quem quiser ler o multiplicador de
-     fora. Nenhum `onThink`/creaturescript extra é necessário.
-  Se um dia quisermos o multiplicador de dano de verdade, o caminho é gerar uma cópia do monstro
-  com os `<attack>` já multiplicados e trocar a criatura, não um `onThink`.
+- **`attack_multiplier` aumenta o dano de verdade (2026-09-05).** O `onHealthChange` do TFS 1.4.2
+  não consegue reescrever a lista de `<attack>`/spells do monstro em runtime (ela é lida uma única
+  vez, no carregamento do XML) — mas dá pra multiplicar o dano do OUTRO lado: o
+  `CreatureEvent onHealthChange` do JOGADOR (registrado no login, `player:registerEvent`) também é
+  chamado quando o boss acerta o jogador (`attacker` = o boss), com `primaryDamage`/`secondaryDamage`
+  já calculados — e o retorno da função troca o dano de verdade (`server/tfs/src/creatureevent.cpp`,
+  `executeHealthChange`). `boss_phases.lua` (gerado por `tools/export_tfs.py`) usa isso:
+  1. **`NarutoBossPhases`** (evento do MONSTRO, o de sempre): a cada fase com `mult > 1`, publica
+     `NarutoBossPhases.state[bossId] = {name, mult}` — além de manter a cura pontual
+     (`+ (mult - 1) * 10%` do HP máximo) e o aumento de velocidade (`changeSpeed`) como antes,
+     que continuam valendo (fazem o boss alcançar e bater mais vezes por minuto).
+  2. **`NarutoBossFury`** (evento novo, do JOGADOR): no `onHealthChange` do jogador, se
+     `attacker` é um boss com `state.mult > 1` (nome revalidado contra `state.name`, pra não
+     vazar o multiplicador se o `creature:getId()` do boss morto for reciclado por outro
+     monstro), multiplica `primaryDamage` e `secondaryDamage` por `mult` (arredondado,
+     `floor(x*mult+0.5)`) e devolve os dois. Cobre dano melee E de spell do boss (ambos chegam
+     por `onHealthChange` do jogador do mesmo jeito). Summons invocados na fase **não** herdam
+     o `mult` — só o `id` do boss original entra em `NarutoBossPhases.state`.
+  3. `NarutoBossReset.onDeath` limpa `NarutoBossPhases.state[bossId]` (e o índice de fase) pra
+     não vazar por `cid` reutilizado.
+  Teste headless: `tools/tests/test_boss_fury_headless.lua` (`tools/tests/run_boss_fury_tests.sh`).
+  **Efeito colateral esperado**: como a cura/velocidade da fase já estavam calibradas pra
+  compensar a FALTA de dano real, somar o multiplicador de dano de verdade em cima sobe o TTK
+  efetivo dos bosses acima do calibrado em `balanceamento-relatorio-v6.md` — ver nota de
+  recalibração ali (rodada 7 deve cortar pela metade o excedente de `attack_multiplier`, ex.
+  1.5 → 1.25, em `data/monsters/*.json`).
 - Loot com itens exclusivos (`legendary`/`rare`) e pergaminhos.
 
 ### Serpente Branca (Floresta da Morte, L25)
@@ -105,7 +121,7 @@ Ninja renegado pálido que abandona a forma humana quando encurralado. 4 600 HP,
 |---|---|---|
 | 1 — forma humana | 100% (primeiro dano) | fala de abertura; ataca com veneno (melee + névoa em `circle_r2` + cuspe ácido com slow) |
 | 2 — transformação | 60% | `looktype 890` (serpente 2×2), efeito verde, invoca **3 Cobras da Floresta** |
-| 3 — fúria | 25% | `attack_multiplier 1.9` (cura +9% + velocidade), efeito vermelho, invoca **2 Serpentes Menores** |
+| 3 — fúria | 25% | `attack_multiplier 1.9`: dano real ×1,9 (`NarutoBossFury`), cura pontual +9% + velocidade, efeito vermelho, invoca **2 Serpentes Menores** (summons não herdam o ×1,9) |
 
 Loot exclusivo: `white_serpent_fang` ("Presa da Serpente Branca", material raro, 100%) e
 `scroll_doku_kiri` (pergaminho tier 2 de `doku_kiri`, 25%).
