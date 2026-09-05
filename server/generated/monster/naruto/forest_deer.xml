@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Cervo" nameDescription="um cervo" race="blood" experience="5" speed="500" manacost="0">
 	<health now="30" max="30"/>
-	<look type="21" head="40" body="62" legs="80" feet="20" corpse="5968"/>
+	<look type="941" head="39" body="39" legs="22" feet="115" corpse="5968"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

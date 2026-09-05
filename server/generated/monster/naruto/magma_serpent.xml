@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Serpente de Magma" nameDescription="um serpente de magma" race="fire" experience="1370" speed="440" manacost="0">
 	<health now="2280" max="2280"/>
-	<look type="56" head="96" body="95" legs="94" feet="93" corpse="4238"/>
+	<look type="943" head="75" body="75" legs="75" feet="75" corpse="4238"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

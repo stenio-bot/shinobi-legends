@@ -1805,3 +1805,169 @@ reiniciar, servidor compartilhado com playtest) → sessão de screenshots
 - Ataques de MONSTRO continuam limitados aos 6 slots vanilla redesenhados
   (um efeito/missile por elemento, sem variação por jutsu) — os 27 efeitos
   novos só aparecem nos jutsus do jogador.
+
+## Criaturas procedurais: animais dedicados + variantes de paleta humanoide
+
+Duas dores do backlog (`docs/backlog-sprites.md`): (1) Lobo/Cervo/Águia do
+Trovão usavam o looktype 21 (fera genérica vanilla) — não pareciam nada; (2)
+10 monstros humanoides (bandidos, ninjas, chefes...) e 3 cobras
+compartilhavam looktype IMPORTADO (`assets-src/sprites/imports.json`,
+`layers=1`) com outro monstro, byte a byte idênticos — as cores de
+`data/tfs_mapping.json` (head/body/legs/feet) não tinham nenhum efeito, pois
+só `layers=2` ganha máscara de outfit (`ThingType::loadTexture`, ver
+"Cores de outfit (layers=2)" acima). Duas ferramentas novas resolvem cada
+metade do problema, com estratégias opostas por serem problemas diferentes:
+
+| | `tools/spr/gen_animals.py` | `tools/spr/gen_humanoid_variants.py` |
+|---|---|---|
+| Arte | 100% procedural (`animal_art.py`, ADR-002) | reaproveita PNG importado (`assets-src/import/`) |
+| Camadas | `layers=2` (base clara + máscara de cor) | `layers=1` (cor gravada no pixel) |
+| Como diferencia monstros no mesmo looktype | `data/tfs_mapping.json` (head/body/legs/feet, índice da paleta oficial) | matiz (HSV) girada na hora de gerar o PNG — 1 looktype novo por monstro |
+| Direção/andar | 4 direções reais + 3 fases de andar desenhadas por código | mesma arte nas 4 direções/3 fases (limitação da fonte, ver abaixo) |
+| Looktypes novos | 940–945 | 946–957 |
+
+### `tools/spr/tibia_colors.py`: paleta oficial de outfit
+
+Reimplementa `Outfit::getColor` (`client-otc/src/client/outfit.cpp`, fórmula
+HSI, `HSI_H_STEPS=19 × HSI_SI_VALUES=7 = 133` índices) em Python, pra poder
+escolher índices de cor (os que o protocolo manda em head/body/legs/feet)
+a partir de um RGB alvo (`nearest()`) sem adivinhar número na mão. A paleta
+real é **esparsa**: só 7 combinações de saturação/intensidade por matiz, e a
+linha de múltiplos de 19 é uma rampa de CINZA pura (preto..branco) — várias
+cores "abafadas" (oliva, navy, ardósia) ficam mais perto de um cinza da
+paleta do que de qualquer índice colorido, e isso é fiel ao jogo de
+verdade, não bug.
+
+Por isso o módulo guarda DOIS dicionários: `RAW` (o RGB "de lore", livre) e
+`NAMED` (`{k: nearest(v) for k, v in RAW.items()}`, já quantizado pro índice
+0..132). **Regra importante:** `NAMED`/`color_rgb(NAMED[...])` é só pra
+protocolo (head/body/legs/feet de looktype `layers=2`, como os animais
+abaixo); `gen_humanoid_variants.py` usa `RAW` direto, porque quantizar
+primeiro faz o alvo do hue-shift virar cinza pra cores abafadas (foi um bug
+real da primeira versão deste script — arqueiro "verde-oliva" saía cinza).
+
+### `tools/spr/animal_art.py` + `gen_animals.py`: looktypes 940–945
+
+Mesma convenção de `art.py` (célula 32×32, camada 0 = tons claros nas
+regiões colorizáveis, camada 1 = máscara exata vermelho/verde/azul/amarelo
+= body/legs/feet/head). Gera Lobo (940), Cervo (941), Águia do Trovão (942,
+sempre em voo — asas abertas, sombra deslocada em vez de ciclo de passada),
+Cobra (943, enrolada parada / rastejando andando), Sapo (944, reaproveita
+`art.draw_toad`) e Sanguessuga (945, verme fino ondulando com ventosas nas
+pontas — silhueta bem diferente da cobra e do "blob" antigo). Saída:
+`assets-src/sprites/creatures/look_9NN_l{0,1}.png` +
+`assets-src/sprites/overrides/60_animals.json` (chave `creature_sheets`,
+aplicada por `imports.py:apply()` — coisas já montadas, sem processamento de
+imagem, ao contrário de `creatures`).
+
+Cobra (943) e Sapo (944, só o Sapo Gigante) continuam compartilhados por
+mais de um monstro — mas agora com máscara de cor de verdade:
+
+| Monstro | Looktype | head/body/legs/feet (`data/tfs_mapping.json`) |
+|---|---|---|
+| `wolf` | 940 | `wolf_gray_brown` (head/body), `wolf_dark` (legs/feet) |
+| `forest_deer` | 941 | `deer_tan` (head/body), `deer_cream` (legs), `wolf_dark` (feet/casco) |
+| `thunder_eagle` | 942 | `eagle_gold` (head/feet), `eagle_slate` (body/legs) |
+| `forest_snake` | 943 | `snake_forest_green` (as 4 — só body/head aparecem na arte) |
+| `lesser_serpent` | 943 | `snake_venom_green` |
+| `magma_serpent` | 943 | `snake_magma_red` |
+| `giant_toad` | 944 | `toad_swamp_green` (head/body), verde-musgo mais escuro (legs/feet) |
+| `boss_elder_toad` | 60 (inalterado) | continua no looktype importado 2×2, agora sozinho no 60 (o Sapo Gigante saiu) |
+| `leech` | 945 | `leech_dark_purple` (as 4 — legs não aparece na arte) |
+
+### `tools/spr/gen_humanoid_variants.py`: looktypes 946–957
+
+Para os looktypes humanoides importados (128 "ninja_blue", 129
+"ninja_bandit", 130 "ninja_pale", 131 "ninja_chief", 138 "hooded_purple", 12
+"oni_fox"), a única forma de dar cor diferente a um monstro sem desenhar
+arte nova é gerar uma CÓPIA do PNG com a matiz girada — `layers=1` não tem
+máscara. O script:
+
+1. Lê a MESMA imagem-fonte que `imports.json` usa pro looktype base, monta a
+   folha exatamente como `imports.py:Importer.creature()` (sem
+   `directions`): a MESMA imagem nas 4 direções e nas 3 fases de andar (a
+   arte importada não tem direção real nem ciclo de andar próprio — não é
+   este script que resolve isso).
+2. Acha a matiz DOMINANTE da "roupa": histograma de matiz (só pixels opacos
+   e minimamente saturados), soma numa JANELA circular de ±36° ao redor de
+   cada bin candidato (não o bin isolado mais alto — um brasão pequeno mas
+   muito saturado podia vencer um cluster maior mas espalhado pela sombra),
+   e tira a média circular ponderada dentro da janela vencedora.
+3. Roda a matiz só dos pixels DENTRO de ±38..58° dessa matiz dominante (com
+   uma rampa suave entre os dois raios) por um delta fixo até a matiz-alvo
+   (`tibia_colors.RAW`), e dá um empurrão de saturação (`sat_boost=1.6`,
+   também ponderado) nesses mesmos pixels — a roupa de origem costuma ser
+   bem dessaturada (azul-acinzentado, bege), então só girar a matiz sem
+   realçar a saturação dava um tom "sujo"/lavado. Pele, cabelo escuro
+   (baixa saturação, já ignorado por outro motivo) e qualquer acento de cor
+   bem diferente da roupa (ex. um detalhe vermelho isolado) ficam FORA da
+   janela e continuam com a cor original.
+4. Valor (brilho/sombra/contorno) nunca é tocado — é o que preserva o
+   sombreamento pedido.
+5. Pro Oni da Geleira (looktype 12, fonte 3×3), também redimensiona a caixa
+   final pra 2×2 (a raposa de origem era grande demais pro monstro).
+
+Saída: `assets-src/sprites/creatures/look_9NN.png` (`layers=1`, 1 arquivo
+por looktype) + `assets-src/sprites/overrides/61_humanoid_variants.json`
+(mesma chave `creature_sheets`).
+
+| Grupo (looktype base) | Fica no base (inalterado) | Variantes novas |
+|---|---|---|
+| 129 "ninja_bandit" (na verdade azul, não marrom) | — (nenhum; `elite_cloud_guard`/`exam_rival_sound` continuam no 129 cru, fora do escopo) | `bandit`→956 marrom, `bandit_archer`→946 verde-oliva, `mercenary_bridge`→947 azul-marinho, `ruin_puppet`→948 madeira |
+| 128 "ninja_blue" (= outfit padrão do jogador) | — (nenhum monstro; o 128 é o outfit do jogador) | `mist_scout`→949 verde-azulado enevoado, `rogue_ninja`→950 cinza-ardósia |
+| 131 "ninja_chief" (na verdade bege/caqui) | — (nenhum; nenhuma das 3 cores pedidas batia com bege) | `mist_guardian`→951 cinza-azulado de aço, `boss_puppeteer`→952 violeta, `boss_bandit_chief`→957 vermelho/preto |
+| 130 "ninja_pale" (já pálido) | `masked_apprentice` (combina com Haku) | `spectral_warrior`→953 roxo-pálido |
+| 138 "hooded_purple" (já roxo escuro) | `curse_shaman` | `boss_curse_partner`→954 vermelho |
+| 12 "oni_fox" (raposa vermelha 3×3) | `boss_ancestral_oni` (vermelho combina com a Nuvem Vermelha) | `glacier_oni`→955 azul-gelo, 2×2 |
+
+### Validação
+
+`tools/validate_data.py` (OK) → `tools/export_tfs.py` (looktypes/cores
+corretos nos `.xml` gerados, ex. `server/generated/monster/naruto/wolf.xml`
+com `look type="940" head="76" body="76" legs="95" feet="95"`) →
+`bash tools/install_generated.sh` → `tools/spr/build_assets.py` (override
+`60_animals.json`/`61_humanoid_variants.json` aplicado, `conferencia OTB ->
+.dat: OK`) → `tools/spr/dump_dat.py` (`validacao: OK`, 0 divergências em
+stackable/fluid/splash/animation). Os PNGs finais foram conferidos
+visualmente (grade lado a lado de todas as 22 variantes, célula por célula)
+antes e depois de cada ajuste do algoritmo de hue-shift — ver limitações
+abaixo sobre o que NÃO foi validado.
+
+### Limitações honestas
+
+- **Sem verificação in-game/screenshot nesta passada.** `client-otc/
+  shinobirc.lua` estava sendo escrito por outro agente de playtest no
+  momento desta missão (regra do projeto: nunca sobrescrever esse arquivo
+  enquanto existir) — a validação ficou limitada a render determinístico
+  dos PNGs gerados (mesma imagem que o `.dat`/`.spr` empacotam) e à
+  conferência `dump_dat.py`/OTB↔DAT (0 divergências). **Próximo passo
+  obrigatório:** `/reload monsters` no servidor e `/m <Nome>` de cada um dos
+  16 monstros tocados, olhando as 4 direções e o andar, antes de considerar
+  a missão fechada de verdade.
+- O hue-shift dos humanoides muda só a cor — a POSE continua uma só,
+  repetida nas 4 direções e nas 3 fases de "andar" (limitação da arte
+  importada, não deste script). Quem já viu o Bandido original reconhece a
+  mesma pose em todas as variantes.
+- Várias fontes importadas (128/129/131) são naturalmente azul/roxo-escuro
+  já na origem — girar a matiz pra um alvo muito distante (oliva, madeira)
+  ainda deixa um resíduo do tom original na sombra/contorno (que não muda,
+  de propósito), então o resultado fica mais "dessaturado e distinto" do
+  que uma cor de tinta de loja; olhando lado a lado dá pra distinguir todos
+  os 10, mas `bandit` (956, marrom) e `ruin_puppet` (948, madeira) ficam
+  próximos entre si (ambos marrom/tan) — se isso incomodar em playtest,
+  aumentar a distância de matiz entre os dois é o ajuste mais barato.
+- `boss_bandit_chief` (957) e `boss_curse_partner` (954) miram "vermelho"
+  mas saem um vermelho-terroso/vinho (a saturação de origem era baixa
+  demais pro `sat_boost` atual compensar 100%) — legível como "avermelhado",
+  não um vermelho vívido de painel de cores.
+- Nenhum destes 22 looktypes novos (940–957) foi auditado quanto a colisão
+  com a faixa dinâmica de "boss placeholder" de `gen_placeholders.py`
+  (`BOSS_FIRST = max(looktype citado em XML) + 1`) além do que o
+  `build_assets.py`/`dump_dat.py` já conferem automaticamente (a faixa se
+  recalcula sozinha a cada export, então não deveria colidir — mas não foi
+  testado o cenário de adicionar um 958º looktype numa sessão futura antes
+  de rodar o pipeline completo uma vez).
+- `elite_cloud_guard` (129) e os 3 `exam_rival_*` (`exam_rival_stone`=128,
+  `exam_rival_sound`=129, `exam_rival_mist`=130) continuam nos looktypes
+  importados crus, fora do escopo desta passada — ver
+  `docs/backlog-sprites.md`.

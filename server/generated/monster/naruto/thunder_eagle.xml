@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Águia do Trovão" nameDescription="uma águia do trovão" race="blood" experience="810" speed="520" manacost="0">
 	<health now="1160" max="1160"/>
-	<look type="21" head="96" body="95" legs="94" feet="93" corpse="5968"/>
+	<look type="942" head="59" body="30" legs="30" feet="59" corpse="5968"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

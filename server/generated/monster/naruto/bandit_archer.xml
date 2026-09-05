@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Bandido Arqueiro" nameDescription="um bandido arqueiro" race="blood" experience="80" speed="400" manacost="0">
 	<health now="100" max="100"/>
-	<look type="129" head="20" body="30" legs="40" feet="50" corpse="3058"/>
+	<look type="946" head="20" body="30" legs="40" feet="50" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

@@ -88,36 +88,76 @@ def nearest_hue(h, s=0.8, v=0.8):
     return nearest((r * 255, g * 255, b * 255))
 
 
-# Paleta nomeada de conveniencia (indice Tibia), pensada para o lore dos
-# monstros desta missao. Nao e exaustiva -- so o que os grupos precisam.
-NAMED = {
-    "brown_bandit": nearest((132, 92, 54)),
-    "olive_archer": nearest((100, 112, 56)),
-    "navy_mercenary": nearest((46, 58, 96)),
-    "wood_puppet": nearest((176, 150, 104)),
-    "cream_puppet": nearest((214, 198, 168)),
-    "rogue_slate": nearest((70, 66, 84)),
-    "chief_red": nearest((150, 40, 36)),
-    "chief_black": nearest((40, 38, 44)),
-    "puppeteer_violet": nearest((104, 60, 132)),
-    "spectral_pale_purple": nearest((150, 130, 176)),
-    "spectral_ghost_white": nearest((208, 202, 214)),
-    "curse_partner_purple": nearest((78, 46, 96)),
-    "curse_partner_armor": nearest((60, 58, 68)),
-    "oni_icy_blue": nearest((150, 196, 214)),
-    "oni_icy_white": nearest((222, 236, 240)),
-    "wolf_gray_brown": nearest((110, 96, 84)),
-    "wolf_dark": nearest((70, 60, 54)),
-    "deer_tan": nearest((176, 140, 96)),
-    "deer_cream": nearest((214, 196, 164)),
-    "eagle_slate": nearest((90, 100, 116)),
-    "eagle_gold": nearest((196, 156, 64)),
-    "snake_forest_green": nearest((70, 128, 64)),
-    "snake_venom_green": nearest((120, 170, 40)),
-    "snake_magma_red": nearest((190, 70, 40)),
-    "toad_swamp_green": nearest((90, 140, 76)),
-    "leech_dark_purple": nearest((90, 50, 90)),
+# Paleta nomeada de conveniencia, pensada para o lore dos monstros desta
+# missao. Nao e exaustiva -- so o que os grupos precisam.
+#
+# RAW guarda o RGB "desejado" tal qual pensado pro lore (livre, qualquer cor).
+# NAMED quantiza RAW pro indice 0..132 da paleta REAL de outfit da Tibia (so
+# 133 cores no total — client-otc/src/client/outfit.cpp) e serve pros campos
+# head/body/legs/feet de data/tfs_mapping.json (protocolo manda indice, nao
+# RGB; so faz efeito em looktype layers=2/mascara — ver FORMATO.md §3.5).
+# Quantizar perde informacao (a paleta e BEM esparsa: so 7 combinacoes de
+# saturacao/intensidade por matiz, e varias cores "abafadas" tipo oliva/navy/
+# ardosia caem mais perto de uma entrada CINZA do que de qualquer entrada
+# colorida — e assim mesmo no jogo de verdade, nao e bug). Por isso
+# tools/spr/gen_humanoid_variants.py (recolor de PIXEL, sem mascara de
+# protocolo) usa RAW diretamente, nunca NAMED/color_rgb(NAMED[...]) — do
+# contrario o alvo do hue-shift vira cinza em vez da cor pretendida.
+RAW = {
+    "brown_bandit": (132, 92, 54),
+    "olive_archer": (100, 112, 56),
+    "navy_mercenary": (46, 58, 96),
+    "wood_puppet": (176, 150, 104),
+    "cream_puppet": (214, 198, 168),
+    "rogue_slate": (70, 66, 84),
+    "chief_red": (150, 40, 36),
+    "chief_black": (40, 38, 44),
+    "puppeteer_violet": (104, 60, 132),
+    "spectral_pale_purple": (150, 130, 176),
+    "spectral_ghost_white": (208, 202, 214),
+    "curse_partner_purple": (78, 46, 96),
+    "curse_partner_armor": (60, 58, 68),
+    "oni_icy_blue": (150, 196, 214),
+    "oni_icy_white": (222, 236, 240),
+    "wolf_gray_brown": (110, 96, 84),
+    "wolf_dark": (70, 60, 54),
+    "deer_tan": (176, 140, 96),
+    "deer_cream": (214, 196, 164),
+    "eagle_slate": (90, 100, 116),
+    "eagle_gold": (196, 156, 64),
+    "snake_forest_green": (70, 128, 64),
+    "snake_venom_green": (120, 170, 40),
+    "snake_magma_red": (190, 70, 40),
+    "toad_swamp_green": (90, 140, 76),
+    "leech_dark_purple": (90, 50, 90),
+    # adicionados na continuacao da missao de criaturas procedurais (variantes
+    # de paleta para looktypes humanoides importados compartilhados —
+    # tools/spr/gen_humanoid_variants.py):
+    "mist_scout_teal": (70, 108, 112),
+    "mist_guardian_steel": (92, 108, 128),
+    "curse_partner_red": (150, 44, 40),
 }
+
+NAMED = {name: nearest(rgb) for name, rgb in RAW.items()}
+
+# Correcao manual: `nearest()` euclidiano puro cai numa entrada CINZA (indice
+# multiplo de 19) pra varios RAW pouco saturados (marrom-acinzentado do lobo,
+# ardosia da aguia, verde-pantano do sapo/cobra, roxo escuro da sanguessuga) —
+# a distancia RGB pra um cinza medio fica menor que pra qualquer entrada colorida
+# disponivel nos 7 combos de saturacao/intensidade da paleta real. Resultado:
+# lobo/cobra-da-floresta/sapo saindo LITERALMENTE cinza puro (e o mesmo cinza
+# uns dos outros!) no jogo. Estes indices foram escolhidos a mao direto da
+# tabela de 114 cores coloridas (ver `python3 tibia_colors.py` + filtro
+# `idx % 19 != 0`), priorizando ficar na familia de matiz certa em vez do
+# vizinho euclidiano mais proximo:
+NAMED.update({
+    "wolf_gray_brown": 20,      # (191,159,143) bege-acastanhado, hue 20 sat baixa
+    "wolf_dark": 115,           # (127,42,0) marrom escuro
+    "eagle_slate": 30,          # (143,159,191) azul-ardosia claro
+    "toad_swamp_green": 43,     # (127,191,95) verde medio
+    "snake_forest_green": 63,   # (63,191,63) verde puro (distinto do venom_green)
+    "leech_dark_purple": 128,   # (85,0,127) roxo escuro de verdade
+})
 
 
 if __name__ == "__main__":

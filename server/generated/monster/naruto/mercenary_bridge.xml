@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Mercenário da Ponte" nameDescription="um mercenário da ponte" race="blood" experience="140" speed="420" manacost="0">
 	<health now="230" max="230"/>
-	<look type="129" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<look type="947" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

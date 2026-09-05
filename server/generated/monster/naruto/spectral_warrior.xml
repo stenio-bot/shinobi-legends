@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Guerreiro Espectral" nameDescription="um guerreiro espectral" race="undead" experience="720" speed="460" manacost="0">
 	<health now="900" max="900"/>
-	<look type="130" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<look type="953" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

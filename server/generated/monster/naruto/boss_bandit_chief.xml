@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Chefe dos Bandidos" nameDescription="o chefe dos bandidos" race="blood" experience="1500" speed="400" manacost="0">
 	<health now="1500" max="1500"/>
-	<look type="131" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<look type="957" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

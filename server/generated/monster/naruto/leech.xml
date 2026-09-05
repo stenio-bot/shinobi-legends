@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Sanguessuga Gigante" nameDescription="uma sanguessuga gigante" race="venom" experience="120" speed="250" manacost="0">
 	<health now="180" max="180"/>
-	<look type="19" head="96" body="95" legs="94" feet="93" corpse="4187"/>
+	<look type="945" head="128" body="128" legs="128" feet="128" corpse="4187"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

@@ -91,78 +91,84 @@
   },
   "monsters": {
     "wolf": {
-      "looktype": 21,
+      "looktype": 940,
       "corpse": 5968,
       "race": "blood",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "head": 20,
+      "body": 20,
+      "legs": 115,
+      "feet": 115,
+      "_note": "looktype 940 (procedural, tools/spr/gen_animals.py) — lobo de verdade: 4 direcoes, ciclo de andar, layers=2 (mascara de cor). Antes usava 21 (fera generica vanilla, sem parecer lobo nenhum)."
     },
     "bandit": {
-      "looktype": 129,
+      "looktype": 956,
       "head": 78,
       "body": 114,
       "legs": 76,
       "feet": 95,
       "corpse": 3058,
-      "race": "blood"
+      "race": "blood",
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Bandido — marrom (variante propria de 129 'ninja_bandit', que na verdade e azul/roxo — o mesmo looktype importado que Bandido Arqueiro/Mercenario da Ponte/Marionete de Combate)."
     },
     "forest_snake": {
-      "looktype": 56,
+      "looktype": 943,
       "corpse": 4238,
       "race": "blood",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "head": 63,
+      "body": 63,
+      "legs": 63,
+      "feet": 63,
+      "_note": "looktype 943 (procedural, tools/spr/gen_animals.py) — cobra de verdade (enrolada parada, rasteja andando), layers=2: as 3 serpentes continuam no MESMO looktype mas agora com cores DIFERENTES de verdade (antes era 56, importado, layers=1 — as cores no tfs_mapping nao tinham nenhum efeito)."
     },
     "bandit_archer": {
-      "looktype": 129,
+      "looktype": 946,
       "head": 20,
       "body": 30,
       "legs": 40,
       "feet": 50,
       "corpse": 3058,
-      "race": "blood"
+      "race": "blood",
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Bandido Arqueiro — verde-oliva (variante de 129)."
     },
     "boss_bandit_chief": {
-      "looktype": 131,
+      "looktype": 957,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 915 (mugen 'Sasuke Akatsuki') — exatamente o erro reportado pelo usuário ('bandido usando o Sasuke'). Agora usa 131 'ninja_chief' (assets-src/sprites/imports.json, sprite genérico já extraído para este uso), reaproveitado também pelo Marionetista das Ruínas (boss_puppeteer) em outra região/faixa de level."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Chefe dos Bandidos — vermelho/preto (variante de 131, distinta do Guardião da Neblina e do Marionetista)."
     },
     "leech": {
-      "looktype": 19,
+      "looktype": 945,
       "corpse": 4187,
       "race": "venom",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "head": 128,
+      "body": 128,
+      "legs": 128,
+      "feet": 128,
+      "_note": "looktype 945 (procedural, tools/spr/gen_animals.py) — verme fino ondulando com ventosas, silhueta bem diferente da cobra e do 'blob' antigo. Antes usava 19 (importado, generico)."
     },
     "giant_toad": {
-      "looktype": 60,
+      "looktype": 944,
       "corpse": 4166,
       "race": "blood",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "head": 43,
+      "body": 43,
+      "legs": 119,
+      "feet": 119,
+      "_note": "looktype 944 (procedural, tools/spr/gen_animals.py) — sapo dedicado (nao compartilha mais com o Sapo Ancião). Antes era 60 (importado, 2x2, compartilhado com boss_elder_toad)."
     },
     "rogue_ninja": {
-      "looktype": 128,
+      "looktype": 950,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 914 (mugen 'Sasuke Taka') num monstro genérico, contra ADR-002/pedido do usuário (nome próprio só em boss). Agora usa 128 'ninja_blue' (assets-src/sprites/imports.json), sprite genérico já reaproveitado pelo outfit padrão do jogador — ver pendência de recolor no relatório da missão. 914 fica reservado/sem uso, proposto para uma futura squad 'Quatro do Som' (docs/lore/mundo.md)."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Ninja Renegado — cinza-ardósia (variante de 128, mesmo motivo do Batedor da Névoa acima)."
     },
     "boss_elder_toad": {
       "looktype": 60,
@@ -174,14 +180,14 @@
       "feet": 93
     },
     "lesser_serpent": {
-      "looktype": 56,
+      "looktype": 943,
       "corpse": 4238,
       "race": "venom",
-      "_note": "placeholder: looktype 56 (cobra) recolorida",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "_note": "looktype 943 (procedural, tools/spr/gen_animals.py) — cobra de verdade (enrolada parada, rasteja andando), layers=2: as 3 serpentes continuam no MESMO looktype mas agora com cores DIFERENTES de verdade (antes era 56, importado, layers=1 — as cores no tfs_mapping nao tinham nenhum efeito).",
+      "head": 62,
+      "body": 62,
+      "legs": 62,
+      "feet": 62
     },
     "boss_white_serpent": {
       "looktype": 916,
@@ -194,14 +200,14 @@
       "feet": 0
     },
     "ruin_puppet": {
-      "looktype": 129,
+      "looktype": 948,
       "head": 19,
       "body": 76,
       "legs": 79,
       "feet": 114,
       "corpse": 3058,
       "race": "undead",
-      "_note": "placeholder: outfit humano vanilla 129 recolorido; corpo 'dead human'"
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Marionete de Combate — tom de madeira (variante de 129)."
     },
     "stone_sentinel": {
       "looktype": 61,
@@ -214,14 +220,14 @@
       "feet": 93
     },
     "spectral_warrior": {
-      "looktype": 130,
+      "looktype": 953,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "undead",
-      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 912 (mugen 'Obito') num monstro genérico. Agora usa 130 'ninja_pale' (assets-src/sprites/imports.json, já extraído para este uso exato: 'figura pálida'). 912 liberado para o boss_masked_puppeteer no Covil da Nuvem Vermelha."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Guerreiro Espectral — roxo-pálido (variante de 130 'ninja_pale'; Aprendiz Mascarado continua no 130 original, ja pálido o suficiente pra combinar com Haku)."
     },
     "curse_shaman": {
       "looktype": 138,
@@ -234,30 +240,30 @@
       "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 911 (mugen 'Pain') num monstro genérico. Agora usa 138 'hooded_purple' (assets-src/sprites/imports.json, npcs_sheet, já extraído para este uso exato). 911 liberado para o boss_rings_bearer no Covil da Nuvem Vermelha."
     },
     "boss_puppeteer": {
-      "looktype": 131,
+      "looktype": 952,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 910 (mugen 'Itachi') — reservado agora para bosses de arco de verdade (covil final). Marionetista das Ruínas agora usa 131 'ninja_chief' (assets-src/sprites/imports.json), reaproveitado do Chefe dos Bandidos (regiões/níveis diferentes, sem conflito visual). 910 liberado para o boss_illusive_eye no Covil da Nuvem Vermelha."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Marionetista das Ruínas — violeta (variante de 131)."
     },
     "thunder_eagle": {
-      "looktype": 21,
+      "looktype": 942,
       "corpse": 5968,
       "race": "blood",
-      "_note": "placeholder: looktype 21 e corpo 'dead wolf' até termos sprite de ave",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "_note": "looktype 942 (procedural, tools/spr/gen_animals.py) — ave de verdade, sempre em voo (asas abertas, sombra deslocada). Antes usava 21 (fera generica vanilla, corpo 'dead wolf').",
+      "head": 59,
+      "body": 30,
+      "legs": 30,
+      "feet": 59
     },
     "glacier_oni": {
-      "looktype": 12,
+      "looktype": 955,
       "corpse": 3058,
       "race": "blood",
-      "_note": "placeholder: looktype 12 (criatura grande vanilla)",
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Oni da Geleira — azul-gelo, caixa 2x2 (variante de 12 'oni_fox', que na verdade e uma raposa vermelha 3x3; Oni Ancestral continua no 12 original, vermelho combina com a Nuvem Vermelha).",
       "head": 96,
       "body": 95,
       "legs": 94,
@@ -274,14 +280,14 @@
       "_note": "placeholder: outfit 137"
     },
     "magma_serpent": {
-      "looktype": 56,
+      "looktype": 943,
       "corpse": 4238,
       "race": "fire",
-      "_note": "placeholder: looktype 56 (cobra) recolorida",
-      "head": 96,
-      "body": 95,
-      "legs": 94,
-      "feet": 93
+      "_note": "looktype 943 (procedural, tools/spr/gen_animals.py) — cobra de verdade (enrolada parada, rasteja andando), layers=2: as 3 serpentes continuam no MESMO looktype mas agora com cores DIFERENTES de verdade (antes era 56, importado, layers=1 — as cores no tfs_mapping nao tinham nenhum efeito).",
+      "head": 75,
+      "body": 75,
+      "legs": 75,
+      "feet": 75
     },
     "boss_ancestral_oni": {
       "looktype": 12,
@@ -294,14 +300,14 @@
       "feet": 0
     },
     "boss_curse_partner": {
-      "looktype": 138,
+      "looktype": 954,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "NOVO (docs/lore/mundo.md, Montanha do Trovão): metade 'humana' da Dupla Imortal. Visual 138 'hooded_purple' (assets-src/sprites/imports.json), reaproveitado do Xamã da Maldição em outra região/faixa de level."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): O Sócio Eterno — vermelho (variante de 138 'hooded_purple'; Xamã da Maldição continua no 138 original, roxo escuro)."
     },
     "elite_deserter": {
       "looktype": 915,
@@ -314,34 +320,34 @@
       "_note": "NOVO (docs/lore/mundo.md, Ruínas do Clã Marionetista): mini-boss inspirado no arco de Resgate do Sasuke / Quatro do Som — visual 915 (mugen 'Sasuke Akatsuki'), liberado do Chefe dos Bandidos; aqui o uso faz sentido (é um gênio desertor de elite, não um bandido comum)."
     },
     "mercenary_bridge": {
-      "looktype": 129,
+      "looktype": 947,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 129 'ninja_bandit' (assets-src/sprites/imports.json), reaproveitado do Bandido/Bandido Arqueiro em outra região."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Mercenário da Ponte — azul-marinho escuro (variante de 129)."
     },
     "mist_scout": {
-      "looktype": 128,
+      "looktype": 949,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 128 'ninja_blue' (assets-src/sprites/imports.json), reaproveitado."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Batedor da Névoa — verde-azulado enevoado (variante de 128; o outfit padrao do jogador TAMBEM e 128, por isso nao fica no looktype base)."
     },
     "mist_guardian": {
-      "looktype": 131,
+      "looktype": 951,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 131 'ninja_chief' (assets-src/sprites/imports.json), reaproveitado — mob tanque, encaixa com a figura 'maior, armado' da folha."
+      "_note": "NOVO (tools/spr/gen_humanoid_variants.py, paleta por hue-shift do sprite importado): Guardião da Neblina — cinza-azulado de aço (variante de 131 'ninja_chief', que na verdade e bege/caqui)."
     },
     "boss_mist_swordsman": {
       "looktype": 132,
@@ -454,14 +460,14 @@
       "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 4/4, final do jogo): visual 913 (mugen 'Madara', liberado do Oni Ancestral) — boss de endgame, o mais forte do jogo."
     },
     "forest_deer": {
-      "looktype": 21,
+      "looktype": 941,
       "corpse": 5968,
       "race": "blood",
-      "head": 40,
-      "body": 62,
-      "legs": 80,
-      "feet": 20,
-      "_note": "reaproveita o sprite do Lobo (looktype 21, mon_wolf) só recolorido — ADR-002 (visual apenas, sem sprite novo). Serve para testar a categoria 'passivo' (foge/anda, não ataca) contra a 'agressivo' do Lobo."
+      "head": 39,
+      "body": 39,
+      "legs": 22,
+      "feet": 115,
+      "_note": "looktype 941 (procedural, tools/spr/gen_animals.py) — cervo de verdade (chifres, pernas finas), dedicado (nao compartilha mais com o Lobo). Antes reaproveitava 21 (mon_wolf) so recolorido."
     }
   },
   "items": {

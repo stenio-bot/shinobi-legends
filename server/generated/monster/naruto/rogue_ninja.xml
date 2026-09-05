@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Ninja Renegado" nameDescription="uma ninja renegado" race="blood" experience="300" speed="450" manacost="0">
 	<health now="340" max="340"/>
-	<look type="128" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<look type="950" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>
