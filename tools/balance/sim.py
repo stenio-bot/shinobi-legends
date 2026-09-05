@@ -102,7 +102,7 @@ MANA_BASE = 1600        # vocation.cpp:149 getReqMana: 1600 * mult^(magLevel-1)
 # pool de HP (100+level*15) já cresceu o bastante pra o antigo valor fixo virar imperceptível
 # também (mesmo raciocínio do achado de chakra da rodada 3/4, aplicado por simetria).
 def chakra_regen_amount_per_tick(level):
-    return 3 + level // 4
+    return 2 + level // 4
 
 CHAKRA_REGEN_TICK_S = 2
 

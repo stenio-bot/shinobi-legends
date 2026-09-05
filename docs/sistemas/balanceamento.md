@@ -169,7 +169,7 @@ conveniência e não eficiência.
 `character_switch.lua` (`server/tfs/data/scripts/naruto/`) aplica no login E a cada level-up
 (`CreatureEvent NarutoRegenAdvance`, novo) uma `Condition(CONDITION_REGENERATION, ...)` com
 `CONDITION_PARAM_TICKS=-1` (permanente) recalculada em Lua puro a partir de `player:getLevel()`
-— chakra `3+floor(level/4)` a cada **2s** (era 3 a cada 5s fixo, 0,6/s em qualquer nível), HP
+— chakra `2+floor(level/6)` a cada **2s** (era 3 a cada 5s fixo, 0,6/s em qualquer nível), HP
 `2+floor(level/10)` a cada 5s (em L1-9 é idêntico ao valor antigo, só acelera depois). Pool de
 chakra também subiu: `100+level*10` (era `50+level*10`) — piso de chakra inicial em
 `character_switch.lua` 60→110. Ver `balanceamento-relatorio-v5.md` §1 pro raciocínio completo
@@ -486,3 +486,6 @@ nenhuma vila limpe uma zona inteira com vantagem:
 4. `[PLACEHOLDER]` A economia foi modelada só pelas fontes de PvM. Missões sequenciais
    somam ~24.000 ryo nas Ruínas e ~62.000 na Montanha — o suficiente para ~1 peça de set
    por área, que é o alvo. Recompensa de missão não deve pagar o set inteiro.
+
+
+> **Rodada 9 (2026-09-05)**: regeneração de chakra passou de `3+floor(level/4)` para `2+floor(level/4)` a cada 2 s (1,0/s no L1, 3,5/s no L20) para o chakra voltar a ser recurso; cooldown do tier 1 fica em 9 s. Ver decisão no fim de `balanceamento-relatorio-v8.md`.

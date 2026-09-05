@@ -1538,7 +1538,11 @@ function NarutoRegen.apply(player)
 	regen:setParameter(CONDITION_PARAM_TICKS, -1)
 	regen:setParameter(CONDITION_PARAM_HEALTHGAIN, 2 + math.floor(level / 10))
 	regen:setParameter(CONDITION_PARAM_HEALTHTICKS, 5000)
-	regen:setParameter(CONDITION_PARAM_MANAGAIN, 3 + math.floor(level / 4))
+	-- RODADA 9 (2026-09-05): chakra volta a ser recurso. 2+floor(level/4) a cada 2 s = 1,0/s no L1,
+	-- abaixo do consumo de um tier 1 (12-14% do pool) a cada 9 s (~1,7/s): em combate sustentado o
+	-- pool drena devagar (sim: ~0-25% do tempo sem chakra ate L20, mais no endgame onde os tiers 2/3
+	-- de custo fixo pesam); parado, recupera em ate ~120 s. (Era 3+floor(level/4): nunca secava.)
+	regen:setParameter(CONDITION_PARAM_MANAGAIN, 2 + math.floor(level / 4))
 	regen:setParameter(CONDITION_PARAM_MANATICKS, 2000)
 	player:addCondition(regen)
 end
