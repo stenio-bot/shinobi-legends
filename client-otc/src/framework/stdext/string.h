@@ -57,6 +57,12 @@ namespace stdext
     [[nodiscard]] bool is_valid_utf8(std::string_view src);
     [[nodiscard]] std::string utf8_to_latin1(std::string_view src);
     [[nodiscard]] std::string latin1_to_utf8(std::string_view src);
+    /// Like utf8_to_latin1, but codepoints outside latin1 (0x00A0-0x00FF) that have a
+    /// cp1252 slot in the 0x80-0x9F range (curly quotes, en/em dash, ellipsis, etc.) are
+    /// mapped there instead of being dropped; anything else becomes '?'. Used to decode
+    /// protocol strings for display with the client's byte-indexed cp1252 bitmap fonts
+    /// (see InputMessage::getString()).
+    [[nodiscard]] std::string utf8_to_cp1252(std::string_view src);
 
 #ifdef WIN32
     [[nodiscard]] std::wstring utf8_to_utf16(std::string_view src);

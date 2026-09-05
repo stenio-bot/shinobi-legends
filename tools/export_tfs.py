@@ -888,6 +888,125 @@ function NarutoJson.decode(str)
 	return v
 end
 
+-- ------------------------------------------------------------------ NarutoText (ponte de encoding)
+-- Regressao critica do playtest de historia (2026-09-05, docs/qa/playtest-historia-arcos4-6.md):
+-- todo Lua GERADO por este script sai em cp1252 (ver _lua_cp1252 no topo do arquivo Python -- o
+-- OTClient renderiza os baloes/chat lendo os bytes das strings Lua como cp1252). Mas os nomes que
+-- chegam de dentro do TFS em tempo de execucao (creature:getName(), attacker:getName(),
+-- target:getName(), monster:getName()) vem dos atributos `name=` dos XML de monstro/npc, que
+-- CONTINUAM em UTF-8 (nunca reescritos por _lua_cp1252 -- so o Lua gerado passa por ele). Ou seja,
+-- duas sequencias de bytes diferentes para o mesmo texto visual (ex.: "Aguia do Trovao" com acento
+-- vira '\xC1guia do Trov\xE3o' no Lua gerado mas continua '\xC3\x81guia do Trov\xc3\xa3o' -- UTF-8
+-- -- vindo de target:getName()); qualquer comparacao byte-a-byte (q.monster == name,
+-- PHASES[creature:getName()], etc.) nunca bate para nomes acentuados.
+--
+-- REGRA (documentada tambem em docs/sistemas/cliente-ux.md): Lua gerado = cp1252 para exibicao;
+-- nomes que vem do jogo chegam em UTF-8 -> sempre passar por NarutoText.utf8ToCp1252(...) ANTES de
+-- comparar/indexar contra um literal gerado (q.monster, PHASES, t.monster, entry.monster,
+-- a.monsterName etc.). Na direcao inversa -- um nome gerado (cp1252) que precisa voltar pro TFS,
+-- ex. Game.createMonster(nome) de um summon com acento -- usar NarutoText.cp1252ToUtf8(...) (o TFS
+-- casa nomes de monstro por bytes; um nome cp1252 nao acha o MonsterType cujo `name=` e' UTF-8).
+--
+-- Implementacao em Lua 5.1/LuaJIT puro (sem a lib `utf8`, que so existe a partir do Lua 5.3):
+-- decodifica/codifica byte a byte, validando os bytes de continuacao UTF-8 (10xxxxxx) -- um byte
+-- que nao forma uma sequencia UTF-8 valida (ex.: uma string JA em cp1252, como os literais gerados
+-- passados de volta por engano) passa direto, sem alterar. Code points sem par exato em cp1252
+-- (fora de U+00A0-U+00FF e fora da tabela de pontuacao "esperta" abaixo) viram '?' (mesmo fallback
+-- de `str.encode('cp1252', errors='replace')` do lado Python). NAO mexe nas mensagens exibidas
+-- (essas continuam cp1252 puro, geradas por _lua_cp1252 -- ver topo do arquivo).
+NarutoText = {}
+
+-- Bloco 0x80-0x9F de cp1252 diverge de Latin-1/UTF-8 direto (sao os "C1 controls" do Unicode ali
+-- substituidos por pontuacao tipografica); os demais bytes acentuados (0xA0-0xFF) sao identicos ao
+-- code point Unicode (Latin-1). So' esta tabela extra precisa de mapeamento explicito nos dois
+-- sentidos.
+local NARUTO_TEXT_UNICODE_TO_CP1252 = {
+	[0x2013] = 0x96, [0x2014] = 0x97,
+	[0x2018] = 0x91, [0x2019] = 0x92,
+	[0x201C] = 0x93, [0x201D] = 0x94,
+	[0x2026] = 0x85,
+}
+local NARUTO_TEXT_CP1252_TO_UNICODE = {
+	[0x96] = 0x2013, [0x97] = 0x2014,
+	[0x91] = 0x2018, [0x92] = 0x2019,
+	[0x93] = 0x201C, [0x94] = 0x201D,
+	[0x85] = 0x2026,
+}
+
+--- Decodifica `s` (bytes UTF-8, ex.: vindo de creature:getName()) para bytes cp1252 (o encoding
+--- dos literais deste Lua gerado). Idempotente o suficiente pra aceitar por engano uma string que
+--- ja estava em cp1252 (os bytes acentuados de cp1252, todos >= 0xA0, quase nunca formam uma
+--- sequencia de continuacao UTF-8 valida -- ver bytes soltos abaixo).
+function NarutoText.utf8ToCp1252(s)
+	if type(s) ~= 'string' then return s end
+	local byte, char = string.byte, string.char
+	local out, i, n = {}, 1, #s
+	while i <= n do
+		local b1 = byte(s, i)
+		local cp, len
+		if b1 < 0x80 then
+			cp, len = b1, 1
+		elseif b1 >= 0xC2 and b1 <= 0xDF and i + 1 <= n then
+			local b2 = byte(s, i + 1)
+			if b2 and b2 >= 0x80 and b2 <= 0xBF then
+				cp, len = (b1 - 0xC0) * 0x40 + (b2 - 0x80), 2
+			end
+		elseif b1 >= 0xE0 and b1 <= 0xEF and i + 2 <= n then
+			local b2, b3 = byte(s, i + 1), byte(s, i + 2)
+			if b2 and b3 and b2 >= 0x80 and b2 <= 0xBF and b3 >= 0x80 and b3 <= 0xBF then
+				cp, len = (b1 - 0xE0) * 0x1000 + (b2 - 0x80) * 0x40 + (b3 - 0x80), 3
+			end
+		elseif b1 >= 0xF0 and b1 <= 0xF4 and i + 3 <= n then
+			local b2, b3, b4 = byte(s, i + 1), byte(s, i + 2), byte(s, i + 3)
+			if b2 and b3 and b4 and b2 >= 0x80 and b2 <= 0xBF and b3 >= 0x80 and b3 <= 0xBF and b4 >= 0x80 and b4 <= 0xBF then
+				cp, len = 0x10000, 4  -- >= 0x10000: fora do BMP, sem representacao em cp1252 -> '?'
+			end
+		end
+		if not cp then
+			-- lead byte invalido ou continuacao faltando: byte solto (provavelmente ja cp1252
+			-- ou puro ASCII de controle) -- passa direto, sem tentar reinterpretar.
+			out[#out + 1] = char(b1)
+			i = i + 1
+		else
+			if cp < 0x80 or (cp >= 0xA0 and cp <= 0xFF) then
+				out[#out + 1] = char(cp)
+			else
+				local specialByte = NARUTO_TEXT_UNICODE_TO_CP1252[cp]
+				out[#out + 1] = specialByte and char(specialByte) or '?'
+			end
+			i = i + len
+		end
+	end
+	return table.concat(out)
+end
+
+--- Inversa: bytes cp1252 (ex.: um nome vindo de uma tabela gerada, como PHASES[...].summons[i].name)
+--- para bytes UTF-8 (o encoding que o TFS espera pra casar com o `name=` do monster/npc XML, ex.
+--- Game.createMonster).
+function NarutoText.cp1252ToUtf8(s)
+	if type(s) ~= 'string' then return s end
+	local byte, char = string.byte, string.char
+	local out, i, n = {}, 1, #s
+	while i <= n do
+		local b = byte(s, i)
+		local special = NARUTO_TEXT_CP1252_TO_UNICODE[b]
+		if special then
+			out[#out + 1] = char(0xE0 + math.floor(special / 0x1000),
+				0x80 + math.floor(special % 0x1000 / 0x40), 0x80 + special % 0x40)
+		elseif b < 0x80 then
+			out[#out + 1] = char(b)
+		elseif b >= 0xA0 and b <= 0xFF then
+			out[#out + 1] = char(0xC0 + math.floor(b / 0x40), 0x80 + b % 0x40)
+		else
+			-- 0x80-0x9F fora da tabela especial: nao usado pelos textos deste jogo -- mantem o
+			-- byte cru em vez de arriscar um par UTF-8 errado.
+			out[#out + 1] = char(b)
+		end
+		i = i + 1
+	end
+	return table.concat(out)
+end
+
 -- ------------------------------------------------------------------ envio (opcode estendido)
 -- ARMADILHA do TFS 1.4.2: NetworkMessage::addString (src/networkmessage.cpp) DESCARTA em
 -- silencio qualquer string com mais de 8192 bytes. Como Player.sendExtendedOpcode
@@ -2246,7 +2365,11 @@ scripts = HEADER_LUA + """-- Coloque em data/scripts/naruto/quests_kill.lua (rev
 local killEvent = CreatureEvent("NarutoQuestKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	local name = target:getName()
+	-- target:getName() vem do XML do monstro (UTF-8); q.monster/q.anyOf/q.dropsFrom[].monster
+	-- sao literais deste Lua GERADO (cp1252, ver _lua_cp1252 em tools/export_tfs.py) -- sem esta
+	-- conversao, kill de monstro acentuado (ex. "Aguia do Trovao") nunca bate (docs/qa/playtest-
+	-- historia-arcos4-6.md, achado critico 2026-09-05).
+	local name = NarutoText.utf8ToCp1252(target:getName())
 	for _, q in ipairs(NarutoQuests.list) do
 		if q.kind == 'kill' then
 			-- NOVO (docs/sistemas/missoes.md): objective.any_of — qualquer monstro da lista conta
@@ -2565,7 +2688,8 @@ end
 local killEvent = CreatureEvent("NarutoTaskKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	local name = target:getName()
+	-- ver comentario equivalente em scripts/naruto/quests_kill.lua: t.monster e' cp1252, getName() e' UTF-8.
+	local name = NarutoText.utf8ToCp1252(target:getName())
 	for _, t in ipairs(NarutoTasks.list) do
 		if t.monster == name then
 			local prog = player:getStorageValue(t.progressStorage)
@@ -2727,7 +2851,9 @@ end
 local killEvent = CreatureEvent("NarutoDailyKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	NarutoDailies.onKill(player, target:getName())
+	-- entry.monster (naruto_dailies.lua) e' cp1252 gerado; getName() do TFS e' UTF-8 -- converte
+	-- antes de entrar em NarutoDailies.onKill (mesma regra de quests_kill.lua/tasks.lua).
+	NarutoDailies.onKill(player, NarutoText.utf8ToCp1252(target:getName()))
 	return true
 end
 killEvent:register()
@@ -3121,7 +3247,9 @@ local killEvent = CreatureEvent("NarutoAchievementKill")
 function killEvent.onKill(player, target)
 	if not NarutoAchievements then return true end
 	if not target:isMonster() then return true end
-	NarutoAchievements.onKill(player, target:getName())
+	-- a.monsterName (naruto_achievements.lua, kill_specific) e' cp1252 gerado; getName() do TFS
+	-- e' UTF-8 -- converte antes (mesma regra de quests_kill.lua/tasks.lua/dailies.lua).
+	NarutoAchievements.onKill(player, NarutoText.utf8ToCp1252(target:getName()))
 	return true
 end
 killEvent:register()
@@ -3216,7 +3344,9 @@ NarutoBossPhases.state = NarutoBossPhases.state or {}
 local fired = {}  -- monsterId -> índice da última fase disparada
 local ev = CreatureEvent("NarutoBossPhases")
 function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
-	local list = PHASES[creature:getName()]
+	-- PHASES e' indexada pelos nomes cp1252 deste Lua gerado; creature:getName() vem do XML do
+	-- boss (UTF-8) -- converte antes do lookup (ex.: "O Socio Eterno" sem isso nunca acha a lista).
+	local list = PHASES[NarutoText.utf8ToCp1252(creature:getName())]
 	if not list then return primaryDamage, primaryType, secondaryDamage, secondaryType end
 	local id = creature:getId()
 	local pct = (creature:getHealth() - primaryDamage) * 100 / creature:getMaxHealth()
@@ -3229,7 +3359,9 @@ function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secon
 			for _ = 1, s.count do
 				local pos = creature:getPosition()
 				pos.x = pos.x + math.random(-2, 2); pos.y = pos.y + math.random(-2, 2)
-				local mon = Game.createMonster(s.name, pos, false, true)
+				-- s.name vem da tabela PHASES (cp1252 gerado); Game.createMonster casa pelo
+				-- `name=` do XML do monstro (UTF-8) -- converte na direcao inversa.
+				local mon = Game.createMonster(NarutoText.cp1252ToUtf8(s.name), pos, false, true)
 				if mon and attacker then mon:setTarget(attacker) end
 			end
 		end

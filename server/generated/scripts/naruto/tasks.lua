@@ -3,7 +3,8 @@
 local killEvent = CreatureEvent("NarutoTaskKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	local name = target:getName()
+	-- ver comentario equivalente em scripts/naruto/quests_kill.lua: t.monster e' cp1252, getName() e' UTF-8.
+	local name = NarutoText.utf8ToCp1252(target:getName())
 	for _, t in ipairs(NarutoTasks.list) do
 		if t.monster == name then
 			local prog = player:getStorageValue(t.progressStorage)

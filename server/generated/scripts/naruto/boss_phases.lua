@@ -68,7 +68,9 @@ NarutoBossPhases.state = NarutoBossPhases.state or {}
 local fired = {}  -- monsterId -> \xEDndice da \xFAltima fase disparada
 local ev = CreatureEvent("NarutoBossPhases")
 function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
-	local list = PHASES[creature:getName()]
+	-- PHASES e' indexada pelos nomes cp1252 deste Lua gerado; creature:getName() vem do XML do
+	-- boss (UTF-8) -- converte antes do lookup (ex.: "O Socio Eterno" sem isso nunca acha a lista).
+	local list = PHASES[NarutoText.utf8ToCp1252(creature:getName())]
 	if not list then return primaryDamage, primaryType, secondaryDamage, secondaryType end
 	local id = creature:getId()
 	local pct = (creature:getHealth() - primaryDamage) * 100 / creature:getMaxHealth()
@@ -81,7 +83,9 @@ function ev.onHealthChange(creature, attacker, primaryDamage, primaryType, secon
 			for _ = 1, s.count do
 				local pos = creature:getPosition()
 				pos.x = pos.x + math.random(-2, 2); pos.y = pos.y + math.random(-2, 2)
-				local mon = Game.createMonster(s.name, pos, false, true)
+				-- s.name vem da tabela PHASES (cp1252 gerado); Game.createMonster casa pelo
+				-- `name=` do XML do monstro (UTF-8) -- converte na direcao inversa.
+				local mon = Game.createMonster(NarutoText.cp1252ToUtf8(s.name), pos, false, true)
 				if mon and attacker then mon:setTarget(attacker) end
 			end
 		end

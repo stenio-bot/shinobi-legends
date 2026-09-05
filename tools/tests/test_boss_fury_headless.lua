@@ -15,6 +15,10 @@ local GEN = ROOT .. "server/generated/"
 
 local stub = dofile(scriptDir .. "tfs_stub.lua")
 
+-- NarutoText (utf8ToCp1252/cp1252ToUtf8): boss_phases.lua usa pra casar PHASES[creature:getName()]
+-- (getName() vem em UTF-8, as chaves de PHASES saem cp1252 -- ver tools/export_tfs.py).
+dofile(GEN .. "lib/naruto_json.lua")
+
 -- ---------------------------------------------------------------- framework de teste mínimo
 local results = {}
 local function check(name, cond, detail)

@@ -200,6 +200,95 @@ de `/look` em itens/criaturas (só o rank do jogador, que já vinha traduzido po
 literal em `server/tfs/src/*.cpp`, adicionar um `EXACT[...]` ou `PATTERNS` novo em
 `naruto_chat.lua`.
 
+## 5. Encoding — mojibake residual em NOMES (NPC/criatura/item), corrigido no protocolo (C++)
+
+Depois do fix da seção 4.1 (Lua, só para mensagens de sistema e o JSON do opcode 210), sobrou
+mojibake em **nomes**: NPC "AnciÃ£o Kaito" na aba NPCs/balão de fala, itens "poÃ§Ã£o de vida" no
+chat de loot, nomes de criatura. Causa: esses nomes vêm de um pipeline de protocolo diferente
+do texto de sistema — atributo `name=` do XML de monstro/NPC (gerado a partir de `data/*.json`,
+**não** passa por `tools/export_tfs.py`), continuam em UTF-8, enquanto o texto de Lua
+(`tools/export_tfs.py`'s `_lua_cp1252`, desde 2026-09-05) já vai em cp1252. O cliente antigo
+tratava toda string do protocolo como se já viesse pronta pra tela; qualquer uma em UTF-8
+virava mojibake byte-a-byte nas fontes bitmap cp1252.
+
+### Implementação
+
+Conversão movida para um ponto único e obrigatório: **`InputMessage::getString()`**
+(`client-otc/src/framework/net/inputmessage.cpp`) — todo texto do protocolo do jogo passa por
+aqui (nome de criatura/NPC/item, falas, JSON do opcode 210, textos de janela, etc.), então não
+há mais depender de cada callsite lembrar de converter.
+
+- Regra aplicada string a string, sem estado: se tem byte ≥0x80 **e** é UTF-8 válido de ponta a
+  ponta (`stdext::is_valid_utf8`), converte com a nova `stdext::utf8_to_cp1252` (mesma tabela
+  `CP1252_EXTRA` de `naruto_chat.lua`/`naruto_menu.lua` — €, aspas curvas, travessão en/em,
+  reticências etc. viram o byte cp1252 certo em vez de sumir; qualquer outro codepoint fora do
+  latin1 vira `?`). Se **não** é UTF-8 válido (caso do texto de Lua, que já é cp1252 — um byte
+  solto como `\xE3` quase nunca fecha uma sequência UTF-8 válida junto com o resto da string),
+  passa intacta.
+- **Idempotente por construção**: cada chamada de `getString()` lê bytes novos do buffer de
+  rede: não há "converter duas vezes" a mesma string. E o texto já-cp1252 vindo do Lua do
+  servidor sobrevive ileso porque falha o teste `is_valid_utf8` (mesma lógica de `isCont` que
+  `naruto_chat.lua` já usava do lado Lua).
+- `stdext::utf8_to_latin1` (existente) **não foi reaproveitada** para isto: ela descarta
+  qualquer codepoint fora de 0x00A0–0x00FF (perderia €/aspas curvas/travessão/reticências em
+  silêncio) — por isso a nova `stdext::utf8_to_cp1252`
+  (`client-otc/src/framework/stdext/string.{h,cpp}`), com fallback `?` só para o que sobra fora
+  do cp1252.
+- `parseExtendedOpcode` (opcode 210) usa `getString()` para o buffer JSON — a conversão roda
+  antes do `json::parse` em `naruto_menu.lua`. Aspas/escapes/chaves do JSON são ASCII (não têm
+  byte ≥0x80), então a re-codificação só toca valores de string com acento; não há risco de
+  quebrar a estrutura do JSON.
+- Consequência: `utf8ToCp1252` dos módulos Lua (`naruto_chat.lua`, `naruto_menu.lua`) virou
+  **no-op** na prática — o texto já chega em cp1252 do C++, `str:find('[\128-\255]')` só acha
+  bytes cp1252 soltos que a própria função já tratava como "passa direto". Funções mantidas
+  (não removidas): continuam servindo de rede de segurança e não quebram nada rodando em cima
+  de texto já convertido.
+
+### Testado
+
+Build: `cmake --build --preset macos-release --target otclient` (ver tempo no relatório da
+sessão). In-game com conta `slqa`: NPC com acento (`/tp` até um NPC como Ancião Kaito) na aba
+NPCs e no balão de fala, `/m <criatura acentuada>` pra ver o nome em tela, loot de criatura com
+acento no chat, Menu Shinobi (aba Missões, nomes de missão acentuados) — screenshots
+`screenshots/encoding_*.png`. Zero `Lua exception` no log do cliente durante o teste.
+
+### Limitações conhecidas (fora do escopo deste fix, cliente não pode resolver sozinho)
+
+- **Bug de missão "kill não conta" com monstro acentuado** (`docs/qa/playtest-historia-
+  arcos4-6.md`, Achado #2) era **do servidor**, não do cliente — **CORRIGIDO** (2026-09-05,
+  mesmo dia deste achado): `NarutoText.utf8ToCp1252`/`.cp1252ToUtf8` (novo, gerado em
+  `lib/naruto_json.lua` por `tools/export_tfs.py`) converte o nome vindo de `creature:getName()`
+  (UTF-8, do `name=` do XML do monstro) antes de comparar contra os literais cp1252 deste Lua
+  gerado, em `quests_kill.lua`/`tasks.lua`/`dailies.lua`/`achievements.lua` (contagem de kill) e
+  `boss_phases.lua` (`PHASES[...]` e summons via `Game.createMonster`). **Regra geral:** Lua
+  gerado = cp1252 para exibição; qualquer nome que chega do jogo em tempo de execução chega em
+  UTF-8 → sempre `NarutoText.utf8ToCp1252(nome)` antes de comparar/indexar contra um literal
+  gerado (e `NarutoText.cp1252ToUtf8(nome)` na direção inversa, ex. summon de boss). Testes
+  headless em `tools/tests/test_encoding_headless.lua`.
+- Um texto cp1252 cujo trecho acentuado formar, por coincidência, uma sequência UTF-8
+  multibyte válida (ex.: os bytes cp1252 de "Ã" seguido de um byte de continuação válido)
+  passaria pela conversão por engano. Não observado em texto real do jogo (mesmo risco que o
+  fallback Lua já aceitava); documentado aqui para quem for investigar um nome esquisito no
+  futuro.
+- **Achado ao vivo, residual, servidor**: a mensagem `"Loot of %s: %s"` (`server/tfs/data/
+  scripts/eventcallbacks/monster/default_onDropLoot.lua`) mistura DUAS codificações **dentro da
+  mesma string** antes mesmo de chegar ao cliente — bytes reais capturados matando uma Águia do
+  Trovão (`xxd` no log): `mType:getNameDescription()` chega no wire já como cp1252 de um byte só
+  (`74 72 6f 76 e3 6f` = "trov" + `\xE3` + "o", `\xE3`='ã' cp1252), mas
+  `corpse:getContentDescription()` (nome do item, `poção`/`pena do trovão` etc.) chega em UTF-8
+  de verdade (`74 72 6f 76 c3 a3 6f 73` = "trov" + `\xC3\xA3` + "os", 2 bytes válidos). Como é
+  **uma única string** (`("Loot of %s: %s"):format(...)`), `is_valid_utf8` roda sobre o buffer
+  inteiro: o `\xE3` solto do nome do monstro já quebra a validade global, então
+  `InputMessage::getString` (corretamente, pela regra "se não é UTF-8 válido, passa intacta")
+  deixa a string INTEIRA sem tocar — o nome do monstro aparece perfeito (já era cp1252) mas o
+  nome do item continua mojibake (ainda UTF-8 de 2 bytes na tela cp1252). Não investiguei por
+  que `getNameDescription()` (via Lua) chega diferente de `getContentDescription()` — os dois
+  deveriam vir do mesmo tipo de atributo XML (`nameDescription=`/`name=`, ambos UTF-8 no
+  arquivo-fonte, confirmado com `xxd` em `thunder_eagle.xml`); é uma inconsistência do
+  **servidor** (TFS C++/Lua), fora do escopo desta missão ("engenheiro de cliente") — repro:
+  matar qualquer monstro com nome acentuado que largue um item com nome acentuado, olhar o
+  canal de chat onde a mensagem `MESSAGE_LOOT` aparece.
+
 ## Arquivos tocados
 
 **Servidor** (gerador + instalado): `tools/export_tfs.py` (ação `get_progress`, campo `rank`
@@ -215,6 +304,11 @@ Missões, rank em tela, hook de chat), `client-otc/modules/naruto_theme/{naruto_
 (crédito OTClient).
 
 **Docs**: este arquivo + `docs/sistemas/combate-e-jutsus.md` (protocolo opcode 210 atualizado).
+
+**Encoding de nomes no protocolo (missão posterior, seção "5")**: `client-otc/src/framework/
+net/inputmessage.cpp` (`InputMessage::getString`, conversão UTF-8→cp1252 na entrada do
+protocolo), `client-otc/src/framework/stdext/string.{h,cpp}` (`stdext::utf8_to_cp1252`, nova).
+Nenhum arquivo de módulo Lua alterado (só validado que `utf8ToCp1252` virou no-op).
 
 **Conquistas (missão posterior, mesma seção "1")**: `tools/export_tfs.py` ganhou a geração de
 `lib/naruto_achievements.lua` + `scripts/naruto/achievements.lua`, o campo `achievements` no

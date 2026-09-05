@@ -141,9 +141,16 @@ Game = {getPlayers = function()
 	for _, p in pairs(M.players) do list[#list + 1] = p end
 	return list
 end}
--- só usado pelos summons de boss_phases.lua (fora do escopo do teste de fúria: fixture de teste
--- não usa summons) — devolve nil, igual a uma falha silenciosa de spawn no TFS real.
-function Game.createMonster(name, pos, extended, force) return nil end
+-- usado pelos summons de boss_phases.lua. Registra toda chamada em M.createMonsterCalls (nome +
+-- posição), pro teste de encoding (tools/tests/test_encoding_headless.lua) conferir que o nome
+-- chega em UTF-8 (o TFS casa o MonsterType pelo `name=` do XML, que é UTF-8 — ver NarutoText.
+-- cp1252ToUtf8 em lib/naruto_json.lua). Continua devolvendo nil (igual a uma falha silenciosa de
+-- spawn no TFS real) — nenhum teste existente depende do retorno.
+M.createMonsterCalls = {}
+function Game.createMonster(name, pos, extended, force)
+	M.createMonsterCalls[#M.createMonsterCalls + 1] = {name = name, pos = pos}
+	return nil
+end
 
 -- ------------------------------------------------------------------ Monster/Creature genérico
 -- (usado por tools/tests/test_boss_fury_headless.lua para simular o boss e outros monstros que

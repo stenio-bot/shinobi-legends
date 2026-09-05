@@ -34,3 +34,7 @@ echo "OK — todo o Lua gerado compila."
 echo
 echo "== testes funcionais headless (tools/tests/test_quests_headless.lua) =="
 luajit tools/tests/test_quests_headless.lua
+
+echo
+echo "== testes funcionais headless (tools/tests/test_encoding_headless.lua) =="
+luajit tools/tests/test_encoding_headless.lua

@@ -63,6 +63,7 @@ local function fakeMonster(name)
 end
 
 -- ---------------------------------------------------------------- carrega as libs REAIS geradas
+dofile(GEN .. "lib/naruto_json.lua")      -- NarutoText (utf8ToCp1252/cp1252ToUtf8) -- quests_kill.lua usa
 dofile(GEN .. "lib/naruto_ranks.lua")     -- NarutoRanks (requires.rank precisa disso)
 dofile(GEN .. "lib/naruto_quests.lua")    -- NarutoQuests com os dados REAIS de data/npcs/*.json
 -- Carrega ANTES de qualquer teste (regressão ou fixture) que chame onKill/o poll de reach:

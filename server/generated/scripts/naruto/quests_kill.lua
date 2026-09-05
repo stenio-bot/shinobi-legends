@@ -3,7 +3,11 @@
 local killEvent = CreatureEvent("NarutoQuestKill")
 function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
-	local name = target:getName()
+	-- target:getName() vem do XML do monstro (UTF-8); q.monster/q.anyOf/q.dropsFrom[].monster
+	-- sao literais deste Lua GERADO (cp1252, ver _lua_cp1252 em tools/export_tfs.py) -- sem esta
+	-- conversao, kill de monstro acentuado (ex. "Aguia do Trovao") nunca bate (docs/qa/playtest-
+	-- historia-arcos4-6.md, achado critico 2026-09-05).
+	local name = NarutoText.utf8ToCp1252(target:getName())
 	for _, q in ipairs(NarutoQuests.list) do
 		if q.kind == 'kill' then
 			-- NOVO (docs/sistemas/missoes.md): objective.any_of \x97 qualquer monstro da lista conta
