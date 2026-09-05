@@ -1,0 +1,2244 @@
+[
+  {
+    "id": "task_wolf_1",
+    "name": "Tarefa: Lobo (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "wolf",
+    "count": 50,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 75,
+      "items": [
+        "wolf_pelt",
+        "wolf_pelt"
+      ]
+    }
+  },
+  {
+    "id": "task_wolf_2",
+    "name": "Tarefa: Lobo (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "wolf",
+    "count": 150,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 300,
+      "items": [
+        "wolf_pelt",
+        "wolf_pelt",
+        "wolf_pelt",
+        "wolf_pelt",
+        "wolf_pelt"
+      ]
+    }
+  },
+  {
+    "id": "task_wolf_3",
+    "name": "Tarefa: Lobo (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "wolf",
+    "count": 400,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 1000,
+      "items": [
+        "trophy_wolf"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_1",
+    "name": "Tarefa: Bandido (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit",
+    "count": 50,
+    "min_level": 2,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 248,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_2",
+    "name": "Tarefa: Bandido (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit",
+    "count": 150,
+    "min_level": 2,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 990,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_3",
+    "name": "Tarefa: Bandido (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit",
+    "count": 400,
+    "min_level": 2,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 3300,
+      "items": [
+        "trophy_bandit"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_snake_1",
+    "name": "Tarefa: Cobra da Floresta (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_snake",
+    "count": 50,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 112,
+      "items": [
+        "snake_fang",
+        "snake_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_snake_2",
+    "name": "Tarefa: Cobra da Floresta (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_snake",
+    "count": 150,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 450,
+      "items": [
+        "snake_fang",
+        "snake_fang",
+        "snake_fang",
+        "snake_fang",
+        "snake_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_snake_3",
+    "name": "Tarefa: Cobra da Floresta (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_snake",
+    "count": 400,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 1500,
+      "items": [
+        "trophy_forest_snake"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_archer_1",
+    "name": "Tarefa: Bandido Arqueiro (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit_archer",
+    "count": 50,
+    "min_level": 4,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 300,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_archer_2",
+    "name": "Tarefa: Bandido Arqueiro (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit_archer",
+    "count": 150,
+    "min_level": 4,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1200,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_bandit_archer_3",
+    "name": "Tarefa: Bandido Arqueiro (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "bandit_archer",
+    "count": 400,
+    "min_level": 4,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 4000,
+      "items": [
+        "trophy_bandit_archer"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_bandit_chief_1",
+    "name": "Tarefa: Chefe dos Bandidos (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "boss_bandit_chief",
+    "count": 3,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 495,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_bandit_chief_2",
+    "name": "Tarefa: Chefe dos Bandidos (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "boss_bandit_chief",
+    "count": 10,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 2200,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_bandit_chief_3",
+    "name": "Tarefa: Chefe dos Bandidos (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "boss_bandit_chief",
+    "count": 25,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 6875,
+      "items": [
+        "trophy_boss_bandit_chief"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_deer_1",
+    "name": "Tarefa: Cervo (Iniciante)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_deer",
+    "count": 50,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 30,
+      "items": [
+        "health_potion_small",
+        "health_potion_small"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_deer_2",
+    "name": "Tarefa: Cervo (Veterana)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_deer",
+    "count": 150,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 120,
+      "items": [
+        "health_potion_small",
+        "health_potion_small",
+        "health_potion_small",
+        "health_potion_small",
+        "health_potion_small"
+      ]
+    }
+  },
+  {
+    "id": "task_forest_deer_3",
+    "name": "Tarefa: Cervo (Lendária)",
+    "npc": "task_master_leaf",
+    "zone": "floresta_da_vila",
+    "monster_id": "forest_deer",
+    "count": 400,
+    "min_level": 1,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 400,
+      "items": [
+        "trophy_forest_deer"
+      ]
+    }
+  },
+  {
+    "id": "task_mercenary_bridge_1",
+    "name": "Tarefa: Mercenário da Ponte (Iniciante)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mercenary_bridge",
+    "count": 50,
+    "min_level": 9,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 248,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_mercenary_bridge_2",
+    "name": "Tarefa: Mercenário da Ponte (Veterana)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mercenary_bridge",
+    "count": 150,
+    "min_level": 9,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 990,
+      "items": [
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem",
+        "bandit_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_mercenary_bridge_3",
+    "name": "Tarefa: Mercenário da Ponte (Lendária)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mercenary_bridge",
+    "count": 400,
+    "min_level": 9,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 3300,
+      "items": [
+        "trophy_mercenary_bridge"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_scout_1",
+    "name": "Tarefa: Batedor da Névoa (Iniciante)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_scout",
+    "count": 50,
+    "min_level": 11,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 300,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_scout_2",
+    "name": "Tarefa: Batedor da Névoa (Veterana)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_scout",
+    "count": 150,
+    "min_level": 11,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1200,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_scout_3",
+    "name": "Tarefa: Batedor da Névoa (Lendária)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_scout",
+    "count": 400,
+    "min_level": 11,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 4000,
+      "items": [
+        "trophy_mist_scout"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_guardian_1",
+    "name": "Tarefa: Guardião da Neblina (Iniciante)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_guardian",
+    "count": 50,
+    "min_level": 13,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 412,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_guardian_2",
+    "name": "Tarefa: Guardião da Neblina (Veterana)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_guardian",
+    "count": 150,
+    "min_level": 13,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1650,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_mist_guardian_3",
+    "name": "Tarefa: Guardião da Neblina (Lendária)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "mist_guardian",
+    "count": 400,
+    "min_level": 13,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 5500,
+      "items": [
+        "trophy_mist_guardian"
+      ]
+    }
+  },
+  {
+    "id": "task_masked_apprentice_1",
+    "name": "Tarefa: Aprendiz Mascarado (Iniciante)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "masked_apprentice",
+    "count": 50,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 600,
+      "items": [
+        "apprentice_mask",
+        "apprentice_mask"
+      ]
+    }
+  },
+  {
+    "id": "task_masked_apprentice_2",
+    "name": "Tarefa: Aprendiz Mascarado (Veterana)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "masked_apprentice",
+    "count": 150,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 2400,
+      "items": [
+        "apprentice_mask",
+        "apprentice_mask",
+        "apprentice_mask",
+        "apprentice_mask",
+        "apprentice_mask"
+      ]
+    }
+  },
+  {
+    "id": "task_masked_apprentice_3",
+    "name": "Tarefa: Aprendiz Mascarado (Lendária)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "masked_apprentice",
+    "count": 400,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 8000,
+      "items": [
+        "trophy_masked_apprentice"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_mist_swordsman_1",
+    "name": "Tarefa: Espadachim da Névoa (Iniciante)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "boss_mist_swordsman",
+    "count": 3,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 630,
+      "items": [
+        "fang_of_the_swordsman",
+        "fang_of_the_swordsman"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_mist_swordsman_2",
+    "name": "Tarefa: Espadachim da Névoa (Veterana)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "boss_mist_swordsman",
+    "count": 10,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 2800,
+      "items": [
+        "fang_of_the_swordsman",
+        "fang_of_the_swordsman",
+        "fang_of_the_swordsman",
+        "fang_of_the_swordsman",
+        "fang_of_the_swordsman"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_mist_swordsman_3",
+    "name": "Tarefa: Espadachim da Névoa (Lendária)",
+    "npc": "task_master_coastal",
+    "zone": "costa_das_mares",
+    "monster_id": "boss_mist_swordsman",
+    "count": 25,
+    "min_level": 14,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 8750,
+      "items": [
+        "trophy_boss_mist_swordsman"
+      ]
+    }
+  },
+  {
+    "id": "task_leech_1",
+    "name": "Tarefa: Sanguessuga Gigante (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "leech",
+    "count": 50,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 412,
+      "items": [
+        "leech_gland",
+        "leech_gland"
+      ]
+    }
+  },
+  {
+    "id": "task_leech_2",
+    "name": "Tarefa: Sanguessuga Gigante (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "leech",
+    "count": 150,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1650,
+      "items": [
+        "leech_gland",
+        "leech_gland",
+        "leech_gland",
+        "leech_gland",
+        "leech_gland"
+      ]
+    }
+  },
+  {
+    "id": "task_leech_3",
+    "name": "Tarefa: Sanguessuga Gigante (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "leech",
+    "count": 400,
+    "min_level": 7,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 5500,
+      "items": [
+        "trophy_leech"
+      ]
+    }
+  },
+  {
+    "id": "task_giant_toad_1",
+    "name": "Tarefa: Sapo Gigante (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "giant_toad",
+    "count": 50,
+    "min_level": 10,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 638,
+      "items": [
+        "toad_skin",
+        "toad_skin"
+      ]
+    }
+  },
+  {
+    "id": "task_giant_toad_2",
+    "name": "Tarefa: Sapo Gigante (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "giant_toad",
+    "count": 150,
+    "min_level": 10,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 2550,
+      "items": [
+        "toad_skin",
+        "toad_skin",
+        "toad_skin",
+        "toad_skin",
+        "toad_skin"
+      ]
+    }
+  },
+  {
+    "id": "task_giant_toad_3",
+    "name": "Tarefa: Sapo Gigante (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "giant_toad",
+    "count": 400,
+    "min_level": 10,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 8500,
+      "items": [
+        "trophy_giant_toad"
+      ]
+    }
+  },
+  {
+    "id": "task_rogue_ninja_1",
+    "name": "Tarefa: Ninja Renegado (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "rogue_ninja",
+    "count": 50,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 1050,
+      "items": [
+        "rogue_headband",
+        "rogue_headband"
+      ]
+    }
+  },
+  {
+    "id": "task_rogue_ninja_2",
+    "name": "Tarefa: Ninja Renegado (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "rogue_ninja",
+    "count": 150,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 4200,
+      "items": [
+        "rogue_headband",
+        "rogue_headband",
+        "rogue_headband",
+        "rogue_headband",
+        "rogue_headband"
+      ]
+    }
+  },
+  {
+    "id": "task_rogue_ninja_3",
+    "name": "Tarefa: Ninja Renegado (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "rogue_ninja",
+    "count": 400,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 14000,
+      "items": [
+        "trophy_rogue_ninja"
+      ]
+    }
+  },
+  {
+    "id": "task_lesser_serpent_1",
+    "name": "Tarefa: Serpente Menor (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "lesser_serpent",
+    "count": 50,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 1012,
+      "items": [
+        "snake_fang",
+        "snake_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_lesser_serpent_2",
+    "name": "Tarefa: Serpente Menor (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "lesser_serpent",
+    "count": 150,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 4050,
+      "items": [
+        "snake_fang",
+        "snake_fang",
+        "snake_fang",
+        "snake_fang",
+        "snake_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_lesser_serpent_3",
+    "name": "Tarefa: Serpente Menor (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "lesser_serpent",
+    "count": 400,
+    "min_level": 15,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 13500,
+      "items": [
+        "trophy_lesser_serpent"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_elder_toad_1",
+    "name": "Tarefa: Sapo Ancião (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_elder_toad",
+    "count": 3,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 2025,
+      "items": [
+        "toad_oil",
+        "toad_oil"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_elder_toad_2",
+    "name": "Tarefa: Sapo Ancião (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_elder_toad",
+    "count": 10,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 9000,
+      "items": [
+        "toad_oil",
+        "toad_oil",
+        "toad_oil",
+        "toad_oil",
+        "toad_oil"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_elder_toad_3",
+    "name": "Tarefa: Sapo Ancião (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_elder_toad",
+    "count": 25,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 28125,
+      "items": [
+        "trophy_boss_elder_toad"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_white_serpent_1",
+    "name": "Tarefa: Serpente Branca (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_white_serpent",
+    "count": 3,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 2025,
+      "items": [
+        "white_serpent_fang",
+        "white_serpent_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_white_serpent_2",
+    "name": "Tarefa: Serpente Branca (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_white_serpent",
+    "count": 10,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 9000,
+      "items": [
+        "white_serpent_fang",
+        "white_serpent_fang",
+        "white_serpent_fang",
+        "white_serpent_fang",
+        "white_serpent_fang"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_white_serpent_3",
+    "name": "Tarefa: Serpente Branca (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "boss_white_serpent",
+    "count": 25,
+    "min_level": 20,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 28125,
+      "items": [
+        "trophy_boss_white_serpent"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_stone_1",
+    "name": "Tarefa: Rival do Exame — Pedra (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_stone",
+    "count": 50,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 375,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_stone_2",
+    "name": "Tarefa: Rival do Exame — Pedra (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_stone",
+    "count": 150,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1500,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_stone_3",
+    "name": "Tarefa: Rival do Exame — Pedra (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_stone",
+    "count": 400,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 5000,
+      "items": [
+        "trophy_exam_rival_stone"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_sound_1",
+    "name": "Tarefa: Rival do Exame — Som (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_sound",
+    "count": 50,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 375,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_sound_2",
+    "name": "Tarefa: Rival do Exame — Som (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_sound",
+    "count": 150,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1500,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_sound_3",
+    "name": "Tarefa: Rival do Exame — Som (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_sound",
+    "count": 400,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 5000,
+      "items": [
+        "trophy_exam_rival_sound"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_mist_1",
+    "name": "Tarefa: Rival do Exame — Névoa (Iniciante)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_mist",
+    "count": 50,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 375,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_mist_2",
+    "name": "Tarefa: Rival do Exame — Névoa (Veterana)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_mist",
+    "count": 150,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 1500,
+      "items": [
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium",
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "task_exam_rival_mist_3",
+    "name": "Tarefa: Rival do Exame — Névoa (Lendária)",
+    "npc": "task_master_swamp",
+    "zone": "floresta_da_morte",
+    "monster_id": "exam_rival_mist",
+    "count": 400,
+    "min_level": 17,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 5000,
+      "items": [
+        "trophy_exam_rival_mist"
+      ]
+    }
+  },
+  {
+    "id": "task_ruin_puppet_1",
+    "name": "Tarefa: Marionete de Combate (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "ruin_puppet",
+    "count": 50,
+    "min_level": 24,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 1522,
+      "items": [
+        "puppet_joint",
+        "puppet_joint"
+      ]
+    }
+  },
+  {
+    "id": "task_ruin_puppet_2",
+    "name": "Tarefa: Marionete de Combate (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "ruin_puppet",
+    "count": 150,
+    "min_level": 24,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 6090,
+      "items": [
+        "puppet_joint",
+        "puppet_joint",
+        "puppet_joint",
+        "puppet_joint",
+        "puppet_joint"
+      ]
+    }
+  },
+  {
+    "id": "task_ruin_puppet_3",
+    "name": "Tarefa: Marionete de Combate (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "ruin_puppet",
+    "count": 400,
+    "min_level": 24,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 20300,
+      "items": [
+        "trophy_ruin_puppet"
+      ]
+    }
+  },
+  {
+    "id": "task_stone_sentinel_1",
+    "name": "Tarefa: Sentinela de Pedra (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "stone_sentinel",
+    "count": 50,
+    "min_level": 29,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 1800,
+      "items": [
+        "granite_core",
+        "granite_core"
+      ]
+    }
+  },
+  {
+    "id": "task_stone_sentinel_2",
+    "name": "Tarefa: Sentinela de Pedra (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "stone_sentinel",
+    "count": 150,
+    "min_level": 29,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 7200,
+      "items": [
+        "granite_core",
+        "granite_core",
+        "granite_core",
+        "granite_core",
+        "granite_core"
+      ]
+    }
+  },
+  {
+    "id": "task_stone_sentinel_3",
+    "name": "Tarefa: Sentinela de Pedra (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "stone_sentinel",
+    "count": 400,
+    "min_level": 29,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 24000,
+      "items": [
+        "trophy_stone_sentinel"
+      ]
+    }
+  },
+  {
+    "id": "task_spectral_warrior_1",
+    "name": "Tarefa: Guerreiro Espectral (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "spectral_warrior",
+    "count": 50,
+    "min_level": 35,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 2138,
+      "items": [
+        "spectral_ash",
+        "spectral_ash"
+      ]
+    }
+  },
+  {
+    "id": "task_spectral_warrior_2",
+    "name": "Tarefa: Guerreiro Espectral (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "spectral_warrior",
+    "count": 150,
+    "min_level": 35,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 8550,
+      "items": [
+        "spectral_ash",
+        "spectral_ash",
+        "spectral_ash",
+        "spectral_ash",
+        "spectral_ash"
+      ]
+    }
+  },
+  {
+    "id": "task_spectral_warrior_3",
+    "name": "Tarefa: Guerreiro Espectral (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "spectral_warrior",
+    "count": 400,
+    "min_level": 35,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 28500,
+      "items": [
+        "trophy_spectral_warrior"
+      ]
+    }
+  },
+  {
+    "id": "task_curse_shaman_1",
+    "name": "Tarefa: Xamã da Maldição (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "curse_shaman",
+    "count": 50,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 2475,
+      "items": [
+        "cursed_talisman",
+        "cursed_talisman"
+      ]
+    }
+  },
+  {
+    "id": "task_curse_shaman_2",
+    "name": "Tarefa: Xamã da Maldição (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "curse_shaman",
+    "count": 150,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 9900,
+      "items": [
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman"
+      ]
+    }
+  },
+  {
+    "id": "task_curse_shaman_3",
+    "name": "Tarefa: Xamã da Maldição (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "curse_shaman",
+    "count": 400,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 33000,
+      "items": [
+        "trophy_curse_shaman"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_deserter_1",
+    "name": "Tarefa: Desertor de Elite (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "elite_deserter",
+    "count": 3,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 338,
+      "items": [
+        "deserter_seal",
+        "deserter_seal"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_deserter_2",
+    "name": "Tarefa: Desertor de Elite (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "elite_deserter",
+    "count": 10,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 1500,
+      "items": [
+        "deserter_seal",
+        "deserter_seal",
+        "deserter_seal",
+        "deserter_seal",
+        "deserter_seal"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_deserter_3",
+    "name": "Tarefa: Desertor de Elite (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "elite_deserter",
+    "count": 25,
+    "min_level": 41,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 4688,
+      "items": [
+        "trophy_elite_deserter"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_puppeteer_1",
+    "name": "Tarefa: Marionetista das Ruínas (Iniciante)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "boss_puppeteer",
+    "count": 3,
+    "min_level": 45,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 4050,
+      "items": [
+        "cursed_talisman",
+        "cursed_talisman"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_puppeteer_2",
+    "name": "Tarefa: Marionetista das Ruínas (Veterana)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "boss_puppeteer",
+    "count": 10,
+    "min_level": 45,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 18000,
+      "items": [
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman",
+        "cursed_talisman"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_puppeteer_3",
+    "name": "Tarefa: Marionetista das Ruínas (Lendária)",
+    "npc": "task_master_ruins",
+    "zone": "ruinas_do_cla_marionetista",
+    "monster_id": "boss_puppeteer",
+    "count": 25,
+    "min_level": 45,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 56250,
+      "items": [
+        "trophy_boss_puppeteer"
+      ]
+    }
+  },
+  {
+    "id": "task_thunder_eagle_1",
+    "name": "Tarefa: Águia do Trovão (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "thunder_eagle",
+    "count": 50,
+    "min_level": 51,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 3038,
+      "items": [
+        "thunder_feather",
+        "thunder_feather"
+      ]
+    }
+  },
+  {
+    "id": "task_thunder_eagle_2",
+    "name": "Tarefa: Águia do Trovão (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "thunder_eagle",
+    "count": 150,
+    "min_level": 51,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 12150,
+      "items": [
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather"
+      ]
+    }
+  },
+  {
+    "id": "task_thunder_eagle_3",
+    "name": "Tarefa: Águia do Trovão (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "thunder_eagle",
+    "count": 400,
+    "min_level": 51,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 40500,
+      "items": [
+        "trophy_thunder_eagle"
+      ]
+    }
+  },
+  {
+    "id": "task_glacier_oni_1",
+    "name": "Tarefa: Oni da Geleira (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "glacier_oni",
+    "count": 50,
+    "min_level": 57,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 3375,
+      "items": [
+        "glacier_shard",
+        "glacier_shard"
+      ]
+    }
+  },
+  {
+    "id": "task_glacier_oni_2",
+    "name": "Tarefa: Oni da Geleira (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "glacier_oni",
+    "count": 150,
+    "min_level": 57,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 13500,
+      "items": [
+        "glacier_shard",
+        "glacier_shard",
+        "glacier_shard",
+        "glacier_shard",
+        "glacier_shard"
+      ]
+    }
+  },
+  {
+    "id": "task_glacier_oni_3",
+    "name": "Tarefa: Oni da Geleira (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "glacier_oni",
+    "count": 400,
+    "min_level": 57,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 45000,
+      "items": [
+        "trophy_glacier_oni"
+      ]
+    }
+  },
+  {
+    "id": "task_storm_monk_1",
+    "name": "Tarefa: Monge da Tempestade (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "storm_monk",
+    "count": 50,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 3825,
+      "items": [
+        "thunder_feather",
+        "thunder_feather"
+      ]
+    }
+  },
+  {
+    "id": "task_storm_monk_2",
+    "name": "Tarefa: Monge da Tempestade (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "storm_monk",
+    "count": 150,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 15300,
+      "items": [
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather",
+        "thunder_feather"
+      ]
+    }
+  },
+  {
+    "id": "task_storm_monk_3",
+    "name": "Tarefa: Monge da Tempestade (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "storm_monk",
+    "count": 400,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 51000,
+      "items": [
+        "trophy_storm_monk"
+      ]
+    }
+  },
+  {
+    "id": "task_magma_serpent_1",
+    "name": "Tarefa: Serpente de Magma (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "magma_serpent",
+    "count": 50,
+    "min_level": 71,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 4162,
+      "items": [
+        "magma_scale",
+        "magma_scale"
+      ]
+    }
+  },
+  {
+    "id": "task_magma_serpent_2",
+    "name": "Tarefa: Serpente de Magma (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "magma_serpent",
+    "count": 150,
+    "min_level": 71,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 16650,
+      "items": [
+        "magma_scale",
+        "magma_scale",
+        "magma_scale",
+        "magma_scale",
+        "magma_scale"
+      ]
+    }
+  },
+  {
+    "id": "task_magma_serpent_3",
+    "name": "Tarefa: Serpente de Magma (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "magma_serpent",
+    "count": 400,
+    "min_level": 71,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 55500,
+      "items": [
+        "trophy_magma_serpent"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_curse_partner_1",
+    "name": "Tarefa: O Sócio Eterno (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_curse_partner",
+    "count": 3,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 3375,
+      "items": [
+        "cursed_heart",
+        "cursed_heart"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_curse_partner_2",
+    "name": "Tarefa: O Sócio Eterno (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_curse_partner",
+    "count": 10,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 15000,
+      "items": [
+        "cursed_heart",
+        "cursed_heart",
+        "cursed_heart",
+        "cursed_heart",
+        "cursed_heart"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_curse_partner_3",
+    "name": "Tarefa: O Sócio Eterno (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_curse_partner",
+    "count": 25,
+    "min_level": 65,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 46875,
+      "items": [
+        "trophy_boss_curse_partner"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_ancestral_oni_1",
+    "name": "Tarefa: Oni Ancestral (Iniciante)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_ancestral_oni",
+    "count": 3,
+    "min_level": 75,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 6480,
+      "items": [
+        "oni_horn",
+        "oni_horn"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_ancestral_oni_2",
+    "name": "Tarefa: Oni Ancestral (Veterana)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_ancestral_oni",
+    "count": 10,
+    "min_level": 75,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 28800,
+      "items": [
+        "oni_horn",
+        "oni_horn",
+        "oni_horn",
+        "oni_horn",
+        "oni_horn"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_ancestral_oni_3",
+    "name": "Tarefa: Oni Ancestral (Lendária)",
+    "npc": "task_master_mountain",
+    "zone": "montanha_do_trovao",
+    "monster_id": "boss_ancestral_oni",
+    "count": 25,
+    "min_level": 75,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 90000,
+      "items": [
+        "trophy_boss_ancestral_oni"
+      ]
+    }
+  },
+  {
+    "id": "task_white_clone_1",
+    "name": "Tarefa: Clone Branco (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "white_clone",
+    "count": 50,
+    "min_level": 79,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 4050,
+      "items": [
+        "cloud_emblem",
+        "cloud_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_white_clone_2",
+    "name": "Tarefa: Clone Branco (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "white_clone",
+    "count": 150,
+    "min_level": 79,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 16200,
+      "items": [
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_white_clone_3",
+    "name": "Tarefa: Clone Branco (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "white_clone",
+    "count": 400,
+    "min_level": 79,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 54000,
+      "items": [
+        "trophy_white_clone"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_cloud_guard_1",
+    "name": "Tarefa: Ninja Elite da Aurora (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "elite_cloud_guard",
+    "count": 50,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 20.0,
+      "ryo": 4950,
+      "items": [
+        "cloud_emblem",
+        "cloud_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_cloud_guard_2",
+    "name": "Tarefa: Ninja Elite da Aurora (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "elite_cloud_guard",
+    "count": 150,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 75.0,
+      "ryo": 19800,
+      "items": [
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem",
+        "cloud_emblem"
+      ]
+    }
+  },
+  {
+    "id": "task_elite_cloud_guard_3",
+    "name": "Tarefa: Ninja Elite da Aurora (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "elite_cloud_guard",
+    "count": 400,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 260.0,
+      "ryo": 66000,
+      "items": [
+        "trophy_elite_cloud_guard"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_illusive_eye_1",
+    "name": "Tarefa: O Vigia Ilusório (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_illusive_eye",
+    "count": 3,
+    "min_level": 80,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 6885,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_illusive_eye_2",
+    "name": "Tarefa: O Vigia Ilusório (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_illusive_eye",
+    "count": 10,
+    "min_level": 80,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 30600,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_illusive_eye_3",
+    "name": "Tarefa: O Vigia Ilusório (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_illusive_eye",
+    "count": 25,
+    "min_level": 80,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 95625,
+      "items": [
+        "trophy_boss_illusive_eye"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_masked_puppeteer_1",
+    "name": "Tarefa: O Mascarado das Sombras (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_masked_puppeteer",
+    "count": 3,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 7290,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_masked_puppeteer_2",
+    "name": "Tarefa: O Mascarado das Sombras (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_masked_puppeteer",
+    "count": 10,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 32400,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_masked_puppeteer_3",
+    "name": "Tarefa: O Mascarado das Sombras (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_masked_puppeteer",
+    "count": 25,
+    "min_level": 85,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 101250,
+      "items": [
+        "trophy_boss_masked_puppeteer"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_rings_bearer_1",
+    "name": "Tarefa: O Portador dos Seis Caminhos (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_rings_bearer",
+    "count": 3,
+    "min_level": 90,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 7695,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_rings_bearer_2",
+    "name": "Tarefa: O Portador dos Seis Caminhos (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_rings_bearer",
+    "count": 10,
+    "min_level": 90,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 34200,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_rings_bearer_3",
+    "name": "Tarefa: O Portador dos Seis Caminhos (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_rings_bearer",
+    "count": 25,
+    "min_level": 90,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 106875,
+      "items": [
+        "trophy_boss_rings_bearer"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_crimson_ancestor_1",
+    "name": "Tarefa: O Ancestral da Nuvem Vermelha (Iniciante)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_crimson_ancestor",
+    "count": 3,
+    "min_level": 95,
+    "repeatable": true,
+    "cooldown_min": 180,
+    "reward": {
+      "xp": 15,
+      "ryo": 8100,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_crimson_ancestor_2",
+    "name": "Tarefa: O Ancestral da Nuvem Vermelha (Veterana)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_crimson_ancestor",
+    "count": 10,
+    "min_level": 95,
+    "repeatable": true,
+    "cooldown_min": 720,
+    "reward": {
+      "xp": 60,
+      "ryo": 36000,
+      "items": [
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson",
+        "ring_fragment_crimson"
+      ]
+    }
+  },
+  {
+    "id": "task_boss_crimson_ancestor_3",
+    "name": "Tarefa: O Ancestral da Nuvem Vermelha (Lendária)",
+    "npc": "task_master_lair",
+    "zone": "covil_nuvem_vermelha",
+    "monster_id": "boss_crimson_ancestor",
+    "count": 25,
+    "min_level": 95,
+    "repeatable": true,
+    "cooldown_min": 1440,
+    "reward": {
+      "xp": 200,
+      "ryo": 112500,
+      "items": [
+        "trophy_boss_crimson_ancestor"
+      ]
+    }
+  }
+]

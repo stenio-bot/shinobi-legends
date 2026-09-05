@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Rival do Exame — Névoa" nameDescription="um rival do exame — névoa" race="blood" experience="260" speed="420" manacost="0">
+	<health now="380" max="380"/>
+	<look type="130" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-22" max="-34"/>
+	</attacks>
+	<defenses armor="12" defense="12"/>
+	<elements>
+		<element earthPercent="-50"/>
+		<element firePercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="35" chance="100000"/>
+		<item id="7618" chance="10000"/>  <!-- health_potion_small -->
+	</loot>
+</monster>

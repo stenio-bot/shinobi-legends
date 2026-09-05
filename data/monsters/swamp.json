@@ -117,7 +117,7 @@
   {
     "id": "rogue_ninja",
     "name": "Ninja Renegado",
-    "description": "Desertor da vila. Joga shuriken e depois parte pra lâmina.",
+    "description": "Um chunin comum que desertou e agora vive escondido na Floresta da Morte. Joga shuriken e depois parte pra lâmina.",
     "level": 18,
     "hp": 340,
     "attack": 30,
@@ -230,7 +230,7 @@
   {
     "id": "boss_elder_toad",
     "name": "Sapo Ancião",
-    "description": "Boss secundário da Floresta da Morte. Invoca filhotes e cospe água em linha.",
+    "description": "Boss secundário da Floresta da Morte. Invoca filhotes e cospe água em linha. Guarda um Pergaminho do Céu — etapa 2 do Exame Chunin (docs/lore/progressao.md).",
     "level": 25,
     "hp": 4000,
     "attack": 45,
@@ -319,6 +319,12 @@
         "chance": 1.0,
         "min": 3,
         "max": 5
+      },
+      {
+        "item_id": "scroll_heaven",
+        "chance": 1.0,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 1500,
@@ -330,7 +336,7 @@
   {
     "id": "boss_white_serpent",
     "name": "Serpente Branca",
-    "description": "Ninja renegado de pele pálida e olhos de réptil. Quando encurralado, abandona a forma humana.",
+    "description": "Ninja renegado de pele pálida e olhos de réptil. Quando encurralado, abandona a forma humana. Guarda um Pergaminho da Terra — etapa 2 do Exame Chunin (docs/lore/progressao.md).",
     "level": 25,
     "hp": 4600,
     "attack": 48,
@@ -460,6 +466,12 @@
         "chance": 1.0,
         "min": 3,
         "max": 5
+      },
+      {
+        "item_id": "scroll_earth",
+        "chance": 1.0,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 1500,
@@ -467,5 +479,116 @@
     "respawn_s": 7200,
     "sprite": "mon_white_serpent",
     "article": "a"
+  },
+  {
+    "id": "exam_rival_stone",
+    "name": "Rival do Exame — Pedra",
+    "description": "Genin da Vila da Pedra, aqui para o mesmo exame que você. Etapa 3 (torneio) do Exame Chunin (docs/lore/progressao.md).",
+    "level": 20,
+    "hp": 420,
+    "attack": 30,
+    "defense": 16,
+    "speed": 4.0,
+    "element": "doton",
+    "xp": 260,
+    "behavior": "aggressive",
+    "aggro_range": 6,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Soco de Pedra",
+        "damage_min": 22,
+        "damage_max": 36,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "health_potion_small",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 15,
+    "ryo_max": 35,
+    "respawn_s": 60,
+    "sprite": "mon_exam_rival",
+    "article": "um"
+  },
+  {
+    "id": "exam_rival_sound",
+    "name": "Rival do Exame — Som",
+    "description": "Genin da Vila do Som, treinado para atacar de longe com ondas de vibração. Etapa 3 (torneio) do Exame Chunin (docs/lore/progressao.md).",
+    "level": 20,
+    "hp": 360,
+    "attack": 32,
+    "defense": 10,
+    "speed": 4.4,
+    "element": "raiton",
+    "xp": 260,
+    "behavior": "ranged",
+    "aggro_range": 7,
+    "attack_range": 4,
+    "attacks": [
+      {
+        "name": "Onda Sônica",
+        "damage_min": 20,
+        "damage_max": 32,
+        "cooldown_s": 2.2,
+        "type": "projectile"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "health_potion_small",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 15,
+    "ryo_max": 35,
+    "respawn_s": 60,
+    "sprite": "mon_exam_rival",
+    "article": "um"
+  },
+  {
+    "id": "exam_rival_mist",
+    "name": "Rival do Exame — Névoa",
+    "description": "Genin da Vila da Névoa, usa água para cobrir a aproximação. Etapa 3 (torneio) do Exame Chunin (docs/lore/progressao.md).",
+    "level": 20,
+    "hp": 380,
+    "attack": 29,
+    "defense": 12,
+    "speed": 4.2,
+    "element": "suiton",
+    "xp": 260,
+    "behavior": "aggressive",
+    "aggro_range": 6,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Golpe Úmido",
+        "damage_min": 22,
+        "damage_max": 34,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "health_potion_small",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 15,
+    "ryo_max": 35,
+    "respawn_s": 60,
+    "sprite": "mon_exam_rival",
+    "article": "um"
   }
 ]

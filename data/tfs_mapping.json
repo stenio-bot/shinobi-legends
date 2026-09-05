@@ -127,14 +127,14 @@
       "race": "blood"
     },
     "boss_bandit_chief": {
-      "looktype": 915,
+      "looktype": 131,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "visual de vilão: looktype 915 (mugen_looktypes.json, sprite 'Sasuke Akatsuki' — usado só como asset visual, NÃO como nome; NPC/monstro continua se chamando 'Chefe dos Bandidos')"
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 915 (mugen 'Sasuke Akatsuki') — exatamente o erro reportado pelo usuário ('bandido usando o Sasuke'). Agora usa 131 'ninja_chief' (assets-src/sprites/imports.json, sprite genérico já extraído para este uso), reaproveitado também pelo Marionetista das Ruínas (boss_puppeteer) em outra região/faixa de level."
     },
     "leech": {
       "looktype": 19,
@@ -155,14 +155,14 @@
       "feet": 93
     },
     "rogue_ninja": {
-      "looktype": 914,
+      "looktype": 128,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "visual: looktype 914 (mugen_looktypes.json, sprite 'Sasuke Taka' — ninja renegado de capa, combina com o conceito; nome do monstro continua 'Ninja Renegado')"
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 914 (mugen 'Sasuke Taka') num monstro genérico, contra ADR-002/pedido do usuário (nome próprio só em boss). Agora usa 128 'ninja_blue' (assets-src/sprites/imports.json), sprite genérico já reaproveitado pelo outfit padrão do jogador — ver pendência de recolor no relatório da missão. 914 fica reservado/sem uso, proposto para uma futura squad 'Quatro do Som' (docs/lore/mundo.md)."
     },
     "boss_elder_toad": {
       "looktype": 60,
@@ -214,34 +214,34 @@
       "feet": 93
     },
     "spectral_warrior": {
-      "looktype": 912,
+      "looktype": 130,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "undead",
-      "_note": "visual: looktype 912 (mugen_looktypes.json, sprite 'Obito' — máscara/figura sombria combina com 'guerreiro espectral'; nome continua 'Guerreiro Espectral')"
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 912 (mugen 'Obito') num monstro genérico. Agora usa 130 'ninja_pale' (assets-src/sprites/imports.json, já extraído para este uso exato: 'figura pálida'). 912 liberado para o boss_masked_puppeteer no Covil da Nuvem Vermelha."
     },
     "curse_shaman": {
-      "looktype": 911,
+      "looktype": 138,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "visual: looktype 911 (mugen_looktypes.json, sprite 'Pain' — visual de vilão místico combina com 'xamã da maldição'; nome continua 'Xamã da Maldição')"
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 911 (mugen 'Pain') num monstro genérico. Agora usa 138 'hooded_purple' (assets-src/sprites/imports.json, npcs_sheet, já extraído para este uso exato). 911 liberado para o boss_rings_bearer no Covil da Nuvem Vermelha."
     },
     "boss_puppeteer": {
-      "looktype": 910,
+      "looktype": 131,
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0,
       "corpse": 3058,
       "race": "blood",
-      "_note": "visual de vilão: looktype 910 (mugen_looktypes.json, sprite 'Itachi' — capa de vilão de elite, combina com o boss das Ruínas do Clã; nome continua 'Marionetista das Ruínas')"
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 910 (mugen 'Itachi') — reservado agora para bosses de arco de verdade (covil final). Marionetista das Ruínas agora usa 131 'ninja_chief' (assets-src/sprites/imports.json), reaproveitado do Chefe dos Bandidos (regiões/níveis diferentes, sem conflito visual). 910 liberado para o boss_illusive_eye no Covil da Nuvem Vermelha."
     },
     "thunder_eagle": {
       "looktype": 21,
@@ -284,14 +284,174 @@
       "feet": 93
     },
     "boss_ancestral_oni": {
-      "looktype": 913,
+      "looktype": 12,
       "corpse": 3058,
       "race": "undead",
-      "_note": "visual de vilão: looktype 913 (mugen_looktypes.json, sprite 'Madara' — único boss humanoide da Montanha do Trovão; nome continua 'Oni Ancestral')",
+      "_note": "CORRIGIDO (docs/lore/mundo.md): era looktype 913 (mugen 'Madara'), liberado para o boss_crimson_ancestor no Covil da Nuvem Vermelha (final de verdade). Oni Ancestral agora usa 12 'oni_fox' (assets-src/sprites/imports.json — raposa de várias caudas), reaproveitado do Oni da Geleira (glacier_oni) da mesma região; reflavorizado como a metade 'fera' da Dupla Imortal ao lado do novo boss_curse_partner.",
       "head": 0,
       "body": 0,
       "legs": 0,
       "feet": 0
+    },
+    "boss_curse_partner": {
+      "looktype": 138,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Montanha do Trovão): metade 'humana' da Dupla Imortal. Visual 138 'hooded_purple' (assets-src/sprites/imports.json), reaproveitado do Xamã da Maldição em outra região/faixa de level."
+    },
+    "elite_deserter": {
+      "looktype": 915,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Ruínas do Clã Marionetista): mini-boss inspirado no arco de Resgate do Sasuke / Quatro do Som — visual 915 (mugen 'Sasuke Akatsuki'), liberado do Chefe dos Bandidos; aqui o uso faz sentido (é um gênio desertor de elite, não um bandido comum)."
+    },
+    "mercenary_bridge": {
+      "looktype": 129,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 129 'ninja_bandit' (assets-src/sprites/imports.json), reaproveitado do Bandido/Bandido Arqueiro em outra região."
+    },
+    "mist_scout": {
+      "looktype": 128,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 128 'ninja_blue' (assets-src/sprites/imports.json), reaproveitado."
+    },
+    "mist_guardian": {
+      "looktype": 131,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): visual 131 'ninja_chief' (assets-src/sprites/imports.json), reaproveitado — mob tanque, encaixa com a figura 'maior, armado' da folha."
+    },
+    "boss_mist_swordsman": {
+      "looktype": 132,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): Espadachim da Névoa, inspirado no arco do País das Ondas (Zabuza). Visual 132 'ninja_white' (assets-src/sprites/imports.json — 'ninja de cabelo branco'), sprite genérico ainda sem uso em nenhum outro monstro; NÃO usa personagem principal (é a dupla mais 'pessoal' do jogo, ver docs/lore/mundo.md)."
+    },
+    "masked_apprentice": {
+      "looktype": 130,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés): Aprendiz Mascarado, inspirado em Haku. Visual 130 'ninja_pale' (assets-src/sprites/imports.json), reaproveitado do Guerreiro Espectral em outra região."
+    },
+    "exam_rival_stone": {
+      "looktype": 128,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/progressao.md, Exame Chunin — torneio): rival genin de outra vila. Visual genérico 128."
+    },
+    "exam_rival_sound": {
+      "looktype": 129,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/progressao.md, Exame Chunin — torneio): rival genin de outra vila. Visual genérico 129."
+    },
+    "exam_rival_mist": {
+      "looktype": 130,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/progressao.md, Exame Chunin — torneio): rival genin de outra vila. Visual genérico 130."
+    },
+    "white_clone": {
+      "looktype": 130,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "venom",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha): soldado-clone descartável. Visual 130 'ninja_pale', reaproveitado — combina bem com 'clone branco'."
+    },
+    "elite_cloud_guard": {
+      "looktype": 129,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha): guarda de elite da organização. Visual 129 'ninja_bandit', reaproveitado."
+    },
+    "boss_illusive_eye": {
+      "looktype": 910,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 1/4): visual 910 (mugen 'Itachi', liberado do Marionetista das Ruínas) — aqui SIM é o uso correto de personagem principal: boss de endgame do covil final da organização."
+    },
+    "boss_masked_puppeteer": {
+      "looktype": 912,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 2/4): visual 912 (mugen 'Obito', liberado do Guerreiro Espectral) — boss de endgame."
+    },
+    "boss_rings_bearer": {
+      "looktype": 911,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 3/4): visual 911 (mugen 'Pain', liberado do Xamã da Maldição) — boss de endgame."
+    },
+    "boss_crimson_ancestor": {
+      "looktype": 913,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "corpse": 3058,
+      "race": "blood",
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 4/4, final do jogo): visual 913 (mugen 'Madara', liberado do Oni Ancestral) — boss de endgame, o mais forte do jogo."
     },
     "forest_deer": {
       "looktype": 21,
@@ -384,7 +544,15 @@
     "soldier_pill": 8472,
     "oni_fang_blade": 7418,
     "white_serpent_fang": 5895,
-    "scroll_doku_kiri": 1956
+    "scroll_doku_kiri": 1956,
+    "scroll_heaven": 6287,
+    "scroll_earth": 6288,
+    "fang_of_the_swordsman": 6352,
+    "apprentice_mask": 6554,
+    "deserter_seal": 6555,
+    "cursed_heart": 6559,
+    "cloud_emblem": 6868,
+    "ring_fragment_crimson": 6938
   },
   "npc_outfits": {
     "merchant_leaf": {
@@ -458,6 +626,46 @@
       "legs": 0,
       "feet": 0,
       "_note": "Mestra Yuki → looktype 903 (mugen_looktypes.json, sprite 'Hinata')"
+    },
+    "exam_proctor_forest": {
+      "type": 918,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "NOVO (docs/lore/progressao.md): Instrutora Ibuki, proctora do Exame Chunin → looktype 918 (mugen_looktypes.json, sprite 'Sakura The Last' — até então sem uso em nenhum monstro/NPC)"
+    },
+    "merchant_coastal": {
+      "type": 139,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés) → looktype 139 'merchant_green' (assets-src/sprites/imports.json), reaproveitado de merchant_ruins"
+    },
+    "quest_giver_coastal": {
+      "type": 137,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "NOVO (docs/lore/mundo.md, Costa das Marés) → looktype 137 'elder_red' (assets-src/sprites/imports.json), reaproveitado de quest_giver_leaf/storm_monk"
+    },
+    "merchant_akatsuki_lair": {
+      "type": 139,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha) → looktype 139 'merchant_green' (assets-src/sprites/imports.json), reaproveitado"
+    },
+    "quest_giver_akatsuki_lair": {
+      "type": 908,
+      "head": 0,
+      "body": 0,
+      "legs": 0,
+      "feet": 0,
+      "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha): Capitã Anbu → looktype 908 (mugen_looktypes.json, sprite 'Minato Edo'), reaproveitado do outfit de vila (sabio_cerimonial/Areia) — general/Hokage de elite guiando a prova final"
     }
   },
   "_items_notes": {
@@ -512,6 +720,14 @@
     "scroll_doton_colapso": "5952 poem scroll",
     "scroll_fuuin_contencao": "6119 scroll",
     "white_serpent_fang": "5895 fish fin",
-    "scroll_doku_kiri": "1956 map"
+    "scroll_doku_kiri": "1956 map",
+    "scroll_heaven": "6287 (id livre, sem colisão com items.xml vanilla; item de missão do Exame Chunin, não vendável)",
+    "scroll_earth": "6288 (id livre, sem colisão com items.xml vanilla; item de missão do Exame Chunin, não vendável)",
+    "fang_of_the_swordsman": "6352 (id livre, sem colisão com items.xml vanilla)",
+    "apprentice_mask": "6554 (id livre, sem colisão com items.xml vanilla)",
+    "deserter_seal": "6555 (id livre, sem colisão com items.xml vanilla)",
+    "cursed_heart": "6559 (id livre, sem colisão com items.xml vanilla)",
+    "cloud_emblem": "6868 (id livre, sem colisão com items.xml vanilla)",
+    "ring_fragment_crimson": "6938 (id livre, sem colisão com items.xml vanilla)"
   }
 }

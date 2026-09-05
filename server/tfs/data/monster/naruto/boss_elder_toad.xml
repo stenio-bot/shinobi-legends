@@ -39,5 +39,6 @@
 		<item id="1955" chance="20000"/>  <!-- scroll_suiton_suiryuudan -->
 		<item id="5881" countmax="4" chance="100000"/>  <!-- toad_oil -->
 		<item id="7589" countmax="5" chance="100000"/>  <!-- chakra_pill_medium -->
+		<item id="6287" chance="100000"/>  <!-- scroll_heaven -->
 	</loot>
 </monster>

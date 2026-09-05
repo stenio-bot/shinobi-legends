@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="O Ancestral da Nuvem Vermelha" nameDescription="o o ancestral da nuvem vermelha" race="blood" experience="34800" speed="440" manacost="0">
+	<health now="29000" max="29000"/>
+	<look type="913" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-128" max="-192"/>
+		<attack name="energy" interval="8000" chance="40" radius="3" target="0" min="-115" max="-175">
+			<attribute key="areaEffect" value="energyhit"/>
+		</attack>
+		<attack name="speed" interval="8000" chance="40" speedchange="-1000" duration="1500" range="1" target="1"/>
+	</attacks>
+	<defenses armor="75" defense="75"/>
+	<elements>
+		<element holyPercent="-50"/>
+		<element earthPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="12000" chance="100000"/>
+		<item id="6938" countmax="3" chance="100000"/>  <!-- ring_fragment_crimson -->
+		<item id="7591" countmax="15" chance="100000"/>  <!-- health_potion_large -->
+		<item id="8472" countmax="10" chance="100000"/>  <!-- soldier_pill -->
+	</loot>
+</monster>

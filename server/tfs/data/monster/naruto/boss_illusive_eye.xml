@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="O Vigia Ilusório" nameDescription="o o vigia ilusório" race="blood" experience="25200" speed="420" manacost="0">
+	<health now="21000" max="21000"/>
+	<look type="910" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-110" max="-165"/>
+		<attack name="fire" interval="6000" chance="60" range="4" target="1" min="-95" max="-150">
+			<attribute key="shootEffect" value="fire"/>
+		</attack>
+		<attack name="speed" interval="6000" chance="35" speedchange="-1000" duration="2000" range="4" target="1"/>
+	</attacks>
+	<defenses armor="64" defense="64"/>
+	<elements>
+		<element icePercent="-50"/>
+		<element holyPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="10200" chance="100000"/>
+		<item id="6938" chance="50000"/>  <!-- ring_fragment_crimson -->
+		<item id="7591" countmax="8" chance="100000"/>  <!-- health_potion_large -->
+		<item id="8472" countmax="6" chance="100000"/>  <!-- soldier_pill -->
+	</loot>
+</monster>

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Quest",
+  "description": "Formato ALVO de uma missão de NPC (data/npcs/*.json, campo 'quests'). Documentário: tools/validate_data.py hoje só faz checagens ad-hoc (q['objective']['kill'] e q['reward']['items'] quando presentes) e tools/export_tfs.py hoje SÓ entende objective.kind='kill' (campos objective.kill + objective.count, sem o campo 'kind'). Toda missão nova criada pela missão de lore (docs/lore/progressao.md) mantém objective.kill/count funcionando (compat com o exportador atual) e usa os campos extras abaixo (quiz, stages, grants_rank) só como documentação para uma futura extensão de tools/export_tfs.py e tools/validate_data.py — NÃO editados por esta missão (fora de escopo).",
+  "type": "object",
+  "required": ["id", "name", "text", "objective", "reward"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "name": {"type": "string"},
+    "text": {"type": "string"},
+    "objective": {
+      "type": "object",
+      "description": "Formato hoje suportado por tools/export_tfs.py: {kind:'kill', kill: <monster_id>, count: N}. kind é novo campo documentário (default implícito 'kill' quando ausente, para não quebrar compat).",
+      "properties": {
+        "kind": {"enum": ["kill", "collect_item", "keyword_quiz", "kill_sequence"]},
+        "kill": {"type": "string", "description": "monster id, obrigatório para kind=kill (compat atual do exportador)"},
+        "count": {"type": "integer", "minimum": 1},
+        "items": {
+          "type": "array",
+          "description": "para kind=collect_item: lista de {item_id, count} que o jogador precisa entregar/ter na mochila",
+          "items": {
+            "type": "object",
+            "properties": {"item_id": {"type": "string"}, "count": {"type": "integer", "minimum": 1}}
+          }
+        },
+        "quiz": {
+          "type": "array",
+          "description": "para kind=keyword_quiz: perguntas por palavra-chave (TFS keywordHandler já existe em tools/export_tfs.py:npc_files, dá para estender)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": {"type": "string"},
+              "keywords": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "sequence": {
+          "type": "array",
+          "description": "para kind=kill_sequence: ids de monstro a abater em ordem (hoje modelado como N quests sequenciais separadas, ver docs/lore/progressao.md)",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "reward": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "xp": {"type": "integer", "minimum": 0},
+        "ryo": {"type": "integer", "minimum": 0},
+        "items": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "grants_rank": {
+      "enum": ["genin", "chunin", "jonin", "anbu", "kage"],
+      "description": "documentário: esta quest é (parte d)o exame que concede este rank — ver data/ranks.json e docs/lore/progressao.md"
+    }
+  }
+}

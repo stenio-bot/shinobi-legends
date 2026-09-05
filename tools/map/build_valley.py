@@ -233,6 +233,25 @@ FENCE_V = 1534
 #: itens que bloqueiam mas podem ser abertos — passáveis no BFS
 DOOR_IDS = {DOOR_STONE_H, DOOR_STONE_V, DOOR_WOOD_H, DOOR_WOOD_V, 1540}
 
+# --------------------------------------------------------- mobiliario / v2
+# Ids vanilla usados nos interiores de loja, praca e arena (server ids de
+# server/tfs/data/items/items.xml). Nenhum item novo precisou ser desenhado:
+# os interiores usam os tiles proprios jp-style que ja existem em
+# assets-src/sprites/tiles.json (tatami_floor, wood_wall_h/v, wood_sign,
+# paper_lantern, torii_gate, bamboo_fence — ids sao lidos de ``sid`` em
+# tempo de build, nao sao constantes aqui).
+COUNTER = 1617                                   # balcao da loja (bloqueia)
+SHOP_TABLE = 1622                                # mesa
+CHEST = 1740                                     # bau (nao bloqueia)
+BENCH = 1662                                     # banco (nao bloqueia)
+FOUNTAIN = 1360                                  # fonte da praca (bloqueia)
+STATUE = 1442                                    # estatua
+TELEPORT_ITEM = 1387                             # "magic forcefield" — type=teleport vanilla
+
+#: itens que TEM `tele_dest`: tratados como passagem extra no BFS (ver
+#: `teleport_edges`), alem de serem sempre nao-bloqueantes.
+
+
 # ------------------------------------------------------------------ layout
 # Conteúdo em x 1000..1199, y 1000..1119 (200x120) no andar 7.
 
@@ -271,6 +290,62 @@ TOWER_CENTER = (1165, 1060)
 
 # Acampamento dos bandidos
 CAMP_CENTER = (1100, 1100)
+
+# --------------------------------------------------------- Vila da Folha v2
+# Segundo portão (leste), ligando a avenida comercial ao anel de trilhas.
+GATE_E_X = V_X1
+GATE_E_Y = ROAD_H                                 # mesma faixa da rua comercial (1054-1056)
+
+# Rua dos Mercadores: as 3 lojas ficam todas na MESMA rua leste-oeste
+# (ROAD_H, y 1054-1056), fachada virada pro sul (a porta do template fica
+# sempre na linha de baixo — ver stamp_building/buildings.json), ancoradas em
+# y=1053 para a porta cair em 1053 e abrir direto na rua em 1054. Todas do
+# lado LESTE da avenida/praça (a oeste fica a Academia; a praça desce ate
+# y=1052, então não sobra altura pra loja nenhuma entre praça e rua a oeste
+# da avenida sem invadir o campo de treino).
+SHOP_ROW_Y = ROAD_H[0] - 1                       # 1053
+SHOPS = [
+    # (nome do NPC, id de dados em data/npcs, template, x do canto inf-esq)
+    ("Ichiro, o Mercador", "merchant_leaf", "newbie_shop", 1037),
+    ("Mestre Hayato", "scroll_master_leaf", "ramen_shop", 1042),
+    ("Capitã Rin", "quest_giver_leaf", "blue_shop", 1046),
+]
+
+# Bairro residencial: continua no anel norte (junto da torre) e no anel sul
+# (onde ficavam as lojas antigas) — agora só casas, sem loja misturada.
+RESIDENTIAL_NORTH = [(1013, 1036, "big_house"), (1040, 1036, "house_green")]
+RESIDENTIAL_SOUTH = [(1021, 1063, "blue_house"), (1041, 1063, "blue_house")]
+
+# Bloco cívico (taverna + prisão), a leste da avenida, sul da praça.
+TAVERN_XY = (1032, 1063)
+PRISON_XY = (1013, 1063)
+
+# Academia ninja / campo de treino (mesmo retangulo de antes, com cerca de
+# bambu e teleporte para a Arena do Exame Chunin).
+ACADEMY = (1013, 1046, 1020, 1052)
+ACADEMY_GATE_TP = (1020, 1049)                   # pad de teleporte -> arena
+
+# ----------------------------------------------------- Interiores (teleporte)
+# Salas separadas, longe do resto do conteudo (x 1300+), mesmo andar 7.
+# Cada interior: retangulo com parede de madeira + chao de tatame, balcao
+# com o NPC atras, bau(s), pad de entrada perto da "porta" simbolica. O pad
+# de SAIDA fica do lado de fora, no lugar onde o NPC ficava antes (rua).
+INTERIOR_ICHIRO = (1300, 1000, 1306, 1005)       # 7x6
+INTERIOR_HAYATO = (1310, 1000, 1317, 1005)       # 8x6
+INTERIOR_RIN = (1320, 1000, 1325, 1005)          # 6x6
+
+# ----------------------------------------------------- Arena do Exame Chunin
+# 30x20, piso de pedra, "arquibancada" = anel de muro + bancos; teleporte de
+# entrada fica na Academia (ACADEMY_GATE_TP), saida volta pro mesmo pad.
+ARENA = (1300, 1015, 1329, 1034)                 # x0,y0,x1,y1 (30x20)
+ARENA_ENTRY_TP = (1314, 1033)                    # pad de entrada (dentro, sul)
+ARENA_CENTER = (1314, 1024, FLOOR)
+
+# ----------------------------------------------------- Muro da Floresta da Morte
+# Cerca alta de bambu ao redor de toda a zona (x 1130..1199, y 1000..1119),
+# com 1 portao encostado no fim da ponte (o Hub de NPCs comeca logo depois).
+DEATH_WALL = (1130, 1000, 1199, 1119)
+DEATH_GATE_Y = (BRIDGE_Y0 - 1, BRIDGE_Y1 + 1)     # abertura alinhada a ponte
 
 
 class Cell:
@@ -561,19 +636,26 @@ def build(tpls, sid):
     b.path(RIVER_X1 + 2, 1060, HUB[0] - 1, 1060, DIRT, width=3)
     b.path(HUB[2] + 1, 1060, TOWER[0] - 1, 1060, DIRT, width=3)
 
-    # 6. Vila da Folha ---------------------------------------------------
+    # 6. Vila da Folha (v2 — quarteiroes, 2 portoes, ruas nomeadas) -------
     b.fill(V_X0, V_Y0, V_X1, V_Y1, DIRT)
 
+    # -- 6.1 muralha + 2 portoes (sul = principal/torii, leste = comercio) --
     gate_tiles = {(x, GATE_Y) for x in range(GATE_X[0], GATE_X[1] + 1)}
+    gate_tiles |= {(GATE_E_X, y) for y in range(GATE_E_Y[0], GATE_E_Y[1] + 1)}
     b.walls(V_X0, V_Y0, V_X1, V_Y1, STONE_WALL_H, STONE_WALL_V, STONE_WALL_C,
             doors=gate_tiles)
     for (gx, gy) in gate_tiles:
         b.ground(gx, gy, COBBLE)
-    # tochas na muralha, ao lado do portão
     b.put(GATE_X[0] - 1, GATE_Y, TORCH)
     b.put(GATE_X[1] + 1, GATE_Y, TORCH)
+    b.put(GATE_E_X, GATE_E_Y[0] - 1, TORCH)
+    b.put(GATE_E_X, GATE_E_Y[1] + 1, TORCH)
+    # torii vermelho no portao sul (entrada principal) + placa de boas-vindas
+    b.put(GATE_X[1], GATE_Y + 1, sid["torii_gate"])
+    b.put(GATE_X[0] - 3, GATE_Y + 2, SIGN,
+          text="Vila da Folha\nPortao Sul -> avenida principal -> praca -> Torre do Hokage")
 
-    # ruas
+    # -- 6.2 ruas: avenida N-S (portao sul - praca - torre) + rua comercial
     for x in range(ROAD_V[0], ROAD_V[1] + 1):
         for y in range(V_Y0 + 1, V_Y1):
             if PLAZA[1] <= y <= PLAZA[3]:
@@ -583,10 +665,8 @@ def build(tpls, sid):
         for x in range(V_X0 + 1, V_X1):
             b.ground(x, y, COBBLE)
 
-    # praça central
+    # -- 6.3 praca central + templo + fonte + bancos -----------------------
     b.fill(PLAZA[0], PLAZA[1], PLAZA[2], PLAZA[3], STONE_FLOOR)
-
-    # templo (zona de proteção)
     b.building(TEMPLE[0], TEMPLE[1], TEMPLE[2], TEMPLE[3], STONE_FLOOR,
                wood=False, doors=[TEMPLE_DOOR])
     b.flag_rect(PLAZA[0], PLAZA[1], PLAZA[2], PLAZA[3],
@@ -596,62 +676,94 @@ def build(tpls, sid):
     b.put(TEMPLE[0] + 1, TEMPLE[3] + 1, TORCH)
     b.put(TEMPLE[2] - 1, TEMPLE[3] + 1, TORCH)
     b.put(PLAZA[0] + 1, PLAZA[1] + 1, SIGN, text="Vila da Folha - Templo da Chama")
+    # fonte + bancos no patio sul da praca (entre o templo e a rua comercial)
+    b.put(1029, PLAZA[3] - 3, FOUNTAIN)   # (1029,1049) — nao em cima do waypoint "Praca" (1029,1050)
+    for (bx, by) in [(1027, PLAZA[3] - 2), (1031, PLAZA[3] - 2),
+                     (1029, PLAZA[3] - 4)]:
+        c = b.cells.get((bx, by))
+        if c is not None and not c.items:
+            b.put(bx, by, BENCH)
 
     # depósito, junto à praça
     b.put(PLAZA[0] + 2, PLAZA[3] - 1, DEPOT, depot_id=1)
     b.put(PLAZA[0] + 1, PLAZA[3] - 1, SIGN, text="Deposito da Vila")
 
     # --- prédios importados (village_buildings.png) ---------------------
-    # Substituem as casas/lojas de parede de madeira vanilla. São FACHADAS:
-    # tudo bloqueia menos a porta, e não há interior — por isso os NPCs de loja
-    # ficam na RUA, um tile à frente da porta.
+    # São FACHADAS: tudo bloqueia menos a porta. Os NPCs de loja agora ficam
+    # DENTRO de uma sala separada (build_shop_interiors), ligada por
+    # teleporte na célula em frente à porta.
     npcs = []
 
-    # torre do líder ao norte da praça (o templo continua sendo a PZ)
+    # -- 6.4 torre do Hokage ao norte da praca (o templo continua a PZ) ----
     tower_door = stamp_building(b, tpls, sid, "tower", 1027, 1036)
     b.put(1026, 1036, sid["bld_grass_patch_0_0"])
     b.put(1032, 1036, sid["bld_grass_patch_0_0"])
+    b.put(tower_door[0] - 2, tower_door[1] + 1, SIGN, text="Torre do Hokage")
+    b.notes.append("porta da torre do hokage em %r" % (tower_door,))
 
-    # casas do anel norte
-    stamp_building(b, tpls, sid, "big_house", 1013, 1036, ground=DIRT)
-    stamp_building(b, tpls, sid, "house_green", 1040, 1036, ground=DIRT)
+    # -- 6.5 bairro residencial (anel norte junto a torre + anel sul) ------
+    for (sx, sy, key) in RESIDENTIAL_NORTH + RESIDENTIAL_SOUTH:
+        stamp_building(b, tpls, sid, key, sx, sy, ground=DIRT)
+    b.put(RESIDENTIAL_NORTH[0][0] - 1, RESIDENTIAL_NORTH[0][1] - 5, SIGN,
+          text="Bairro Residencial")
 
-    # lojas com NPC (nome, template, x, y do canto inferior esquerdo)
-    for (name, tpl_key, sx, sy) in [
-            ("Ichiro, o Mercador", "newbie_shop", 1014, 1043),
-            ("Mestre Hayato", "ramen_shop", 1040, 1044),
-            ("Capitã Rin", "blue_shop", 1040, 1051)]:
-        door = stamp_building(b, tpls, sid, tpl_key, sx, sy, ground=DIRT)
-        b.clear_items(door[0], door[1] + 1)
-        b.put(door[0] - 1, door[1] + 1, TORCH)
-        npcs.append((name, (door[0], door[1] + 1)))
+    # -- 6.6 Rua dos Mercadores: as 3 lojas lado a lado, viradas pra rua ----
+    for (name, _npc_id, tpl_key, sx) in SHOPS:
+        door = stamp_building(b, tpls, sid, tpl_key, sx, SHOP_ROW_Y, ground=DIRT)
+        b.notes.append("loja %s: porta em %r" % (name, door))
+        npcs.append((name, door))  # posição provisória; build_shop_interiors substitui
+    b.put(ROAD_V[1] + 2, ROAD_H[0] - 1, SIGN,
+          text="Rua dos Mercadores - Ichiro, Hayato e Capita Rin")
 
-    # taverna, prisão e casas do anel sul
-    stamp_building(b, tpls, sid, "prison", 1013, 1063, ground=DIRT)
-    stamp_building(b, tpls, sid, "blue_house", 1021, 1063, ground=DIRT)
-    stamp_building(b, tpls, sid, "tavern", 1032, 1063, ground=DIRT)
+    # -- 6.7 bloco civico (taverna + prisao), sem NPC (nao existe em data/npcs)
+    stamp_building(b, tpls, sid, "prison", PRISON_XY[0], PRISON_XY[1], ground=DIRT)
+    stamp_building(b, tpls, sid, "tavern", TAVERN_XY[0], TAVERN_XY[1], ground=DIRT)
     stamp_building(b, tpls, sid, "roof_orange", 1037, 1063, ground=DIRT)
-    stamp_building(b, tpls, sid, "blue_house", 1041, 1063, ground=DIRT)
+    b.put(PRISON_XY[0], PRISON_XY[1] + 2, SIGN, text="Prisao da Vila")
+    b.put(TAVERN_XY[0] + 1, TAVERN_XY[1] + 2, SIGN, text="Taverna do Vale")
 
-    # postes e vegetação importada
-    stamp_building(b, tpls, sid, "lamp_post", 1021, 1053)
-    stamp_building(b, tpls, sid, "lamp_post", 1037, 1053)
-    stamp_building(b, tpls, sid, "tree", 1017, 1045)
-    stamp_building(b, tpls, sid, "bushes", 1022, 1053)
-    stamp_building(b, tpls, sid, "bushes", 1034, 1053)
-    stamp_building(b, tpls, sid, "bushes", 1025, 1067)
-
-    b.notes.append("porta da torre do lider em %r" % (tower_door,))
-
-    # campo de treino
-    b.fill(1013, 1046, 1020, 1052, DIRT)
+    # -- 6.8 Academia Ninja / campo de treino, cercada de bambu ------------
+    ax0, ay0, ax1, ay1 = ACADEMY
+    b.fill(ax0, ay0, ax1, ay1, DIRT)
+    academy_gate = {(1016, ay1 + 1), (1017, ay1 + 1)}   # entrada (rua comercial, ao sul)
+    for x in range(ax0 - 1, ax1 + 2):
+        for y in (ay0 - 1, ay1 + 1):
+            if (x, y) in academy_gate:
+                continue
+            c = b.cells.get((x, y))
+            if c is not None and not c.items:
+                b.put(x, y, sid["bamboo_fence"])
+    for y in range(ay0, ay1 + 1):
+        for x in (ax0 - 1, ax1 + 1):
+            c = b.cells.get((x, y))
+            if c is not None and not c.items:
+                b.put(x, y, sid["bamboo_fence"])
+    for (gx, gy) in academy_gate:
+        b.ground(gx, gy, DIRT)
     for (dx, dy) in [(1014, 1047), (1017, 1047), (1020, 1047),
                      (1014, 1051), (1017, 1051), (1020, 1051)]:
         b.clear_items(dx, dy)
         b.put(dx, dy, DUMMY)
-    b.put(1013, 1045, SIGN, text="Campo de treino dos Genin")
+    b.put(ax0, ay0 - 2, SIGN, text="Academia Ninja - alvos de treino dos Genin")
+    # pad de teleporte para a Arena do Exame Chunin (ver build_arena)
+    b.clear_items(*ACADEMY_GATE_TP)
+    b.put(ACADEMY_GATE_TP[0], ACADEMY_GATE_TP[1], TELEPORT_ITEM,
+          tele_dest=(ARENA_ENTRY_TP[0], ARENA_ENTRY_TP[1], FLOOR))
+    b.put(ACADEMY_GATE_TP[0] - 1, ACADEMY_GATE_TP[1], SIGN,
+          text="-> Arena do Exame Chunin")
+    # Instrutora Ibuki (exam_proctor_forest, data/npcs/leaf.json) — proctora
+    # do Exame Chunin, pedido de spawn de data/maps/spawns_lore.json
+    ibuki_pos = (ACADEMY_GATE_TP[0] - 2, ACADEMY_GATE_TP[1] - 1)
+    b.clear_items(*ibuki_pos)
+    npcs.append(("Instrutora Ibuki", ibuki_pos))
 
-    # tochas nas ruas
+    # -- 6.9 postes e vegetação importada ----------------------------------
+    stamp_building(b, tpls, sid, "tree", 1017, 1044)
+    stamp_building(b, tpls, sid, "bushes", 1022, 1053)
+    stamp_building(b, tpls, sid, "bushes", 1034, 1053)
+    stamp_building(b, tpls, sid, "bushes", 1025, 1067)
+
+    # -- 6.10 tochas nas ruas -----------------------------------------------
     for y in range(V_Y0 + 4, V_Y1, 8):
         for x in (ROAD_V[0] - 1, ROAD_V[1] + 1):
             if not b.cells[(x, y)].items and not (PLAZA[1] <= y <= PLAZA[3]):
@@ -660,6 +772,13 @@ def build(tpls, sid):
         for y in (ROAD_H[0] - 1, ROAD_H[1] + 1):
             if not b.cells[(x, y)].items:
                 b.put(x, y, TORCH)
+
+    # -- 6.11 trecho fora do portao leste, ligando ao anel de trilhas (x=1055)
+    for x in range(GATE_E_X + 1, 1056):
+        for y in range(GATE_E_Y[0], GATE_E_Y[1] + 1):
+            b.ground(x, y, DIRT)
+            b.clear_items(x, y)
+    b.put(GATE_E_X + 2, GATE_E_Y[0] - 1, SIGN, text="Portao Leste -> trilha da floresta")
 
     # 6b. muros e moitas importados fora do portão sul --------------------
     stamp_building(b, tpls, sid, "green_gate_b", 1023, 1073)
@@ -711,7 +830,171 @@ def build(tpls, sid):
         if x != ccx:
             b.put(x, ccy - 7, FENCE_H)
 
+    # 10. muro da Floresta da Morte (cerca alta + portao na ponte) ---------
+    build_death_forest_wall(b, sid)
+
+    # 11. sinalizacao nas bifurcacoes da floresta --------------------------
+    add_forest_signs(b, sid)
+
+    # 12. interiores das lojas (teleporte de entrada na porta / saida) -----
+    shop_names = {s[0] for s in SHOPS}
+    shop_doors = {name: pos for (name, pos) in npcs if name in shop_names}
+    interior_positions = build_shop_interiors(b, sid, shop_doors)
+    npcs = [(name, interior_positions.get(name, pos)) for (name, pos) in npcs]
+
+    # 13. Arena do Exame Chunin (teleporte de entrada na Academia) ---------
+    build_arena(b, sid)
+
     return b, npcs
+
+
+def build_death_forest_wall(b, sid):
+    """Cerca alta de bambu ao redor de toda a Floresta da Morte (DEATH_WALL),
+    com um unico portao alinhado a ponte (DEATH_GATE_Y) — o hub de NPCs do
+    pantano comeca logo depois do portao."""
+    x0, y0, x1, y1 = DEATH_WALL
+    gate = {(x0, y) for y in range(DEATH_GATE_Y[0], DEATH_GATE_Y[1] + 1)}
+    n = 0
+    for x in range(x0, x1 + 1):
+        for y in (y0, y1):
+            if (x, y) in gate or (x, y) not in b.cells:
+                continue
+            b.clear_items(x, y)
+            b.put(x, y, sid["bamboo_fence"])
+            n += 1
+    for y in range(y0, y1 + 1):
+        for x in (x0, x1):
+            if (x, y) in gate or (x, y) not in b.cells:
+                continue
+            b.clear_items(x, y)
+            b.put(x, y, sid["bamboo_fence"])
+            n += 1
+    b.put(x0, DEATH_GATE_Y[0] - 1, TORCH)
+    b.put(x0, DEATH_GATE_Y[1] + 1, TORCH)
+    b.put(x0 + 1, DEATH_GATE_Y[0] - 1, SIGN,
+          text="Floresta da Morte - Area do Exame Chunin. Entre por sua conta e risco.")
+    b.notes.append("muro da Floresta da Morte: %d tiles de cerca (1 portao na ponte)" % n)
+
+
+def add_forest_signs(b, sid):
+    """Placas nas bifurcacoes: uma perto de cada clareira, no ponto onde a
+    trilha sai do anel principal (mesma logica de connect_clearings), mais
+    uma na bifurcacao ponte / Floresta da Morte."""
+    n = 0
+    for (name, cx, cy, _) in CLEARINGS:
+        ring_y = 1025 if cy < 1050 else 1075
+        pos = (cx + 1, ring_y - 1 if ring_y == 1025 else ring_y + 1)
+        c = b.cells.get(pos)
+        if c is not None and not c.items:
+            b.put(pos[0], pos[1], SIGN, text="-> %s" % name)
+            n += 1
+    c = b.cells.get((RIVER_X0 - 3, BRIDGE_Y0 - 2))
+    if c is not None and not c.items:
+        b.put(RIVER_X0 - 3, BRIDGE_Y0 - 2, SIGN, text="-> Ponte / Floresta da Morte")
+        n += 1
+    b.notes.append("placas de trilha nas bifurcacoes: %d" % n)
+
+
+def build_shop_interior(b, sid, rect, npc_name, outside_front):
+    """Sala fechada (parede de madeira + chao de tatame): balcao com o NPC
+    atras, bau(s) num canto, pad de SAIDA (teleporte de volta pra rua, ligado
+    a `outside_front`). O ponto de CHEGADA (pouso da entrada vinda de fora)
+    fica livre de item, um tile ao lado do pad de saida — nunca no MESMO
+    tile, senao um teleporte que aterrissa em cima de outro reativaria e
+    criaria um loop infinito entre os dois lados."""
+    x0, y0, x1, y1 = rect
+    b.clear_rect(x0, y0, x1, y1)
+    b.fill(x0, y0, x1, y1, sid["tatami_floor"])
+    for x in range(x0, x1 + 1):
+        for y in (y0, y1):
+            b.clear_items(x, y)
+            b.put(x, y, sid["wood_wall_h"])
+    for y in range(y0 + 1, y1):
+        for x in (x0, x1):
+            b.clear_items(x, y)
+            b.put(x, y, sid["wood_wall_v"])
+
+    cx = (x0 + x1) // 2
+    counter_y = y1 - 3
+    for x in range(x0 + 1, x1):
+        b.clear_items(x, counter_y)
+        b.put(x, counter_y, COUNTER)
+    npc_pos = (cx, counter_y - 1)
+
+    landing = (cx, y1 - 1)                       # chegada (sem item)
+    exitpad = (cx - 1, y1 - 1)                   # saida (com teleporte)
+    b.clear_items(*exitpad)
+    b.put(exitpad[0], exitpad[1], TELEPORT_ITEM,
+          tele_dest=(outside_front[0], outside_front[1], FLOOR))
+    b.put(exitpad[0], counter_y + 1, SIGN, text="Saida - %s" % npc_name)
+
+    b.put(x0 + 1, y0 + 1, CHEST)
+    b.put(x1 - 1, y0 + 1, CHEST)
+    for (lx, ly) in ((x0 + 1, y1 - 1), (x1 - 1, y1 - 1)):
+        c = b.cells.get((lx, ly))
+        if c is not None and not c.items:      # sala estreita pode coincidir com o pad de saida
+            b.put(lx, ly, sid["paper_lantern"])
+    return npc_pos, landing
+
+
+def build_shop_interiors(b, sid, shop_doors):
+    """Constroi as 3 salas (longe do resto do mapa, x>=1300, mesmo andar) e
+    liga cada uma a porta da fachada por teleporte: a ENTRADA fica na propria
+    celula da porta (empilhada sobre o item de porta da fachada — a porta
+    continua visivel, so ganha a funcao de teleporte); a SAIDA fica dentro da
+    sala e devolve pra rua, um tile a frente da porta (nunca na porta em si,
+    pra nao criar loop). Devolve {nome_do_npc: posicao_dentro_da_sala}."""
+    layout = [
+        ("Ichiro, o Mercador", INTERIOR_ICHIRO),
+        ("Mestre Hayato", INTERIOR_HAYATO),
+        ("Capitã Rin", INTERIOR_RIN),
+    ]
+    npc_positions = {}
+    for (name, rect) in layout:
+        door = shop_doors.get(name)
+        if door is None:
+            continue
+        outside_front = (door[0], door[1] + 1)
+        npc_pos, landing = build_shop_interior(b, sid, rect, name, outside_front)
+        b.put(door[0], door[1], TELEPORT_ITEM,
+              tele_dest=(landing[0], landing[1], FLOOR))
+        npc_positions[name] = npc_pos
+    return npc_positions
+
+
+def build_arena(b, sid):
+    """Arena de pedra 30x20 pro Exame Chunin: piso de pedra, arquibancada =
+    anel de bancos encostado na muralha interna. Teleporte de entrada fica na
+    Academia (ACADEMY_GATE_TP); o pad de retorno fica dentro da arena, um
+    tile ao lado do pouso da entrada (mesma regra anti-loop de
+    build_shop_interior)."""
+    x0, y0, x1, y1 = ARENA
+    b.fill(x0, y0, x1, y1, STONE_FLOOR)
+    b.walls(x0, y0, x1, y1, STONE_WALL_H, STONE_WALL_V, STONE_WALL_C)
+    for x in range(x0 + 1, x1):
+        for y in (y0 + 1, y1 - 1):
+            c = b.cells.get((x, y))
+            if c is not None and not c.items:
+                b.put(x, y, BENCH)
+    for y in range(y0 + 1, y1):
+        for x in (x0 + 1, x1 - 1):
+            c = b.cells.get((x, y))
+            if c is not None and not c.items:
+                b.put(x, y, BENCH)
+
+    cx, cy, _ = ARENA_CENTER
+    b.put(cx, cy, SIGN, text="Arena do Exame Chunin")
+    b.put(cx - 3, y0 + 1, TORCH)
+    b.put(cx + 3, y0 + 1, TORCH)
+
+    landing = ARENA_ENTRY_TP
+    ret = (ARENA_ENTRY_TP[0], ARENA_ENTRY_TP[1] - 1)
+    b.clear_items(*ret)
+    b.put(ret[0], ret[1], TELEPORT_ITEM,
+          tele_dest=(ACADEMY_GATE_TP[0] - 1, ACADEMY_GATE_TP[1], FLOOR))
+    b.put(ret[0] - 1, ret[1], SIGN, text="Sair -> Academia Ninja")
+    b.clear_items(*landing)
+    b.notes.append("arena do exame chunin: entrada=Academia, retorno em %r" % (ret,))
 
 
 # --------------------------------------------------------------- clareiras
@@ -826,6 +1109,20 @@ def build_spawns(b, npcs):
     sf.group(TOWER_CENTER[0], TOWER_CENTER[1], FLOOR, radius=1) \
         .add_monster("Sapo Ancião", 0, 0, spawntime=3600)
 
+    # torneio do Exame Chunin, na Arena — pedido de data/maps/spawns_lore.json
+    # (2x cada rival: Pedra, Som, Nevoa), perto do centro pra nao encostar
+    # nas arquibancadas nem no sinal.
+    acx, acy, _ = ARENA_CENTER
+    sf.group(acx - 3, acy - 3, FLOOR, radius=2) \
+        .add_monster("Rival do Exame — Pedra", 0, 0, spawntime=120) \
+        .add_monster("Rival do Exame — Pedra", 2, 0, spawntime=120)
+    sf.group(acx + 3, acy - 3, FLOOR, radius=2) \
+        .add_monster("Rival do Exame — Som", 0, 0, spawntime=120) \
+        .add_monster("Rival do Exame — Som", 2, 0, spawntime=120)
+    sf.group(acx, acy + 4, FLOOR, radius=2) \
+        .add_monster("Rival do Exame — Névoa", 0, 0, spawntime=120) \
+        .add_monster("Rival do Exame — Névoa", 2, 0, spawntime=120)
+
     # NPCs
     for (name, (nx, ny)) in npcs:
         sf.group(nx, ny, FLOOR, radius=1).add_npc(name, 0, 0, spawntime=60)
@@ -857,12 +1154,33 @@ def walkable_map(b, types):
     return walk
 
 
-def bfs(walk, start):
+def teleport_edges(b):
+    """{(x,y) -> (tx,ty)} para toda celula que tem um item com `tele_dest`
+    (interiores das lojas, arena do exame chunin). O BFS de conectividade
+    trata isso como uma passagem extra alem dos 4 vizinhos — sem isso, tudo
+    que so e alcancavel por teleporte (interiores, arena) reportaria falso
+    positivo de "inalcancavel a pe"."""
+    edges = {}
+    for (x, y), c in b.cells.items():
+        for it in c.items:
+            dest = it.tele_dest
+            if dest is None:
+                continue
+            edges[(x, y)] = (dest[0], dest[1])
+    return edges
+
+
+def bfs(walk, start, teleports=None):
+    teleports = teleports or {}
     seen = {start}
     q = deque([start])
     while q:
         x, y = q.popleft()
-        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+        neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+        dest = teleports.get((x, y))
+        if dest is not None:
+            neighbors.append(dest)
+        for nx, ny in neighbors:
             if (nx, ny) in walk and (nx, ny) not in seen:
                 seen.add((nx, ny))
                 q.append((nx, ny))
@@ -891,21 +1209,39 @@ def validate(b, types, sf, npcs):
             problems.append("item %d nao existe no items.otb" % iid)
 
     walk = walkable_map(b, types)
+    teleports = teleport_edges(b)
     start = (TEMPLE_POS[0], TEMPLE_POS[1])
     if start not in walk:
         problems.append("templo %r nao e caminhavel" % (start,))
         return problems, walk, set()
-    reach = bfs(walk, start)
+    reach = bfs(walk, start, teleports)
+
+    # NPCs de loja ficam de propósito atrás de um balcão que BLOQUEIA (como
+    # no Tibia de verdade): o jogador nunca pisa na célula do NPC, só chega
+    # perto o suficiente pra conversar. Por isso NPCs (e só eles) são
+    # validados por PROXIMIDADE (raio de "fala", não walk exato) — monstros
+    # continuam exigindo a célula exata caminhável, senão perderiam PvM real.
+    NPC_TALK_RADIUS = 3
+
+    def near_reach(px, py, radius=0):
+        if radius == 0:
+            return (px, py) in reach
+        return any((px + dx, py + dy) in reach
+                   for dx in range(-radius, radius + 1)
+                   for dy in range(-radius, radius + 1))
 
     for g in sf.groups:
-        if (g.x, g.y) not in reach:
+        is_npc_group = bool(g.creatures) and all(c[0] == "npc" for c in g.creatures)
+        radius = NPC_TALK_RADIUS if is_npc_group else 0
+        if not near_reach(g.x, g.y, radius):
             problems.append("centro de spawn (%d,%d) inalcancavel" % (g.x, g.y))
         for (px, py, _) in g.positions:
-            if (px, py) not in reach:
+            if not near_reach(px, py, radius):
                 problems.append("criatura em (%d,%d) inalcancavel" % (px, py))
     for (name, (nx, ny)) in npcs:
-        if (nx, ny) not in reach:
-            problems.append("NPC %s em (%d,%d) inalcancavel" % (name, nx, ny))
+        if not near_reach(nx, ny, NPC_TALK_RADIUS):
+            problems.append("NPC %s em (%d,%d) inalcancavel (nem a %d tiles do balcao)"
+                             % (name, nx, ny, NPC_TALK_RADIUS))
     return problems, walk, reach
 
 
@@ -935,6 +1271,11 @@ def to_otbm(b):
     m.add_waypoint("Torre", TOWER_CENTER[0], TOWER_CENTER[1], FLOOR)
     m.add_waypoint("Acampamento", CAMP_CENTER[0], CAMP_CENTER[1], FLOOR)
     m.add_waypoint("Hub Pantano", HUB[0] + 2, HUB[1] + 2, FLOOR)
+    m.add_waypoint("Portao Leste", GATE_E_X, (GATE_E_Y[0] + GATE_E_Y[1]) // 2, FLOOR)
+    m.add_waypoint("Rua dos Mercadores", SHOPS[1][3] + 1, SHOP_ROW_Y, FLOOR)
+    m.add_waypoint("Academia", ACADEMY[0] + 2, ACADEMY[1] + 2, FLOOR)
+    m.add_waypoint("Arena Chunin", ARENA_CENTER[0], ARENA_CENTER[1], FLOOR)
+    m.add_waypoint("Muro Floresta da Morte", DEATH_WALL[0], (DEATH_GATE_Y[0] + DEATH_GATE_Y[1]) // 2, FLOOR)
     return m
 
 

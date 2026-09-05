@@ -3,9 +3,7 @@
  "format": 1,
  "root": "assets-src/import/player",
  "build_dir": "assets-src/import/player/_sheets",
-
  "_doc_creatures": "'directions' (imports.py, Importer.creature_dirs): 0=Norte, 1=Leste, 2=Sul, 3=Oeste; 'idle' = frame group 0 (1 fase), 'walk' = frame group 1 (N fases). Um quadro e uma string ou {\"src\":..., \"mirror\":true}. 'mirror_of': N gera a direcao espelhando a N. layers=1 (arte ja colorida). Escala unica + base dos pes para nao pular ao animar.",
-
  "creatures": [
   {
    "id": 128,
@@ -15,30 +13,36 @@
    "_uso": "OUTFIT PADRAO DO JOGADOR (looktype 128) + rogue_ninja, merchant_leaf, quest_giver_swamp",
    "directions": {
     "0": {
-     "_dir": "norte / costas (aproximacao: nao ha vista de costas no material). 0068 e o UNICO quadro em que os olhos nao foram desenhados — a 32px a faixa clara sob a bandana le como a nuca. O ciclo e 0068 e o seu espelho: o pe da frente troca de lado e o rosto nunca aparece. Testado in-game: usar 0074 na fase de passagem fazia PISCAR um rosto de frente a cada volta do ciclo.",
-     "idle": "sprite_0068.png",
+     "_dir": "norte / costas — SINTETIZADA a partir do perfil leste (char_synth.synthesize_back: mirror + repintura do rosto na cor do cabelo ~(200, 176, 78) + escurecimento). Antes disso o norte era so o quadro 0068 (o unico sem olhos desenhados) + seu espelho; agora usa o MESMO ciclo de pernas do leste (4 fases), so recolorido — anda de verdade em vez de balancar.",
+     "idle": "_synth/back_idle.png",
      "walk": [
-      "sprite_0068.png",
-      {"src": "sprite_0068.png", "mirror": true},
-      "sprite_0068.png"
+      "_synth/back_walk0.png",
+      "_synth/back_walk1.png",
+      "_synth/back_walk2.png",
+      "_synth/back_walk3.png"
      ]
     },
     "1": {
-     "_dir": "leste (perfil para a direita)",
+     "_dir": "leste (perfil para a direita) — 4a fase SINTETICA (deslocamento de pernas) somada as 3 reais",
      "idle": "sprite_0080.png",
      "walk": [
       "sprite_0084.png",
       "sprite_0083.png",
-      "sprite_0075.png"
+      "sprite_0075.png",
+      "_synth/east_walk3_synth.png"
      ]
     },
     "2": {
-     "_dir": "sul / de frente",
+     "_dir": "sul / de frente — 4a fase SINTETICA somada as 3 reais (0070, 0076, 0070-espelhado)",
      "idle": "sprite_0071.png",
      "walk": [
       "sprite_0070.png",
       "sprite_0076.png",
-      {"src": "sprite_0070.png", "mirror": true}
+      {
+       "src": "sprite_0070.png",
+       "mirror": true
+      },
+      "_synth/south_walk3_synth.png"
      ]
     },
     "3": {
@@ -47,7 +51,6 @@
     }
    }
   },
-
   {
    "id": 898,
    "name": "naruto_attack",
@@ -58,15 +61,30 @@
    "directions": {
     "0": {
      "idle": "sprite_0043.png",
-     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+     "walk": [
+      "sprite_0043.png",
+      "sprite_0031.png",
+      "sprite_0017.png",
+      "sprite_0012.png"
+     ]
     },
     "1": {
      "idle": "sprite_0043.png",
-     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+     "walk": [
+      "sprite_0043.png",
+      "sprite_0031.png",
+      "sprite_0017.png",
+      "sprite_0012.png"
+     ]
     },
     "2": {
      "idle": "sprite_0043.png",
-     "walk": ["sprite_0043.png", "sprite_0031.png", "sprite_0017.png", "sprite_0012.png"]
+     "walk": [
+      "sprite_0043.png",
+      "sprite_0031.png",
+      "sprite_0017.png",
+      "sprite_0012.png"
+     ]
     },
     "3": {
      "_dir": "oeste — espelho do leste, para o soco sair no sentido certo",

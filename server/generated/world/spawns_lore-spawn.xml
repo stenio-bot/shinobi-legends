@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<!-- Referência de spawns. Coordenadas do protótipo (x,y) + offset; ajuste ao mapa .otbm real. -->
+<spawns>
+</spawns>

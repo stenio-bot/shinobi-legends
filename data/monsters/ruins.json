@@ -136,7 +136,7 @@
   {
     "id": "spectral_warrior",
     "name": "Guerreiro Espectral",
-    "description": "Morreu defendendo o clã e não aceitou a notícia.",
+    "description": "Um soldado raso do clã que morreu defendendo o templo e não aceitou a notícia.",
     "level": 38,
     "hp": 900,
     "attack": 60,
@@ -289,9 +289,81 @@
     "article": "um"
   },
   {
+    "id": "elite_deserter",
+    "name": "Desertor de Elite",
+    "description": "Um gênio que abandonou a própria vila atrás de poder proibido e agora recruta para a Toca do Som antes de seguir viagem — eco do arco de Resgate do Sasuke / Quatro do Som (docs/lore/pesquisa-naruto.md).",
+    "level": 46,
+    "hp": 2600,
+    "attack": 74,
+    "defense": 24,
+    "speed": 4.8,
+    "element": "katon",
+    "xp": 2200,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 4,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Corte Genjutsu",
+        "damage_min": 58,
+        "damage_max": 88,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      },
+      {
+        "name": "Chama Dirigida",
+        "damage_min": 50,
+        "damage_max": 76,
+        "cooldown_s": 5.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "burn",
+            "chance": 0.4,
+            "duration_s": 5,
+            "value": 9
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 40,
+        "attack_multiplier": 1.3,
+        "message": "Poder de verdade não se pede. Se toma."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "deserter_seal",
+        "chance": 1.0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "scroll_katon_karyuu",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_medium",
+        "chance": 1.0,
+        "min": 2,
+        "max": 4
+      }
+    ],
+    "ryo_min": 250,
+    "ryo_max": 500,
+    "respawn_s": 5400,
+    "sprite": "mon_elite_deserter",
+    "article": "o"
+  },
+  {
     "id": "boss_puppeteer",
     "name": "Marionetista das Ruínas",
-    "description": "Boss das Ruínas do Clã. Não luta: manda as marionetes lutarem.",
+    "description": "Último herdeiro do clã extinto que servia à Vila da Areia com bonecos de guerra. Boss das Ruínas do Clã Marionetista. Não luta: manda as marionetes lutarem. Derrotá-lo é um dos dois requisitos do Exame Jonin (docs/lore/progressao.md).",
     "level": 50,
     "hp": 9100,
     "attack": 83,

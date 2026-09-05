@@ -325,22 +325,45 @@ A triagem quadro → (direção, fase) fica versionada em
 escolha, nenhuma imagem. Quem o build lê de verdade é
 `assets-src/sprites/overrides/30_player.json`.
 
-| Direção | Parado | Andar (contato, passagem, contato oposto) |
+| Direção | Parado | Andar (4 fases) |
 |---|---|---|
-| 0 Norte (costas) | 0068 | 0068, 0068 espelhado, 0068 |
-| 1 Leste | 0080 | 0084, 0083, 0075 |
-| 2 Sul (frente) | 0071 | 0070, 0076, 0070 espelhado |
+| 0 Norte (costas) | **SINTETIZADA** (`_synth/back_idle.png`) | `_synth/back_walk0..3.png` |
+| 1 Leste | 0080 | 0084, 0083, 0075, **synth** (`_synth/east_walk3_synth.png`) |
+| 2 Sul (frente) | 0071 | 0070, 0076, 0070 espelhado, **synth** (`_synth/south_walk3_synth.png`) |
 | 3 Oeste | espelho do leste | espelho do leste |
 
 O ciclo do leste foi escolhido medindo os **pés** (pixels de sandália no terço
 inferior): 0084 = pé direito no ar (vão 15 px), 0083 = pés juntos na passagem
 (vão 2 px), 0075 = pé esquerdo no ar (vão 13 px), os três com 39 px de altura.
-0068 é o único quadro **alto** em que os olhos não foram desenhados: a 32 px a
-faixa clara sob a bandana lê como a nuca, e por ser alto virar de sul para norte
-não encolhe o boneco.
 
 O ataque 898 usa 0043 (guarda) → 0031 (recuo) → 0017 (jab) → 0012 (avanço), nas 4
-fases do frame group "andando".
+fases do frame group "andando" (inalterado por este trabalho).
+
+### Atualização: costas sintetizada + 4ª fase (`import_player.py`)
+
+O material de 76 quadros **não tem nenhuma vista de costas** (documentado desde
+sempre) — o norte usava o quadro 0068 (o único sem olhos desenhados: a 32 px a
+faixa clara sob a bandana lia como nuca) + seu espelho, e o ciclo de andar tinha
+só **3** fases em toda direção. `tools/spr/import_player.py` (novo) aplica ao 128
+a mesma técnica do `import_mugen.py`:
+
+1. **Costas sintetizada** (`char_synth.synthesize_back`): espelha o quadro 0080
+   (idle leste), detecta a região de PELE da cabeça (dilatada 3px para pegar
+   contorno de olhos/sobrancelha), repinta com a cor de **cabelo** do personagem
+   (amostrada dos fios acima da bandana — ver `hair_color()`, que ignora a faixa
+   azul da bandana, que dominava a média ingênua) e escurece ~14%. Aplicado ao
+   idle E às 4 fases de andar do leste (mesmo ciclo de pernas, só recolorido):
+   agora o norte **anda de verdade** em vez de só balançar entre 2 poses.
+2. **4ª fase de andar sintética** (`char_synth.synth_walk_offset`) no leste e no
+   sul: desloca a metade inferior (pernas) do quadro de passagem alguns px para
+   o lado oposto + leve inclinação, para completar o ciclo sem repetir uma pose.
+3. **Nitidez**: automática — é o novo padrão de `imports.fit_uniform`
+   (downscale por área + realce + contorno 1px), usado por *toda* criatura com
+   `directions`, então o 128 já ganhou o pipeline sem precisar de nada específico
+   aqui (ver seção "Personagens MUGEN" abaixo para o comparativo que decidiu isso).
+
+`assets-src/import/player/_synth/` guarda os PNGs gerados (privado, fora do git).
+Rodar de novo: `.venv/bin/python tools/spr/import_player.py` (idempotente).
 
 ### `directions` no `imports.py`
 
@@ -394,28 +417,31 @@ citado nos XML do TFS, hoje 878..897) para chefes 2×2 — por isso o ataque usa
 arte no intervalo ("todo id de 1..max precisa existir"). Depois desta mudança o
 `.dat` tem 898 criaturas em vez de 897.
 
-### Teste in-game (2 rodadas)
+### Teste in-game (3 rodadas, ver seção MUGEN para o script `charwalk_rc.lua`)
 
-Cópia temporária de `client-otc/tests/autotest_rc.lua` em
-`client-otc/shinobirc.lua`: login `god`, `/arena` (sai da protection zone),
-`/looktype 128`, `g_game.walk` 6× em cada direção e `g_app.doScreenshot` a cada
-130 ms durante o movimento. Resultado em `screenshots/player_*.png`.
-
-- **Rodada 1** pegou um defeito: a fase de passagem do norte era o quadro 0074
-  (cabeça baixa, mas com rosto desenhado) e **piscava um rosto de frente** a cada
-  volta do ciclo. Trocada pelo espelho do 0068.
-- **Rodada 2** (final): as 4 direções corretas, pés no chão em todas as fases,
-  sem mudança de tamanho ao virar, leste e oeste espelhados, ciclo do leste com
-  as 3 poses visivelmente distintas.
+O 128 foi testado JUNTO com os MUGEN no mesmo `client-otc/tests/charwalk_rc.lua`
+(6 passos por direção, 3 screenshots a ~150ms durante o movimento). Resultado
+final: costas com cabelo loiro visível e pernas andando de verdade no norte,
+perfil correto em leste/oeste, frente reconhecível no sul, pés no chão nas 4
+direções, sem mudança de tamanho ao virar. Ver a seção MUGEN para as 3 rodadas
+completas (2 primeiras falharam por causa do AMBIENTE de teste — monstro
+sobrevivente de outra sessão paralisando o jogador, depois uma sessão presa no
+servidor —, não da arte; corrigido trocando `/arena` por um `/tp` fixo na praça
+e reiniciando o servidor).
 
 ### Limitações
 
-- Não há vista de costas: o norte é 0068 + espelho, então o ciclo tem só **2
-  poses distintas** e lê como um balanço, não como uma passada.
-- Não há passo frontal: o sul usa 0070 e o seu espelho para simular a alternância.
+- A costas sintetizada usa o MESMO ciclo de pernas do leste (só recolorido): se
+  o jogador olhasse de verdade o material teria outro ritmo de passada; é uma
+  aproximação, não uma vista real.
+- Não há passo frontal de verdade: o sul usa 0070/0076/0070-espelhado + 1 fase
+  sintética; a "passada" frontal é uma simulação por deslocamento, não uma
+  perna real levantando.
 - O oeste é espelhado do leste, então bandana e zíper trocam de lado (invisível a
   32 px).
-- Os quadros de 39–41 px são reduzidos a 80% e perdem ~1 px de detalhe no rosto.
+- Os quadros de 39–41 px são reduzidos e perdem ~1 px de detalhe no rosto (o
+  contorno 1px pós-redução devolve parte da legibilidade — ver comparativo de
+  nitidez na seção MUGEN).
 - `layers = 1`: as cores de outfit (`head/body/legs/feet`) que o servidor manda
   são ignoradas no 128 — todo jogador fica com a mesma roupa laranja.
 - O looktype 898 tem a mesma arte nas 4 direções (só o oeste é espelhado): quem
@@ -423,134 +449,296 @@ Cópia temporária de `client-otc/tests/autotest_rc.lua` em
 
 ## Personagens MUGEN (`import_mugen.py` + `overrides/40_mugen.json`)
 
-Os looktypes **900–926** são 26 personagens de Naruto vindos de um material
-privado do usuário em `assets-src/import/mugen/` (fora do git, ADR-002): 21.653
-BMPs paletados, rips estilo MUGEN/JUS de um jogo de luta. A numeração é **fixa** e
-vive em `assets-src/sprites/mugen_looktypes.json` (looktype → pasta → nome), que é
-versionado e serve tanto para a arte quanto para o uso no jogo.
+Os looktypes **900–926** são 27 personagens de Naruto (26 nomes distintos + o
+Minato Edo como variação) vindos de um material privado do usuário em
+`assets-src/import/mugen/` (fora do git, ADR-002): 21.653 BMPs paletados, rips
+estilo MUGEN/JUS de um jogo de luta. A numeração é **fixa** e vive em
+`assets-src/sprites/mugen_looktypes.json` (looktype → pasta → nome), versionado.
 
 ```bash
-.venv/bin/python tools/spr/import_mugen.py           # triagem + PNGs + 40_mugen.json
+.venv/bin/python tools/spr/survey_mugen.py           # varredura EXAUSTIVA + _survey_<lt>.png
+.venv/bin/python tools/spr/import_mugen.py           # triagem final + PNGs + 40_mugen.json
 .venv/bin/python tools/spr/import_mugen.py --report  # só o diagnóstico, não grava
 .venv/bin/python tools/spr/import_mugen.py --only 913 922
+.venv/bin/python tools/spr/import_player.py          # mesma técnica aplicada ao 128
 .venv/bin/python tools/spr/build_assets.py
 .venv/bin/python tools/spr/dump_dat.py               # validacao: OK, divergencias=0
 ```
 
+### Retrabalho (feedback: "a forma de andar está errada ainda, muito ruim")
+
+A primeira versão deste pipeline resolvia o básico (parado + 3 fases de andar,
+mesma escala, sem escorregar) mas deixava três problemas que o usuário sentiu
+jogando: (1) olhando **para os lados** o personagem sempre aparecia de **perfil**
+mesmo andando para norte/sul; (2) **5 personagens** não tinham ciclo de andar
+real e só "respiravam" parados; (3) o downscale 60→32px direto por LANCZOS
+borrava detalhe. As três seções abaixo (varredura exaustiva, síntese de costas e
+4ª fase, comparativo de nitidez) documentam a correção.
+
 ### O que o material é (e o que não é)
 
 Vista **lateral** de jogo de luta: o personagem olha para a direita ou para a
-esquerda. **Não existe vista de frente nem de costas** em nenhum dos 26 rips
-(conferido com um detector de pele na faixa da cabeça — ver `pick_back`, hoje só
-acessível por override manual). O fundo é a **cor-chave do índice 0 da paleta**,
-cuja cor concreta muda de quadro para quadro (verde escuro, verde neon…).
+esquerda. A varredura exaustiva (`survey_mugen.py`, TODO quadro do rip, não só
+os primeiros ~200) confirma: **não existe vista de costas real em nenhum dos 27
+rips** — o classificador de orientação (pele no terço superior: simétrica =
+frente, ausente = costas, concentrada de um lado = perfil) só encontra "costas"
+em blobs de efeito (chakra, fumaça) sem pele nenhuma, nunca um personagem
+virado. Muitos rips (vários desenhados num ângulo 3/4 "heroico", não 90° puro)
+**têm sim** poses de frente/3-4 espalhadas pelo arquivo — geralmente vitória,
+intro ou um chute/soco que gira o corpo para a câmera — e a varredura consegue
+achar candidatos aproveitáveis para o Sul em 25 dos 27. O fundo é a **cor-chave
+do índice 0 da paleta**, cuja cor concreta muda de quadro para quadro.
 
 A ordem dos arquivos é *quase* sempre: ícone, retrato 120×140, parado
 (respirando), agachar, andar, correr, pular e depois dezenas de golpes — mas
 varia o bastante para não dar para confiar em índices fixos. O script mede cada
 quadro.
 
-### Conversão e peneiras
+### Varredura exaustiva (`survey_mugen.py`)
 
-1. **BMP → RGBA** com chave dupla: índice 0 da paleta **e** a cor exata do pixel
-   (0,0). Alguns rips remapeiam a paleta; o canto superior esquerdo é sempre fundo.
-2. **Tamanho**: acima de 96 px de lado é tela/efeito (320×240, 632×480…); abaixo
-   de 12×20 é faísca, poeira ou ícone.
-3. **Densidade da caixa**: abaixo de 10% é fumaça espalhada, acima de 75% é uma
-   bola/pedra sólida (vários rips começam com dezenas dessas).
-4. **Altura típica**: a moda das alturas do rip é a altura do personagem — ele
-   aparece em centenas de quadros, cada efeito em poucos. Serve de **piso** para
-   a busca da pose parada.
+Novo script: le **todos** os BMPs de cada personagem (sem o teto de ~200
+arquivos da triagem antiga), classifica cada quadro por:
+
+- **orientação** — `frente` / `perfil_direita` / `perfil_esquerda` / `3/4` /
+  `costas`, pela razão e assimetria de pele no terço superior da caixa;
+- **pose** — `parado` / `andar` / `correr` / `pular` / `ataque` / `especial` /
+  `dano` / `vitoria` / `outro`, por uma combinação de altura relativa ao parado,
+  proporção largura/altura, movimento de silhueta entre vizinhos e (para
+  "vitória") posição no arquivo. **Isto é heurística best-effort**, não um fato:
+  serve para gerar candidatos que o artista (eu) revisou visualmente, não para
+  decidir sozinha.
+
+Também estima por personagem a **cor de pele** e a **cor de cabelo** (cluster
+pela cor mais frequente — moda, não média, dos pixels que passam no teste de
+tom de pele / dos pixels do topo da cabeça que não são pele), usadas depois pela
+síntese de costas.
+
+Saída: `assets-src/import/extracted/mugen/_survey_<looktype>.png` — uma linha
+por orientação, colunas = melhor candidato de cada pose encontrada, com o
+número do arquivo abaixo. Os 27 foram olhados um a um; a varredura confirmou o
+"sem costas real" e ajudou a calibrar o filtro do candidato de frente (ver
+próxima seção — o primeiro candidato automático pegava um quadro adjacente ao
+parado, quase idêntico a ele, e foi preciso excluir a própria corrida do parado
+e exigir uma diferença mínima de silhueta).
 
 ### Escolha automática dos quadros
 
 - **Parado** = a animação de *respirar*: a **primeira** corrida de quadros
-  consecutivos com a silhueta quase constante (altura e largura variando ≤ 4 px)
-  e mais alta que larga (`w ≤ 0,90 h`). Dentro dela fica o quadro **mediano pelo
-  vão entre os pés**. Também testei "a corrida mais longa" e "a mais estreita":
-  as duas erram mais (a mais longa pega o ciclo de andar do Kakashi, a mais
-  estreita pega uma pose inclinada do Naruto Kid).
-- **Andar** = 3 quadros **consecutivos** com a mesma altura do parado, com o
-  **vão entre os pés oscilando** (contato → passagem → contato oposto, o mesmo
-  critério do `30_player.json`), silhueta realmente mudando entre as fases
-  (diferença de máscara ≥ 3%), paleta parecida com a do parado (cosseno ≥ 0,80,
-  o que derruba espadas de chakra e mantos de raposa) e contagem de pixels a até
-  ±45% da do parado. Três passadas, da mais exigente para a mais tolerante:
-  primeiros 45 quadros com ±3 px de altura, depois ±6 px, depois até o quadro 120.
-- **Lado** = massa de pixels de **pele no terço superior** à esquerda × à direita
-  da caixa. Leste = olhando para a direita; se o rip olha para a esquerda, todos
-  os quadros entram espelhados e o oeste desespelha.
-- **Norte/Sul**: não existem no material. As três direções N/L/S usam o mesmo
-  perfil e o oeste é `mirror_of: 1`.
+  consecutivos com a silhueta quase constante e mais alta que larga. Dentro dela
+  fica o quadro **mediano pelo vão entre os pés**. Inalterado desde a v1.
+- **Andar, agora com 4 fases**: o script tenta primeiro uma janela de **4**
+  quadros consecutivos com a mesma altura do parado e **2 alternâncias** no vão
+  entre os pés (contato-passagem-contato-passagem — `_walk4_in`), em 4 passadas
+  de tolerância crescente, olhando o rip **inteiro** se precisar. **22 dos 27**
+  acharam um ciclo real de 4 fases (`real4`); os outros 5 (902 Sakura Kid, 907
+  Minato, 908 Minato Edo, 915 Sasuke Akatsuki, 925 Naruto Girl — os mesmos "sem
+  ciclo de andar" da v1) caem para 3 fases reais (`real3`) + **1 fase
+  sintética**.
+- **Frente (Sul)**: `pick_front` procura, no rip INTEIRO, o melhor quadro
+  classificado `frente` ou `3/4`, com altura parecida com o parado, paleta
+  parecida (não é um efeito) e **silhueta suficientemente diferente do parado**
+  (motion ≥ 5%, excluindo a própria corrida do parado) — sem esse último filtro
+  o candidato mais "barato" era um quadro vizinho ao parado, visualmente idêntico
+  a ele. Achou candidato em **25 dos 27** (não achou em 923 Naruto 6 Caldas, que
+  cai para o perfil do Leste).
+- **Lado** = massa de pele no terço superior à esquerda × à direita. Inalterado.
+- **Costas (Norte)**: **sintetizada**, nunca copiada do material — ver próxima
+  seção.
+
+### Síntese de costas (`char_synth.synthesize_back`)
+
+Como não existe costas real em nenhum rip, o Norte agora é **gerado** a partir
+do ciclo de perfil (idle + as 4 fases de andar), com a técnica pedida:
+
+1. **Espelha** o quadro horizontalmente (`ImageOps.mirror`).
+2. **Detecta a região de pele da cabeça** (~46% superior da caixa, o mesmo
+   detector de tom de pele usado para orientação), **dilata a máscara 3px** para
+   pegar contorno de olhos/sobrancelha/boca que não são "pele" pelo teste de cor
+   mas ficam cercados por ela.
+3. **Repinta** essa região com a **cor de cabelo** estimada do personagem,
+   preservando parte da luminância original do pixel (não fica um floodfill
+   chapado — mantém alguma sombra/luz onde já havia).
+4. **Escurece** o sprite inteiro ~14% (RGB × 0,86).
+5. A **silhueta (alpha) não muda** — o quadro de costas continua alinhado ao
+   mesmo ciclo de passos do perfil, só recolorido. Isso é o que faz o Norte
+   **andar de verdade** em vez de balançar: as pernas se movem exatamente como
+   no Leste, só a cabeça lê como nuca em vez de rosto.
+
+Exceção: as 4 formas de raposa/quadrúpede (921, 922, 923, 926 — `NO_FACE_SYNTH`)
+não têm "rosto" reconhecível (é chakra/pelagem), então só recebem o
+escurecimento, sem tentativa de repintura de rosto (que geraria manchas
+aleatórias num bicho sem cara).
+
+Antes/depois (Naruto Kid, 900): o perfil original (0004) tem cabelo loiro e
+rosto visível olhando para a direita; a costas sintetizada mostra o mesmo
+boneco, espelhado, com a região do rosto virada um blob de cabelo
+dourado-acastanhado (a cor estimada, mais escura que o loiro puro por causa do
+escurecimento geral) e sem olhos/faixa — lê como "de costas" à distância de
+jogo. Aplicado também ao 128 (jogador): a cor de cabelo estimada bateu em
+azul-acinzentado na primeira tentativa (a amostra do "terço superior" pegava
+mais a bandana do que os fios, num sprite de só 40px de altura); corrigido com
+um detector específico de pixels QUENTES (r>g>b) no `import_player.py`, que deu
+um dourado plausível.
+
+### 4ª fase sintética (`char_synth.synth_walk_offset`)
+
+Onde só há 3 fases reais (ou nenhuma), a 4ª é sintetizada deslocando a metade
+inferior (pernas, ~55% de baixo) horizontalmente 1-3px com uma leve inclinação
+(shear) que cresce da cintura ao pé, e a imagem inteira 1px na vertical (o
+"baloiço" do passo) — **nunca** a imagem inteira nem um efeito aleatório, só a
+região das pernas, para parecer passo e não tremor. Nos 5 personagens sem ciclo
+nenhum, as 4 fases inteiras (incluindo a 0ª = parado) vêm dessa síntese, com
+deslocamentos alternados (+2/0/-2px) simulando um balanço de perna esquerda →
+direita → esquerda.
 
 ### Overrides manuais
 
-`OVERRIDES`, no topo de `tools/spr/import_mugen.py`, permite fixar `idle`,
-`walk`, `faces` e `back` por looktype, pelo **número do arquivo** (`_NNNN`), não
-pelo índice na lista filtrada. **11 dos 26** precisaram:
+`OVERRIDES`, no topo de `tools/spr/import_mugen.py`, fixa `idle`, `walk`
+(3 ou 4 números — 3 ganha a 4ª fase sintética), `faces` e `front` por looktype,
+pelo **número do arquivo**. Mesmos 11 casos da v1 (ver tabela no histórico do
+arquivo), sem mudança de motivo.
 
-| Motivo | Looktypes |
+### Comparativo de nitidez (`tools/spr/compare_sharpen.py`)
+
+Quatro variantes testadas no downscale ~60px→32px (folha ampliada 4×, 4
+personagens de paletas bem diferentes: Naruto laranja, Kakashi verde/cinza,
+Madara vermelho/preto, Sakura rosa/branco):
+
+| Variante | Resultado |
 |---|---|
-| O rip **não tem** ciclo de andar (só parado, agachar, pular e golpes) — uso as fases do respirar como andar | 902 Sakura Kid, 907 Minato, 908 Minato Edo, 915 Sasuke Akatsuki, 925 Naruto Girl |
-| A heurística elegeu um golpe com efeito grande como "andar" | 919 Naruto Sennin, 920 Naruto KCM |
-| Forma de raposa: o rip começa com dezenas de efeitos e o bicho é quadrúpede | 921 1 Calda, 922 4 Caldas, 923 6 Caldas, 926 Kid Fox (só o lado) |
-| A primeira corrida de silhueta constante era um "apontar o braço" em loop | 911 Pain |
+| (a) recorte + LANCZOS direto (o que já existia) | boa, mas borda um pouco solta no fundo |
+| (b) downscale por ÁREA (`Image.BOX`, média dos pixels) + realce (`unsharp`) | quase igual a (a), levemente mais limpo |
+| (c) (a) + quantização à paleta original (nearest-color por pixel) | **ruim** — criou ruído de sal-e-pimenta nas bordas: o material tem antialiasing (centenas de tons), então um pixel de borda intermediário fica **equidistante** de cores muito diferentes da paleta reduzida e escolhe errado (ex.: um pixel laranja-claro de transição virou branco ou azul) |
+| (d) = (c) + contorno 1px | mesmo defeito de (c), só com bordas mais duras |
+| (e) = (b) + contorno escuro de 1px redesenhado após a redução | **vencedora** — silhueta nítida, sem ruído, cores fiéis |
+
+A quantização de paleta (c/d) foi **testada e descartada**: parecia a técnica
+mais "correta" no papel (evitar tons intermediários) mas piorou visualmente
+porque o material de origem não é pixel-art de paleta pequena, é um rip com
+antialiasing pesado. A vencedora foi (e): `imports.fit_uniform` agora faz
+downscale por área + realce (`amount=0.8`) e redesenha um contorno escuro de 1px
+na silhueta final — **automático para toda criatura com `directions`** (mugen E
+o outfit do jogador), sem precisar de flag nenhuma (`sharpen=True` é o padrão;
+dá para desligar com `sharpen=False` se algum caso futuro precisar do
+comportamento antigo).
+
+### Tabela final por personagem
+
+| Look | Nome | Parado | Andar (4 fases) | Frente (Sul) | Notas |
+|---|---|---|---|---|---|
+| 900 | Naruto Kid | 0004 | 0029/30/31/32 real4 | 0066 real | |
+| 901 | Sasuke Kid | 0005 | 0028/29/30/31 real4 | 0048 real | |
+| 902 | Sakura Kid | 0004 | 0003/04/05 + synth | 0055 real | sem ciclo real (override) |
+| 903 | Hinata | 0003 | 0053/54/55/56 real4 | 0060 real | |
+| 904 | Rock Lee | 0005 | 0047/48/49/50 real4 | 0024 real | |
+| 905 | Tenten | 0005 | 0113/14/15/118 real4 | 0192 real | leque gigante em todo quadro |
+| 906 | Kakashi | 0004 | 0028/29/30/31 real4 | 0020 real | |
+| 907 | Minato | 0003 | 0003/04/05 + synth | 0076 real | sem ciclo real (override) |
+| 908 | Minato Edo | 0005 | 0005/06/07 + synth | 0070 real | sem ciclo real (override) |
+| 909 | Killer Bee | 0006 | 0070/71/72/73 real4 | 0047 real | |
+| 910 | Itachi | 0005 | 0124/25/26/27 real4 | 0113 real | |
+| 911 | Pain | 0008 | 0036/37/38/40 real4 | 0009 real | idle por override |
+| 912 | Obito | 0003 | 0082/83/84/85 real4 | 0087 real | |
+| 913 | Madara | 0005 | 0025/26/27/28 real4 | 0100 real | |
+| 914 | Sasuke Taka | 0002 | 0082/83/84/85 real4 | 0059 real | |
+| 915 | Sasuke Akatsuki | 0003 | 0002/03/04 + synth | 0064 real | sem ciclo real (override) |
+| 916 | Sasuke Rinnegan | 0006 | 0057/58/59/60 real4 | 0063 real | |
+| 917 | Sakura | 0005 | 0017/18/19/20 real4 | 0060 real | |
+| 918 | Sakura The Last | 0004 | 0112/14/15/116 real4 | 0381 real | |
+| 919 | Naruto Sennin | 0004 | 0014/15/16 + synth | 0055 real | walk por override |
+| 920 | Naruto KCM | 0005 | 0019/20/21 + synth | 0004 real | walk por override |
+| 921 | Naruto 1 Calda | 0005 | 0012/13/14 + synth | 0200 real | quadrúpede, sem repintura de rosto |
+| 922 | Naruto 4 Caldas | 0076 | 0079/81/82 + synth | 0508 real | quadrúpede, sem repintura de rosto |
+| 923 | Naruto 6 Caldas | 0022 | 0030/31/32 + synth | **perfil (Leste)** | quadrúpede; sem candidato de frente |
+| 924 | Naruto Ashura | 0004 | 0020/21/22/23 real4 | 0135 real | |
+| 925 | Naruto Girl | 0006 | 0005/06/07 + synth | 0197 real | sem ciclo real (override) |
+| 926 | Naruto Kid Fox | 0001 | 0013/14/15/16 real4 | 0044 real | quadrúpede, sem repintura de rosto |
+| 128 | Jogador (Naruto laranja) | sprite_0071 (Sul) / 0080 (Leste) | 3 reais + 1 synth (todas direções) | 0071 real (já existia) | costas 100% sintetizada |
+
+Todas as 28 entradas têm **Norte = costas sintetizada** (nunca copiada do rip) e
+**Leste/Oeste = perfil espelhado**. "real4"/"real3+synth" = quantas das 4 fases
+de andar são quadros de verdade do rip vs. sintetizadas por deslocamento de
+pernas.
 
 ### Saídas
 
-- `assets-src/import/extracted/mugen/<looktype>/{idle,walk0,walk1,walk2}_NNNN.png`
-  — os quadros recortados (privado);
-- `assets-src/import/extracted/mugen/_review_<looktype>.png` — folha de revisão
-  por personagem: parado + 3 fases nas 4 direções, ampliada 3×, já passada pelo
-  `fit_uniform` (é o que o build vai gravar);
-- `assets-src/import/extracted/mugen/_review_all.png` — folha geral, uma linha
-  por personagem;
-- **`assets-src/sprites/overrides/40_mugen.json`** — o único versionado. Mesmo
-  esquema do `imports.json`/`30_player.json`; `root` aponta para o material bruto
-  e os `src` começam com `../extracted/` porque os recortes ficam fora dele. Toda
-  entrada cujo PNG não existir é ignorada com aviso: numa máquina sem o material
-  o build cai no placeholder.
+- `assets-src/import/extracted/mugen/<looktype>/{idle,walk0..3,back_idle,
+  back_walk0..3,front}_NNNN.png` — quadros recortados/sintetizados (privado);
+- `assets-src/import/extracted/mugen/_survey_<looktype>.png` — folha da
+  varredura exaustiva (candidatos por orientação × pose);
+- `assets-src/import/extracted/mugen/_review_<looktype>.png` — parado + 4 fases
+  de andar nas 4 direções (agora com costas sintetizada), ampliada 3×, já
+  passada pelo `fit_uniform`;
+- `assets-src/import/extracted/mugen/_review_all.png` — folha geral;
+- **`assets-src/sprites/mugen_frames.json`** — registro VERSIONADO (só índices e
+  metadados, nenhuma imagem) da escolha final por personagem: quadro do parado,
+  quadros de andar, `walk_kind`, lado, quadro de frente, cores de pele/cabelo
+  estimadas e notas — o que a tabela acima resume;
+- **`assets-src/sprites/overrides/40_mugen.json`** — o que o build lê de
+  verdade. Mesmo esquema do `imports.json`; toda entrada cujo PNG não existir é
+  ignorada com aviso.
 
 ### Encaixe
 
-`Importer.creature_dirs` + `fit_uniform`: **uma escala só por personagem**
-(`min(32/maior_largura, 32/maior_altura, 1)`), base dos pés no chão da célula e
-centro do apoio (centroide do terço inferior) no meio. Todos são **1×1**, como o
-outfit do jogador — nada vira 1×2. Madara (60 px) cai para ~53%, as formas de
-raposa (86 px de largura) para ~37% e ficam pequenas na célula: é o preço de um
-bicho quadrúpede e largo em 32×32.
+`Importer.creature_dirs` + `fit_uniform` (agora com o pipeline de nitidez da
+seção acima): uma escala só por personagem, base dos pés no chão da célula,
+centro do apoio no meio. Todos 1×1. Madara (60px) cai para ~53%, as formas de
+raposa (86px de largura) para ~37% — preço de um bicho quadrúpede largo em
+32×32, inalterado desde a v1.
 
-### Teste in-game (2 rodadas)
+### Teste in-game (3 rodadas)
 
-Cópia temporária de `client-otc/tests/mugen_rc.lua` em `client-otc/shinobirc.lua`
-(removida no fim): login `god`, `/arena`, e para 900, 901, 906, 911, 913 e 922
-troca de outfit + `g_game.walk` nas 4 direções com 2 screenshots por direção →
-`screenshots/mugen_<looktype>_*.png`. **0 erros no cliente.**
+Novo script `client-otc/tests/charwalk_rc.lua` (temporário, copiado para
+`client-otc/shinobirc.lua` e removido no fim): login `god`, troca de outfit **no
+cliente** (`setOutfit`, contorna o `/looktype` do TFS que recusa id ≥ 903) para
+**128, 900, 901, 902, 903, 906, 909, 913**, 6 passos (`g_game.walk`) em cada
+direção com 3 screenshots a ~150ms de intervalo DURANTE o movimento →
+`screenshots/walk_<looktype>_<dir>_<i>.png`.
 
-- **Rodada 1** achou dois defeitos do *teste* (não da arte): o `/looktype` do TFS
-  recusa id ≥ 903 (`server/tfs/data/talkactions/scripts/looktype.lua`, fora do
-  escopo deste trabalho), então o rc passou a trocar o outfit **no cliente**
-  (`localPlayer:setOutfit`) — quem desenha e anima a criatura é ele, é o
-  suficiente para conferir a arte; e 3 `zoomIn` cortavam o boneco na captura.
-- **Rodada 2** (final): os 6 renderizam certo, pés no chão, sem mudar de tamanho
-  ao virar, as 3 fases de andar visivelmente diferentes e o oeste espelhado.
+- **Rodada 1**: o teleporte inicial usava `/arena` (como na v1) — mas um monstro
+  "Sapo Ancião" **sobrevivente de uma sessão de teste anterior** (o servidor
+  estava rodando há dezenas de minutos, com bichos invocados por
+  `autotest_rc.lua` ainda vivos) estava parado bem no ponto da arena e
+  **paralisava o jogador** ao chegar (`"You are paralyzed"`), impedindo os
+  `g_game.walk` de moverem o personagem — screenshots mostravam o monstro, não
+  o personagem andando. Defeito do AMBIENTE de teste, não da arte.
+- **Rodada 2**: trocado `/arena` por um `/tp` fixo na praça (zona de proteção,
+  garantidamente livre de bicho) — mas a sessão anterior não tinha se
+  desconectado direito do servidor (o cliente encerrou de forma abrupta ao
+  bater no timeout da Rodada 1) e o login da Rodada 2 ficou **preso** (`"GM has
+  logged in"` sem `"logged out"` correspondente no log do TFS), sem nunca entrar
+  em jogo. Corrigido reiniciando o `tfs` (`kill` + novo `./build/tfs`), o que
+  também limpou o monstro sobrevivente da Rodada 1.
+- **Rodada 3** (final, servidor limpo): os 8 looktypes renderizaram certo —
+  **Norte** com cabelo visível e pernas se movendo (não é mais um balanço),
+  **Leste/Oeste** com o perfil de combate esperado, **Sul** com uma pose de
+  frente reconhecível (não repete o parado do Leste), pés no chão em todas as
+  fases, **sem mudança de tamanho** ao virar em nenhum dos 8. 0 erros no log do
+  cliente.
 
-### Limitações
+### Limitações restantes
 
-- **Não há norte nem sul**: as três direções mostram o mesmo perfil. Andando para
-  cima ou para baixo o personagem continua de lado. É a mesma limitação do
-  `30_player.json`, só que aqui vale para os **quatro** lados menos o oeste.
-- O oeste é espelhado do leste: bandana, zíper e arma trocam de lado (invisível a
-  32 px).
-- `layers = 1`: as cores de outfit (`head/body/legs/feet`) do servidor são
-  ignoradas — cada looktype tem uma roupa fixa.
-- 5 personagens não têm ciclo de andar no material e apenas *balançam* ao andar.
-- As formas de raposa (921–923, 926) são quadrúpedes largos: reduzidos a ~37% da
-  altura original, leem como um vulto vermelho a 32 px.
-- Tenten (905) carrega um leque gigante em **todos** os quadros do rip; ele ocupa
-  metade da célula e não há como separá-lo.
-- O `/looktype` do TFS não alcança 900–926: para usar in-game é preciso mexer em
-  `server/` (fora do escopo) ou setar o outfit por script.
+- **Costas é sempre síntese**, nunca material real — em close-ups grandes lê-se
+  como "cabelo cobrindo o rosto" mais do que uma anatomia de nuca desenhada à
+  mão; a 32px na visão do jogo funciona bem.
+- 5 personagens (902, 907, 908, 915, 925) ainda não têm ciclo de andar real: 3
+  das 4 fases vêm do respirar (mudam pouco entre si) + 1 sintética — anda mais
+  suave que a v1 (que tinha 0 fases sintéticas e repetia o parado 3×), mas ainda
+  não é uma passada "de verdade".
+- As 4 formas de raposa/quadrúpede (921-923, 926) não recebem repintura de rosto
+  na síntese de costas (só escurecem) — não têm "cara" para apagar, e são
+  reduzidas a ~37% do tamanho por serem largas.
+- 923 (Naruto 6 Caldas) não achou nenhum candidato de frente utilizável: Sul
+  repete o perfil do Leste.
+- O oeste continua espelhado do leste (bandana/zíper/arma trocam de lado,
+  invisível a 32px); `layers=1` (cores de outfit do servidor ignoradas); o
+  `/looktype` do TFS não alcança 900-926 (preciso setar o outfit por script ou
+  mexer em `server/`, fora do escopo).
+- A classificação de POSE da varredura exaustiva (correr/pular/ataque/especial/
+  dano/vitória) é heurística best-effort — usada só para montar candidatos a
+  revisar, não é uma verdade automática; nomes como "vitória" ou "dano" numa
+  folha de revisão podem estar errados sem que isso afete a arte final (que
+  passa por seleção e revisão visual separadas).
 
 ## Terreno procedural (`gen_terrain.py` + `overrides/10_terrain.json`)
 
@@ -944,3 +1132,313 @@ confira com `tools/map/otbm.py`, `OtbmMap.read(...).item_count_by_id()`).
 - Recortes maiores que 128 px são reduzidos para caber em 4×4 (o `.dat` não vai
   além disso na prática); recortes entre 32 e 45 px são reduzidos para 1×1, o que
   perde um pouco de nitidez nos humanoides.
+
+## Terreno v3 (grama/terra/água mais "renderizados")
+
+Feedback do usuário depois de ver o jogo rodando: "as coisas mais renderizadas
+ainda" — a grama in-game vinha de `overrides/20_screenshot.json` (extraída de um
+print real de um cliente Open Tibia), que por vir de uma imagem JPEG comprimida
+lê como um verde quase sólido, sem tufos, sem contraste, sem "chão de jogo".
+
+### Comparativo (Pillow, folha 4×4 a 4×)
+
+`screenshots/compare_grass_v3.png` e `screenshots/compare_dirt_v3.png` colocam
+lado a lado, na mesma escala: (1) a grama/terra extraída do screenshot
+(`20_screenshot.json`), (2) a procedural antiga (`gen_terrain.py` antes deste
+trabalho — backup usado só para o comparativo, não versionado), (3) a v3 nova.
+
+**Grama — venceu a v3.** O screenshot é uma mancha verde-clara quase uniforme
+(ruído de compressão JPEG, não textura); a v2 já tinha tufos + flor/pedra
+ocasionais mas pouco contraste; a v3 abre a paleta (tom mais escuro 44 e mais
+claro 138, era 56–126), adiciona "lâminas" isoladas (riscos de 2px que quebram
+a leitura de "pontinho + fundo liso"), sobe de 6 para 8 variantes e torna a flor
+**rara** (1 variante em 8, era 2 em 6 — flor demais lia como canteiro). Decisão:
+**v3 ativa, `20_screenshot.json` desativado** (`items: []`, ver comentário
+`_desativado_v3` no próprio arquivo — os PNGs originais continuam em
+`assets-src/import/extracted/screenshot/` para reverter se necessário).
+
+**Terra — venceu a v3** pelo mesmo motivo (screenshot chapado); a v3 soma
+cascalho em 2 tons (claro E escuro, era só claro) e rachaduras finas
+(terra ressecada, não só "marrom com pontinhos").
+
+**Cobblestone, piso de pedra, lama** — não vieram do screenshot (só grama e
+terra tinham entrada em `20_screenshot.json`); a versão procedural já cobria
+bem o pedido (`cobble()`: Voronoi com rejunte escuro na fronteira das células +
+bisel de luz/sombra por pedra; `stone_floor()`: lajes em fiada com junta e
+desgaste; `mud()`: poça com reflexo). Neste trabalho a junta do piso de pedra
+foi aprofundada (`shade(P_STONE[0], -30)` → `-44`, confirmado no
+render_v3_praca.png da rodada 2: juntas nitidamente mais fundas).
+
+**Água** — reforçada, não trocada: 2ª crista de onda (reflexo, fase deslocada
+da primeira), cintilação mais forte (10→14 pontos, brilho +22→+26) e um
+borrifo de espuma branca esparsa (4 pixels/fase). Continua com 3 fases
+(`animationPhases`, exigido pelo `FLAG_ANIMATION` do id 4608).
+
+### `grass_shade` — variante para sombra de árvore (documentado, não ligado)
+
+A missão pediu uma "vinheta de sombra em tiles adjacentes a árvores", mas
+**não** no gerador de mapa (fora do escopo deste trabalho: `tools/map/` é de
+outro agente). `gen_terrain.py` ganhou `grass_shade(v, amount=-26)`: pega a
+MESMA arte de `grass(v)` (pixel a pixel, sem regenerar do zero — por isso
+encaixa sem costura com a variante normal) e escurece em bloco. Gera 3 amostras
+(`terrain/grass_shade_0..2.png`), **não referenciadas em nenhum server id** —
+servem de referência para quem for implementar a troca de tile por vizinhança
+em `tools/map/build_valley.py` (autoborder/decor): ao detectar um tile de grama
+adjacente a uma árvore (2×2), trocar o server id normal pela variante
+`grass_shade` correspondente.
+
+### Tiles refeitos (mesmos nomes de arquivo — 10_terrain.json não mudou)
+
+| Arquivo | Server ids | O que mudou |
+|---|---|---|
+| `grass_0..5.png` (+ `grass_6.png`, `grass_7.png` extra) | 4526–4531 | paleta mais aberta, tufo 2 tons, lâminas, flor rara, +2 variantes (não ligadas — reserva p/ mapas futuros) |
+| `dirt_0..2.png` | 351–353 | cascalho 2 tons + rachaduras |
+| `stone_floor.png` | 431 | junta mais funda |
+| `water_0..2.png` | 4608 | 2ª crista (reflexo), cintilação mais forte, espuma |
+| `grass_shade_0..2.png` | nenhum (amostra/documentação) | ver acima |
+
+Cobblestone (`cobble_0..4.png`), piso de madeira, lama/pântano, árvores,
+paredes e portas **não precisaram de reescrita** — já tinham contorno, tufo/
+musgo/veio e sombra elíptica opaca sob árvore (`_tree_shadow`) desde a versão
+anterior; confirmado nos screenshots in-game (ver abaixo).
+
+### Teste in-game (3 rodadas)
+
+Script `client-otc/tests/render_v3_rc.lua` (copiado para `client-otc/shinobirc.lua`
+e removido ao final, mesmo padrão de `autotest_rc.lua`): login `god`, `/god`
+(status máximo), `/tp x,y,z` (comando de `server/tfs/data/scripts/naruto/gm_tools.lua`)
+para floresta (1060,1080,7), lago/ponte (1127,1060,7), praça (1029,1044,7) e
+Floresta da Morte (1165,1061,7), screenshot em cada, depois
+`modules.naruto_menu.show('Jutsus')` (chamada direta à função pública do
+módulo — não precisa simular Ctrl+J) e screenshot da lista de jutsus + barra
+de ação. Saída: `screenshots/render_v3_{floresta,lago_ponte,praca,
+floresta_morte,icons}.png`.
+
+- **Rodada 1** (grama/terra/água v3 + junta de piso original): sombra elíptica
+  de árvore visível e nítida, tronco com 2 tons de casca, copa em 4 tons +
+  contorno, ponte de madeira com veio, tocha e fogueira acesas, parede de
+  pedra com musgo — tudo já "renderizado" no sentido pedido. `0 erros` no
+  cliente (`grep -c error`).
+- **Rodada 2** (junta do piso de pedra aprofundada de -30 para -44): confirmado
+  em close-up (`render_v3_praca.png`) que a junta ficou nitidamente mais funda,
+  sem quebrar o padrão de fiada. Rebuild + `dump_dat.py` OK, `0 erros`.
+- **Rodada 3** (confirmação de estabilidade, sem mudança de código): mesmo
+  teste rodado de novo do zero para provar que o build é idempotente — os 5
+  screenshots saem iguais à rodada 2, `0 erros` no log do cliente.
+
+## Grama v4: regras de baixo contraste
+
+Revisão do trabalho da v3, com feedback do usuário depois de ver o jogo
+rodando de novo: a grama v3 (paleta 44..138, tufos em 2 tons, lâminas, flor,
+pedrinha) ficou **manchada e escura**, com "remendos retangulares por tile"
+visíveis (xadrez de tons) e cara de mofo — o oposto de Tibia clássica, que é
+grama de tom médio, **uniforme à distância**, com variação sutil (2–3 tons
+próximos, tufos claros pequenos e raros, nenhuma emenda perceptível).
+
+### Causa raiz (não era só a paleta)
+
+A paleta mais aberta (44..138) era metade do problema; a outra metade — a que
+de fato produzia o "xadrez por tile" — estava em `shared_field()`: cada uma
+das 8 variantes misturava o campo comum (55%) com um `fbm` **próprio**
+(45%), e `fbm()` normaliza cada campo ao seu **próprio** min/max antes da
+mistura. Normalizar independentemente faz a **média** do resultado variar
+ligeiramente de variante para variante (a forma da distribuição de ruído
+não é idêntica entre sementes diferentes, mesmo normalizada 0..1) — o
+suficiente para o olho notar tiles vizinhos com brilho médio um pouco
+diferente, lido como remendos/xadrez quando o chão cobre uma área grande.
+
+### O que a v4 muda
+
+`tools/spr/gen_terrain.py`, funções `grass()` e `mud()`:
+
+1. **Um tom base único por material**, próximo do pedido (`#5aa03c`/
+   `#4f8f34`): grama usa `P_GRASS_V4 = [(81,141,53), (86,150,56), (91,159,59)]`
+   — só **3 tons**, ±6% em torno da base (86,150,56), contra os 5 tons
+   44..138 da v3. Lama (`P_MUD_V4`) segue a mesma regra: 3 tons ±8% em torno
+   de (78,72,52), contra os 5 tons 48..110 da v3; a poça (`P_PUDDLE`) também
+   foi clareada (não precisa ser quase preta para ler como água parada).
+2. **Campo de ruído CONTÍNUO através dos tiles, sem mistura por variante**:
+   todas as 8 variantes de grama (e as 4 de lama) usam o **MESMO** campo
+   `fbm(CELL, SEED_FIXO, octaves)` — nenhuma soma de campo próprio por
+   variante. `noise_tile()` já é periódica no tamanho do tile (32px, múltiplo
+   de 32 por construção — o grid do ruído fecha em si mesmo via `% cells`),
+   então usar o mesmo campo em toda variante dá emenda **exata** (mesma
+   textura) em vez de apenas parecida. Não dá para fazer a fase depender da
+   posição do tile no mundo — as variantes são PNGs fixos, gerados sem saber
+   onde o mapa (`tools/map/build_valley.py`, fora do escopo) vai colocá-los —
+   mas o mesmo campo compartilhado resolve o mesmo problema (média e emenda
+   idênticas) por um caminho que não depende disso.
+3. **Tufo claro em vez de touceira/lâmina/flor/pedrinha**: a v3 empilhava por
+   tile uma touceira escura, uma lâmina, e ocasionalmente flor ou pedrinha —
+   cada uma uma mancha de baixo contraste sozinha, mas HAVIA MUITAS por
+   tile. A v4 tem **uma única decoração**: um tufo de 2–4px, 1 tom acima do
+   mais claro da paleta (`shade(P_GRASS_V4[2], 14)`), presente em **2 das 8
+   variantes** (25%, o mais perto de "20%" que dá com 8 variantes discretas;
+   as outras 6 são pixel-a-pixel idênticas ao campo base, o que por
+   construção não pode gerar xadrez). Nenhuma mancha escura em lugar nenhum
+   (zero touceira/lâmina/flor/pedrinha) e nenhum contorno preto (`outline()`
+   nunca é chamado em `grass()`/`mud()`, como antes).
+
+### Medição de uniformidade (script `compare_grass.py`, ad-hoc nesta sessão)
+
+Mosaico 8×8 de tiles aleatórios (com repetição), 4× de zoom; duas métricas:
+desvio-padrão da luminância **média por tile** entre os 64 tiles do mosaico
+(mede o "xadrez") e diferença média de luminância entre pixels de bordas de
+tiles adjacentes (mede a emenda). Comparativo em
+`screenshots/compare_grass_v4.png` (v3 atual | v4 nova | grama extraída do
+print, lado a lado):
+
+| Métrica (grama) | v3 | v4 | screenshot (referência) |
+|---|---|---|---|
+| desvio-padrão ENTRE tiles | 2,34 | **0,03** | 1,27 |
+| diff média de borda (emenda) | 21,56 | **0,56** | 13,59 |
+| diff MÁXIMA de borda | 32,16 | **0,67** | 20,64 |
+| desvio-padrão interno (textura) | 21,23 | 5,53 | 14,42 |
+| faixa interna (max−min) | 125,91 | **14,24** | 59,66 |
+
+A v4 fica **abaixo** da própria referência do screenshot em todas as
+métricas de uniformidade (menos xadrez, menos emenda) — ganha por larga
+margem e sem repetir o defeito antigo da v20_screenshot (chapada demais,
+"ruído de compressão JPEG, não textura"): a faixa interna de 14,24 ainda
+dá uma textura visível de baixo contraste, só que sem os saltos de 125,91
+da v3. Lama (mesma mudança, valores do arquivo `mud_0..3.png` como
+efetivamente buildado): desvio entre tiles caiu de 1,16 para 0,76 (-34%),
+diff média de borda de 13,29 para 4,33 (-67%), diff máxima de 25,76 para
+14,83 (-42%) — melhoria em toda métrica, ainda que com só 4 variantes a
+poça (elemento distinto, não faz parte do "xadrez" de material) se repita
+de forma um pouco mais reconhecível no mosaico do que a grama.
+
+### Iteração de parâmetros (3 rodadas, olhando as folhas)
+
+Harness isolado (fora do repo, sem tocar `gen_terrain.py` durante a
+iteração) gerando só a grama com 3 combinações de oitavas/paleta, sempre com
+o MESMO campo compartilhado (a mudança estrutural já elimina o xadrez; o que
+sobra para calibrar é a leitura visual do ruído):
+
+1. **r1**: base (86,150,56), ±6%, oitavas `((3,1.0),(7,0.4))` — manchas
+   orgânicas, sem listra visível. **Vencedora.**
+2. **r2**: base (90,150,55), ±5%, oitavas `((4,1.0),(9,0.35))` — visualmente
+   quase igual a r1, mas a célula-9 do ruído criou uma leve listra vertical
+   (batimento entre a grade de 9 e o tile de 32px) perceptível de perto.
+3. **r3**: base (88,148,55), ±5,5%, oitavas com 3 camadas
+   `((3,1.0),(6,0.4),(12,0.2))` — a camada extra de alta frequência (12)
+   também gerou um padrão sutil em xadrez fino, pior que r1.
+
+r1 venceu por não ter nenhum artefato periódico visível nas 3 folhas
+(`mosaic_v4_r1/r2/r3.png`, comparadas via Read nesta sessão) e por bater
+a luminância média (119,9) muito perto da referência do screenshot (121,2).
+Os mesmos parâmetros (oitavas `(3,1.0),(7,0.4)`) foram usados de saída para
+a lama, com paleta e semente próprias; um ajuste posterior de oitavas da
+lama para `((4,1.0),(9,0.35))` não mudou a leitura visual de forma notável
+(a poça domina visualmente), então ficou como está.
+
+### Teste in-game
+
+`client-otc/shinobirc.lua` temporário (copiado, testado, removido ao final,
+mesmo padrão da v3): login `god`, `/god`, `/tp 1060,1080,7` (floresta) e
+`/tp 1029,1044,7` (praça), screenshot em cada. `0 erros` no log do cliente.
+Saída: `screenshots/render_v4_floresta.png` e `render_v4_praca.png` —
+comparados com `render_v3_floresta.png`: a grama lê como um campo verde
+uniforme de tom médio, sem nenhum remendo/xadrez visível tile a tile; o piso
+de pedra da praça (`stone_floor()`, 1 variante só — não pode gerar xadrez
+por definição, não precisou mudar) segue igual, junta funda e legível.
+
+### Lama e piso de pedra da praça
+
+- **Lama**: mostrava o mesmo xadrez de material que a grama (mesma causa
+  raiz — `shared_field()` com fbm próprio por variante) e foi corrigida do
+  mesmo jeito (ver acima). Não foi possível confirmar in-game nesta rodada
+  porque `tools/map/build_valley.py` (fora do escopo) não usa lama nos dois
+  pontos de teste pedidos (floresta e praça); a correção foi validada só
+  por medição/mosaico (`mosaic_mud_v4_final.png`).
+- **Piso de pedra da praça** (`stone_floor()`): checado e **não mudou** — é
+  uma única variante (sem lista de variantes para divergir em média), a
+  junta em fiada já é de baixo contraste desde a v3 (junta -44, não um
+  "xadrez de papel quadriculado"), e o `render_v4_praca.png` confirma visual
+  idêntico ao `render_v3_praca.png`. Regra do enunciado era condicional ("se
+  hoje mostrarem xadrez") — este não mostra, então ficou como estava.
+
+### Pendências
+
+- A poça da lama ainda se repete de forma um pouco reconhecível em um
+  mosaico denso de só 4 variantes (mesma limitação estrutural de "poucas
+  variantes", não um problema de contraste); aumentar para 6–8 variantes de
+  lama resolveria, mas está fora do pedido desta rodada.
+- `grass_shade()` (amostra de sombra sob árvore, não ligada a nenhum server
+  id) automaticamente passou a usar a nova `grass()` — não foi verificada
+  visualmente porque não é usada por nenhum server id hoje (mesma situação
+  documentada na v3).
+
+## Índice de ícone determinístico (jutsus.png × jutsus_data.lua)
+
+### O bug visto (causa raiz)
+
+`screenshots/menu_04_jutsus.png` (de um commit anterior, "Modelo 4+4... 23
+jutsus novos") mostra ícones cortados/errados na aba Jutsus e na barra: alguns
+jutsus de elemento `fuuton`/`none` apareciam com ícone **cinza** (cor de
+elemento errada) ou com sprites **completamente alheios** — uma tocha, um
+cadeado/bolsa marrom — no lugar do símbolo esperado (bola/anel/linha/cruz/
+silhueta). Outros apareciam em branco.
+
+Investigação: `tools/spr/gen_jutsu_icons.py` e `tools/export_tfs.py` calculam
+a MESMA ordem (`jutsu_icon_order`: por elemento, tier, level, id — fórmula
+duplicada nos dois arquivos de propósito, um não importa o outro). O índice na
+folha (`clientId` em `NarutoSpellInfo`) é `posição * 32px`. O commit "Modelo
+4+4" **adicionou 23 jutsus** a `data/jutsus/*.json` — `tools/export_tfs.py`
+rodou e gravou `jutsus_data.lua` com `clientId` até 53 (54 entradas), mas
+`jutsus.png` **não foi regenerado junto** naquele momento: continuou com a
+largura antiga (menos de 54×32px). Um `clientId` maior que a largura real da
+folha faz o cliente recortar (`setImageClip`) uma região **fora** da imagem —
+o OTClient não recusa nem preenche com transparente, ele lê o que estiver no
+atlas de textura logo depois (nesse caso, pixels de outro ícone da UI: tocha,
+cadeado). **Causa raiz: os dois artefatos são gerados por comandos separados,
+e nada garantia que rodassem juntos** depois que `data/jutsus/*.json` mudou de
+tamanho — um bug de processo, não de fórmula (as duas fórmulas de ordenação
+já eram idênticas).
+
+Estado atual verificado: `jutsus.png` já tinha 54 ícones (1728×32px) batendo
+com as 54 entradas de `jutsus_data.lua` **antes** deste trabalho (`git diff`
+vazio depois de rodar `gen_jutsu_icons.py`) — ou seja, o bug do screenshot
+antigo já não se manifesta no estado atual do repo. `render_v3_icons.png`
+(rodadas 1–3) confirma: todos os 8 jutsus ativos mostram o símbolo certo (bola/
+anel/linha/silhueta/cruz) na cor certa do elemento (verde para Fuuton, cinza
+para `none`), e a barra de ação (F1–F10) também — nenhum ícone cortado, nenhum
+sprite alheio, nenhum branco.
+
+### O que foi feito para não voltar a acontecer
+
+Como `tools/export_tfs.py` está fora do escopo editável deste trabalho (não
+pode ser alterado para LER um arquivo de ordem externo), a correção foi:
+
+1. **`assets-src/sprites/jutsu_icon_order.json`** (novo, gerado por
+   `gen_jutsu_icons.py` a cada execução): registro auditável e versionado da
+   ordem calculada — índice, id, elemento, tier, level de cada jutsu. Serve
+   para revisar em `git diff` quando a ordem muda (jutsu novo inserido no meio
+   de um elemento, por exemplo).
+2. **Validação embutida em `gen_jutsu_icons.py`** (`validate_against_lua`):
+   toda vez que o script roda, ele lê `jutsus_data.lua` já gerado, extrai os
+   pares `icon`/`clientId` de `NarutoSpellInfo` e compara com a ordem que
+   acabou de calcular. Diverge (contagem diferente ou id no índice errado) →
+   imprime `DIVERGENCIA jutsus.png x jutsus_data.lua` linha a linha e **sai com
+   código 1** (mesmo padrão "OK, divergencias=0" de `dump_dat.py`). Hoje
+   imprime `validacao de indice: OK, divergencias=0 (54 jutsus, ...)`.
+3. **Guarda de sanidade no cliente** (`naruto_menu.lua`, `buildIconIndex`):
+   antes de aceitar uma posição `{x, y}` do `NarutoSpellIcons`/`clientId`, o
+   código confere que `x < (numero de jutsus) * 32`. Se um dia os dois
+   arquivos voltarem a divergir (alguém regenerar só um dos dois), o cliente
+   **não desenha ícone nenhum** para o jutsu fora do intervalo, em vez de
+   sampler lixo do atlas — troca "ícone alheio" por "sem ícone", bem mais
+   fácil de notar e depurar.
+
+**Se um dia for preciso mexer em `tools/export_tfs.py`** (fora do escopo
+deste trabalho): o ideal seria ele LER `assets-src/sprites/jutsu_icon_order.json`
+em vez de recalcular `jutsu_icon_order` com a fórmula duplicada — eliminaria de
+vez a possibilidade das duas ordens divergirem (hoje elas só coincidem porque
+as duas fórmulas foram escritas iguais e mantidas manualmente em sincronia).
+
+### 54 jutsus, não 25
+
+A missão citava "hoje 25?" — não confirmado: no estado atual do repo já são
+**54** jutsus em `data/jutsus/*.json` (katon 6, suiton 5, raiton 8, doton 4,
+fuuton 5, neutral/personal 26) e `jutsus.png` já tem 54 ícones (1728×32px),
+gerados e validados por este trabalho. Não havia nenhum jutsu sem ícone.

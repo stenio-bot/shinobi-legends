@@ -189,6 +189,38 @@
 	<attribute key="description" value="Ensina Doku: Névoa Venenosa. Qualquer vila pode aprender."/>
 	<!-- required_level 25: aplicar via movements.xml (level) -->
 </item>
+<item id="6287" name="pergaminho do céu">  <!-- scroll_heaven (rare) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Item de missão. Etapa 2 do Exame Chunin (docs/lore/progressao.md) — cai do Sapo Ancião, na Floresta da Morte."/>
+</item>
+<item id="6288" name="pergaminho da terra">  <!-- scroll_earth (rare) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Item de missão. Etapa 2 do Exame Chunin (docs/lore/progressao.md) — cai da Serpente Branca, na Floresta da Morte."/>
+</item>
+<item id="6352" name="presa do espadachim da névoa">  <!-- fang_of_the_swordsman (rare) -->
+	<attribute key="weight" value="40"/>
+	<attribute key="description" value="Fragmento da lâmina do Espadachim da Névoa. Material raro da Costa das Marés."/>
+</item>
+<item id="6554" name="máscara do aprendiz">  <!-- apprentice_mask (uncommon) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Máscara lascada, ainda gelada. Material do Aprendiz Mascarado, Costa das Marés."/>
+</item>
+<item id="6555" name="selo do desertor">  <!-- deserter_seal (rare) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Selo de papel arrancado do braço do Desertor de Elite. Material das Ruínas do Clã Marionetista."/>
+</item>
+<item id="6559" name="coração amaldiçoado">  <!-- cursed_heart (epic) -->
+	<attribute key="weight" value="50"/>
+	<attribute key="description" value="Ainda bate, sozinho, na palma da mão. Material de O Sócio Eterno, Montanha do Trovão."/>
+</item>
+<item id="6868" name="emblema da nuvem vermelha">  <!-- cloud_emblem (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Emblema arrancado do uniforme de um soldado da organização. Material comum do Covil da Nuvem Vermelha."/>
+</item>
+<item id="6938" name="fragmento do anel escarlate">  <!-- ring_fragment_crimson (legendary) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Estilhaço de um anel de poder, ainda quente. Material lendário dos bosses do Covil da Nuvem Vermelha."/>
+</item>
 <item id="7382" name="katana do trovão">  <!-- thunder_katana (rare) -->
 	<attribute key="weight" value="600"/>
 	<attribute key="description" value="A lâmina estala sozinha antes da tempestade."/>

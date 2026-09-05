@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Clone Branco" nameDescription="um clone branco" race="venom" experience="1900" speed="400" manacost="0">
+	<health now="2700" max="2700"/>
+	<look type="130" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-100" max="-150"/>
+	</attacks>
+	<defenses armor="40" defense="40"/>
+	<elements>
+		<element energyPercent="-50"/>
+		<element icePercent="25"/>
+	</elements>
+	<loot>
+		<item id="2148" countmax="360" chance="100000"/>
+		<item id="6868" chance="50000"/>  <!-- cloud_emblem -->
+	</loot>
+</monster>

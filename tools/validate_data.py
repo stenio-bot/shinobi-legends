@@ -135,7 +135,94 @@ for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
             for i in q["reward"].get("items", []):
                 if i not in item_ids: errors.append(f"quest {q['id']}: item de recompensa desconhecido '{i}'")
 
+# ids de todos os NPCs (para validar data/tasks.json 'npc' e checagens gerais)
+npc_ids = set()
+for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
+    for n in load(path):
+        npc_ids.add(n["id"])
+
+# data/ranks.json (docs/lore/progressao.md): progressão Genin->Kage. Documentário + consumido
+# por tools/export_tfs.py (NarutoRanks). Valida contra rank.schema.json e referências de área.
+ranks_path = os.path.join(ROOT, "ranks.json")
+rank_ids = set()
+if os.path.exists(ranks_path):
+    ranks = load(ranks_path)
+    rank_schema = load(os.path.join(ROOT, "schemas", "rank.schema.json"))
+    for r in ranks:
+        if V:
+            for e in V(rank_schema).iter_errors(r):
+                errors.append(f"data/ranks.json [{r.get('rank','?')}]: {e.message}")
+        if r["rank"] in rank_ids:
+            errors.append(f"ranks.json: rank duplicado '{r['rank']}'")
+        rank_ids.add(r["rank"])
+    RANK_ORDER = ["genin", "chunin", "jonin", "anbu", "kage"]
+    if sorted(rank_ids) != sorted(RANK_ORDER) or len(ranks) != len(RANK_ORDER):
+        errors.append(f"ranks.json: esperado exatamente {RANK_ORDER}, achou {sorted(rank_ids)}")
+
+# grants_rank / grants_rank_progress nas quests dos NPCs devem apontar para um rank válido
+for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
+    for n in load(path):
+        for q in n.get("quests", []):
+            for field in ("grants_rank", "grants_rank_progress"):
+                r = q.get(field)
+                if r and rank_ids and r not in rank_ids:
+                    errors.append(f"quest {q['id']}: {field} desconhecido '{r}'")
+            obj = q.get("objective", {})
+            if obj.get("kind") == "keyword_quiz":
+                quiz = obj.get("quiz", [])
+                if len(quiz) < 1:
+                    errors.append(f"quest {q['id']}: keyword_quiz sem perguntas em objective.quiz")
+                for i, qq in enumerate(quiz):
+                    if not qq.get("keywords"):
+                        errors.append(f"quest {q['id']}: pergunta {i+1} do quiz sem 'keywords'")
+
+# data/tasks.json (docs/sistemas/progressao-servidor.md): tarefas repetíveis estilo Tibia tasks.
+# Arquivo opcional (tools/export_tfs.py ignora o sistema de tarefas se não existir).
+tasks_path = os.path.join(ROOT, "tasks.json")
+if os.path.exists(tasks_path):
+    tasks = load(tasks_path)
+    task_schema = load(os.path.join(ROOT, "schemas", "task.schema.json"))
+    task_ids = set()
+    for t in tasks:
+        if V:
+            for e in V(task_schema).iter_errors(t):
+                errors.append(f"data/tasks.json [{t.get('id','?')}]: {e.message}")
+        if t["id"] in task_ids:
+            errors.append(f"tasks.json: id duplicado '{t['id']}'")
+        task_ids.add(t["id"])
+        if t.get("npc") and t["npc"] not in npc_ids:
+            errors.append(f"task {t['id']}: npc desconhecido '{t['npc']}'")
+        if t.get("monster_id") and t["monster_id"] not in monster_ids:
+            errors.append(f"task {t['id']}: monstro desconhecido '{t['monster_id']}'")
+        for i in t.get("reward", {}).get("items", []):
+            if i not in item_ids:
+                errors.append(f"task {t['id']}: item de recompensa desconhecido '{i}'")
+
+# data/dailies.json (docs/sistemas/progressao-servidor.md): pool de missões diárias por faixa de level.
+dailies_path = os.path.join(ROOT, "dailies.json")
+if os.path.exists(dailies_path):
+    dailies = load(dailies_path)
+    daily_schema = load(os.path.join(ROOT, "schemas", "daily.schema.json"))
+    daily_ids = set()
+    for d in dailies:
+        if V:
+            for e in V(daily_schema).iter_errors(d):
+                errors.append(f"data/dailies.json [{d.get('id','?')}]: {e.message}")
+        if d["id"] in daily_ids:
+            errors.append(f"dailies.json: id duplicado '{d['id']}'")
+        daily_ids.add(d["id"])
+        if d.get("monster_id") and d["monster_id"] not in monster_ids:
+            errors.append(f"daily {d['id']}: monstro desconhecido '{d['monster_id']}'")
+        if d.get("level_min", 1) > d.get("level_max", 1):
+            errors.append(f"daily {d['id']}: level_min > level_max")
+        for i in d.get("reward", {}).get("items", []):
+            if i not in item_ids:
+                errors.append(f"daily {d['id']}: item de recompensa desconhecido '{i}'")
+
 print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas, {len(characters)} personagens, {len(element_sets)} sets elementais")
+if os.path.exists(ranks_path): print(f"{len(rank_ids)} ranks")
+if os.path.exists(tasks_path): print(f"{len(task_ids)} tarefas")
+if os.path.exists(dailies_path): print(f"{len(daily_ids)} diárias (pool)")
 if errors:
     print("\n".join("ERRO " + e for e in errors)); sys.exit(1)
 print("OK — tudo válido")

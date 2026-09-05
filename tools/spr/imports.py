@@ -18,6 +18,11 @@ import sys
 
 from PIL import Image, ImageOps
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
+import char_synth as _CS   # noqa: E402  (nitidez do downscale, ver fit_uniform)
+
 CELL = 32
 FLAG_ANIMATION = 1 << 24        # itemflags_t do items.otb (ver FORMATO.md secao 5)
 MAX_TILES = 4          # o .dat guarda width/height em U8; o cliente aceita ate 4
@@ -92,13 +97,23 @@ def _foot_center(img):
     return tot / float(n)
 
 
-def fit_uniform(img, box, scale, mirror=False):
+def fit_uniform(img, box, scale, mirror=False, sharpen=True, outline=True):
     """Encaixa um quadro numa celula de `box` px com uma escala JA DECIDIDA.
 
     Ao contrario de `fit()`, que redimensiona cada quadro para preencher a celula,
     aqui a escala e a MESMA para todos os quadros da criatura — senao o boneco
     encolhe e cresce a cada fase e a cada direcao. Depois de escalar, o quadro e
     alinhado pela BASE (pes no chao da celula) e pelo centro do apoio.
+
+    `sharpen` troca o downscale de LANCZOS direto por **downscale de AREA
+    (Image.BOX, media dos pixels) + realce** (`char_synth.unsharp`) — comparado
+    em `tools/spr/compare_sharpen.py` contra LANCZOS puro e contra quantizar a
+    paleta original: a quantizacao por pixel mais proximo criou RUIDO de
+    sal-e-pimenta nas bordas ja suavizadas (a paleta do material tem centenas de
+    tons por causa do antialiasing do rip; "cor mais proxima" por pixel escolhe
+    tons errados nas bordas) e foi descartada. `outline` redesenha um contorno
+    escuro de 1px na silhueta final — o contorno do material original se perde
+    no downscale de 60->32px, e o estilo Tibia depende de silhueta legivel.
     """
     img = _trim(img.convert("RGBA"))
     if mirror:
@@ -106,13 +121,19 @@ def fit_uniform(img, box, scale, mirror=False):
     if scale < 1.0:
         w = max(1, round(img.width * scale))
         h = max(1, round(img.height * scale))
-        img = img.resize((w, h), Image.LANCZOS)
+        if sharpen:
+            img = img.resize((w, h), Image.BOX)
+            img = _CS.unsharp(img, amount=0.8)
+        else:
+            img = img.resize((w, h), Image.LANCZOS)
     img = _binarize(img.convert("RGBA"))
-    img = _trim(img)                      # o LANCZOS pode devolver borda vazia
+    img = _trim(img)                      # o resize pode devolver borda vazia
     out = Image.new("RGBA", (box, box), (0, 0, 0, 0))
     x = int(round(box / 2.0 - _foot_center(img)))
     x = max(min(x, box - img.width), min(0, box - img.width))
     out.paste(img, (x, box - img.height))
+    if sharpen and outline:
+        out = _CS.outline_1px(out)
     return out
 
 

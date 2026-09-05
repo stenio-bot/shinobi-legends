@@ -1,5 +1,16 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <!-- Cole dentro de <monsters> em data/monster/monsters.xml -->
+<monster name="Clone Branco" file="naruto/white_clone.xml"/>
+<monster name="Ninja Elite da Aurora" file="naruto/elite_cloud_guard.xml"/>
+<monster name="O Vigia Ilusório" file="naruto/boss_illusive_eye.xml"/>
+<monster name="O Mascarado das Sombras" file="naruto/boss_masked_puppeteer.xml"/>
+<monster name="O Portador dos Seis Caminhos" file="naruto/boss_rings_bearer.xml"/>
+<monster name="O Ancestral da Nuvem Vermelha" file="naruto/boss_crimson_ancestor.xml"/>
+<monster name="Mercenário da Ponte" file="naruto/mercenary_bridge.xml"/>
+<monster name="Batedor da Névoa" file="naruto/mist_scout.xml"/>
+<monster name="Guardião da Neblina" file="naruto/mist_guardian.xml"/>
+<monster name="Aprendiz Mascarado" file="naruto/masked_apprentice.xml"/>
+<monster name="Espadachim da Névoa" file="naruto/boss_mist_swordsman.xml"/>
 <monster name="Lobo" file="naruto/wolf.xml"/>
 <monster name="Bandido" file="naruto/bandit.xml"/>
 <monster name="Cobra da Floresta" file="naruto/forest_snake.xml"/>
@@ -10,11 +21,13 @@
 <monster name="Oni da Geleira" file="naruto/glacier_oni.xml"/>
 <monster name="Monge da Tempestade" file="naruto/storm_monk.xml"/>
 <monster name="Serpente de Magma" file="naruto/magma_serpent.xml"/>
+<monster name="O Sócio Eterno" file="naruto/boss_curse_partner.xml"/>
 <monster name="Oni Ancestral" file="naruto/boss_ancestral_oni.xml"/>
 <monster name="Marionete de Combate" file="naruto/ruin_puppet.xml"/>
 <monster name="Sentinela de Pedra" file="naruto/stone_sentinel.xml"/>
 <monster name="Guerreiro Espectral" file="naruto/spectral_warrior.xml"/>
 <monster name="Xamã da Maldição" file="naruto/curse_shaman.xml"/>
+<monster name="Desertor de Elite" file="naruto/elite_deserter.xml"/>
 <monster name="Marionetista das Ruínas" file="naruto/boss_puppeteer.xml"/>
 <monster name="Sanguessuga Gigante" file="naruto/leech.xml"/>
 <monster name="Sapo Gigante" file="naruto/giant_toad.xml"/>
@@ -22,3 +35,6 @@
 <monster name="Serpente Menor" file="naruto/lesser_serpent.xml"/>
 <monster name="Sapo Ancião" file="naruto/boss_elder_toad.xml"/>
 <monster name="Serpente Branca" file="naruto/boss_white_serpent.xml"/>
+<monster name="Rival do Exame — Pedra" file="naruto/exam_rival_stone.xml"/>
+<monster name="Rival do Exame — Som" file="naruto/exam_rival_sound.xml"/>
+<monster name="Rival do Exame — Névoa" file="naruto/exam_rival_mist.xml"/>

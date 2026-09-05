@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rank",
+  "description": "Progressão de rank Genin->Kage. Ver docs/lore/progressao.md. NOTA: tools/validate_data.py ainda não valida data/ranks.json contra este schema (fora do escopo da missão de lore que criou este arquivo) — documentário/pronto para o exportador consumir no futuro.",
+  "type": "object",
+  "required": ["rank", "min_level", "unlocks"],
+  "additionalProperties": false,
+  "properties": {
+    "rank": {"enum": ["genin", "chunin", "jonin", "anbu", "kage"]},
+    "min_level": {"type": "integer", "minimum": 1},
+    "quest_id": {
+      "type": ["string", "null"],
+      "description": "id documentário do exame que leva a este rank (ver docs/lore/progressao.md); null para o rank inicial (genin)."
+    },
+    "unlocks": {
+      "type": "object",
+      "required": ["title", "areas", "jutsu_tier", "status_bonus"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "description": "mensagem exibida ao alcançar o rank"},
+        "areas": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "ids de região (docs/lore/mundo.md) liberados a partir deste rank"
+        },
+        "jutsu_tier": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3,
+          "description": "tier elemental de referência já acessível por level nesta faixa (documentário, ver data/jutsus/*.json required_level)"
+        },
+        "status_bonus": {
+          "type": "object",
+          "description": "bônus fixo somado ao cálculo normal de personagem-e-progressao.md ao alcançar o rank",
+          "additionalProperties": {"type": "number"}
+        }
+      }
+    }
+  }
+}

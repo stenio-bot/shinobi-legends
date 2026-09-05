@@ -44,5 +44,6 @@
 		<item id="2412" chance="15000"/>  <!-- katana_ronin -->
 		<item id="8473" countmax="5" chance="100000"/>  <!-- antidote -->
 		<item id="7589" countmax="5" chance="100000"/>  <!-- chakra_pill_medium -->
+		<item id="6288" chance="100000"/>  <!-- scroll_earth -->
 	</loot>
 </monster>

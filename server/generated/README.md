@@ -19,4 +19,4 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |
 | `world/*-spawn.xml` | referência para o Remere's Map Editor | manual |
 
-Totais: 22 monstros, 54 jutsus, 80 itens, 9 NPCs, 15 missões, 4 vocações.
+Totais: 38 monstros, 54 jutsus, 88 itens, 14 NPCs, 31 missões, 4 vocações.

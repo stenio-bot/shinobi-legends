@@ -1,5 +1,10 @@
 # Sistema: Vilas e Clãs
 
+> **Lore:** a progressão de rank (Genin→Chunin→Jonin→Anbu→Kage, exames por
+> etapa) vive em `docs/lore/progressao.md` e `data/ranks.json`; a bíblia de
+> regiões (uma por arco) em `docs/lore/mundo.md`. Este documento cobre só as 4
+> vilas jogáveis, seus outfits e os personagens/jutsus.
+
 ## Vilas (escolha na criação — nomes provisórios, ver ADR-002)
 | Vila | Elemento principal | Skill bônus (+20% ganho) | Jutsu inicial |
 |---|---|---|---|

@@ -182,7 +182,7 @@
   {
     "id": "boss_bandit_chief",
     "name": "Chefe dos Bandidos",
-    "description": "Boss da Floresta. Aparece a cada 2h.",
+    "description": "O bandido mais velho e mais experiente da estrada, não um ninja renomado — só alguém que sobreviveu bandido tempo demais. Boss da Floresta da Vila. Aparece a cada 2h.",
     "level": 12,
     "hp": 1500,
     "attack": 30,

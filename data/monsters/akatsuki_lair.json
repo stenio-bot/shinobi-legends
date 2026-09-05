@@ -1,0 +1,407 @@
+[
+  {
+    "id": "white_clone",
+    "name": "Clone Branco",
+    "description": "Soldado descartável cultivado em massa pela Organização Nuvem Vermelha; não fala, não hesita, não sente medo. Covil da Nuvem Vermelha (docs/lore/mundo.md).",
+    "level": 82,
+    "hp": 2700,
+    "attack": 118,
+    "defense": 40,
+    "speed": 4.0,
+    "element": "doton",
+    "xp": 1900,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Investida Branca",
+        "damage_min": 100,
+        "damage_max": 150,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "cloud_emblem",
+        "chance": 0.5,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 180,
+    "ryo_max": 360,
+    "respawn_s": 60,
+    "sprite": "mon_white_clone",
+    "article": "um"
+  },
+  {
+    "id": "elite_cloud_guard",
+    "name": "Ninja Elite da Aurora",
+    "description": "Guarda de elite da organização, treinado para não recuar nunca. Covil da Nuvem Vermelha (docs/lore/mundo.md).",
+    "level": 88,
+    "hp": 4100,
+    "attack": 130,
+    "defense": 70,
+    "speed": 4.4,
+    "element": "raiton",
+    "xp": 2500,
+    "behavior": "aggressive",
+    "aggro_range": 9,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Corte Relâmpago",
+        "damage_min": 110,
+        "damage_max": 165,
+        "cooldown_s": 2.4,
+        "type": "melee",
+        "effects": [
+          {
+            "type": "paralyze",
+            "chance": 0.2,
+            "duration_s": 1.0
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "cloud_emblem",
+        "chance": 0.6,
+        "min": 1,
+        "max": 2
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 0.15,
+        "min": 1,
+        "max": 2
+      }
+    ],
+    "ryo_min": 220,
+    "ryo_max": 440,
+    "respawn_s": 80,
+    "sprite": "mon_elite_cloud_guard",
+    "article": "um"
+  },
+  {
+    "id": "boss_illusive_eye",
+    "name": "O Vigia Ilusório",
+    "description": "Primeiro guardião do covil: seu olho prende quem olha por tempo demais num laço de ilusão. Boss 1/4 do Covil da Nuvem Vermelha — inspirado em estrutura de arco, nunca em nome (ADR-002). Derrotá-lo (com O Mascarado das Sombras) é o Exame Anbu.",
+    "level": 85,
+    "hp": 21000,
+    "attack": 124,
+    "defense": 64,
+    "speed": 4.2,
+    "element": "katon",
+    "xp": 25200,
+    "behavior": "aggressive",
+    "aggro_range": 10,
+    "attack_range": 4,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Selo de Chamas Negras",
+        "damage_min": 110,
+        "damage_max": 165,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Olhar que Prende",
+        "damage_min": 95,
+        "damage_max": 150,
+        "cooldown_s": 6.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "paralyze",
+            "chance": 0.35,
+            "duration_s": 2.0
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "Você não devia ter chegado tão longe."
+      },
+      {
+        "hp_percent": 50,
+        "attack_multiplier": 1.4,
+        "message": "Então eu mesmo encerro isso."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_fragment_crimson",
+        "chance": 0.5,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 1.0,
+        "min": 4,
+        "max": 8
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 1.0,
+        "min": 3,
+        "max": 6
+      }
+    ],
+    "ryo_min": 5100,
+    "ryo_max": 10200,
+    "respawn_s": 10800,
+    "sprite": "mon_boss_illusive_eye",
+    "article": "o"
+  },
+  {
+    "id": "boss_masked_puppeteer",
+    "name": "O Mascarado das Sombras",
+    "description": "Segundo guardião do covil: nunca luta na linha de frente, prefere puxar os fios de todos os outros eventos de longe. Boss 2/4 do Covil da Nuvem Vermelha. Derrotá-lo (com O Vigia Ilusório) é o Exame Anbu.",
+    "level": 90,
+    "hp": 23500,
+    "attack": 130,
+    "defense": 68,
+    "speed": 4.4,
+    "element": "fuuton",
+    "xp": 28200,
+    "behavior": "aggressive",
+    "aggro_range": 10,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Golpe do Vazio",
+        "damage_min": 116,
+        "damage_max": 174,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Distorção Espacial",
+        "damage_min": 100,
+        "damage_max": 156,
+        "cooldown_s": 7.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.5,
+            "duration_s": 4,
+            "value": 0.4
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "Nada disso importa. Eu já vi como isso termina."
+      },
+      {
+        "hp_percent": 50,
+        "attack_multiplier": 1.4,
+        "message": "Vou parar de fingir que isso é um jogo."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_fragment_crimson",
+        "chance": 0.5,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 1.0,
+        "min": 4,
+        "max": 8
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 1.0,
+        "min": 3,
+        "max": 6
+      }
+    ],
+    "ryo_min": 5400,
+    "ryo_max": 10800,
+    "respawn_s": 10800,
+    "sprite": "mon_boss_masked_puppeteer",
+    "article": "o"
+  },
+  {
+    "id": "boss_rings_bearer",
+    "name": "O Portador dos Seis Caminhos",
+    "description": "Terceiro guardião do covil: olhos em anel que multiplicam sua vontade em vários corpos ao mesmo tempo. Boss 3/4 do Covil da Nuvem Vermelha. Derrotá-lo (com O Ancestral da Nuvem Vermelha) é o Exame Kage.",
+    "level": 95,
+    "hp": 26000,
+    "attack": 137,
+    "defense": 71,
+    "speed": 4.0,
+    "element": "doton",
+    "xp": 31200,
+    "behavior": "aggressive",
+    "aggro_range": 10,
+    "attack_range": 5,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Empurrão Gravitacional",
+        "damage_min": 122,
+        "damage_max": 183,
+        "cooldown_s": 2.2,
+        "type": "melee"
+      },
+      {
+        "name": "Caminho da Dor",
+        "damage_min": 105,
+        "damage_max": 164,
+        "cooldown_s": 6.0,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.3,
+            "duration_s": 1.5
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "A dor é o único caminho para a paz."
+      },
+      {
+        "hp_percent": 60,
+        "summons": [
+          {
+            "monster_id": "elite_cloud_guard",
+            "count": 2
+          }
+        ],
+        "message": "Meus caminhos não lutam sozinhos."
+      },
+      {
+        "hp_percent": 25,
+        "attack_multiplier": 1.5,
+        "message": "Vou mostrar a vocês o verdadeiro poder de um deus."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_fragment_crimson",
+        "chance": 0.6,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 1.0,
+        "min": 5,
+        "max": 10
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 1.0,
+        "min": 4,
+        "max": 7
+      }
+    ],
+    "ryo_min": 5700,
+    "ryo_max": 11400,
+    "respawn_s": 10800,
+    "sprite": "mon_boss_rings_bearer",
+    "article": "o"
+  },
+  {
+    "id": "boss_crimson_ancestor",
+    "name": "O Ancestral da Nuvem Vermelha",
+    "description": "Fundador da organização e o boss final do jogo. Ninguém que entrou como Chunin saiu vivo do salão dele. Boss 4/4 do Covil da Nuvem Vermelha — derrotá-lo (com O Portador dos Seis Caminhos) é o Exame Kage, o fim da progressão de rank (docs/lore/progressao.md).",
+    "level": 100,
+    "hp": 29000,
+    "attack": 144,
+    "defense": 75,
+    "speed": 4.4,
+    "element": "raiton",
+    "xp": 34800,
+    "behavior": "aggressive",
+    "aggro_range": 12,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Golpe do Fundador",
+        "damage_min": 128,
+        "damage_max": 192,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      },
+      {
+        "name": "Tempestade da Nuvem Vermelha",
+        "damage_min": 115,
+        "damage_max": 175,
+        "cooldown_s": 8.0,
+        "type": "area",
+        "shape": "circle_r2",
+        "effects": [
+          {
+            "type": "stun",
+            "chance": 0.4,
+            "duration_s": 1.5
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "Eu fundei isso tudo antes de qualquer um de vocês nascer."
+      },
+      {
+        "hp_percent": 60,
+        "attack_multiplier": 1.3,
+        "message": "Você acha mesmo que chegou ao fim?"
+      },
+      {
+        "hp_percent": 25,
+        "attack_multiplier": 1.7,
+        "message": "Então prove que merece o título que veio buscar."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "ring_fragment_crimson",
+        "chance": 1.0,
+        "min": 2,
+        "max": 3
+      },
+      {
+        "item_id": "health_potion_large",
+        "chance": 1.0,
+        "min": 8,
+        "max": 15
+      },
+      {
+        "item_id": "soldier_pill",
+        "chance": 1.0,
+        "min": 6,
+        "max": 10
+      }
+    ],
+    "ryo_min": 6000,
+    "ryo_max": 12000,
+    "respawn_s": 14400,
+    "sprite": "mon_boss_crimson_ancestor",
+    "article": "o"
+  }
+]

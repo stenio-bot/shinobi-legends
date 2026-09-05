@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Daily",
+  "description": "Entrada do POOL de missões diárias (docs/sistemas/progressao-servidor.md). A cada dia, o servidor sorteia 3 entradas da faixa de level do jogador (level_min<=level<=level_max) — ver server/generated/lib/naruto_dailies.lua. Se data/dailies.json não existir, o exportador ignora o sistema (compat).",
+  "type": "object",
+  "required": ["id", "name", "text", "monster_id", "count", "level_min", "level_max", "reward"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "name": {"type": "string"},
+    "text": {"type": "string"},
+    "monster_id": {"type": "string"},
+    "count": {"type": "integer", "minimum": 1},
+    "level_min": {"type": "integer", "minimum": 1},
+    "level_max": {"type": "integer", "minimum": 1},
+    "reward": {
+      "type": "object",
+      "required": ["xp", "ryo", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "xp": {"type": "number", "minimum": 0, "description": "kills equivalentes (ver NarutoRewards.scaledXp), não XP absoluto"},
+        "ryo": {"type": "integer", "minimum": 0},
+        "items": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

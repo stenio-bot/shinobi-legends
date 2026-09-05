@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="O Sócio Eterno" nameDescription="o o sócio eterno" race="blood" experience="7200" speed="420" manacost="0">
+	<health now="6200" max="6200"/>
+	<look type="138" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2200" min="-90" max="-135"/>
+		<attack name="earth" interval="7000" chance="40" radius="2" target="0" min="-80" max="-120">
+			<attribute key="areaEffect" value="stones"/>
+		</attack>
+		<attack name="speed" interval="7000" chance="30" speedchange="-1000" duration="1000" range="1" target="1"/>
+	</attacks>
+	<defenses armor="45" defense="45"/>
+	<elements>
+		<element energyPercent="-50"/>
+		<element icePercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="5000" chance="100000"/>
+		<item id="6559" chance="100000"/>  <!-- cursed_heart -->
+		<item id="5952" chance="10000"/>  <!-- scroll_doton_colapso -->
+		<item id="8472" countmax="4" chance="100000"/>  <!-- soldier_pill -->
+	</loot>
+</monster>

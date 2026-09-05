@@ -3,11 +3,8 @@
  "format": 1,
  "source": "assets-src/import/player",
  "contact_sheet": "assets-src/import/player/_contact.png",
-
  "_doc_material": "76 quadros RGBA de 17..33 x 30..41 px, de um jogo de acao 2D em vista lateral. NAO e um set top-down: TODOS os quadros mostram o rosto (frontal ou 3/4 virado para a DIREITA). Nao existe nenhuma vista de COSTAS — conferido pixel a pixel (pele visivel na faixa da cabeca em 76/76 quadros). Por isso a direcao 0 (norte) e uma aproximacao; ver 'limitacoes'.",
-
  "_doc_direcoes": "Ordem do enum Otc::Direction / pattern_x do .dat: 0=Norte (costas), 1=Leste (olhando para a direita), 2=Sul (de frente), 3=Oeste (esquerda). Fase 0 = parado; fases 1..3 = ciclo de andar (contato, passagem, contato oposto). 'mirror': true espelha o quadro na horizontal.",
-
  "outfit": {
   "looktype": 128,
   "name": "naruto_player",
@@ -15,19 +12,40 @@
    "0": {
     "_dir": "norte (costas) — APROXIMACAO",
     "idle": 68,
-    "walk": [68, {"frame": 68, "mirror": true}, 68],
-    "_nota": "68 e o unico quadro ALTO (20x39) em que os olhos nao foram desenhados: a 32px a faixa clara sob a bandana le como a nuca. Fica na mesma altura das outras direcoes (31px depois da escala), entao virar de sul para norte nao encolhe o boneco. 68 espelhado da o passo oposto (a massa dos pes e assimetrica: 16 px a esquerda contra 23 a direita), entao o ciclo le como uma troca de pe. Rodada 1 do teste in-game usava 74 na fase de passagem e PISCAVA um rosto de frente a cada volta; 74 saiu."
+    "walk": [
+     68,
+     {
+      "frame": 68,
+      "mirror": true
+     },
+     68,
+     "synth:back_walk3"
+    ],
+    "_nota": "68 e o unico quadro ALTO (20x39) em que os olhos nao foram desenhados: a 32px a faixa clara sob a bandana le como a nuca. Fica na mesma altura das outras direcoes (31px depois da escala), entao virar de sul para norte nao encolhe o boneco. 68 espelhado da o passo oposto (a massa dos pes e assimetrica: 16 px a esquerda contra 23 a direita), entao o ciclo le como uma troca de pe. Rodada 1 do teste in-game usava 74 na fase de passagem e PISCAVA um rosto de frente a cada volta; 74 saiu. ATUALIZADO: o norte agora e SINTETIZADO a partir do ciclo de 4 fases do leste (char_synth.synthesize_back), nao mais o quadro 0068 sozinho — ver tools/spr/import_player.py. skin~(168, 87, 53) hair~(200, 176, 78)."
    },
    "1": {
     "_dir": "leste (olhando para a direita)",
     "idle": 80,
-    "walk": [84, 83, 75],
+    "walk": [
+     84,
+     83,
+     75,
+     "synth:east_walk3 (deslocamento de pernas sobre 0083)"
+    ],
     "_nota": "familia de perfil estreito (17-19 px de largura, 39-40 de altura, bracos cruzados). Ciclo medido pelos pes: 84 = pe direito no ar (vao 15px), 83 = pes juntos na passagem (vao 2px), 75 = pe esquerdo no ar (vao 13px). Mesma altura nas 3 fases -> sem solavanco vertical."
    },
    "2": {
     "_dir": "sul (de frente)",
     "idle": 71,
-    "walk": [70, 76, {"frame": 70, "mirror": true}],
+    "walk": [
+     70,
+     76,
+     {
+      "frame": 70,
+      "mirror": true
+     },
+     "synth:south_walk3 (deslocamento de pernas sobre 0070-mirror)"
+    ],
     "_nota": "quadros frontais de 39-40px. O material nao tem passo frontal; 70 tem massa de pe assimetrica, entao 70 e 70-espelhado dao a alternancia esquerda/direita e 76 (1px mais baixo) faz a passagem."
    },
    "3": {
@@ -37,28 +55,29 @@
    }
   }
  },
-
  "attack": {
   "looktype": 898,
   "name": "naruto_attack",
   "_doc": "Poses de ataque para jutsus/efeitos futuros. As 4 fases entram no frame group 1 (andando) das 4 direcoes, todas iguais: o consumidor deve travar a direcao ou usar o looktype so como animacao.",
-  "phases": [43, 31, 17, 12],
+  "phases": [
+   43,
+   31,
+   17,
+   12
+  ],
   "_nota": "sequencia de soco virada para a direita: 43 = guarda com punho erguido, 31 = recuo/carga, 17 = jab estendido, 12 = avanco com salto. Alturas 36/38/37/38 px — escala unica mantem o boneco do mesmo tamanho."
  },
-
  "normalizacao": {
   "escala": "UMA escala para todos os quadros da entrada: min(32/maior_largura, 32/maior_altura, 1.0), LANCZOS + alpha binario (o .spr 1098 e RGB). Para o outfit da 32/40 = 0.80.",
   "alinhamento": "base dos pes no fundo da celula de 32x32 + centro do APOIO (centroide dos pixels opacos do terco inferior) no meio da celula. Centralizar pela caixa faria o corpo escorregar quando um braco/perna sai para fora.",
   "tiles": 1,
   "_nota": "personagem da Tibia e 1x1 (32x32). Os quadros de ate 41px sao REDUZIDOS, nunca cortados nem promovidos a 1x2."
  },
-
  "nao_usados": {
   "_doc": "Quadros do material que nao entraram em nenhum looktype (poses de pulo, quedas, emotes, caretas, combos redundantes).",
   "faixas": "13-16, 18-30, 32-42, 44-67, 69, 72-74, 77-79, 81-82, 85-87",
   "usados": "outfit 128: 68 (N), 80/84/83/75 (L+O espelhado), 71/70/76 (S) | ataque 898: 43/31/17/12"
  },
-
  "limitacoes": [
   "Nao existe vista de costas no material: a direcao 0 (norte) usa 0068, o unico quadro sem olhos desenhados, mais o seu espelho. E o compromisso menos ruim ate aparecer arte de costas — mas o ciclo de andar do norte tem so 2 poses distintas, entao le como um balanco e nao como uma passada.",
   "Nao existe ciclo de andar frontal: a direcao 2 (sul) usa espelhamento para simular a alternancia de passo.",

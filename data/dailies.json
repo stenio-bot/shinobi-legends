@@ -1,0 +1,152 @@
+[
+  {
+    "id": "daily_wolves",
+    "name": "Diária: Alcateia",
+    "text": "A vila quer a alcateia da trilha enxugada por hoje. Mate 6 Lobos.",
+    "monster_id": "wolf",
+    "count": 6,
+    "level_min": 1,
+    "level_max": 19,
+    "reward": {"xp": 8, "ryo": 100, "items": []}
+  },
+  {
+    "id": "daily_snakes",
+    "name": "Diária: Serpentes",
+    "text": "Cobras da floresta atacaram viajantes de novo. Mate 6.",
+    "monster_id": "forest_snake",
+    "count": 6,
+    "level_min": 1,
+    "level_max": 19,
+    "reward": {"xp": 8, "ryo": 100, "items": []}
+  },
+  {
+    "id": "daily_bandits",
+    "name": "Diária: Bandidos",
+    "text": "A estrada leste precisa de patrulha hoje. Mate 8 Bandidos.",
+    "monster_id": "bandit",
+    "count": 8,
+    "level_min": 1,
+    "level_max": 19,
+    "reward": {"xp": 9, "ryo": 130, "items": []}
+  },
+  {
+    "id": "daily_leeches",
+    "name": "Diária: Sanguessugas",
+    "text": "A margem da Floresta da Morte está infestada de novo. Mate 8 Sanguessugas.",
+    "monster_id": "leech",
+    "count": 8,
+    "level_min": 1,
+    "level_max": 19,
+    "reward": {"xp": 8, "ryo": 110, "items": []}
+  },
+  {
+    "id": "daily_rivals",
+    "name": "Diária: Rivais do Exame",
+    "text": "Restos do torneio Chunin ainda rondam a floresta. Derrote 4 rivais (qualquer um).",
+    "monster_id": "exam_rival_stone",
+    "count": 4,
+    "level_min": 20,
+    "level_max": 49,
+    "reward": {"xp": 9, "ryo": 300, "items": []}
+  },
+  {
+    "id": "daily_puppets",
+    "name": "Diária: Bonecos",
+    "text": "As ruínas continuam ativando bonecos de guerra sozinhos. Destrua 8 Marionetes de Combate.",
+    "monster_id": "ruin_puppet",
+    "count": 8,
+    "level_min": 20,
+    "level_max": 49,
+    "reward": {"xp": 9, "ryo": 320, "items": []}
+  },
+  {
+    "id": "daily_sentinels",
+    "name": "Diária: Sentinelas",
+    "text": "Sentinelas de pedra guardam o pátio central. Derrube 6.",
+    "monster_id": "stone_sentinel",
+    "count": 6,
+    "level_min": 20,
+    "level_max": 49,
+    "reward": {"xp": 9, "ryo": 340, "items": []}
+  },
+  {
+    "id": "daily_shamans",
+    "name": "Diária: Xamãs",
+    "text": "Os selos de maldição precisam de manutenção — ou melhor, de destruição. Mate 6 Xamãs da Maldição.",
+    "monster_id": "curse_shaman",
+    "count": 6,
+    "level_min": 20,
+    "level_max": 49,
+    "reward": {"xp": 10, "ryo": 400, "items": []}
+  },
+  {
+    "id": "daily_eagles",
+    "name": "Diária: Águias",
+    "text": "As águias do trovão voltaram a atacar a trilha da montanha. Abata 10.",
+    "monster_id": "thunder_eagle",
+    "count": 10,
+    "level_min": 50,
+    "level_max": 79,
+    "reward": {"xp": 9, "ryo": 550, "items": []}
+  },
+  {
+    "id": "daily_oni",
+    "name": "Diária: Onis da Geleira",
+    "text": "Mais onis desceram da geleira. Mate 8.",
+    "monster_id": "glacier_oni",
+    "count": 8,
+    "level_min": 50,
+    "level_max": 79,
+    "reward": {"xp": 9, "ryo": 600, "items": []}
+  },
+  {
+    "id": "daily_monks",
+    "name": "Diária: Monges da Tempestade",
+    "text": "Monges renegados atacam quem passa pela trilha alta. Mate 8.",
+    "monster_id": "storm_monk",
+    "count": 8,
+    "level_min": 50,
+    "level_max": 79,
+    "reward": {"xp": 10, "ryo": 650, "items": []}
+  },
+  {
+    "id": "daily_magma",
+    "name": "Diária: Serpentes de Magma",
+    "text": "As fendas quentes voltaram a se abrir. Mate 8 Serpentes de Magma.",
+    "monster_id": "magma_serpent",
+    "count": 8,
+    "level_min": 50,
+    "level_max": 79,
+    "reward": {"xp": 10, "ryo": 700, "items": []}
+  },
+  {
+    "id": "daily_clones",
+    "name": "Diária: Clones Brancos",
+    "text": "O covil está produzindo clones descartáveis demais. Destrua 8.",
+    "monster_id": "white_clone",
+    "count": 8,
+    "level_min": 80,
+    "level_max": 100,
+    "reward": {"xp": 10, "ryo": 900, "items": []}
+  },
+  {
+    "id": "daily_elite_guard",
+    "name": "Diária: Guarda de Elite",
+    "text": "A guarda da Aurora precisa ser reduzida antes do próximo ataque. Mate 6.",
+    "monster_id": "elite_cloud_guard",
+    "count": 6,
+    "level_min": 80,
+    "level_max": 100,
+    "reward": {"xp": 10, "ryo": 950, "items": []}
+  },
+  {
+    "id": "daily_storm_review",
+    "name": "Diária: Revisão da Montanha",
+    "text": "Um Kage também revisita os próprios campos de treino. Mate 10 Monges da Tempestade.",
+    "monster_id": "storm_monk",
+    "count": 10,
+    "level_min": 80,
+    "level_max": 100,
+    "reward": {"xp": 9, "ryo": 850, "items": []}
+  }
+]

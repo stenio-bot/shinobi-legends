@@ -1,83 +1,11 @@
 {
- "_doc": "Terreno extraido de screenshots reais de um cliente Open Tibia (material privado do usuario em assets-src/import/, fora do git). Gerado por tools/spr/extract_screenshot.py — veja docs/sistemas/arte-e-sprites.md, secao 'Extracao de screenshots'. Mesmo esquema do imports.json; o build carrega assets-src/sprites/overrides/*.json em ordem de nome e o ultimo vence, entao este 20_ sobrescreve o que o 10_terrain.json (arte procedural) tiver posto em grama, terra, arvores e arbustos. Toda entrada cujo PNG nao existir e ignorada com aviso: numa maquina sem o material o build cai de volta no 10_terrain.",
+ "_doc": "Terreno extraido de screenshots reais de um cliente Open Tibia (material privado do usuario em assets-src/import/, fora do git). Gerado por tools/spr/extract_screenshot.py — veja docs/sistemas/arte-e-sprites.md, secao 'Extracao de screenshots'. Mesmo esquema do imports.json; o build carrega assets-src/sprites/overrides/*.json em ordem de nome e o ultimo vence, entao este 20_ sobrescreveria o que o 10_terrain.json (arte procedural) tiver posto em grama, terra, arvores e arbustos. Toda entrada cujo PNG nao existir e ignorada com aviso: numa maquina sem o material o build cai de volta no 10_terrain.",
  "format": 1,
  "root": "assets-src/import/extracted",
  "build_dir": "assets-src/import/extracted/_sheets",
  "_doc_items": "server_ids = ids do TFS usados por tools/map/build_valley.py (GRASS/DIRT/TREES/BUSHES). Um id por entrada quando cada variante precisa de arte propria. 'tiles': 2 monta o sprite de 64x64 ancorado no canto inferior direito, que e como a Tibia desenha arvore.",
- "items": [
-  {
-   "name": "shot_grass_1",
-   "src": "screenshot/grass_light/grass_light_00.png",
-   "server_ids": [
-    4526
-   ],
-   "_uso": "GRASS[0] — grama clara, celula 16,1 do screenshot"
-  },
-  {
-   "name": "shot_grass_2",
-   "src": "screenshot/grass_light/grass_light_01.png",
-   "server_ids": [
-    4527
-   ],
-   "_uso": "GRASS[1] — celula 16,0"
-  },
-  {
-   "name": "shot_grass_3",
-   "src": "screenshot/grass_light/grass_light_02.png",
-   "server_ids": [
-    4528
-   ],
-   "_uso": "GRASS[2] — celula 13,2"
-  },
-  {
-   "name": "shot_grass_4",
-   "src": "screenshot/grass_light/grass_light_03.png",
-   "server_ids": [
-    4529
-   ],
-   "_uso": "GRASS[3] — celula 19,6"
-  },
-  {
-   "name": "shot_grass_5",
-   "src": "screenshot/grass_light/grass_light_04.png",
-   "server_ids": [
-    4530
-   ],
-   "_uso": "GRASS[4] — celula 15,2"
-  },
-  {
-   "name": "shot_grass_6",
-   "src": "screenshot/grass_light/grass_light_05.png",
-   "server_ids": [
-    4531
-   ],
-   "_uso": "GRASS[5] — celula 17,1"
-  },
-  {
-   "name": "shot_dirt_1",
-   "src": "screenshot/dirt/dirt_00.png",
-   "server_ids": [
-    351
-   ],
-   "_uso": "DIRT[0] — trilha de terra, celula 0,0"
-  },
-  {
-   "name": "shot_dirt_2",
-   "src": "screenshot/dirt/dirt_01.png",
-   "server_ids": [
-    352
-   ],
-   "_uso": "DIRT[1] — celula 0,2"
-  },
-  {
-   "name": "shot_dirt_3",
-   "src": "screenshot/dirt/dirt_02.png",
-   "server_ids": [
-    353
-   ],
-   "_uso": "DIRT[2] — celula 0,1"
-  }
- ],
+ "items": [],
+ "_desativado_v3": "Terreno v3 (docs/sistemas/arte-e-sprites.md, secao 'Terreno v3'): as entradas shot_grass_1..6 (server_ids 4526-4531) e shot_dirt_1..3 (server_ids 351-353) foram REMOVIDAS daqui apos comparativo lado a lado (screenshots/compare_grass_v3.png, screenshots/compare_dirt_v3.png). A grama/terra extraida do screenshot real e clara e CHAPADA (ruido suave de compressao JPEG, sem tufos/cascalho/contraste); a procedural de tools/spr/gen_terrain.py (10_terrain.json) tem paleta de 5 tons, tufos, laminas de grama, flor rara, cascalho em 2 tons e rachaduras. A v3 venceu; os PNGs originais continuam em assets-src/import/extracted/screenshot/{grass_light,dirt}/ (fora do git) para o caso de alguem querer refazer o comparativo, so nao sao mais aplicados. Os arquivos .json ficam com 'items: []' em vez de apagados para preservar o historico/comentarios acima.",
  "_nao_mapeado": "Tambem foram extraidos screenshot/objects/{bush_flower_b,rock_grey,branch_fallen}.png. O valley.otbm nao usa nenhum id de pedra nem de galho caido (ver tools/map/otbm.py item_count_by_id), entao ficam disponiveis para quando o mapa ganhar esses itens.",
  "_nota": "Árvores e arbustos do screenshot removidos: as copas recortadas ficam como manchas; usamos as procedurais do 10_terrain.json."
 }

@@ -1,0 +1,99 @@
+{
+  "id": "spawns_lore",
+  "_doc": "PEDIDO ao agente de mapa (não é um mapa jogável) — spawns novos que a missão de lore (docs/lore/mundo.md, docs/lore/progressao.md) precisa, no formato {zone, monster_id, count} pedido pela missão. 'spawns'/'width'/'height' abaixo ficam vazios/zerados de propósito: tools/validate_data.py varre data/maps/*.json e faz m['spawns'] (acesso direto, sem .get) em TODO arquivo da pasta — um array vazio aqui evita quebrar o validador enquanto os spawns de verdade (com x/y reais) não são decididos pelo agente de mapa. Os pedidos de verdade estão em 'requests'.",
+  "width": 0,
+  "height": 0,
+  "spawns": [],
+  "requests": [
+    {
+      "zone": "floresta_da_morte",
+      "monster_id": "exam_rival_stone",
+      "count": 2,
+      "note": "zona existente 'Floresta da Morte' (rect [50,0,46,40] em data/maps/forest_valley.json). Pequeno cluster tipo 'arena' — os 3 rivais do torneio do Exame Chunin (docs/lore/progressao.md) devem ficar próximos entre si e de exam_proctor_forest (npc em x=60,y=24)."
+    },
+    {
+      "zone": "floresta_da_morte",
+      "monster_id": "exam_rival_sound",
+      "count": 2,
+      "note": "ver nota acima."
+    },
+    {
+      "zone": "floresta_da_morte",
+      "monster_id": "exam_rival_mist",
+      "count": 2,
+      "note": "ver nota acima."
+    },
+    {
+      "zone": "ruinas_do_cla_marionetista",
+      "monster_id": "elite_deserter",
+      "count": 1,
+      "note": "zona existente 'Ruínas do Clã' (rect [96,0,52,40] em data/maps/forest_valley.json, renomeada na bíblia para 'Ruínas do Clã Marionetista'). Mini-boss único, entre curse_shaman e boss_puppeteer no percurso (nível 44→46→50)."
+    },
+    {
+      "zone": "montanha_do_trovao",
+      "monster_id": "boss_curse_partner",
+      "count": 1,
+      "note": "zona existente 'Montanha do Trovão' (rect [148,0,52,40] em data/maps/forest_valley.json). Boss único, antes de boss_ancestral_oni no percurso (nível 70→80) — os dois formam a 'Dupla Imortal', ver docs/lore/mundo.md."
+    },
+    {
+      "zone": "costa_das_mares",
+      "monster_id": "mercenary_bridge",
+      "count": 6,
+      "note": "REGIÃO NOVA, sem mapa físico ainda — ver docs/lore/mundo.md #2. Pedido: uma zona costeira de nível 12–19, encaixando entre 'Floresta da Vila' e 'Floresta da Morte' ou como rota alternativa a partir da vila. NPCs em data/npcs/coastal_tides.json (x/y placeholder, aguardando posição real)."
+    },
+    {
+      "zone": "costa_das_mares",
+      "monster_id": "mist_scout",
+      "count": 4,
+      "note": "ver nota acima."
+    },
+    {
+      "zone": "costa_das_mares",
+      "monster_id": "mist_guardian",
+      "count": 3,
+      "note": "ver nota acima."
+    },
+    {
+      "zone": "costa_das_mares",
+      "monster_id": "boss_mist_swordsman",
+      "count": 1,
+      "note": "boss único da região (a Aprendiz Mascarado, masked_apprentice, é só invocado em combate — não precisa de spawn próprio)."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "white_clone",
+      "count": 10,
+      "note": "REGIÃO NOVA, sem mapa físico ainda — ver docs/lore/mundo.md #6 (antes 'Fortaleza Akatsu' em docs/sistemas/monstros-e-pvm.md). Pedido: masmorra final de nível 80–100, depois de 'Montanha do Trovão'. NPCs em data/npcs/akatsuki_lair.json (x/y placeholder)."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "elite_cloud_guard",
+      "count": 6,
+      "note": "ver nota acima."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "boss_illusive_eye",
+      "count": 1,
+      "note": "boss 1/4 da masmorra, nível 85."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "boss_masked_puppeteer",
+      "count": 1,
+      "note": "boss 2/4 da masmorra, nível 90."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "boss_rings_bearer",
+      "count": 1,
+      "note": "boss 3/4 da masmorra, nível 95."
+    },
+    {
+      "zone": "covil_nuvem_vermelha",
+      "monster_id": "boss_crimson_ancestor",
+      "count": 1,
+      "note": "boss 4/4, final do jogo, nível 100. Deve ficar na sala mais funda/isolada da masmorra."
+    }
+  ]
+}

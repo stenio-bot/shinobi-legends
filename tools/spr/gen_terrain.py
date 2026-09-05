@@ -214,10 +214,24 @@ def shade(c, k):
 
 
 # ------------------------------------------------------------------ paletas
-#: do tom mais escuro ao mais claro; 5 tons e o teto (estilo Tibia 7.x)
-P_GRASS = [(56, 74, 40, 255), (72, 94, 50, 255), (90, 112, 62, 255),
-           (108, 130, 74, 255), (126, 148, 88, 255)]
-P_GRASS_DOT = [(140, 170, 92, 255), (46, 66, 34, 255)]
+#: v4 — REVERSAO do contraste aberto da v3 (feedback: "manchada, escura,
+#: remendos retangulares/xadrez por tile, mofo"). A causa raiz da v3 nao era
+#: so a paleta 44..138: era misturar em cada variante um campo fbm PROPRIO
+#: (normalizado 0..1 de forma independente por semente — `shared_field`,
+#: peso 45%) por cima do campo comum. Normalizar cada campo ao seu proprio
+#: min..max faz cada variante ter uma media/desvio ligeiramente diferentes
+#: mesmo depois da mistura — o suficiente para o olho notar a media por-tile
+#: divergindo em bloco (o "xadrez"). v4: SEM mistura por variante — todas as
+#: 8 variantes usam o MESMO campo fbm (`P_GRASS_V4_FIELD_SEED`), so as
+#: decoracoes esparsas (tufo raro) diferem. Isso zera a diferenca de media/
+#: desvio entre variantes E a diferenca de borda entre vizinhas (medido:
+#: ver docs, secao "Grama v4"). Paleta com so 3 tons bem proximos (base
+#: unica ~#569639, ±6%) em vez dos 5 tons 44..138 da v3.
+P_GRASS_V4 = [(81, 141, 53, 255), (86, 150, 56, 255), (91, 159, 59, 255)]
+#: compat: mantido para quem ainda importar P_GRASS (nao usado por grass()).
+P_GRASS = P_GRASS_V4
+P_GRASS_DOT = [(150, 178, 98, 255), (38, 58, 28, 255)]
+P_GRASS_BLADE = (118, 144, 70, 255)   # nao usado na v4 (risco de lamina saiu)
 P_FLOWER = [(214, 206, 128, 255), (206, 132, 148, 255), (196, 196, 214, 255)]
 
 P_DIRT = [(78, 60, 42, 255), (96, 74, 52, 255), (114, 90, 64, 255),
@@ -233,9 +247,13 @@ P_STONE = [(118, 116, 110, 255), (140, 138, 132, 255), (158, 156, 150, 255),
 P_WOOD = [(84, 58, 34, 255), (104, 74, 44, 255), (124, 90, 54, 255),
           (144, 108, 68, 255), (162, 126, 84, 255)]
 
-P_MUD = [(48, 44, 32, 255), (62, 58, 42, 255), (78, 72, 52, 255),
-         (94, 88, 64, 255), (110, 104, 78, 255)]
-P_PUDDLE = [(30, 34, 28, 255), (40, 48, 38, 255), (54, 64, 50, 255)]
+#: v4 — mesma regra de baixo contraste da grama: 3 tons proximos (base unica
+#: ~(78,72,52), ±8%) em vez dos 5 tons 48..110 da v3, que faziam variantes
+#: divergirem em media quando cada uma vinha de shared_field() com fbm
+#: proprio (mesma causa raiz do xadrez da grama).
+P_MUD_V4 = [(72, 66, 48, 255), (78, 72, 52, 255), (84, 78, 56, 255)]
+P_MUD = P_MUD_V4
+P_PUDDLE = [(42, 48, 42, 255), (52, 60, 50, 255), (66, 76, 62, 255)]
 
 P_WATER = [(34, 62, 84, 255), (44, 76, 100, 255), (56, 92, 116, 255),
            (70, 108, 132, 255), (92, 130, 152, 255)]
@@ -256,40 +274,71 @@ DARK = (20, 18, 16, 255)
 
 
 # =========================================================== CHAO (32x32)
+#: campo de ruido UNICO para todas as variantes de grama v4 (ver P_GRASS_V4).
+#: periodo = CELL = 32px (noise_tile ja e periodico em `size`, entao qualquer
+#: `cells` da grade fecha sem costura — "periodo multiplo de 32" cumprido
+#: trivialmente com multiplicador 1). Nao ha como fazer a fase depender da
+#: posicao do tile no mundo (as variantes sao PNGs fixos, gerados sem saber
+#: onde vao cair no mapa — isso e decidido depois por tools/map/build_valley.py,
+#: fora do escopo deste trabalho); a alternativa adotada, e que resolve o
+#: mesmo problema por outro caminho, e todas as variantes usarem o MESMO
+#: campo em vez de um campo por variante — a emenda entao e EXATA (mesma
+#: textura) em vez de apenas "estatisticamente parecida".
+GRASS_V4_OCTAVES = ((3, 1.0), (7, 0.4))
+GRASS_V4_SEED = 42010
+
+
 def grass(v):
-    """6 variantes de grama; a base e a MESMA funcao de ruido periodico, so as
-    decoracoes (tufos, florzinhas, pedrinha) mudam — assim qualquer variante
-    encosta em qualquer outra sem emenda."""
-    f = shared_field("grass", 1000, 1000 + v + 1)
-    img = quantize(f, P_GRASS)
-    rnd = Rnd(4200 + v * 37)
-    # tufos: 3 pixels na vertical, tom mais claro
-    for _ in range(10 + v):
-        x, y = rnd.i(CELL), rnd.i(CELL)
-        c = P_GRASS_DOT[0]
-        put(img, x, y, c)
-        put(img, x, y - 1, shade(c, -14))
-        if rnd.chance(0.5):
-            put(img, x + 1, y, shade(c, -22))
-    # touceiras escuras (dao profundidade) — pequenas, senao viram "bichinhos"
-    for _ in range(3):
-        x, y = rnd.i(CELL), rnd.i(CELL)
-        blob(img, x, y, 1.1 + rnd.f() * 0.6, P_GRASS_DOT[1], rnd, squash=1.6)
-    if v in (1, 4):                      # florzinhas em 2 das 6 variantes
-        for _ in range(2 + v % 2):
-            x, y = rnd.i(CELL), rnd.i(CELL)
-            c = rnd.pick(P_FLOWER)
-            put(img, x, y, c)
-            put(img, x, y - 1, shade(c, -40))
-    if v in (2, 5):                      # pedrinha solta
-        x, y = rnd.i(CELL), rnd.i(CELL)
-        blob(img, x, y, 1.4, (120, 118, 112, 255), rnd)
-        put(img, x, y + 1, (78, 76, 72, 255))
+    """v4 — grama de baixo contraste, estilo Tibia classico (revisao da v3).
+
+    Feedback que motivou a reescrita: a v3 abriu contraste demais (paleta
+    44..138, tufos escuros, laminas, flor, pedrinha) e cada variante vinha de
+    `shared_field()` — campo comum (55%) + um fbm PROPRIO por variante (45%,
+    normalizado 0..1 de forma independente). Normalizar cada campo ao seu
+    proprio min/max faz a MEDIA da mistura variar um pouco de variante para
+    variante mesmo com o mesmo campo base — o suficiente para o mapa ler como
+    um xadrez de tiles um pouco mais claros/escuros lado a lado (medido: ver
+    docs, secao "Grama v4"). A v4 elimina a causa raiz em vez de so abafar o
+    sintoma: TODAS as 8 variantes usam o **mesmo** campo `fbm` (nenhuma
+    mistura por variante), paleta de **3 tons** bem proximos (base unica
+    ±6%, ver P_GRASS_V4) e a UNICA decoracao e um tufo claro de 2-4px em
+    **2 das 8 variantes** (25%, o mais perto de "20%" que da com 8 variantes
+    discretas) — nada de touceira escura, lamina, flor ou pedrinha (essas
+    decoracoes tinham 1-3px de mancha mais escura que a v3 empilhava aos
+    montes por tile; a v4 corta todas para não ter NENHUMA mancha escura).
+    Sem contorno preto (outline() nunca e chamado aqui, como antes)."""
+    f = fbm(CELL, GRASS_V4_SEED, GRASS_V4_OCTAVES)
+    img = quantize(f, P_GRASS_V4, dither=0.035)
+    if v in (1, 5):                      # tufo raro: 2 de 8 variantes (~25%)
+        rnd = Rnd(9200 + v * 71)
+        cx, cy = 6 + rnd.i(CELL - 12), 6 + rnd.i(CELL - 12)
+        tuft = shade(P_GRASS_V4[2], 14)  # 1 tom acima do mais claro da paleta
+        offsets = [(0, 0), (0, -1), (1, 0), (1, -1)][:2 + rnd.i(3)]  # 2-4px
+        for dx, dy in offsets:
+            put(img, cx + dx, cy + dy, tuft, wrap=False)
+    return img
+
+
+def grass_shade(v, amount=-26):
+    """Variante de grama escurecida para tiles ADJACENTES a arvore (vinheta de
+    sombra). NAO e aplicada pelo build atual — tools/map/build_valley.py
+    (autoborder/decor) e que decidiria, por vizinhanca, trocar o server id do
+    tile por esta variante; fora do escopo deste trabalho (ver docs). Aqui so
+    geramos a arte de referencia: mesma base + decoracoes de `grass(v)`,
+    escurecida em bloco (nao regenerada do zero, para casar pixel a pixel com
+    a variante normal e emendar sem costura)."""
+    img = grass(v).copy()
+    px = img.load()
+    for y in range(CELL):
+        for x in range(CELL):
+            px[x, y] = shade(px[x, y], amount)
     return img
 
 
 def dirt(v):
-    """Terra batida: ruido mais grosso + cascalho."""
+    """v3 — terra batida: ruido mais grosso + cascalho em 2 tons + rachaduras
+    finas (a v2 so tinha cascalho claro; rachaduras dao a leitura de terra
+    RESSECADA, nao so 'marrom com pontinhos')."""
     oct_ = ((2, 1.0), (5, 0.55), (10, 0.3))
     f = shared_field("dirt", 2000, 2000 + v + 1, octaves=oct_)
     img = quantize(f, P_DIRT, dither=0.08)
@@ -299,8 +348,17 @@ def dirt(v):
         put(img, x, y, shade(P_DIRT[4], 16))
         if rnd.chance(0.4):
             put(img, x + 1, y, P_DIRT[4])
+    for _ in range(6):                   # cascalho escuro (2º tom, contraste)
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, shade(P_DIRT[0], -10))
     for _ in range(5):                   # sulcos de pisada
         blob(img, rnd.i(CELL), rnd.i(CELL), 1.8 + rnd.f() * 1.4, P_DIRT[0], rnd, squash=1.9)
+    for _ in range(3):                   # rachaduras finas (terra ressecada)
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        ang = rnd.f() * 2 * math.pi
+        for k in range(3 + rnd.i(4)):
+            put(img, x + int(k * math.cos(ang)), y + int(k * math.sin(ang)), shade(P_DIRT[0], -16))
+            ang += (rnd.f() - 0.5) * 0.9
     return img
 
 
@@ -350,7 +408,7 @@ def stone_floor():
     f = fbm(CELL, 5150, octaves=((4, 1.0), (9, 0.45)))
     img = quantize(f, P_STONE, dither=0.05)
     rnd = Rnd(9110)
-    joint = shade(P_STONE[0], -30)
+    joint = shade(P_STONE[0], -44)        # v3: junta mais funda (era -30, lia como risco fraco)
     lip = shade(P_STONE[4], 12)
     px = img.load()
     # 4 lajes: linha 0 comeca em x=0, linha 1 desloca 8px (aparelho de tijolo)
@@ -405,11 +463,19 @@ def wood_floor():
     return img
 
 
+MUD_V4_OCTAVES = ((4, 1.0), (9, 0.35))
+MUD_V4_SEED = 51030
+
+
 def mud(v):
-    """Lama / pantano: base parda esverdeada + pocas escuras."""
-    oct_ = ((2, 1.0), (5, 0.6), (11, 0.3))
-    f = shared_field("mud", 8000, 8000 + v + 1, octaves=oct_)
-    img = quantize(f, P_MUD, dither=0.07)
+    """v4 — mesma regra de baixo contraste da grama (docs, secao "Grama v4"):
+    TODAS as variantes usam o MESMO campo fbm (era `shared_field()` com um
+    fbm proprio por variante — mesma causa raiz do xadrez da grama v3),
+    paleta de 3 tons proximos (P_MUD_V4, ±8%, era 5 tons 48..110) e poca
+    atenuada (P_PUDDLE clareado — era quase preto, contraste desnecessario
+    contra uma lama ja escura)."""
+    f = fbm(CELL, MUD_V4_SEED, MUD_V4_OCTAVES)
+    img = quantize(f, P_MUD_V4, dither=0.05)
     rnd = Rnd(1230 + v * 97)
     for _ in range(1 + v % 2):           # pocas: elipses largas e rasas
         cx, cy = rnd.i(CELL), rnd.i(CELL)
@@ -419,21 +485,19 @@ def mud(v):
         ellipse(img, cx, cy, rx - 1.6, ry - 0.9, P_PUDDLE[0], wrap=True)
         for i in range(-2, 3):           # reflexo na agua parada
             put(img, cx + i, cy - int(ry * 0.45), P_PUDDLE[2])
-    for _ in range(8):                   # torroes secos
+    for _ in range(8):                   # torroes secos (1 tom acima/abaixo, discreto)
         x, y = rnd.i(CELL), rnd.i(CELL)
-        put(img, x, y, shade(P_MUD[4], 12))
-        put(img, x + 1, y, shade(P_MUD[4], -4))
-    for _ in range(4):
-        x, y = rnd.i(CELL), rnd.i(CELL)
-        put(img, x, y, (86, 96, 58, 255))
-        put(img, x, y - 1, (70, 80, 46, 255))
+        put(img, x, y, shade(P_MUD_V4[2], 6))
+        put(img, x + 1, y, shade(P_MUD_V4[2], -4))
     return img
 
 
 def water(phase, phases=3):
-    """Agua rasa animada: o campo de ruido ANDA (offset por fase) e o brilho
-    ondula. `phases` fases -> `animationPhases` no .dat (o id 4608 tem
-    FLAG_ANIMATION no OTB, ver FORMATO.md secao 5)."""
+    """v3 — agua rasa animada: o campo de ruido ANDA (offset por fase) e o
+    brilho ondula. `phases` fases -> `animationPhases` no .dat (o id 4608 tem
+    FLAG_ANIMATION no OTB, ver FORMATO.md secao 5). Reforcado com uma segunda
+    faixa de crista (reflexo) e cintilacao mais forte (a v2 tinha uma unica
+    crista discreta e lia como 'agua fosca', sem brilho)."""
     f = fbm(CELL, 4400, octaves=((2, 1.0), (4, 0.55), (8, 0.3)))
     sh = (phase * CELL) // phases        # deslocamento inteiro = continua tileavel
     rolled = [[f[(y + sh) % CELL][(x + (sh // 2)) % CELL] for x in range(CELL)]
@@ -449,8 +513,14 @@ def water(phase, phases=3):
             if (x + phase * 3) % 5:
                 put(img, x, yy, P_WATER[4])
             put(img, x, yy + 1, P_WATER[1])
-    for _ in range(10):                  # cintilacao
-        put(img, rnd.i(CELL), (rnd.i(CELL) + phase * 5) % CELL, shade(P_WATER[4], 22))
+    for x in range(CELL):                # 2ª crista (reflexo), fase deslocada
+        y = int(23 + 2.4 * math.sin((x / 14.0 + 0.4 + phase / float(phases)) * 2 * math.pi))
+        if (x + phase * 2) % 4 == 0:
+            put(img, x, y % CELL, shade(P_WATER[4], 20))
+    for _ in range(14):                  # cintilacao / brilho (era 10, mais fraco)
+        put(img, rnd.i(CELL), (rnd.i(CELL) + phase * 5) % CELL, shade(P_WATER[4], 26))
+    for _ in range(4):                   # borrifo de espuma branca (poucas, isoladas)
+        put(img, rnd.i(CELL), (rnd.i(CELL) + phase * 7) % CELL, (206, 224, 232, 255))
     return img
 
 
@@ -920,9 +990,12 @@ def build():
     def bump(k, c=1):
         n[k] = n.get(k, 0) + c
 
-    for v in range(6):
+    for v in range(8):
         save(grass(v), "grass_%d" % v)
         bump("grama")
+    for v in range(3):                   # amostra de grass_shade (nao wired a nenhum id;
+        save(grass_shade(v), "grass_shade_%d" % v)  # ver docs, secao "Terreno v3")
+        bump("grama (sombra, amostra)")
     for v in range(3):
         save(dirt(v), "dirt_%d" % v)
         bump("terra")

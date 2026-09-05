@@ -2,14 +2,45 @@
 
 -- Coloque em data/scripts/naruto/boss_phases.lua
 local PHASES = {
+	['O Vigia Ilusório'] = {
+		{hp = 100, mult = 1.0, message = 'Você não devia ter chegado tão longe.', summons = {}},
+		{hp = 50, mult = 1.4, message = 'Então eu mesmo encerro isso.', summons = {}},
+	},
+	['O Mascarado das Sombras'] = {
+		{hp = 100, mult = 1.0, message = 'Nada disso importa. Eu já vi como isso termina.', summons = {}},
+		{hp = 50, mult = 1.4, message = 'Vou parar de fingir que isso é um jogo.', summons = {}},
+	},
+	['O Portador dos Seis Caminhos'] = {
+		{hp = 100, mult = 1.0, message = 'A dor é o único caminho para a paz.', summons = {}},
+		{hp = 60, mult = 1.0, message = 'Meus caminhos não lutam sozinhos.', summons = {{name = 'Ninja Elite da Aurora', count = 2}}},
+		{hp = 25, mult = 1.5, message = 'Vou mostrar a vocês o verdadeiro poder de um deus.', summons = {}},
+	},
+	['O Ancestral da Nuvem Vermelha'] = {
+		{hp = 100, mult = 1.0, message = 'Eu fundei isso tudo antes de qualquer um de vocês nascer.', summons = {}},
+		{hp = 60, mult = 1.3, message = 'Você acha mesmo que chegou ao fim?', summons = {}},
+		{hp = 25, mult = 1.7, message = 'Então prove que merece o título que veio buscar.', summons = {}},
+	},
+	['Espadachim da Névoa'] = {
+		{hp = 100, mult = 1.0, message = 'Não é nada pessoal, moleque. É só o trabalho.', summons = {}},
+		{hp = 60, mult = 1.0, message = 'Ainda não. Não vou deixar que ele me leve ainda.', summons = {{name = 'Aprendiz Mascarado', count = 1}}},
+		{hp = 25, mult = 1.6, message = 'Vocês tiraram tudo que eu tinha. Agora eu não tenho mais nada a perder.', summons = {}},
+	},
 	['Chefe dos Bandidos'] = {
 		{hp = 50, mult = 1.0, message = 'Venham, seus inúteis!', summons = {{name = 'Bandido', count = 3}}},
 		{hp = 20, mult = 1.5, message = 'Não vou cair para um genin!', summons = {}},
+	},
+	['O Sócio Eterno'] = {
+		{hp = 75, mult = 1.0, message = 'Mais um coração ainda bate.', summons = {}},
+		{hp = 50, mult = 1.3, message = 'Você vai precisar de mais do que isso.', summons = {}},
+		{hp = 25, mult = 1.6, message = 'O último coração é sempre o mais faminto.', summons = {}},
 	},
 	['Oni Ancestral'] = {
 		{hp = 70, mult = 1.0, message = 'O céu é meu. Desçam com ele.', summons = {{name = 'Águia do Trovão', count = 3}}},
 		{hp = 40, mult = 1.0, message = 'Meus irmãos ainda respiram sob o gelo!', summons = {{name = 'Oni da Geleira', count = 2}}},
 		{hp = 15, mult = 1.7, message = 'Que a montanha caia junto comigo!', summons = {{name = 'Monge da Tempestade', count = 2}}},
+	},
+	['Desertor de Elite'] = {
+		{hp = 40, mult = 1.3, message = 'Poder de verdade não se pede. Se toma.', summons = {}},
 	},
 	['Marionetista das Ruínas'] = {
 		{hp = 70, mult = 1.0, message = 'Vocês vieram brincar com meus bonecos?', summons = {{name = 'Marionete de Combate', count = 2}}},

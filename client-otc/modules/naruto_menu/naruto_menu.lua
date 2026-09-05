@@ -106,13 +106,25 @@ local function buildIconIndex()
     if not info then
         return iconById
     end
+    -- guarda de sanidade contra o bug historico de icone cortado/errado: a folha
+    -- jutsus.png tem exatamente #info * 32px de largura QUANDO gen_jutsu_icons.py
+    -- e export_tfs.py rodam sobre o mesmo data/jutsus/*.json (tools/spr/gen_jutsu_icons.py
+    -- valida isso no build; ver docs/sistemas/arte-e-sprites.md, secao "Indice de icone
+    -- deterministico"). Se um dos dois ficar desatualizado (regenerado sem o outro), um
+    -- x fora do intervalo amostraria pixels de outra imagem no atlas do cliente (o
+    -- defeito visto em screenshots/menu_04_jutsus.png: icone de tocha/cadeado no lugar
+    -- de jutsu). Em vez de mostrar lixo, cai para "sem icone".
+    local maxIndex = 0
+    for _ in pairs(info) do
+        maxIndex = maxIndex + 1
+    end
     for name, spell in pairs(info) do
         local id = spell.icon
         if id then
             local pos = icons and icons[name]
-            if pos then
+            if pos and pos.x >= 0 and pos.x < maxIndex * 32 then
                 iconById[id] = { x = pos.x, y = pos.y }
-            elseif spell.clientId then
+            elseif spell.clientId and spell.clientId >= 0 and spell.clientId < maxIndex then
                 iconById[id] = { x = spell.clientId * 32, y = 0 }
             end
         end

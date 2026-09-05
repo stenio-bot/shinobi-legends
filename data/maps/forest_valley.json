@@ -60,6 +60,18 @@
         52,
         40
       ]
+    },
+    {
+      "name": "Interiores da Vila (Ichiro/Hayato/Rin)",
+      "level_range": [1, 10],
+      "note": "Salas separadas, mesmo andar 7, ligadas por teleporte na celula da porta de cada loja (ver build_shop_interiors em tools/map/build_valley.py). Coordenadas absolutas: x 1300-1325, y 1000-1005.",
+      "rect": [300, 0, 32, 6]
+    },
+    {
+      "name": "Arena do Exame Chunin",
+      "level_range": [1, 25],
+      "note": "Arena de pedra 30x20 pro exame Chunin, teleporte de entrada na Academia Ninja (ACADEMY_GATE_TP). Coordenadas absolutas: x 1300-1329, y 1015-1034, centro (1314,1024,7).",
+      "rect": [300, 15, 30, 20]
     }
   ],
   "spawns": [

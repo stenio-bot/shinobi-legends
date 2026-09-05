@@ -1,0 +1,243 @@
+[
+  {
+    "id": "mercenary_bridge",
+    "name": "Mercenário da Ponte",
+    "description": "Contratado às pressas por uma guilda mercante rival para atrasar a obra da ponte. Gente comum do lado errado da lei — Costa das Marés (docs/lore/mundo.md).",
+    "level": 12,
+    "hp": 230,
+    "attack": 20,
+    "defense": 7,
+    "speed": 4.2,
+    "element": "none",
+    "xp": 140,
+    "behavior": "aggressive",
+    "aggro_range": 6,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Golpe de Machado",
+        "damage_min": 16,
+        "damage_max": 26,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "bandit_emblem",
+        "chance": 0.4,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_small",
+        "chance": 0.08,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 8,
+    "ryo_max": 25,
+    "respawn_s": 45,
+    "sprite": "mon_mercenary_bridge",
+    "article": "um"
+  },
+  {
+    "id": "mist_scout",
+    "name": "Batedor da Névoa",
+    "description": "Vigia a estrada da costa e atira de longe antes de fugir na neblina. Costa das Marés (docs/lore/mundo.md).",
+    "level": 14,
+    "hp": 260,
+    "attack": 22,
+    "defense": 6,
+    "speed": 4.6,
+    "element": "suiton",
+    "xp": 170,
+    "behavior": "ranged",
+    "aggro_range": 7,
+    "attack_range": 5,
+    "attacks": [
+      {
+        "name": "Agulha Molhada",
+        "damage_min": 18,
+        "damage_max": 28,
+        "cooldown_s": 2.2,
+        "type": "projectile"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "shuriken_iron",
+        "chance": 0.3,
+        "min": 3,
+        "max": 8
+      }
+    ],
+    "ryo_min": 10,
+    "ryo_max": 30,
+    "respawn_s": 50,
+    "sprite": "mon_mist_scout",
+    "article": "um"
+  },
+  {
+    "id": "mist_guardian",
+    "name": "Guardião da Neblina",
+    "description": "Fica plantado na entrada da vila costeira; quase não sai do lugar, mas segura a linha. Costa das Marés (docs/lore/mundo.md).",
+    "level": 16,
+    "hp": 420,
+    "attack": 26,
+    "defense": 14,
+    "speed": 3.2,
+    "element": "suiton",
+    "xp": 230,
+    "behavior": "aggressive",
+    "aggro_range": 5,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Golpe de Escudo",
+        "damage_min": 22,
+        "damage_max": 34,
+        "cooldown_s": 2.4,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "health_potion_small",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 15,
+    "ryo_max": 40,
+    "respawn_s": 60,
+    "sprite": "mon_mist_guardian",
+    "article": "um"
+  },
+  {
+    "id": "masked_apprentice",
+    "name": "Aprendiz Mascarado",
+    "description": "Ligado ao Espadachim da Névoa por uma dívida mais funda que dinheiro; aparece para protegê-lo sempre que ele está perto de cair. Mini-boss aliado, invocado na fase 2 do combate (docs/lore/mundo.md).",
+    "level": 17,
+    "hp": 650,
+    "attack": 32,
+    "defense": 10,
+    "speed": 5.5,
+    "element": "suiton",
+    "xp": 380,
+    "behavior": "ranged",
+    "aggro_range": 8,
+    "attack_range": 4,
+    "attacks": [
+      {
+        "name": "Agulhas Senbon",
+        "damage_min": 20,
+        "damage_max": 32,
+        "cooldown_s": 1.8,
+        "type": "projectile",
+        "effects": [
+          {
+            "type": "slow",
+            "chance": 0.4,
+            "duration_s": 3,
+            "value": 0.3
+          }
+        ]
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "apprentice_mask",
+        "chance": 0.6,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 20,
+    "ryo_max": 60,
+    "respawn_s": 600,
+    "sprite": "mon_masked_apprentice",
+    "article": "o"
+  },
+  {
+    "id": "boss_mist_swordsman",
+    "name": "Espadachim da Névoa",
+    "description": "Renegado de uma vila distante, contratado para sabotar a ponte que salvaria a vila costeira. Luta sozinho até perder a metade da vida, quando o Aprendiz Mascarado aparece para protegê-lo — inspirado no arco do País das Ondas (docs/lore/pesquisa-naruto.md). Derrotá-lo é um dos dois requisitos do Exame Jonin.",
+    "level": 19,
+    "hp": 1700,
+    "attack": 34,
+    "defense": 15,
+    "speed": 4.4,
+    "element": "suiton",
+    "xp": 1700,
+    "behavior": "aggressive",
+    "aggro_range": 8,
+    "attack_range": 1,
+    "boss": true,
+    "attacks": [
+      {
+        "name": "Corte da Névoa",
+        "damage_min": 28,
+        "damage_max": 46,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      },
+      {
+        "name": "Lâmina d'Água",
+        "damage_min": 24,
+        "damage_max": 40,
+        "cooldown_s": 6.0,
+        "type": "area",
+        "shape": "circle_r1"
+      }
+    ],
+    "phases": [
+      {
+        "hp_percent": 100,
+        "message": "Não é nada pessoal, moleque. É só o trabalho."
+      },
+      {
+        "hp_percent": 60,
+        "message": "Ainda não. Não vou deixar que ele me leve ainda.",
+        "summons": [
+          {
+            "monster_id": "masked_apprentice",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "hp_percent": 25,
+        "attack_multiplier": 1.6,
+        "message": "Vocês tiraram tudo que eu tinha. Agora eu não tenho mais nada a perder."
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "fang_of_the_swordsman",
+        "chance": 1.0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "katana_ronin",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "health_potion_medium",
+        "chance": 1.0,
+        "min": 2,
+        "max": 4
+      }
+    ],
+    "ryo_min": 400,
+    "ryo_max": 1000,
+    "respawn_s": 7200,
+    "sprite": "mon_mist_swordsman",
+    "article": "o"
+  }
+]

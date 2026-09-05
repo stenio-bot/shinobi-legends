@@ -1,0 +1,110 @@
+[
+  {
+    "id": "merchant_akatsuki_lair",
+    "name": "Fornecedor Enji",
+    "map": "covil_nuvem_vermelha",
+    "x": 10,
+    "y": 10,
+    "_note": "PENDENTE de posição real: região 'covil_nuvem_vermelha' ainda não tem mapa físico (docs/lore/mundo.md, docs/sistemas/mapas.md, antes 'Fortaleza Akatsu'). x/y são placeholder até o agente de mapa desenhar a zona — ver data/maps/spawns_lore.json.",
+    "type": "shop",
+    "sells": [
+      "health_potion_large",
+      "soldier_pill",
+      "chakra_pill_large",
+      "antidote"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "quest_giver_akatsuki_lair",
+    "name": "Capitã Anbu Suzu",
+    "map": "covil_nuvem_vermelha",
+    "x": 12,
+    "y": 12,
+    "_note": "PENDENTE de posição real, ver merchant_akatsuki_lair acima. Dá as 4 missões finais do jogo, uma por boss, na ordem da masmorra (docs/lore/progressao.md).",
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_lair_1_illusive_eye",
+        "name": "Exame Anbu (1/2) — O Vigia Ilusório",
+        "text": "Ninguém que entra aqui como Chunin sai vivo. Prove que é Anbu: derrote O Vigia Ilusório.",
+        "objective": {
+          "kill": "boss_illusive_eye",
+          "count": 1
+        },
+        "reward": {
+          "xp": 60000,
+          "ryo": 15000,
+          "items": [
+            "health_potion_large"
+          ]
+        },
+        "grants_rank_progress": "anbu"
+      },
+      {
+        "id": "q_lair_2_masked_puppeteer",
+        "name": "Exame Anbu (2/2) — O Mascarado das Sombras",
+        "text": "O segundo guardião puxa os fios de longe. Encontre-o e encerre isso.",
+        "objective": {
+          "kill": "boss_masked_puppeteer",
+          "count": 1
+        },
+        "reward": {
+          "xp": 70000,
+          "ryo": 18000,
+          "items": [
+            "health_potion_large"
+          ]
+        },
+        "grants_rank": "anbu"
+      },
+      {
+        "id": "q_lair_3_rings_bearer",
+        "name": "Exame Kage (1/2) — O Portador dos Seis Caminhos",
+        "text": "Só um Kage de verdade encara o próximo guardião e vive para contar. Derrote O Portador dos Seis Caminhos.",
+        "objective": {
+          "kill": "boss_rings_bearer",
+          "count": 1
+        },
+        "reward": {
+          "xp": 85000,
+          "ryo": 22000,
+          "items": [
+            "soldier_pill"
+          ]
+        },
+        "grants_rank_progress": "kage"
+      },
+      {
+        "id": "q_lair_4_crimson_ancestor",
+        "name": "Exame Kage (2/2) — O Ancestral da Nuvem Vermelha",
+        "text": "O fundador da organização te espera no salão final. Vença, e a vila vai te chamar de Kage.",
+        "objective": {
+          "kill": "boss_crimson_ancestor",
+          "count": 1
+        },
+        "reward": {
+          "xp": 120000,
+          "ryo": 40000,
+          "items": [
+            "ring_fragment_crimson"
+          ]
+        },
+        "grants_rank": "kage"
+      }
+    ]
+  },
+  {
+    "id": "task_master_lair",
+    "name": "Mestre de Tarefas Kuro",
+    "map": "covil_nuvem_vermelha",
+    "x": 14,
+    "y": 14,
+    "_note": "PENDENTE de posição real (ver merchant_akatsuki_lair). Tarefas repetíveis de covil_nuvem_vermelha (data/tasks.json).",
+    "type": "tasks"
+  }
+]

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Desertor de Elite" nameDescription="o desertor de elite" race="blood" experience="2200" speed="480" manacost="0">
+	<health now="2600" max="2600"/>
+	<look type="915" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-58" max="-88"/>
+		<attack name="fire" interval="5000" chance="60" range="4" target="1" min="-50" max="-76">
+			<attribute key="shootEffect" value="fire"/>
+		</attack>
+	</attacks>
+	<defenses armor="24" defense="24"/>
+	<elements>
+		<element icePercent="-50"/>
+		<element holyPercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="500" chance="100000"/>
+		<item id="6555" chance="100000"/>  <!-- deserter_seal -->
+		<item id="1954" chance="10000"/>  <!-- scroll_katon_karyuu -->
+		<item id="7588" countmax="4" chance="100000"/>  <!-- health_potion_medium -->
+	</loot>
+</monster>

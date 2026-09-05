@@ -48,6 +48,29 @@ Objetivo: o loop de progressão fecha.
 - [ ] Mochila maior (+slots) como item, crafting básico
 
 ---
+## Lore (2026-09-04) — bíblia do mundo e progressão de rank
+Feedback do usuário: a lógica de visuais estava errada (bandido/mobs comuns
+usando personagens principais como Sasuke) e não havia progressão de rank de
+verdade. Resolvido:
+- [x] Pesquisa de arcos/ranks reais → `docs/lore/pesquisa-naruto.md`
+- [x] Bíblia do mundo: 6 regiões (4 já implementadas + 2 novas com dados
+      prontos) alinhadas aos arcos → `docs/lore/mundo.md`
+- [x] Progressão Genin→Chunin→Jonin→Anbu→Kage com exames de várias etapas →
+      `docs/lore/progressao.md`, `data/ranks.json`, `data/schemas/rank.schema.json`
+- [x] Reatribuição de visuais: monstros/bosses comuns não usam mais
+      personagem principal (só sprites genéricos); 900–926 ficou reservado a
+      NPCs mentores e aos bosses de arco de verdade (Serpente Branca + os 4
+      do covil final) → `data/tfs_mapping.json`, tabela em
+      `docs/sistemas/monstros-e-pvm.md`
+- [ ] Pendências para o exportador/servidor (não editado nesta missão — fora
+      de escopo): objetivo de quest `keyword_quiz` de verdade, storage
+      centralizado de rank, bônus de status por rank — ver
+      `docs/lore/progressao.md`, seção "Pendências técnicas"
+- [ ] Pendências para o agente de mapa: `data/maps/spawns_lore.json` pede
+      2 regiões novas (Costa das Marés, Covil da Nuvem Vermelha) e spawns
+      extras em 2 zonas existentes (Floresta da Morte, Montanha do Trovão)
+
+---
 # Fase OT (a partir de 2026-09-03) — OTClient + TFS. Substitui os Marcos 4–5 abaixo.
 
 ## OT-0 — Fundação

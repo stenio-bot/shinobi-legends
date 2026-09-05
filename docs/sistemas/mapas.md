@@ -39,12 +39,74 @@ house tiles, towns e waypoints).
 
 ## Layout do Vale da Folha
 
-Cabeçalho 2048x2048 (OTBM v2, items 3.57). Todo o conteúdo está no **andar 7**,
-na faixa **x 1000–1199, y 1000–1119** (200x120 = 24.000 tiles).
+Cabeçalho 2048x2048 (OTBM v2, items 3.57). Conteúdo jogável no **andar 7**, em
+duas faixas: o mundo aberto **x 1000–1199, y 1000–1119** (200x120 = 24.000
+tiles) e um apêndice isolado (interiores de loja + Arena do Exame Chunin) em
+**x 1298–1332, y 998–1036**, ligado ao mundo aberto só por teleporte.
 
-> O cabeçalho declara 2048x2048 e não 1024x1024 porque o conteúdo começa em
-> (1000,1000) e vai até x=1199: o TFS ignora `width`/`height`, mas o Remere's usa
-> esses valores para delimitar o canvas e recortaria tudo acima de 1023.
+> O cabeçalho declara 2048x2048 e não 1024x1024 porque o conteúdo vai até
+> x=1329: o TFS ignora `width`/`height`, mas o Remere's usa esses valores para
+> delimitar o canvas e recortaria tudo acima de 1023.
+
+### Mapa v2 (2026-09-04) — por que mudou
+
+Feedback do usuário sobre a v1: "o mapa está todo desengonçado; não sei o que é
+estrada, o que é lugar, loja; precisa de lógica". A v1 tinha as 3 lojas
+espalhadas em 3 pontos diferentes da vila (2 delas nem na mesma rua), sem
+interior (NPC parado na rua, na frente de uma fachada que só bloqueia), sem
+placas explicando o que é cada coisa, e só 1 portão. A v2 resolve isso:
+
+- **Um único portão principal** (sul, com torii vermelho) leva à avenida
+  N-S, que atravessa a praça e termina na Torre do Hokage — exatamente o eixo
+  "portão → praça → prédio principal" de uma cidade Tibia clássica.
+- **Um segundo portão** (leste) abre direto na **Rua dos Mercadores**, que
+  agora tem as 3 lojas **lado a lado, na mesma rua**, cada uma com uma placa.
+- **Lojas têm INTERIOR de verdade**: a fachada (bloqueia tudo, só a porta é
+  passável) ganhou uma sala separada em outro trecho do mapa (x 1300+, ver
+  "Interiores"), com o NPC atrás de um balcão, ligada por **teleporte na
+  própria célula da porta** — visualmente o jogador "entra pela porta".
+- **Sinalização**: placa de madeira (item 1440) em toda rua, portão, loja,
+  bairro e bifurcação de trilha — "Rua dos Mercadores", "Portão Leste →
+  trilha da floresta", "-> Trilha dos Lobos", etc.
+- **Muralha com 2 portões nomeados**, academia cercada de bambu, Floresta da
+  Morte cercada (bambu alto, 1 portão na ponte) e uma **Arena do Exame
+  Chunin** nova (30x20, arquibancada de bancos, teleporte de entrada na
+  Academia).
+
+Como não existe NPC "Guarda da Folha" em `data/npcs/` (regra da missão: só
+usar se já existisse), os portões são sinalizados por placa + tochas, sem
+guarda.
+
+### Planta lógica da vila (declarativo, ver `tools/map/build_valley.py`)
+
+O gerador foi refeito em **funções por bairro**, cada uma cuidando de um
+pedaço (chamadas em sequência de dentro de `build()`): muralha+portões, ruas+
+praça+templo, torre do Hokage, bairro residencial, Rua dos Mercadores
+(fachadas), bloco cívico (taverna/prisão), Academia+cerca, decoração, muro da
+Floresta da Morte, placas de trilha, interiores das lojas, Arena. A planta
+abaixo é o "mapa lógico" em texto (cada célula ≈ 1 tile, y 1030→1069 de cima
+pra baixo, x 1010→1049 da esquerda pra direita); os detalhes finos (porta
+exata, decoração) ficam nas funções, não neste desenho:
+
+```
+legenda: # muralha   G portão   R rua (cobble)   P praça (pedra)
+         T templo    H torre Hokage   S loja (fachada+porta)
+         D casa (residencial)   A academia (cercada de bambu)
+         V depósito   K taverna/prisão   . terra batida
+
+##################G(leste)#######
+#  D          H(torre)      D    #
+#  D        ###########     S,S,S# <- Rua dos Mercadores (loja, loja, loja)
+#            #P  T  P#      ,,,, #    (R = rua leste-oeste, y1054-1056)
+#  A(cerca)  #P     P#       .   #
+#  A         ###door##       .   #
+#  A          ..R..           .  #
+#..........R.R.R.R.R..............#  <- Rua dos Mercadores continua
+#            R                    #
+#  K    D    K,K   D              #
+#  (prisão)  (taverna)             #
+##########G(sul, torii)############
+```
 
 ### Pontos de referência
 
@@ -53,30 +115,69 @@ na faixa **x 1000–1199, y 1000–1119** (200x120 = 24.000 tiles).
 | **Templo / posição da town 1 "Vila da Folha"** | **1029, 1042** |
 | Prédio do templo (paredes de pedra) | 1025,1038 – 1033,1046, porta em 1029,1046 |
 | Praça central (chão de pedra, zona de proteção) | 1022,1036 – 1036,1052 |
+| Fonte da praça / bancos | 1029,1049 / 1027,1050·1031,1050·1029,1048 |
 | Muralha da vila | 1010,1030 – 1049,1069 |
-| Portão sul | 1028–1030, 1069 |
-| Rua norte-sul (cobblestone) | x 1028–1030 |
-| Rua leste-oeste (cobblestone) | y 1054–1056 |
-| Torre do Líder (prédio importado) | 1027,1031 – 1031,1036, porta em 1029,1036 |
-| Loja do Ichiro, o Mercador (`newbie_shop`) | 1014,1040 – 1017,1043 (NPC na rua, 1015,1044) |
-| Loja do Mestre Hayato (`ramen_shop`) | 1040,1040 – 1043,1044 (NPC na rua, 1042,1045) |
-| Casa da Capitã Rin (`blue_shop`) | 1040,1048 – 1042,1051 (NPC na rua, 1041,1052) |
+| **Portão Sul** (principal, torii vermelho) | 1028–1030, 1069 |
+| **Portão Leste** (Rua dos Mercadores) | 1049, 1054–1056 |
+| Avenida norte-sul (cobblestone) | x 1028–1030 |
+| **Rua dos Mercadores** (leste-oeste, cobblestone) | y 1054–1056 |
+| Torre do Hokage (prédio importado) | 1027,1031 – 1031,1036, porta em 1029,1036 |
+| Bairro residencial (norte + sul) | y 1031–1036 (`big_house`, `house_green`) e y 1060–1063 (`blue_house` x2) |
+| Loja do Ichiro, o Mercador (`newbie_shop`) | fachada 1037,1050–1040,1053, porta/teleporte em 1038,1053 |
+| Loja do Mestre Hayato (`ramen_shop`) | fachada 1042,1049–1045,1053, porta/teleporte em 1044,1053 |
+| Loja da Capitã Rin (`blue_shop`) | fachada 1046,1050–1048,1053, porta/teleporte em 1047,1053 |
 | Prisão | 1013,1060 – 1016,1063, porta em 1014,1063 |
 | Taverna | 1032,1059 – 1036,1063, porta em 1034,1063 |
-| Campo de treino (6 training dummies) | 1013,1046 – 1020,1052 |
+| Academia Ninja / campo de treino (cercada de bambu, 6 dummies) | 1013,1046 – 1020,1052, entrada sul em 1016-1017,1053 |
+| Teleporte Academia → Arena | 1020,1049 → 1314,1033 |
 | Depósito (depot chest) | 1024, 1051 |
-| Casas de moradores (prédios importados) | y 1031–1036 e y 1059–1063 |
 | Rio (norte-sul, intransponível) | x 1125–1129 |
-| **Ponte de pedra** (com parapeitos) | x 1124–1130, y 1058–1061 |
+| **Ponte de madeira** (com corrimão) | x 1124–1130, y 1058–1061 |
+| **Muro da Floresta da Morte** (cerca de bambu, 1 portão) | perímetro x1130/x1199,y1000/y1119; portão y1057–1062 |
 | Hub de NPCs do pântano | 1131,1055 – 1139,1064 |
 | Velha Sumi / Rastreador Goro | 1133,1057 / 1135,1058 |
 | **Torre de pedra** (interior 3x3) | 1163,1058 – 1167,1062, porta em 1163,1060 |
 | Boss Sapo Ancião (dentro da torre) | 1165, 1060 |
 | **Acampamento dos bandidos** | centro 1100, 1100 (raio 7) |
 | Boss Chefe dos Bandidos | 1100, 1100 |
+| **Interior — Ichiro** | 1300,1000 – 1306,1005 |
+| **Interior — Hayato** | 1310,1000 – 1317,1005 |
+| **Interior — Rin** | 1320,1000 – 1325,1005 |
+| **Arena do Exame Chunin** (30x20) | 1300,1015 – 1329,1034, centro 1314,1024 |
+| Instrutora Ibuki (proctora do exame, Academia) | 1018,1048 |
+| Rivais do Exame (Pedra/Som/Névoa, 2 cada, na Arena) | em torno de 1314,1024 |
 
-Waypoints gravados no OTBM: `Templo`, `Praca`, `Portao Sul`, `Ponte`, `Torre`,
-`Acampamento`, `Hub Pantano`.
+Waypoints gravados no OTBM: `Templo`, `Praca`, `Portao Sul`, `Portao Leste`,
+`Rua dos Mercadores`, `Academia`, `Ponte`, `Torre`, `Acampamento`,
+`Hub Pantano`, `Arena Chunin`, `Muro Floresta da Morte`.
+
+### Lojas: NPC + interior
+
+| Loja | NPC | Fachada (rua) | Interior | Teleporte |
+|---|---|---|---|---|
+| Loja de Armas (`newbie_shop`) | Ichiro, o Mercador | 1037-1040,1050-1053 | 1300-1306,1000-1005 | entrada empilhada na porta (1038,1053); saída no pad dentro da sala → 1038,1054 (rua) |
+| Loja de Pergaminhos (`ramen_shop`) | Mestre Hayato | 1042-1045,1049-1053 | 1310-1317,1000-1005 | entrada em 1044,1053; saída → 1044,1054 |
+| Quartel/Missões (`blue_shop`) | Capitã Rin | 1046-1048,1050-1053 | 1320-1325,1000-1005 | entrada em 1047,1053; saída → 1047,1054 |
+
+Cada interior: chão de tatame (`tatami_floor`), paredes de madeira
+(`wood_wall_h/v`), balcão (item 1617, bloqueia) com o NPC atrás, 2 baús
+(1740), 2 lanternas de papel (`paper_lantern`) e uma placa "Saída - <NPC>"
+perto do pad de retorno. **Taverna e Prisão continuam só fachada** (sem
+interior) porque não existe NPC de taverneiro/carcereiro em `data/npcs/` — se
+um for criado depois, o mesmo padrão de `build_shop_interior` serve.
+
+### Arena do Exame Chunin
+
+30x20 tiles, piso de pedra (`STONE_FLOOR`), muralha de pedra com um anel de
+bancos (`BENCH`, item 1662) encostado por dentro simulando arquibancada,
+2 tochas perto da entrada e uma placa central. Teleporte de entrada na
+Academia (pad em 1020,1049 → pousa em 1314,1033, sem item na célula de
+pouso); o pad de retorno fica um tile ao norte do pouso (1314,1032) e devolve
+pra Academia num tile livre (1019,1049) — nunca no MESMO tile do pad de ida,
+senão os dois teleportes formam um loop infinito. Populada com os 6 "Rivais
+do Exame" (`data/maps/spawns_lore.json`) e sinalizada como zona nova em
+`data/maps/forest_valley.json`. Deixada documentada aqui para o agente de
+lore usar depois (ex.: cutscene do torneio, diálogo da Instrutora Ibuki).
 
 ### Prédios importados
 
@@ -87,10 +188,14 @@ foram substituídas por prédios recortados de `assets-src/import/village_buildi
 **`assets-src/sprites/buildings.json`** e cada célula 32x32 é um **item novo**
 (`bld_*` em `assets-src/sprites/tiles.json`, server ids **30008–30249**).
 
-**São fachadas, não interiores.** Em Tibia tudo do prédio bloqueia; só a célula de
-porta é caminhável (`group: "door"`, `walkable: true`), e ela não leva a lugar
-nenhum. Por isso os NPCs de loja ficam **na rua**, um tile à frente da porta — antes
-eles ficavam dentro do prédio, atrás de uma porta de madeira.
+**São fachadas** — em Tibia tudo do prédio bloqueia; só a célula de porta é
+caminhável (`group: "door"`, `walkable: true`). Desde a v2 do mapa, as 3
+fachadas de loja (Ichiro/Hayato/Rin) **ganharam interior de verdade**: a
+célula da porta recebe um item de teleporte (`TELEPORT_ITEM = 1387`, empilhado
+por cima do item de porta, sem apagar o desenho) que leva a uma sala separada
+em `tools/map/build_shop_interior()` (x 1300+, ver seção "Lojas: NPC +
+interior" acima). Taverna e Prisão continuam só fachada (sem NPC próprio em
+`data/npcs/`, então sem interior).
 
 `tools/map/build_valley.py` estampa com:
 
@@ -105,20 +210,24 @@ posição absoluta da porta.
 
 | Template | Tamanho (col x lin) | Onde | Porta |
 |---|---|---|---|
-| `tower` (Torre do Líder) | 5x6 | 1027,1036 — ao norte da praça | 1029,1036 |
+| `tower` (Torre do Hokage) | 5x6 | 1027,1036 — ao norte da praça | 1029,1036 |
 | `big_house` | 5x6 | 1013,1036 | 1014,1036 |
 | `house_green` | 4x4 | 1040,1036 | 1041,1036 |
-| `newbie_shop` (Ichiro) | 4x4 | 1014,1043 | 1015,1043 |
-| `ramen_shop` (Hayato) | 4x5 | 1040,1044 | 1042,1044 |
-| `blue_shop` (Rin) | 3x4 | 1040,1051 | 1041,1051 |
+| `newbie_shop` (Ichiro) | 4x4 | 1037,1053 — Rua dos Mercadores | 1038,1053 |
+| `ramen_shop` (Hayato) | 4x5 | 1042,1053 — Rua dos Mercadores | 1044,1053 |
+| `blue_shop` (Rin) | 3x4 | 1046,1053 — Rua dos Mercadores | 1047,1053 |
 | `prison` | 4x4 | 1013,1063 | 1014,1063 |
 | `blue_house` | 3x4 | 1021,1063 e 1041,1063 | col 1 da base |
 | `tavern` | 5x5 | 1032,1063 | 1034,1063 |
 | `roof_orange` | 3x4 | 1037,1063 (galpão) | — |
-| `lamp_post` | 1x4 | 1021,1053 e 1037,1053 | — |
-| `tree` / `bushes` / `big_bush` / `grass_patch` | 1–3 tiles | praça, campo de treino, fora do portão | — |
+| `tree` / `bushes` / `big_bush` / `grass_patch` | 1–3 tiles | praça, academia, fora do portão | — |
 | `green_gate_a/b/c`, `gate_east` | muros verdes | fora do portão sul | — |
 | `shop_east` | 3x3 | 1132,1062 (hub do pântano) | — |
+
+> `lamp_post` saiu da lista: as 2 estampas antigas (1021,1053 e 1037,1053) caíam
+> em cima da cerca de bambu nova da Academia e da fachada nova do Ichiro. As
+> ruas continuam iluminadas por tochas de parede (`TORCH`) e pela lanterna de
+> papel (`paper_lantern`) dentro dos interiores.
 
 O **templo continua sendo a PZ** e a posição da town — a torre foi colocada ao lado
 (ao norte da praça), sem tocar no templo nem no `flag_rect` de proteção.
@@ -142,20 +251,31 @@ tools/install_generated.sh                      # instala no servidor
 
 ### Zonas
 
-- **Vila da Folha** — muralha de pedra, ruas de cobblestone com tochas, praça e templo
-  em **zona de proteção** (o interior do templo também tem `no-logout`).
+- **Vila da Folha** — muralha de pedra com **2 portões nomeados** (Sul,
+  principal, com torii; Leste, saída da Rua dos Mercadores), ruas de
+  cobblestone com tochas, praça com fonte+bancos e templo em **zona de
+  proteção** (o interior do templo também tem `no-logout`). Bairros
+  separados: residencial (norte junto à Torre do Hokage + sul), Rua dos
+  Mercadores (as 3 lojas, cada uma com interior), Academia Ninja (cercada de
+  bambu), bloco cívico (taverna+prisão).
 - **Floresta** (level 1–10) — grama com manchas densas de árvores, trilhas de terra e um
-  anel de trilha em volta da vila (y 1025 / y 1075, x 1005 / x 1055). Clareiras com
-  Lobo, Bandido, Cobra da Floresta e Bandido Arqueiro. A sudeste, o acampamento dos
-  bandidos com tendas, fogueira e cerca, guardado por bandidos.
-- **Floresta da Morte** (level 10–25) — a leste do rio: chão de lama/pântano, árvores
-  mortas, juncos e poças d'água. Sanguessuga Gigante, Sapo Gigante e Ninja Renegado,
-  mais a **Serpente Branca** numa clareira isolada ("Ninho da Serpente", 1190,1015).
+  anel de trilha em volta da vila (y 1025 / y 1075, x 1005 / x 1055), com placa em cada
+  bifurcação. Clareiras com Lobo, Bandido, Cobra da Floresta e Bandido Arqueiro. A
+  sudeste, o acampamento dos bandidos com tendas, fogueira e cerca, guardado por
+  bandidos.
+- **Floresta da Morte** (level 10–25) — a leste do rio, agora **cercada por um muro
+  alto de bambu com 1 portão** alinhado à ponte (área do Exame Chunin). Chão de
+  lama/pântano, árvores mortas, juncos e poças d'água. Sanguessuga Gigante, Sapo
+  Gigante e Ninja Renegado, mais a **Serpente Branca** numa clareira isolada
+  ("Ninho da Serpente", 1190,1015).
+- **Interiores da Vila** e **Arena do Exame Chunin** — apêndice isolado (x 1300+),
+  só acessível por teleporte; ver seções acima. Registrado como zona nova em
+  `data/maps/forest_valley.json`.
 
 ### Spawns
 
-26 grupos, 58 monstros, 5 NPCs. Raio 3–4, `spawntime` 60–120 s para monstros comuns
-e 3600 s para bosses.
+30 grupos, 64 monstros, 6 NPCs. Raio 2–4, `spawntime` 60–120 s para monstros comuns
+(120 s pros Rivais do Exame) e 3600 s para bosses.
 
 | Monstro | Qtd |
 |---|---|
@@ -166,9 +286,16 @@ e 3600 s para bosses.
 | Sanguessuga Gigante | 7 |
 | Sapo Gigante | 7 |
 | Ninja Renegado | 5 |
+| Rival do Exame — Pedra/Som/Névoa (Arena) | 2+2+2 = 6 |
 | Serpente Branca (boss) | 1 |
 | Chefe dos Bandidos (boss) | 1 |
 | Sapo Ancião (boss) | 1 |
+
+Os 6 "Rivais do Exame" e a NPC Instrutora Ibuki vieram de um pedido de
+`data/maps/spawns_lore.json` (agente de lore) que se encaixou diretamente na
+Arena nova — os outros pedidos desse arquivo (Costa das Marés, Covil Nuvem
+Vermelha, Ruínas do Clã, Montanha do Trovão) são regiões **sem mapa físico
+ainda**, fora do escopo desta missão (só existe o Vale da Folha hoje).
 
 ## Como regenerar
 
@@ -344,17 +471,33 @@ e no portão da Vila da Folha. A v2 do algoritmo não muda ONDE as peças vão
 
 ```bash
 .venv/bin/python tools/map/render_preview.py
-# ou uma área específica:
+# presets prontos (v2): full = mundo aberto inteiro (1000,1000-1199,1119);
+# interiors = lojas+arena (1298,998-1332,1036); vila_zoom = só a vila;
+# default = vila+floresta (área antiga)
+.venv/bin/python tools/map/render_preview.py --preset full --labels --zoom 1 \
+    --out screenshots/preview_v2_anotado.png
+# ou uma área especifica (--preset é ignorado se --area for passado):
 .venv/bin/python tools/map/render_preview.py --area 1000 1020 1120 1080 \
     --out screenshots/preview_borders.png
 ```
+
+`--labels` desenha o nome de cada zona/loja/portão em cima do render (usa a
+lista `LABELS`/`INTERIOR_LABELS` do próprio `render_preview.py`, derivada das
+constantes de `build_valley.py` — atualiza sozinha se as coordenadas
+mudarem). `--zoom N` redimensiona o PNG final por N (nearest-neighbor, mantém
+os pixels nítidos) — útil para `vila_zoom --zoom 3`.
 
 Roda `build_valley` como biblioteca (mesma sequência exata do build real:
 `build` → `carve_clearings` → `connect_clearings` → `apply_borders`) e
 desenha 32px por tile usando os PNGs de `assets-src/sprites/terrain/`
 (chão/objetos vanilla, via `assets-src/sprites/overrides/10_terrain.json`) e
 de `tiles.json` (bordas, prédios importados, mobiliário). Servidor id sem PNG
-conhecido é desenhado em magenta — sinal de que falta mapear alguma peça. É
+conhecido no override E sem entrada em `SpriteBook._EXTRA_PLACEHOLDERS`
+(fonte, teleporte, balcão, banco, baú, estátua — mobiliário vanilla usado só
+a partir da v2) é desenhado em magenta — sinal de que falta mapear alguma
+peça; os ids em `_EXTRA_PLACEHOLDERS` viram um círculo colorido com uma letra
+(F=fonte, T=teleporte, C=balcão, B=banco, X=baú, S=estátua), só para o
+preview ficar legível — o cliente real usa o sprite vanilla de verdade. É
 assim que a arte das bordas foi ajustada e conferida (`Read` no PNG gerado)
 sem precisar compilar assets nem abrir o OTClient.
 
@@ -574,6 +717,47 @@ recente: `.venv/bin/python tools/spr/build_assets.py &&
 && cp server/generated/world/valley* server/tfs/data/world/ && pkill -x tfs`
 (subir de novo em seguida).
 
+### BFS por teleporte (mapa v2)
+
+Os interiores das lojas e a Arena só são alcançáveis por teleporte, não a pé
+(ficam num apêndice do mapa, x 1300+). `build_valley.validate()` ganhou
+`teleport_edges(b)` — varre todo item com `tele_dest` setado (todo item
+`TELEPORT_ITEM`/1387 colocado por `build_shop_interiors`/`build_arena`) e
+devolve `{(x,y): (tx,ty)}` — e `bfs()` agora aceita esse dict e, ao visitar
+uma célula, também enfileira o destino do teleporte de lá (se existir), além
+dos 4 vizinhos. **Regra anti-loop**: a célula de POUSO de um teleporte nunca
+pode ter, ela mesma, outro item de teleporte em cima — senão o pouso
+reativaria o teleporte de volta e os dois lados formariam um ciclo infinito
+(o BFS trataria como "alcançável" mas o servidor real travaria o jogador indo
+e voltando). Todo par entrada/saída deste mapa respeita isso (pouso limpo,
+pad de saída um tile ao lado — ver `build_shop_interior`/`build_arena`).
+
+NPCs atrás de balcão também precisaram de uma regra própria: `validate()`
+antes exigia a célula EXATA do NPC caminhável, mas um balcão (item 1617)
+bloqueia de propósito a fileira toda atrás dele (como no Tibia de verdade).
+A partir da v2, só NPCs (nunca monstros) são validados por **proximidade**
+(`NPC_TALK_RADIUS = 3`, Chebyshev) em vez de célula exata — precisa haver
+ALGUMA célula caminhável a até 3 tiles do NPC, não que o NPC em si seja
+pisável.
+
+### Tour in-game do mapa v2 (validação real, 2026-09-04)
+
+Depois do build + `walk_audit` limpos, o mapa foi instalado de verdade
+(`tools/install_generated.sh` + cópia pra `server/tfs/data/world/` +
+`pkill -x tfs` + subir de novo) e visitado com o cliente real — cópia
+temporária de `client-otc/tests/autotest_rc.lua` (removida ao final) logando
+como GM (`/god`) e usando `/tp x,y,z` (talkaction de `gm_tools.lua`) por 9
+pontos, 1 screenshot em cada (`screenshots/mapa_v2_*.png`): praça (fonte +
+bancos), Rua dos Mercadores (as 3 fachadas lado a lado com o pad de
+teleporte roxo em cada porta), **dentro da loja do Ichiro** (NPC atrás do
+balcão, baús, lanternas), Torre do Hokage, Portão Sul (torii vermelho
+visível), uma clareira com 2 Lobos vivos, a ponte de madeira + Hub do
+Pântano (Velha Sumi e Rastreador Goro visíveis), o portão/cerca da Floresta
+da Morte, e a Arena do Exame Chunin — com os 6 "Rivais do Exame" vivos e
+atacando o personagem. Log do servidor sem erros/avisos durante toda a
+sessão. Essa é a confirmação "de verdade" (não só render Python) de que
+teleportes, fachadas, cerca e sinalização funcionam no jogo real.
+
 ### Pendências
 
 - 406 bolsões pequenos de tiles caminháveis (789 tiles, 4,5% do total
@@ -590,3 +774,18 @@ recente: `.venv/bin/python tools/spr/build_assets.py &&
   personagem estava andando normalmente no momento do crash); parece
   instabilidade do cliente em sessões automatizadas longas, fora do escopo
   desta auditoria.
+- **Portão Leste e entrada da Academia "somem" no preview Python** (não no
+  jogo real): `stone_wall_v`/`bamboo_fence` têm `height` maior que 32px no
+  override de renderização — o sprite do tile ABAIXO da abertura invade
+  visualmente 1 linha da própria abertura no PNG gerado por
+  `render_preview.py` (é assim que o Tibia sempre desenha parede alta; a
+  colisão real continua por-tile, confirmada pelo `walk_audit` e pelo tour
+  in-game — screenshot `mapa_v2_02_rua_comercial.png` mostra o portão leste
+  de verdade, sem essa confusão). Só um artefato de leitura da screenshot
+  "vista de cima" nesta ferramenta de preview, não um bug de mapa.
+- Taverna e Prisão continuam sem interior (não há NPC de taverneiro/carcereiro
+  em `data/npcs/` para colocar lá dentro) — se um for criado, basta chamar
+  `build_shop_interior` de novo com a fachada e o NPC certos.
+- Os pedidos de `data/maps/spawns_lore.json` para Costa das Marés e Covil
+  Nuvem Vermelha continuam pendentes: são regiões **sem mapa físico** (fora
+  do Vale da Folha atual), fora do escopo desta missão.

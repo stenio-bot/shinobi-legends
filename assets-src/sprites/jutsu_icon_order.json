@@ -1,0 +1,384 @@
+{
+ "_doc": "Ordem CANONICA dos icones em client-otc/data/images/game/spells/jutsus.png, gerada por tools/spr/gen_jutsu_icons.py (funcao jutsu_icon_order). tools/export_tfs.py recalcula a MESMA ordem (mesma formula, duplicada) para preencher clientId em NarutoSpellInfo/jutsus_data.lua — os dois PRECISAM ficar iguais. Este arquivo e o registro auditavel dessa ordem; gen_jutsu_icons.py valida contra jutsus_data.lua toda vez que roda (ver validate_against_lua).",
+ "count": 54,
+ "order": [
+  {
+   "index": 0,
+   "id": "katon_goukakyuu",
+   "element": "katon",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 1,
+   "id": "agulhas_incendiarias",
+   "element": "katon",
+   "tier": 1,
+   "required_level": 5
+  },
+  {
+   "index": 2,
+   "id": "katon_sopro_brasas",
+   "element": "katon",
+   "tier": 1,
+   "required_level": 6
+  },
+  {
+   "index": 3,
+   "id": "katon_housenka",
+   "element": "katon",
+   "tier": 2,
+   "required_level": 12
+  },
+  {
+   "index": 4,
+   "id": "katon_anel_chamas",
+   "element": "katon",
+   "tier": 2,
+   "required_level": 20
+  },
+  {
+   "index": 5,
+   "id": "katon_karyuu_endan",
+   "element": "katon",
+   "tier": 3,
+   "required_level": 35
+  },
+  {
+   "index": 6,
+   "id": "suiton_mizudan",
+   "element": "suiton",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 7,
+   "id": "suiton_nevoa_cortante",
+   "element": "suiton",
+   "tier": 1,
+   "required_level": 6
+  },
+  {
+   "index": 8,
+   "id": "suiton_prisao_agua",
+   "element": "suiton",
+   "tier": 2,
+   "required_level": 22
+  },
+  {
+   "index": 9,
+   "id": "suiton_suiryuudan",
+   "element": "suiton",
+   "tier": 2,
+   "required_level": 25
+  },
+  {
+   "index": 10,
+   "id": "suiton_vortice_devorador",
+   "element": "suiton",
+   "tier": 3,
+   "required_level": 45
+  },
+  {
+   "index": 11,
+   "id": "raio_selado",
+   "element": "raiton",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 12,
+   "id": "raiton_hari",
+   "element": "raiton",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 13,
+   "id": "raiton_corrente_estatica",
+   "element": "raiton",
+   "tier": 1,
+   "required_level": 6
+  },
+  {
+   "index": 14,
+   "id": "lamina_relampago_pessoal",
+   "element": "raiton",
+   "tier": 1,
+   "required_level": 10
+  },
+  {
+   "index": 15,
+   "id": "raiton_lanca_relampago",
+   "element": "raiton",
+   "tier": 2,
+   "required_level": 18
+  },
+  {
+   "index": 16,
+   "id": "raiton_armadura_eletrica",
+   "element": "raiton",
+   "tier": 2,
+   "required_level": 24
+  },
+  {
+   "index": 17,
+   "id": "bainha_eletrica",
+   "element": "raiton",
+   "tier": 2,
+   "required_level": 26
+  },
+  {
+   "index": 18,
+   "id": "raiton_punho_trovao",
+   "element": "raiton",
+   "tier": 3,
+   "required_level": 30
+  },
+  {
+   "index": 19,
+   "id": "doton_bala_lama",
+   "element": "doton",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 20,
+   "id": "doton_muralha_pedra",
+   "element": "doton",
+   "tier": 1,
+   "required_level": 8
+  },
+  {
+   "index": 21,
+   "id": "doton_estacas_terra",
+   "element": "doton",
+   "tier": 2,
+   "required_level": 22
+  },
+  {
+   "index": 22,
+   "id": "doton_colapso_terreno",
+   "element": "doton",
+   "tier": 3,
+   "required_level": 48
+  },
+  {
+   "index": 23,
+   "id": "fuuton_lamina_vento",
+   "element": "fuuton",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 24,
+   "id": "fuuton_rasteira_vento",
+   "element": "fuuton",
+   "tier": 1,
+   "required_level": 4
+  },
+  {
+   "index": 25,
+   "id": "fuuton_rajada_cortante",
+   "element": "fuuton",
+   "tier": 2,
+   "required_level": 16
+  },
+  {
+   "index": 26,
+   "id": "fuuton_redemoinho_prisao",
+   "element": "fuuton",
+   "tier": 2,
+   "required_level": 23
+  },
+  {
+   "index": 27,
+   "id": "fuuton_tornado_cortante",
+   "element": "fuuton",
+   "tier": 3,
+   "required_level": 36
+  },
+  {
+   "index": 28,
+   "id": "agulhas_multiplas",
+   "element": "none",
+   "tier": 1,
+   "required_level": 1
+  },
+  {
+   "index": 29,
+   "id": "chute_ascendente",
+   "element": "none",
+   "tier": 1,
+   "required_level": 2
+  },
+  {
+   "index": 30,
+   "id": "kunai_marcada",
+   "element": "none",
+   "tier": 1,
+   "required_level": 3
+  },
+  {
+   "index": 31,
+   "id": "punho_suave",
+   "element": "none",
+   "tier": 1,
+   "required_level": 3
+  },
+  {
+   "index": 32,
+   "id": "kawarimi",
+   "element": "none",
+   "tier": 1,
+   "required_level": 5
+  },
+  {
+   "index": 33,
+   "id": "palma_gentil",
+   "element": "none",
+   "tier": 1,
+   "required_level": 5
+  },
+  {
+   "index": 34,
+   "id": "foco_ocular",
+   "element": "none",
+   "tier": 1,
+   "required_level": 7
+  },
+  {
+   "index": 35,
+   "id": "bunshin",
+   "element": "none",
+   "tier": 1,
+   "required_level": 8
+  },
+  {
+   "index": 36,
+   "id": "vigor_teimoso",
+   "element": "none",
+   "tier": 1,
+   "required_level": 9
+  },
+  {
+   "index": 37,
+   "id": "visao_total",
+   "element": "none",
+   "tier": 1,
+   "required_level": 9
+  },
+  {
+   "index": 38,
+   "id": "clone_sombrio",
+   "element": "none",
+   "tier": 1,
+   "required_level": 10
+  },
+  {
+   "index": 39,
+   "id": "shousen",
+   "element": "none",
+   "tier": 1,
+   "required_level": 10
+  },
+  {
+   "index": 40,
+   "id": "salto_do_selo",
+   "element": "none",
+   "tier": 1,
+   "required_level": 12
+  },
+  {
+   "index": 41,
+   "id": "barreira_protetora",
+   "element": "none",
+   "tier": 2,
+   "required_level": 14
+  },
+  {
+   "index": 42,
+   "id": "chute_giratorio",
+   "element": "none",
+   "tier": 2,
+   "required_level": 14
+  },
+  {
+   "index": 43,
+   "id": "contra_ataque_calculado",
+   "element": "none",
+   "tier": 2,
+   "required_level": 15
+  },
+  {
+   "index": 44,
+   "id": "soco_monstruoso",
+   "element": "none",
+   "tier": 2,
+   "required_level": 16
+  },
+  {
+   "index": 45,
+   "id": "soco_da_juventude",
+   "element": "none",
+   "tier": 2,
+   "required_level": 18
+  },
+  {
+   "index": 46,
+   "id": "selo_de_exorcismo",
+   "element": "none",
+   "tier": 2,
+   "required_level": 19
+  },
+  {
+   "index": 47,
+   "id": "corte_duplo",
+   "element": "none",
+   "tier": 2,
+   "required_level": 20
+  },
+  {
+   "index": 48,
+   "id": "lamina_chakra",
+   "element": "none",
+   "tier": 2,
+   "required_level": 20
+  },
+  {
+   "index": 49,
+   "id": "palma_dupla",
+   "element": "none",
+   "tier": 2,
+   "required_level": 24
+  },
+  {
+   "index": 50,
+   "id": "doku_kiri",
+   "element": "none",
+   "tier": 2,
+   "required_level": 25
+  },
+  {
+   "index": 51,
+   "id": "circulo_de_selos",
+   "element": "none",
+   "tier": 2,
+   "required_level": 27
+  },
+  {
+   "index": 52,
+   "id": "explosao_do_selo",
+   "element": "none",
+   "tier": 2,
+   "required_level": 28
+  },
+  {
+   "index": 53,
+   "id": "fuuin_contencao",
+   "element": "none",
+   "tier": 2,
+   "required_level": 40
+  }
+ ]
+}

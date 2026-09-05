@@ -1,0 +1,57 @@
+[
+  {
+    "rank": "genin",
+    "min_level": 1,
+    "quest_id": null,
+    "unlocks": {
+      "title": "Genin da vila",
+      "areas": ["floresta_da_vila"],
+      "jutsu_tier": 1,
+      "status_bonus": {}
+    }
+  },
+  {
+    "rank": "chunin",
+    "min_level": 20,
+    "quest_id": "exam_chunin",
+    "unlocks": {
+      "title": "Chunin — aprovado no Exame Chunin",
+      "areas": ["floresta_da_morte", "costa_das_mares", "ruinas_do_cla_marionetista"],
+      "jutsu_tier": 2,
+      "status_bonus": {"max_hp": 30, "max_chakra": 15}
+    }
+  },
+  {
+    "rank": "jonin",
+    "min_level": 50,
+    "quest_id": "exam_jonin",
+    "unlocks": {
+      "title": "Jonin — venceu o Espadachim da Névoa e o Marionetista das Ruínas",
+      "areas": ["montanha_do_trovao"],
+      "jutsu_tier": 3,
+      "status_bonus": {"max_hp": 80, "max_chakra": 40, "defense": 5}
+    }
+  },
+  {
+    "rank": "anbu",
+    "min_level": 80,
+    "quest_id": "exam_anbu",
+    "unlocks": {
+      "title": "Anbu — venceu a Dupla Imortal e a guarda externa do Covil",
+      "areas": ["covil_nuvem_vermelha"],
+      "jutsu_tier": 3,
+      "status_bonus": {"max_hp": 150, "max_chakra": 70, "defense": 10}
+    }
+  },
+  {
+    "rank": "kage",
+    "min_level": 100,
+    "quest_id": "exam_kage",
+    "unlocks": {
+      "title": "Kage — derrotou os líderes da Organização Nuvem Vermelha",
+      "areas": [],
+      "jutsu_tier": 3,
+      "status_bonus": {"max_hp": 300, "max_chakra": 150, "defense": 20}
+    }
+  }
+]

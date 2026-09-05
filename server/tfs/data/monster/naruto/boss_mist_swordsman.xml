@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<monster name="Espadachim da Névoa" nameDescription="o espadachim da névoa" race="blood" experience="1700" speed="440" manacost="0">
+	<health now="1700" max="1700"/>
+	<look type="132" head="0" body="0" legs="0" feet="0" corpse="3058"/>
+	<targetchange interval="4000" chance="10"/>
+	<flags>
+		<flag summonable="0"/>
+		<flag attackable="1"/>
+		<flag hostile="1"/>
+		<flag illusionable="0"/>
+		<flag convinceable="0"/>
+		<flag pushable="0"/>
+		<flag canpushitems="1"/>
+		<flag canpushcreatures="0"/>
+		<flag targetdistance="1"/>
+		<flag staticattack="90"/>
+		<flag runonhealth="0"/>
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="-28" max="-46"/>
+		<attack name="ice" interval="6000" chance="40" radius="2" target="0" min="-24" max="-40">
+			<attribute key="areaEffect" value="iceattack"/>
+		</attack>
+	</attacks>
+	<defenses armor="15" defense="15"/>
+	<elements>
+		<element earthPercent="-50"/>
+		<element firePercent="25"/>
+	</elements>
+	<script>
+		<event name="NarutoBossPhases"/>
+	</script>
+	<loot>
+		<item id="2148" countmax="1000" chance="100000"/>
+		<item id="6352" chance="100000"/>  <!-- fang_of_the_swordsman -->
+		<item id="2412" chance="12000"/>  <!-- katana_ronin -->
+		<item id="7588" countmax="4" chance="100000"/>  <!-- health_potion_medium -->
+	</loot>
+</monster>

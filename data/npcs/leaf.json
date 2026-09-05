@@ -198,5 +198,175 @@
         }
       }
     ]
+  },
+  {
+    "id": "exam_proctor_forest",
+    "name": "Instrutora Ibuki",
+    "map": "forest_valley",
+    "x": 60,
+    "y": 24,
+    "type": "quest",
+    "_note": "NOVA (docs/lore/progressao.md): proctora do Exame Chunin, as 3 etapas do exame real (prova teórica, sobrevivência com 2 pergaminhos, torneio) modeladas como 6 missões sequenciais compatíveis com o formato kill/count que tools/export_tfs.py já entende — ver 'quiz' na etapa 1 e pendências no relatório da missão para a versão completa (palavra-chave de verdade).",
+    "quests": [
+      {
+        "id": "exam_chunin_1_teoria",
+        "name": "Exame Chunin — Prova Teórica",
+        "text": "Antes de qualquer coisa, prove que prestou atenção no que a vila te ensinou. Responda o que eu perguntar e traga prova de que ainda sabe se virar sozinho na floresta.",
+        "objective": {
+          "kind": "keyword_quiz",
+          "kill": "forest_snake",
+          "count": 1,
+          "quiz": [
+            {
+              "question": "O que você gasta para lançar um jutsu?",
+              "keywords": [
+                "chakra"
+              ]
+            },
+            {
+              "question": "Qual elemento é forte contra Doton?",
+              "keywords": [
+                "fuuton",
+                "vento"
+              ]
+            },
+            {
+              "question": "Quem te ensinou seus primeiros jutsus?",
+              "keywords": [
+                "sensei",
+                "mestre",
+                "hayato"
+              ]
+            },
+            {
+              "question": "Qual skill sobe quando você lança jutsu?",
+              "keywords": [
+                "ninjutsu"
+              ]
+            },
+            {
+              "question": "Quem lidera a vila?",
+              "keywords": [
+                "hokage"
+              ]
+            }
+          ]
+        },
+        "reward": {
+          "xp": 500,
+          "ryo": 100,
+          "items": []
+        }
+      },
+      {
+        "id": "exam_chunin_2a_pergaminho_ceu",
+        "name": "Exame Chunin — Pergaminho do Céu",
+        "text": "Etapa 2: sobrevivência na Floresta da Morte. O Sapo Ancião guarda um Pergaminho do Céu. Traga-o.",
+        "objective": {
+          "kind": "kill",
+          "kill": "boss_elder_toad",
+          "count": 1
+        },
+        "reward": {
+          "xp": 0,
+          "ryo": 0,
+          "items": [
+            "scroll_heaven"
+          ]
+        }
+      },
+      {
+        "id": "exam_chunin_2b_pergaminho_terra",
+        "name": "Exame Chunin — Pergaminho da Terra",
+        "text": "Agora o Pergaminho da Terra. A Serpente Branca guarda o dela no fim da floresta — só entre se estiver pronto.",
+        "objective": {
+          "kind": "kill",
+          "kill": "boss_white_serpent",
+          "count": 1
+        },
+        "reward": {
+          "xp": 0,
+          "ryo": 0,
+          "items": [
+            "scroll_earth"
+          ]
+        }
+      },
+      {
+        "id": "exam_chunin_3a_rival_pedra",
+        "name": "Exame Chunin — Torneio (1/3)",
+        "text": "Etapa 3: o torneio. Seu primeiro oponente veio da Vila da Pedra.",
+        "objective": {
+          "kind": "kill",
+          "kill": "exam_rival_stone",
+          "count": 1
+        },
+        "reward": {
+          "xp": 300,
+          "ryo": 50,
+          "items": []
+        }
+      },
+      {
+        "id": "exam_chunin_3b_rival_som",
+        "name": "Exame Chunin — Torneio (2/3)",
+        "text": "Seu segundo oponente veio da Vila do Som.",
+        "objective": {
+          "kind": "kill",
+          "kill": "exam_rival_sound",
+          "count": 1
+        },
+        "reward": {
+          "xp": 300,
+          "ryo": 50,
+          "items": []
+        }
+      },
+      {
+        "id": "exam_chunin_3c_rival_mist",
+        "name": "Exame Chunin — Torneio (3/3)",
+        "text": "Seu último oponente veio da Vila da Névoa. Vença e você será Chunin.",
+        "objective": {
+          "kind": "kill",
+          "kill": "exam_rival_mist",
+          "count": 1
+        },
+        "reward": {
+          "xp": 5000,
+          "ryo": 2000,
+          "items": [
+            "vest_chuunin"
+          ]
+        },
+        "grants_rank": "chunin"
+      }
+    ]
+  },
+  {
+    "id": "task_master_leaf",
+    "name": "Mestre de Tarefas Jiro",
+    "map": "forest_valley",
+    "x": 20,
+    "y": 25,
+    "type": "tasks",
+    "_note": "NOVO (docs/sistemas/progressao-servidor.md): dá/recebe as tarefas repetíveis de floresta_da_vila (data/tasks.json). Diga {tarefa} para aceitar, {entregar} para entregar."
+  },
+  {
+    "id": "task_master_swamp",
+    "name": "Mestre de Tarefas Ren",
+    "map": "forest_valley",
+    "x": 62,
+    "y": 22,
+    "type": "tasks",
+    "_note": "NOVO: tarefas repetíveis de floresta_da_morte (data/tasks.json)."
+  },
+  {
+    "id": "dailies_board_leaf",
+    "name": "Quadro de Missões",
+    "map": "forest_valley",
+    "x": 24,
+    "y": 16,
+    "type": "dailies",
+    "_note": "NOVO (docs/sistemas/progressao-servidor.md): 'Quadro de Missões' da praça — mostra/aceita as 3 diárias do dia (data/dailies.json). Equivalente funcional ao !diaria; a versão 'placa readable com actionid' pedida pelo designer depende de um item novo + posição no mapa (data/items.json e data/maps não editáveis por esta missão — ver pendências)."
   }
 ]

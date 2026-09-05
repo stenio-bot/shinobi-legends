@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Task",
+  "description": "Tarefa repetível estilo 'Tibia tasks' (docs/sistemas/progressao-servidor.md). Dada por um NPC type='tasks' (data/npcs/*.json). tools/export_tfs.py gera server/generated/lib/naruto_tasks.lua + scripts/naruto/tasks.lua a partir de data/tasks.json. Se o arquivo não existir, o exportador ignora o sistema de tarefas inteiro (compat).",
+  "type": "object",
+  "required": ["id", "name", "npc", "zone", "monster_id", "count", "min_level", "reward"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "name": {"type": "string"},
+    "npc": {"type": "string", "description": "id do NPC (data/npcs/*.json) que dá e recebe esta tarefa"},
+    "zone": {"type": "string", "description": "id da região (docs/lore/mundo.md), só documentário/exibição"},
+    "monster_id": {"type": "string", "description": "monstro a abater (data/monsters/*.json)"},
+    "count": {"type": "integer", "minimum": 1},
+    "min_level": {"type": "integer", "minimum": 1},
+    "repeatable": {"type": "boolean", "default": true},
+    "cooldown_min": {"type": "integer", "minimum": 0, "description": "minutos de espera após entregar antes de poder aceitar de novo"},
+    "reward": {
+      "type": "object",
+      "required": ["xp", "ryo", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "xp": {"type": "number", "minimum": 0, "description": "kills EQUIVALENTES de monstro do level do jogador (não XP absoluto) — convertido em XP real por NarutoRewards.scaledXp(player, xp) no momento da entrega, ver docs/sistemas/progressao-servidor.md"},
+        "ryo": {"type": "integer", "minimum": 0, "description": "ryo absoluto (não escalado)"},
+        "items": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

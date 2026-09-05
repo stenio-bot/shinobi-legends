@@ -21,6 +21,7 @@ Uso: .venv/bin/python tools/spr/gen_jutsu_icons.py
 import glob
 import json
 import os
+import re
 import sys
 
 from PIL import Image, ImageDraw
@@ -28,6 +29,8 @@ from PIL import Image, ImageDraw
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 DATA = os.path.join(ROOT, "data", "jutsus")
 OUT = os.path.join(ROOT, "client-otc", "data", "images", "game", "spells", "jutsus.png")
+ORDER_OUT = os.path.join(ROOT, "assets-src", "sprites", "jutsu_icon_order.json")
+LUA_DATA = os.path.join(ROOT, "client-otc", "modules", "naruto_theme", "jutsus_data.lua")
 
 CELL = 32
 
@@ -156,6 +159,74 @@ def icon(j):
     return img
 
 
+def write_order_file(jutsus):
+    """Grava assets-src/sprites/jutsu_icon_order.json — fonte de verdade UNICA e
+    versionada da ordem dos icones na folha. tools/export_tfs.py NAO le este
+    arquivo (nao pode ser editado por este trabalho); ele recalcula a mesma
+    ordem com a MESMA formula (jutsu_icon_order, duplicada de proposito nos
+    dois lugares). Este arquivo serve para (1) auditar/diffar mudanca de ordem
+    entre commits e (2) validar() abaixo, que compara este calculo contra o
+    jutsus_data.lua ja gerado e falha ALTO (exit != 0) se divergir — em vez de
+    um icone errado silencioso in-game (a causa raiz do bug historico: os dois
+    arquivos gerados por comandos SEPARADOS, sem nada que garanta que rodam
+    juntos apos data/jutsus/*.json mudar)."""
+    order = [{"index": i, "id": j["id"], "element": j.get("element", "none"),
+              "tier": int(j.get("tier", 1)), "required_level": int(j.get("required_level", 1))}
+             for i, j in enumerate(jutsus)]
+    doc = {
+        "_doc": "Ordem CANONICA dos icones em client-otc/data/images/game/spells/jutsus.png, "
+                "gerada por tools/spr/gen_jutsu_icons.py (funcao jutsu_icon_order). "
+                "tools/export_tfs.py recalcula a MESMA ordem (mesma formula, duplicada) para "
+                "preencher clientId em NarutoSpellInfo/jutsus_data.lua — os dois PRECISAM ficar "
+                "iguais. Este arquivo e o registro auditavel dessa ordem; gen_jutsu_icons.py "
+                "valida contra jutsus_data.lua toda vez que roda (ver validate_against_lua).",
+        "count": len(order),
+        "order": order,
+    }
+    os.makedirs(os.path.dirname(ORDER_OUT), exist_ok=True)
+    with open(ORDER_OUT, "w", encoding="utf-8") as f:
+        json.dump(doc, f, ensure_ascii=False, indent=1)
+        f.write("\n")
+    return ORDER_OUT
+
+
+def validate_against_lua(jutsus):
+    """Compara a ordem calculada aqui contra o clientId/icon ja gravados em
+    jutsus_data.lua (gerado por tools/export_tfs.py, que este trabalho NAO
+    pode editar). Divergencia = a causa raiz do bug de icone cortado/errado:
+    jutsus.png e jutsus_data.lua desalinhados porque um foi regenerado sem o
+    outro depois que data/jutsus/*.json mudou de tamanho. Nao falha (so avisa)
+    se o arquivo lua nao existir, para o script continuar util isoladamente."""
+    if not os.path.exists(LUA_DATA):
+        print("aviso: jutsus_data.lua nao encontrado, pulei a validacao de indice")
+        return True
+    with open(LUA_DATA, encoding="cp1252", errors="replace") as f:
+        lua = f.read()
+    pairs = re.findall(r"icon\s*=\s*'([^']*)'\s*,\s*clientId\s*=\s*(\d+)", lua)
+    lua_by_index = {int(idx): icon_id for icon_id, idx in pairs}
+    divergences = []
+    if len(lua_by_index) != len(jutsus):
+        divergences.append(
+            f"contagem diferente: jutsus_data.lua tem {len(lua_by_index)} entradas, "
+            f"data/jutsus/*.json tem {len(jutsus)} — jutsus.png teria {len(jutsus)} icones "
+            f"({len(jutsus) * CELL}px) mas o clientId maximo no lua pressupoe outra largura"
+        )
+    for i, j in enumerate(jutsus):
+        lua_id = lua_by_index.get(i)
+        if lua_id is None:
+            divergences.append(f"  indice {i} ({j['id']}): sem entrada correspondente em jutsus_data.lua")
+        elif lua_id != j["id"]:
+            divergences.append(f"  indice {i}: gen_jutsu_icons.py calcula '{j['id']}', jutsus_data.lua tem '{lua_id}'")
+    if divergences:
+        print("DIVERGENCIA jutsus.png x jutsus_data.lua (rode tools/export_tfs.py e gen_jutsu_icons.py "
+              "juntos, na mesma versao de data/jutsus/*.json):")
+        for d in divergences:
+            print(" ", d)
+        return False
+    print(f"validacao de indice: OK, divergencias=0 ({len(jutsus)} jutsus, jutsus_data.lua e jutsus.png alinhados)")
+    return True
+
+
 def main():
     jutsus = jutsu_icon_order(load_jutsus())
     sheet = Image.new("RGBA", (CELL * len(jutsus), CELL), (0, 0, 0, 0))
@@ -166,7 +237,10 @@ def main():
     print(f"{os.path.relpath(OUT, ROOT)}: {len(jutsus)} icones ({sheet.width}x{sheet.height})")
     for i, j in enumerate(jutsus):
         print(f"  [{i:2d}] {j['id']:28s} {j.get('element'):7s} {symbol_of(j)}")
-    return 0
+    order_path = write_order_file(jutsus)
+    print(f"{os.path.relpath(order_path, ROOT)}: gravado ({len(jutsus)} entradas)")
+    ok = validate_against_lua(jutsus)
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

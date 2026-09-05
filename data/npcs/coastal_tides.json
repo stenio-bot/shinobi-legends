@@ -1,0 +1,110 @@
+[
+  {
+    "id": "merchant_coastal",
+    "name": "Mercador Itsuki",
+    "map": "costa_das_mares",
+    "x": 10,
+    "y": 10,
+    "_note": "PENDENTE de posição real: região 'costa_das_mares' ainda não tem mapa físico (docs/lore/mundo.md, docs/sistemas/mapas.md). x/y são placeholder até o agente de mapa desenhar a zona — ver data/maps/spawns_lore.json.",
+    "type": "shop",
+    "sells": [
+      "health_potion_small",
+      "health_potion_medium",
+      "chakra_pill_small",
+      "antidote",
+      "shuriken_iron",
+      "kunai_iron",
+      "vest_genin"
+    ],
+    "buys_types": [
+      "material",
+      "weapon",
+      "armor"
+    ]
+  },
+  {
+    "id": "quest_giver_coastal",
+    "name": "Ancião Tazu",
+    "map": "costa_das_mares",
+    "x": 12,
+    "y": 12,
+    "_note": "PENDENTE de posição real, ver merchant_coastal acima.",
+    "type": "quest",
+    "quests": [
+      {
+        "id": "q_coastal_mercenaries",
+        "name": "A ponte ameaçada",
+        "text": "Mercenários contratados por uma guilda rival atacam quem trabalha na ponte. Afaste-os. Mate 8.",
+        "objective": {
+          "kill": "mercenary_bridge",
+          "count": 8
+        },
+        "reward": {
+          "xp": 900,
+          "ryo": 250,
+          "items": [
+            "health_potion_small"
+          ]
+        }
+      },
+      {
+        "id": "q_coastal_scouts",
+        "name": "Olhos na neblina",
+        "text": "Batedores vigiam a estrada da costa. Mate 8.",
+        "objective": {
+          "kill": "mist_scout",
+          "count": 8
+        },
+        "reward": {
+          "xp": 1300,
+          "ryo": 350,
+          "items": [
+            "shuriken_iron"
+          ]
+        }
+      },
+      {
+        "id": "q_coastal_guardians",
+        "name": "Quebrando a linha",
+        "text": "Guardiões da neblina bloqueiam a entrada da vila. Derrube 8.",
+        "objective": {
+          "kill": "mist_guardian",
+          "count": 8
+        },
+        "reward": {
+          "xp": 1800,
+          "ryo": 500,
+          "items": [
+            "health_potion_medium"
+          ]
+        }
+      },
+      {
+        "id": "q_coastal_swordsman",
+        "name": "O Espadachim da Névoa",
+        "text": "Um espadachim renegado e seu aprendiz mascarado vieram sabotar a ponte que salvaria esta vila. Derrote os dois.",
+        "objective": {
+          "kill": "boss_mist_swordsman",
+          "count": 1
+        },
+        "reward": {
+          "xp": 12000,
+          "ryo": 4000,
+          "items": [
+            "katana_ronin"
+          ]
+        },
+        "grants_rank_progress": "jonin"
+      }
+    ]
+  },
+  {
+    "id": "task_master_coastal",
+    "name": "Mestre de Tarefas Umi",
+    "map": "costa_das_mares",
+    "x": 14,
+    "y": 14,
+    "_note": "PENDENTE de posição real (ver merchant_coastal). Tarefas repetíveis de costa_das_mares (data/tasks.json).",
+    "type": "tasks"
+  }
+]

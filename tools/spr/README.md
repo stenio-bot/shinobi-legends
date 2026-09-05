@@ -22,7 +22,11 @@ NTO pode ser redistribuído (ADR-002).
 | `dump_dat.py` | Lê um par `.spr`/`.dat`, imprime estatísticas, valida e exporta PNGs. |
 | `import_sheets.py` | Recorta sprites soltos de uma folha PNG (componentes conexos) + folha de revisão. |
 | `imports.py` | Aplica `assets-src/sprites/imports.json` por cima do manifesto (arte importada). |
-| `import_mugen.py` | **Personagens MUGEN** (looktypes 900–926): triagem automática dos rips de `assets-src/import/mugen/` e geração de `overrides/40_mugen.json` + folhas de revisão. |
+| `import_mugen.py` | **Personagens MUGEN** (looktypes 900–926): triagem automática dos rips de `assets-src/import/mugen/`, síntese de costas + 4ª fase de andar, e geração de `overrides/40_mugen.json` + folhas de revisão. |
+| `survey_mugen.py` | Varredura EXAUSTIVA (todo quadro, não só os primeiros ~200) que classifica orientação/pose de cada quadro MUGEN e gera `_survey_<looktype>.png` para revisão manual antes de rodar `import_mugen.py`. |
+| `char_synth.py` | Utilidades de síntese de pixel compartilhadas por `import_mugen.py`/`import_player.py`: vista de costas (`synthesize_back`), fase de andar sintética (`synth_walk_offset`) e o pipeline de nitidez (`unsharp`, `outline_1px`, `extract_palette`/`quantize_to_palette`). |
+| `import_player.py` | Aplica a mesma síntese de costas + 4ª fase ao outfit do jogador (looktype 128), reescrevendo `overrides/30_player.json`. |
+| `compare_sharpen.py` | Ferramenta de laboratório: gera `/tmp/compare_sharpen.png` comparando 4 variantes de downscale 60→32px (LANCZOS, área+realce, quantização de paleta, +contorno) — decidiu o padrão usado por `imports.fit_uniform`. |
 
 ## Uso
 
@@ -370,35 +374,61 @@ jogo de luta, material privado do usuario (fora do git, ADR-002). A numeracao e
 **fixa** e vive em `assets-src/sprites/mugen_looktypes.json`.
 
 ```bash
-.venv/bin/python tools/spr/import_mugen.py           # triagem + PNGs + 40_mugen.json
+.venv/bin/python tools/spr/survey_mugen.py           # varredura exaustiva + _survey_<lt>.png (revisar antes)
+.venv/bin/python tools/spr/import_mugen.py           # triagem + sintese + PNGs + 40_mugen.json
 .venv/bin/python tools/spr/import_mugen.py --report  # so o diagnostico, nao grava
 .venv/bin/python tools/spr/import_mugen.py --only 913 922
+.venv/bin/python tools/spr/import_player.py          # mesma sintese aplicada ao 128
 .venv/bin/python tools/spr/build_assets.py
 .venv/bin/python tools/spr/dump_dat.py               # validacao: OK, divergencias=0
 ```
 
 O script converte o BMP para RGBA usando como chave o **indice 0 da paleta** e a
 cor exata do pixel (0,0), joga fora telas/efeitos (>96 px de lado, densidade da
-caixa fora de 10–75%) e escolhe sozinho:
+caixa fora de 10–75%) e escolhe sozinho, varrendo o rip **inteiro** (sem teto de
+arquivos):
 
 - **parado** = a primeira corrida de quadros consecutivos com silhueta quase
   constante (a animacao de respirar), quadro mediano pelo vao entre os pes;
-- **andar** = 3 quadros consecutivos com a mesma altura do parado e o vao entre os
-  pes oscilando — o mesmo criterio do `30_player.json`;
-- **lado** = massa de pele no terco superior a esquerda vs a direita.
+- **andar, 4 fases** = tenta uma janela de 4 quadros consecutivos com a mesma
+  altura do parado e 2 alternancias no vao entre os pes (`_walk4_in`); 22 dos 27
+  personagens acham as 4 reais, os outros 5 caem para 3 reais + **1 sintetica**
+  (`char_synth.synth_walk_offset`: desloca a metade inferior/pernas 1-3px com
+  leve inclinacao — nunca a imagem inteira);
+- **frente (Sul)** = `pick_front` procura no rip inteiro o melhor quadro de
+  frente/3-4 (excluindo o proprio parado e exigindo silhueta bem diferente
+  dele), achado em 25 dos 27 — os outros repetem o perfil do Leste;
+- **lado** = massa de pele no terco superior a esquerda vs a direita;
+- **costas (Norte)** = **sempre sintetizada** (`char_synth.synthesize_back`):
+  espelha o quadro, repinta a regiao de pele da cabeca (dilatada) com a cor de
+  CABELO estimada do personagem (moda dos pixels do topo da cabeca, nao media —
+  media de amarelo+azul da bandana vira cinza sem sentido) e escurece ~14%; a
+  SILHUETA nao muda, entao o Norte usa o MESMO ciclo de pernas do Leste/andar,
+  so recolorido — anda de verdade em vez de so balancar.
 
-O material e **lateral**: nao ha vista de frente nem de costas, entao
-Norte/Leste/Sul usam o mesmo perfil e o Oeste e `mirror_of: 1`.
+Confirmado por `survey_mugen.py` (varredura exaustiva, nao so os primeiros
+~200 quadros): nao existe vista de costas real em NENHUM dos 27 rips — so blobs
+de efeito sem pele sao classificados como tal por falta de indicio de rosto.
+
+O pipeline de nitidez do downscale 60→32px (`imports.fit_uniform`, automatico
+para toda criatura com `directions`) e downscale por AREA + realce + contorno
+escuro de 1px redesenhado apos a reducao — decidido em `compare_sharpen.py`
+contra LANCZOS puro e contra quantizar a paleta original (que criou ruido de
+sal-e-pimenta nas bordas do material antialiased e foi descartada).
 
 Quando a heuristica erra, a correcao vai no dicionario `OVERRIDES` no topo do
 script (`{"913": {"idle": 5, "walk": [24, 25, 26], "faces": "right"}}`), indexado
-pelo **numero do arquivo**. Hoje 11 dos 26 personagens usam override — o motivo de
-cada um esta comentado ali e em `docs/sistemas/arte-e-sprites.md`.
+pelo **numero do arquivo** (aceita `walk` com 3 ou 4 numeros, e agora tambem
+`front`). Hoje 11 dos 27 personagens usam override — o motivo de cada um esta
+comentado ali e em `docs/sistemas/arte-e-sprites.md`.
 
 Confira sempre as folhas de revisao antes do build:
-`assets-src/import/extracted/mugen/_review_<looktype>.png` (parado + 3 fases nas 4
-direcoes, 3x) e `_review_all.png` (uma linha por personagem).
+`assets-src/import/extracted/mugen/_survey_<looktype>.png` (varredura, antes de
+decidir), `_review_<looktype>.png` (parado + 4 fases nas 4 direcoes, 3x, ja com
+costas sintetizada) e `_review_all.png` (uma linha por personagem).
 
-`40_mugen.json` e o unico arquivo versionado disso tudo; como todo override, cada
-entrada cujo PNG nao existir e ignorada com aviso, entao numa maquina sem o
-material o build roda igual e cai no placeholder.
+`40_mugen.json` e o unico arquivo de arte versionado; `mugen_frames.json`
+registra a ESCOLHA final (indices e metadados, sem imagem nenhuma) para cada
+personagem. Como todo override, cada entrada cujo PNG nao existir e ignorada
+com aviso, entao numa maquina sem o material o build roda igual e cai no
+placeholder.

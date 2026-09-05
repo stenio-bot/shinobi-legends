@@ -1,5 +1,11 @@
 # Sistema: Monstros e PvM
 
+> **Lore e visuais:** a história de cada região, os bosses de arco e a regra de
+> "inimigo genérico nunca usa visual de personagem principal" vivem em
+> `docs/lore/mundo.md` (bíblia do mundo) e `docs/lore/progressao.md` (ranks e
+> exames). Este documento cobre só a mecânica (schema, IA, spawns, fórmulas de
+> fase). Pesquisa de referência (arcos, ranks reais) em `docs/lore/pesquisa-naruto.md`.
+
 ## Anatomia de um monstro (`data/schemas/monster.schema.json`)
 | Campo | Descrição |
 |---|---|
@@ -58,10 +64,15 @@ por `zones`. Números detalhados por faixa em `balanceamento.md`.
 | Área | Zona (rect) | Level | Monstros (element) | Boss | Status |
 |---|---|---|---|---|---|
 | Floresta da Vila | 0,0,50,40 | 1–10 | lobo (none), cobra (doton), bandido (none), bandido arqueiro (none) | Chefe dos Bandidos (katon, L12) | implementada |
-| Floresta da Morte | 50,0,46,40 | 10–25 | sanguessuga (suiton), sapo gigante (suiton), ninja renegado (none), serpente menor (doton, L18) | **Serpente Branca** (doton, L25); Sapo Ancião (suiton, L25) é boss secundário | implementada |
-| Ruínas do Clã | 96,0,52,40 | 25–50 | marionete de combate (none, L27), sentinela de pedra (doton, L32), guerreiro espectral (raiton, L38), xamã da maldição (katon, L44) | Marionetista das Ruínas (fuuton, L50) | implementada |
-| Montanha do Trovão | 148,0,52,40 | 50–80 | águia do trovão (raiton, L54), oni da geleira (suiton, L60), monge da tempestade (fuuton, L68), serpente de magma (katon, L74) | Oni Ancestral (raiton, L80) | implementada |
-| Fortaleza Akatsu | — | 80–100 | ninja de elite, bijuu menor | Líder da Fortaleza | planejada |
+| Costa das Marés | — | 12–19 | mercenário da ponte, batedor da névoa, guardião da neblina (`data/monsters/coastal_tides.json`) | Espadachim da Névoa + Aprendiz Mascarado (suiton, L19) | dados prontos, sem mapa (pedido em `data/maps/spawns_lore.json`) |
+| Floresta da Morte | 50,0,46,40 | 10–25 | sanguessuga (suiton), sapo gigante (suiton), ninja renegado (none), serpente menor (doton, L18), rivais do exame (`exam_rival_*`, L20) | **Serpente Branca** (doton, L25); Sapo Ancião (suiton, L25) é boss secundário | implementada |
+| Ruínas do Clã Marionetista | 96,0,52,40 | 25–50 | marionete de combate (none, L27), sentinela de pedra (doton, L32), guerreiro espectral (raiton, L38), xamã da maldição (katon, L44), desertor de elite (katon, L46) | Marionetista das Ruínas (fuuton, L50) | implementada |
+| Montanha do Trovão | 148,0,52,40 | 50–80 | águia do trovão (raiton, L54), oni da geleira (suiton, L60), monge da tempestade (fuuton, L68), serpente de magma (katon, L74) | O Sócio Eterno (doton, L70) + Oni Ancestral (raiton, L80) — "Dupla Imortal" | implementada (Sócio Eterno é novo) |
+| Covil da Organização Nuvem Vermelha | — | 80–100 | clone branco, ninja elite da aurora (`data/monsters/akatsuki_lair.json`) | 4 bosses sequenciais: O Vigia Ilusório (L85), O Mascarado das Sombras (L90), O Portador dos Seis Caminhos (L95), O Ancestral da Nuvem Vermelha (L100, final) | dados prontos, sem mapa (era "Fortaleza Akatsu"; pedido em `data/maps/spawns_lore.json`) |
+
+Ver `docs/lore/mundo.md` para a história de cada região, e
+`docs/lore/progressao.md` para como as duas regiões "dados prontos, sem mapa"
+e os bosses novos se encaixam nos exames de rank (Genin→Chunin→Jonin→Anbu→Kage).
 
 Cada área nova tem 1 mercador + 1 quest giver em `data/npcs/<area>.json` com 3–4 missões
 sequenciais que acompanham a progressão de level da zona.
@@ -100,20 +111,30 @@ Loot exclusivo: `white_serpent_fang` ("Presa da Serpente Branca", material raro,
 `scroll_doku_kiri` (pergaminho tier 2 de `doku_kiri`, 25%).
 
 ## Visuais dos bosses/monstros humanoides (looktypes 900–926)
-Personagens importados (looktypes fixos 900–926, ver `assets-src/sprites/mugen_looktypes.json`)
-são usados como **visual** de bosses e monstros humanoides — nunca como nome (ADR-002): o nome
-do monstro no jogo continua o nosso, só o `looktype` em `data/tfs_mapping.json` (campo
-`monsters.<id>`) muda.
+
+**Regra corrigida em 2026-09-04** (feedback do usuário: monstros genéricos — o
+Chefe dos Bandidos, um bandido comum — estavam usando o visual do Sasuke, entre
+outros personagens principais em mobs comuns). A partir de agora: **personagens
+importados (looktypes fixos 900–926, ver `assets-src/sprites/mugen_looktypes.json`)
+só aparecem em NPCs mentores e em bosses de arco de verdade** (a Serpente Branca
+e os 4 bosses do covil final); todo o resto — inclusive bosses "menores" como o
+Chefe dos Bandidos e o Marionetista — usa sprites genéricos já extraídos em
+`assets-src/sprites/imports.json` (looktypes 128–139, 12, 19, 56, 60, 61). Ver
+`docs/lore/mundo.md` para a explicação região por região.
 
 | Nosso monstro/boss | Looktype | Sprite de origem | Onde fica |
 |---|---|---|---|
-| Chefe dos Bandidos (`boss_bandit_chief`) | 915 | Sasuke Akatsuki | Floresta da Vila (boss) |
-| Serpente Branca, forma humana (`boss_white_serpent`) | 916 | Sasuke Rinnegan | Floresta da Morte (boss) |
-| Marionetista das Ruínas (`boss_puppeteer`) | 910 | Itachi | Ruínas do Clã (boss) |
-| Oni Ancestral (`boss_ancestral_oni`) | 913 | Madara | Montanha do Trovão (boss, único humanoide da área) |
-| Ninja Renegado (`rogue_ninja`) | 914 | Sasuke Taka | Floresta da Morte (monstro comum) |
-| Guerreiro Espectral (`spectral_warrior`) | 912 | Obito | Ruínas do Clã (monstro comum) |
-| Xamã da Maldição (`curse_shaman`) | 911 | Pain | Ruínas do Clã (monstro comum) |
+| Chefe dos Bandidos (`boss_bandit_chief`) | 131 | genérico "ninja_chief" | Floresta da Vila (boss) — **corrigido**, era 915/Sasuke Akatsuki |
+| Marionetista das Ruínas (`boss_puppeteer`) | 131 | genérico "ninja_chief" | Ruínas do Clã Marionetista (boss) — **corrigido**, era 910/Itachi |
+| Espadachim da Névoa (`boss_mist_swordsman`) | 132 | genérico "ninja_white" | Costa das Marés (boss, novo) |
+| Serpente Branca, forma humana (`boss_white_serpent`) | 916 | Sasuke Rinnegan | Floresta da Morte (boss de arco — mantido, uso correto) |
+| O Sócio Eterno (`boss_curse_partner`) | 138 | genérico "hooded_purple" | Montanha do Trovão (boss, novo) |
+| Oni Ancestral (`boss_ancestral_oni`) | 12 | genérico "oni_fox" | Montanha do Trovão (boss) — **corrigido**, era 913/Madara |
+| Ninja Renegado (`rogue_ninja`) | 128 | genérico "ninja_blue" | Floresta da Morte (monstro comum) — **corrigido**, era 914/Sasuke Taka |
+| Guerreiro Espectral (`spectral_warrior`) | 130 | genérico "ninja_pale" | Ruínas do Clã Marionetista (monstro comum) — **corrigido**, era 912/Obito |
+| Xamã da Maldição (`curse_shaman`) | 138 | genérico "hooded_purple" | Ruínas do Clã Marionetista (monstro comum) — **corrigido**, era 911/Pain |
+| Desertor de Elite (`elite_deserter`, novo) | 915 | Sasuke Akatsuki | Ruínas do Clã Marionetista (mini-boss) — uso correto: é um gênio desertor de elite, não um mob comum |
+| O Vigia Ilusório / O Mascarado das Sombras / O Portador dos Seis Caminhos / O Ancestral da Nuvem Vermelha (novos) | 910 / 912 / 911 / 913 | Itachi / Obito / Pain / Madara | Covil da Organização Nuvem Vermelha — os 4 bosses finais do jogo, uso correto (endgame de verdade) |
 
 A forma de serpente 2×2 da Serpente Branca (fase 60%, looktype 890) continua sendo aplicada em
 runtime por `boss_phases.lua`, sem relação com a faixa 900–926.

@@ -303,5 +303,101 @@
     "teaches_jutsu": "doku_kiri",
     "required_level": 25,
     "sprite": "item_scroll"
+  },
+  {
+    "id": "scroll_heaven",
+    "name": "Pergaminho do Céu",
+    "description": "Item de missão. Etapa 2 do Exame Chunin (docs/lore/progressao.md) — cai do Sapo Ancião, na Floresta da Morte.",
+    "type": "material",
+    "rarity": "rare",
+    "weight": 0.3,
+    "stack_max": 1,
+    "buy_price": 0,
+    "sell_price": 0,
+    "sprite": "item_scroll"
+  },
+  {
+    "id": "scroll_earth",
+    "name": "Pergaminho da Terra",
+    "description": "Item de missão. Etapa 2 do Exame Chunin (docs/lore/progressao.md) — cai da Serpente Branca, na Floresta da Morte.",
+    "type": "material",
+    "rarity": "rare",
+    "weight": 0.3,
+    "stack_max": 1,
+    "buy_price": 0,
+    "sell_price": 0,
+    "sprite": "item_scroll"
+  },
+  {
+    "id": "fang_of_the_swordsman",
+    "name": "Presa do Espadachim da Névoa",
+    "description": "Fragmento da lâmina do Espadachim da Névoa. Material raro da Costa das Marés.",
+    "type": "material",
+    "rarity": "rare",
+    "weight": 0.4,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 260,
+    "sprite": "item_fang"
+  },
+  {
+    "id": "apprentice_mask",
+    "name": "Máscara do Aprendiz",
+    "description": "Máscara lascada, ainda gelada. Material do Aprendiz Mascarado, Costa das Marés.",
+    "type": "material",
+    "rarity": "uncommon",
+    "weight": 0.3,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 80,
+    "sprite": "item_emblem"
+  },
+  {
+    "id": "deserter_seal",
+    "name": "Selo do Desertor",
+    "description": "Selo de papel arrancado do braço do Desertor de Elite. Material das Ruínas do Clã Marionetista.",
+    "type": "material",
+    "rarity": "rare",
+    "weight": 0.2,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 620,
+    "sprite": "item_emblem"
+  },
+  {
+    "id": "cursed_heart",
+    "name": "Coração Amaldiçoado",
+    "description": "Ainda bate, sozinho, na palma da mão. Material de O Sócio Eterno, Montanha do Trovão.",
+    "type": "material",
+    "rarity": "epic",
+    "weight": 0.5,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 950,
+    "sprite": "item_fang"
+  },
+  {
+    "id": "cloud_emblem",
+    "name": "Emblema da Nuvem Vermelha",
+    "description": "Emblema arrancado do uniforme de um soldado da organização. Material comum do Covil da Nuvem Vermelha.",
+    "type": "material",
+    "rarity": "uncommon",
+    "weight": 0.1,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 380,
+    "sprite": "item_emblem"
+  },
+  {
+    "id": "ring_fragment_crimson",
+    "name": "Fragmento do Anel Escarlate",
+    "description": "Estilhaço de um anel de poder, ainda quente. Material lendário dos bosses do Covil da Nuvem Vermelha.",
+    "type": "material",
+    "rarity": "legendary",
+    "weight": 0.2,
+    "stack_max": 100,
+    "buy_price": 0,
+    "sell_price": 1280,
+    "sprite": "item_ring"
   }
 ]

@@ -39,6 +39,16 @@ elements = load(os.path.join(DATA, "elements.json"))
 prog = load(os.path.join(DATA, "progression.json"))
 maps = {m["id"]: m for m in (load(p) for p in glob.glob(os.path.join(DATA, "maps", "*.json")))}
 characters = load(os.path.join(DATA, "characters.json"))
+ranks_list = load(os.path.join(DATA, "ranks.json"))
+
+def load_optional(rel):
+    """data/tasks.json e data/dailies.json são opcionais: se não existirem, os sistemas
+    correspondentes (NarutoTasks/NarutoDailies) simplesmente não são gerados (compat)."""
+    p = os.path.join(DATA, rel)
+    return load(p) if os.path.exists(p) else None
+
+tasks_data = load_optional("tasks.json")
+dailies_data = load_optional("dailies.json")
 
 # Jutsus universais (needlearn="0"): conhecidos por qualquer personagem, sem precisar estar no
 # kit do personagem atual. Todo o resto exige learnSpell (ver naruto_characters.lua/character_switch.lua).
