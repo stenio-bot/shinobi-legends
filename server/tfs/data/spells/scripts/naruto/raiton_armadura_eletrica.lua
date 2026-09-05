@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Raiton: Armadura Elétrica: Uma casca de eletricidade cobre o corpo, acelerando a recuperação enquanto dura.
+-- Raiton: Armadura El\xE9trica: Uma casca de eletricidade cobre o corpo, acelerando a recupera\xE7\xE3o enquanto dura.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 8000)

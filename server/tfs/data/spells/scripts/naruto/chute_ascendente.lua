@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Chute Ascendente: Um chute ascendente que desequilibra o alvo e abre espaço para o próximo golpe.
+-- Chute Ascendente: Um chute ascendente que desequilibra o alvo e abre espa\xE7o para o pr\xF3ximo golpe.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)

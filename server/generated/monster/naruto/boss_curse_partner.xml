@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="O Sócio Eterno" nameDescription="o o sócio eterno" race="blood" experience="7200" speed="420" manacost="0">
-	<health now="6200" max="6200"/>
+	<health now="7000" max="7000"/>
 	<look type="954" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>

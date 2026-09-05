@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Soco Monstruoso: Um soco de força monstruosa que racha o chão ao redor do impacto.
+-- Soco Monstruoso: Um soco de for\xE7a monstruosa que racha o ch\xE3o ao redor do impacto.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 213)

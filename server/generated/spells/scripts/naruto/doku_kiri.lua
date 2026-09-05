@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Doku: Névoa Venenosa: Exala uma névoa roxa ao redor do conjurador; quem respira sai envenenado.
+-- Doku: N\xE9voa Venenosa: Exala uma n\xE9voa roxa ao redor do conjurador; quem respira sai envenenado.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 225)

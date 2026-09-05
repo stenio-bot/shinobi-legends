@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Shousen: Palma Curativa: Cura o próprio HP ao longo de 5s.
+-- Shousen: Palma Curativa: Cura o pr\xF3prio HP ao longo de 5s.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 5000)

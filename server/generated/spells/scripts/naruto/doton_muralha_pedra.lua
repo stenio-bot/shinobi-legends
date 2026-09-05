@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Doton: Muralha de Pedra: Ergue uma casca de rocha ao redor do corpo, endurecendo a pele por alguns segundos.
 local condition = Condition(CONDITION_REGENERATION)

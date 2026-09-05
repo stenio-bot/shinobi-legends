@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
@@ -63,16 +63,16 @@ end
 
 -- IMPORTANTE (2 achados de teste in-game, ver docs/sistemas/progressao-servidor.md):
 -- 1) 'cid' recebido pelo onCreatureSay GLOBAL (o do topo do arquivo, chamado direto pelo core
---    do TFS) NÃO é um id estável — é um userdata Player NOVO a cada mensagem (endereço muda
---    sempre, mesmo mensagens seguidas do mesmo jogador). Usá-lo como chave de tabela
---    (quizState[cid]) falha sempre da 2a mensagem em diante. Já dentro do keywordHandler
---    (questCallback/quizCallback) o 'cid' É um inteiro estável, porque npchandler.lua faz
---    `local cid = creature:getId()` antes de chamar processMessage — só o onCreatureSay
+--    do TFS) N\xC3O \xE9 um id est\xE1vel \x97 \xE9 um userdata Player NOVO a cada mensagem (endere\xE7o muda
+--    sempre, mesmo mensagens seguidas do mesmo jogador). Us\xE1-lo como chave de tabela
+--    (quizState[cid]) falha sempre da 2a mensagem em diante. J\xE1 dentro do keywordHandler
+--    (questCallback/quizCallback) o 'cid' \xC9 um inteiro est\xE1vel, porque npchandler.lua faz
+--    `local cid = creature:getId()` antes de chamar processMessage \x97 s\xF3 o onCreatureSay
 --    GLOBAL (nosso override, que roda ANTES de delegar pro npcHandler) recebe o userdata cru.
--- 2) Passar esse userdata cru como 2º argumento de npcHandler:say(msg, cid) quebra em runtime
+-- 2) Passar esse userdata cru como 2\xBA argumento de npcHandler:say(msg, cid) quebra em runtime
 --    ("Lua Script Error: luaAddEvent(). Argument #5 is unsafe"): say() agenda a resposta via
---    addEvent (fila de 1s do NPC), que não aceita userdata (só tipos primitivos serializáveis).
--- Correção: resolve 'cid' para o Player e usa SEMPRE player:getId() (inteiro) daqui pra baixo —
+--    addEvent (fila de 1s do NPC), que n\xE3o aceita userdata (s\xF3 tipos primitivos serializ\xE1veis).
+-- Corre\xE7\xE3o: resolve 'cid' para o Player e usa SEMPRE player:getId() (inteiro) daqui pra baixo \x97
 -- como chave de quizState e como alvo de npcHandler:say().
 local function playerIdOf(cid)
 	local player = Player(cid)
@@ -147,7 +147,7 @@ local function quizCallback(cid, message, keywords, parameters, node)
 end
 keywordHandler:addKeyword({'prova'}, quizCallback, {})
 keywordHandler:addKeyword({'quiz'}, quizCallback, {})
-npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {missao} se quiser trabalho.")
+npcHandler:setMessage(MESSAGE_GREET, "Ol\xE1, |PLAYERNAME|. Diga {missao} se quiser trabalho.")
 function onCreatureSay(cid, type, msg)
 	if handleQuizAnswer(cid, msg) then return end
 	npcHandler:onCreatureSay(cid, type, msg)

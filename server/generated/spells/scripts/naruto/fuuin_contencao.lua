@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Fuuin: Selo de Contenção: Selo de papel que trava os músculos do alvo por alguns segundos.
+-- Fuuin: Selo de Conten\xE7\xE3o: Selo de papel que trava os m\xFAsculos do alvo por alguns segundos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 222)

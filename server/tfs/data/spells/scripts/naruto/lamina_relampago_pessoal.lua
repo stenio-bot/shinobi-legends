@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Lâmina Relâmpago: Um corte de lâmina eletrificada, rápido o bastante para atordoar.
+-- L\xE2mina Rel\xE2mpago: Um corte de l\xE2mina eletrificada, r\xE1pido o bastante para atordoar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 208)

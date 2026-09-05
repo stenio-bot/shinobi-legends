@@ -329,7 +329,7 @@
     "name": "O Sócio Eterno",
     "description": "A metade 'humana' de uma dupla amaldiçoada por um pacto antigo — não sabe morrer, e cada 'coração' perdido só o deixa mais violento. Eco da dupla imortal da Organização Nuvem Vermelha (docs/lore/pesquisa-naruto.md). Aparece antes do Oni Ancestral na trilha da Montanha do Trovão.",
     "level": 70,
-    "hp": 6200,
+    "hp": 7000,
     "attack": 100,
     "defense": 45,
     "speed": 4.2,
@@ -374,7 +374,7 @@
         "summons": [
           {
             "monster_id": "magma_serpent",
-            "count": 2
+            "count": 1
           }
         ],
         "message": "As fendas ainda respondem ao meu chamado."

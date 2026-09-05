@@ -346,7 +346,7 @@
         "summons": [
           {
             "monster_id": "invoked_path",
-            "count": 2
+            "count": 1
           }
         ],
         "message": "Minha vontade não cabe em um corpo só. Vejam com seus próprios olhos."
@@ -578,7 +578,7 @@
     "name": "Eco Carmesim",
     "description": "Sombra de vontade que O Ancestral da Nuvem Vermelha projeta de si mesmo na fase final da luta — o mesmo fundador, em miniatura. PENDENTE (Lote C, registrado no relatório): precisa do MESMO looktype de 'boss_crimson_ancestor' (913, ver data/tfs_mapping.json) para renderizar como eco visual do boss; sem entrada própria em tfs_mapping.monsters, cai no fallback padrão (looktype 128) até alguém com posse do arquivo adicionar a entrada.",
     "level": 92,
-    "hp": 6500,
+    "hp": 5800,
     "attack": 110,
     "defense": 55,
     "speed": 4.4,

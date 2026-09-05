@@ -1,10 +1,10 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 -- Coloque em data/lib/naruto_json.lua e adicione
 -- `dofile('data/lib/naruto_json.lua')` em data/lib/lib.lua.
 --
 -- NarutoJson.encode(valor) -> string   |  NarutoJson.decode(string) -> valor, err
 -- Arrays vs objetos: uma table com t[1] ~= nil vira array; table vazia vira {} (objeto).
--- Use NarutoJson.array({}) para forçar array vazio ([]).
+-- Use NarutoJson.array({}) para for\xE7ar array vazio ([]).
 NarutoJson = {}
 
 local ARRAY_MT = {__jsonarray = true}
@@ -66,7 +66,7 @@ encodeValue = function(v, out)
 		else
 			out[#out + 1] = '{'
 			local first = true
-			-- ordena as chaves: saída determinística (facilita diff de log/teste)
+			-- ordena as chaves: sa\xEDda determin\xEDstica (facilita diff de log/teste)
 			local keys = {}
 			for k in pairs(v) do keys[#keys + 1] = tostring(k) end
 			table.sort(keys)

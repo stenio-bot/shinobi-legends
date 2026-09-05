@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Soco da Juventude: Um soco carregado de puro vigor físico, sem chakra nenhum envolvido.
+-- Soco da Juventude: Um soco carregado de puro vigor f\xEDsico, sem chakra nenhum envolvido.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)

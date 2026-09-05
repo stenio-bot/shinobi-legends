@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 -- Coloque em data/scripts/naruto/character_switch.lua (revscriptsys carrega sozinho).
 -- Depende de NarutoCharacters/NarutoElements (data/lib/naruto_characters.lua) e de
 -- NarutoJson (data/lib/naruto_json.lua). Ambos entram via dofile em data/lib/lib.lua
@@ -296,11 +296,11 @@ local function missionsProgressJson(player)
 		else
 			status = 'in_progress'
 		end
-		-- NOVO (docs/sistemas/missoes.md, requisito 8 da extensão de tipos de missão): 'kind' e
-		-- 'progress' (texto curto, "3/5 itens"/"Chegou!"/etc. — NarutoQuests.progressText) para a
-		-- aba Missões do menu Shinobi mostrar o tipo/progresso sem precisar falar com o NPC.
-		-- 'boss' só existe (e só é true) em quests kind='kill' com objective.boss — ausente nas
-		-- demais, então um cliente antigo que ignora o campo continua funcionando igual.
+		-- NOVO (docs/sistemas/missoes.md, requisito 8 da extens\xE3o de tipos de miss\xE3o): 'kind' e
+		-- 'progress' (texto curto, "3/5 itens"/"Chegou!"/etc. \x97 NarutoQuests.progressText) para a
+		-- aba Miss\xF5es do menu Shinobi mostrar o tipo/progresso sem precisar falar com o NPC.
+		-- 'boss' s\xF3 existe (e s\xF3 \xE9 true) em quests kind='kill' com objective.boss \x97 ausente nas
+		-- demais, ent\xE3o um cliente antigo que ignora o campo continua funcionando igual.
 		out[#out + 1] = {
 			id = q.id, name = q.name, npc = q.npcName or q.npc, status = status,
 			kind = q.kind, progress = NarutoQuests.progressText(player, q), boss = q.boss or false,
@@ -310,8 +310,8 @@ local function missionsProgressJson(player)
 end
 
 --- Conquistas (NarutoAchievements, data/lib/naruto_achievements.lua): delega tudo para
---- NarutoAchievements.progressJson (lá mora a lista/categoria/progresso de cada uma) -
---- guarda `if` só para o caso raro de rodar sem data/achievements.json (compat).
+--- NarutoAchievements.progressJson (l\xE1 mora a lista/categoria/progresso de cada uma) -
+--- guarda `if` s\xF3 para o caso raro de rodar sem data/achievements.json (compat).
 local function achievementsProgressJson(player)
 	if not NarutoAchievements then return NarutoJson.array({}) end
 	return NarutoAchievements.progressJson(player)
@@ -359,7 +359,7 @@ opcodeEvent:register()
 local STARTING_KIT = {[1] = {2404, 2467, 2649, 2643, 2480}, [2] = {2404, 2467, 2649, 2643, 2480}, [3] = {7378, 2404, 2467, 2649, 2643, 2480}, [4] = {2404, 2467, 2649, 2643, 2480}}
 
 -- ------------------------------------------------------------------ regen (rodada 5)
--- Regen de HP/chakra escalando com o level (rodada 5, item 1a da missao de balanceamento —
+-- Regen de HP/chakra escalando com o level (rodada 5, item 1a da missao de balanceamento \x97
 -- docs/sistemas/balanceamento-relatorio-v5.md par. 1): a rodada 4 usava os valores FIXOS da
 -- vocacao (vocations.xml gainhp/gainmana, gerados por tools/export_tfs.py ~linha 571 -- 0,4
 -- HP/s e 0,6 chakra/s pra QUALQUER level) -- contra um pool de chakra que cresce (100+level*10),
@@ -408,7 +408,7 @@ function login.onLogin(player)
 	-- 60 -- combinado com o gainmana=10/level da vocacao (inalterado) reproduz exatamente a
 	-- curva 100+level*10 de data/progression.json em qualquer level, nao so' no L1). 110*0,03=
 	-- ~3 de custo por cast, 36+ casts do pool inicial -- folga generosa sobre o minimo de 4
-	-- pedido pela missao — ver relatorio v5 §1.
+	-- pedido pela missao \x97 ver relatorio v5 \xA71.
 	if firstTime and player:getMaxMana() < 110 then
 		player:setMaxMana(110)
 		player:addMana(110)

@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Corte Duplo: Dois cortes sucessivos de lâmina em um golpe só, cobrindo um arco à frente.
+-- Corte Duplo: Dois cortes sucessivos de l\xE2mina em um golpe s\xF3, cobrindo um arco \xE0 frente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)

@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Suiton: Vórtice Devorador: Um redemoinho colossal engole a área e arrasta tudo para o centro.
+-- Suiton: V\xF3rtice Devorador: Um redemoinho colossal engole a \xE1rea e arrasta tudo para o centro.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 207)

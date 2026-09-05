@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Katon: Sopro de Brasas: Um sopro curto de brasas que cobre os tiles imediatamente à frente.
+-- Katon: Sopro de Brasas: Um sopro curto de brasas que cobre os tiles imediatamente \xE0 frente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 202)

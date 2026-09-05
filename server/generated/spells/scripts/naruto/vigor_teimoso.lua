@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Vigor Teimoso: Determinação teimosa que acelera a recuperação do próprio corpo em combate.
+-- Vigor Teimoso: Determina\xE7\xE3o teimosa que acelera a recupera\xE7\xE3o do pr\xF3prio corpo em combate.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 6000)

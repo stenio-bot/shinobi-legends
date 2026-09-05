@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Kunai Marcada: Uma kunai selada, lançada para marcar o alvo e permitir um salto instantâneo depois.
+-- Kunai Marcada: Uma kunai selada, lan\xE7ada para marcar o alvo e permitir um salto instant\xE2neo depois.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)

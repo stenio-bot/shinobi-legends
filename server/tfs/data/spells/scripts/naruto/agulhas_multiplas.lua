@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Agulhas Multiplas: Uma saraivada de agulhas de metal lancadas contra o alvo.
 local combat = Combat()

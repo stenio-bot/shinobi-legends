@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Fuuton: Lâmina de Vento: Uma lâmina de ar comprimido cortando em linha reta até o alvo.
+-- Fuuton: L\xE2mina de Vento: Uma l\xE2mina de ar comprimido cortando em linha reta at\xE9 o alvo.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 216)

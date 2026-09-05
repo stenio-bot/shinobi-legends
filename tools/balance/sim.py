@@ -280,6 +280,36 @@ def typical_skills_split(level, taijutsu_frac=1.0, ninjutsu_frac=1.0):
 HYBRID_TAIJUTSU_FRAC = 0.4
 HYBRID_NINJUTSU_FRAC = 0.4
 
+# RODADA 6 (item 1 da missão, teto de híbrido +15%): a rodada 5 provou que NENHUM par de frações
+# de skill fecha "híbrido nunca abaixo do melhor puro" e "híbrido nunca acima do teto" ao mesmo
+# tempo — porque o termo dominante de todo jutsu (`level*level_scale`) não depende da skill
+# treinada, só do level do personagem, então baixar a fração de treino de ninjutsu praticamente
+# não reduz o dano do jutsu aditivo. Nerfar cooldown/dano jutsu por jutsu também não fecha: a
+# escolha de "melhor dps/cooldown" (`pick_ninjutsu_jutsu`) sempre migra pro PRÓXIMO jutsu do kit
+# assim que o escolhido atual é nerfado (testado: nerfar o "campeão" tier 2/3 de cada elemento faz
+# o híbrido migrar pro tier 1 projétil; nerfar esse também migra pro tier 2 "housenka"-like — nunca
+# fecha, só troca qual jutsu carrega o excedente).
+# Fix estrutural (não numérico por jutsu): o híbrido NÃO gasta uma ação decidida pra cada cast
+# como o ninjutsu puro (ele ataca com a arma na cadência normal E, por cima, casta sempre que
+# pronto/pagável — "arma entre casts", rodada 4) — mas um jogador de verdade que joga metade-
+# metade (`HYBRID_TAIJUTSU_FRAC`/`NINJUTSU_FRAC` = 0.4/0.4) não tem a MESMA atenção de rotação que
+# um caster puro: precisa recentralizar o alvo, timing de posicionamento etc. Com o cooldown de
+# tier 1 em 9,0s e o intervalo de arma em 2,0s (rodada 5), cabem 4-5 golpes de arma entre casts —
+# `HYBRID_JUTSU_CADENCE_FRAC` modela que o híbrido só efetivamente aproveita uma fração dessas
+# janelas de cast (o resto "perde o timing", preso na troca de golpe de arma), esticando o
+# cooldown EFETIVO do jutsu só pro build híbrido (a arma continua na cadência cheia, e o
+# ninjutsu PURO não é afetado — ele já paga o custo de rotação certo, dedicando a ação inteira
+# ao jutsu). Isso ataca a causa raiz (o jutsu aditivo é "de graça" demais) de um jeito uniforme,
+# que não depende de QUAL jutsu do kit está sendo usado — resolve o "whack-a-mole" acima sem
+# tocar em nenhum dano/custo calibrado nas rodadas 2-5. Combinado com o fix de rodada 6 nos 2
+# jutsus tier 1 de área de cooldown muito curto (`suiton_nevoa_cortante`/`raiton_corrente_estatica`,
+# 1,6s/1,3s -> 3,0s, igualando ao irmão `katon_sopro_brasas` — eram picks de DPS não-intencionais
+# por causa do cooldown curto, não da identidade de controle deles, ver relatório v6 §1). Sweep
+# testado (0,15-0,42): 0,22 é o maior valor (menor esticamento, ~4,5x o cooldown original) que
+# fecha os 6 bosses de referência dentro do teto de +15% sem nenhum ficar muito abaixo do
+# melhor puro (pior caso -4,6% em L12, dentro do razoável). Ver relatório v6 §1.
+HYBRID_JUTSU_CADENCE_FRAC = 0.22
+
 def typical_skills(level):
     """Skill 'típico' de um jogador médio no nível L: tries acumuladas = horas jogadas até esse
     nível (progressao-jogador.md) x ataques/hora x pontos/ataque x rateSkill (ou rateMagic para
@@ -651,7 +681,8 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                 dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                 monster_hp -= dmg
                 jutsu_dmg_total += dmg
-                next_jutsu_action = t + jutsu["cooldown_s"]
+                # RODADA 6: cooldown efetivo esticado só pro híbrido (ver HYBRID_JUTSU_CADENCE_FRAC).
+                next_jutsu_action = t + jutsu["cooldown_s"] / HYBRID_JUTSU_CADENCE_FRAC
                 if monster_hp <= 0:
                     return _result(died=False)
             # arma na sua própria cadência (independente do jutsu — "arma entre casts")
@@ -1141,7 +1172,8 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
                     dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                     monster_hp -= dmg
                     total_jutsu_dmg += dmg
-                    next_jutsu_action = t + jutsu["cooldown_s"]
+                    # RODADA 6: mesmo esticamento de HYBRID_JUTSU_CADENCE_FRAC do 1x1 (ver simulate_fight).
+                    next_jutsu_action = t + jutsu["cooldown_s"] / HYBRID_JUTSU_CADENCE_FRAC
                 if monster_hp > 0 and t >= next_weapon_action:
                     raw = p.roll_weapon_damage()
                     dmg = apply_mitigation(rng, raw, m_defense, m_armor)

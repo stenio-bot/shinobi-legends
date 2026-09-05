@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Raiton: Corrente Estática: A eletricidade salta em cruz pelo chão a partir do conjurador, prendendo quem tocar.
+-- Raiton: Corrente Est\xE1tica: A eletricidade salta em cruz pelo ch\xE3o a partir do conjurador, prendendo quem tocar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 209)

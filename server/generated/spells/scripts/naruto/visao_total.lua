@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Visão de Alcance Total: Visão que enxerga os pontos vitais de chakra do inimigo, refinando cada golpe seguinte.
+-- Vis\xE3o de Alcance Total: Vis\xE3o que enxerga os pontos vitais de chakra do inimigo, refinando cada golpe seguinte.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 5000)

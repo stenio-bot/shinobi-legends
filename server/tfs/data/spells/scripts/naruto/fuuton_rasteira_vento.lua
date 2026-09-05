@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Rasteira de Vento Leve: Uma rasteira reforçada por uma leve corrente de vento, desequilibra o alvo.
+-- Rasteira de Vento Leve: Uma rasteira refor\xE7ada por uma leve corrente de vento, desequilibra o alvo.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 216)

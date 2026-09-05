@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Bainha Elétrica: A lâmina vibra com eletricidade, formando uma bainha que acelera a recuperação do usuário.
+-- Bainha El\xE9trica: A l\xE2mina vibra com eletricidade, formando uma bainha que acelera a recupera\xE7\xE3o do usu\xE1rio.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 8000)

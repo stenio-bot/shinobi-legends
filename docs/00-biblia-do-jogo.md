@@ -406,9 +406,11 @@ limite matemático real: o dano de arma cresce como um PRODUTO skill×attack (su
 ~136× de L1 a L100), o dano de jutsu só pode crescer como uma SOMA level+magic-level (linear +
 côncavo) — nenhum coeficiente fecha as duas pontas do range ao mesmo tempo sem quebrar a
 paridade de boss no meio (prova completa no relatório v5 §2). O build híbrido (arma+jutsu
-juntos) nunca fica abaixo do melhor build puro, mas excede o teto de +15% em 4 dos 6 bosses —
-pendência conhecida desde a rodada 4, não resolvida (nenhuma fração de treino testada fecha os
-dois lados ao mesmo tempo). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
+juntos) fica dentro do teto de +15% sobre o melhor build puro nos **6 de 6** bosses de
+referência (fechado na rodada 6, que precisou de um parâmetro novo de modelo — o jogador
+híbrido só "acerta o timing" de lançar o jutsu numa fração das janelas livres entre golpes de
+arma, não em todas — ver `docs/sistemas/balanceamento-relatorio-v6.md` §1; nenhuma fração de
+treino sozinha fechava isso). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
 L50–100 (números de dano dos jutsus "campeão" de cada elemento não mudaram na rodada 5) — bem
 mais apertado que a meta de ±10% pedida. Uma tensão real e documentada permanece sem solução
 fechada no cenário de GRUPO (3+ monstros): o mesmo número de dano que faz um jutsu tier 3

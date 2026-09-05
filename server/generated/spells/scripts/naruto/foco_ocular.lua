@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Foco Ocular: Foco extremo que antecipa o próximo golpe do inimigo, abrindo brechas para contra-atacar.
+-- Foco Ocular: Foco extremo que antecipa o pr\xF3ximo golpe do inimigo, abrindo brechas para contra-atacar.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 5000)

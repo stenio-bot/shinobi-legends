@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Fuuton: Tornado Cortante: Uma coluna de vento afiado que avança em linha reta, despedaçando tudo no caminho.
+-- Fuuton: Tornado Cortante: Uma coluna de vento afiado que avan\xE7a em linha reta, despeda\xE7ando tudo no caminho.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 217)
@@ -16,7 +16,7 @@ local area = {
 combat:setArea(createCombatArea(area))
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 54.0 + level * 10.8 + maglevel * 0.0864
+	local base = 32.4 + level * 6.48 + maglevel * 0.0518
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

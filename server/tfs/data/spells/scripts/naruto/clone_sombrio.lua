@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Clone Sombrio: Invoca dois clones de sombra que distraem os inimigos por um instante.
 local condition = Condition(CONDITION_REGENERATION)

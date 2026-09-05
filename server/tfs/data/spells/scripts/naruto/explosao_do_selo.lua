@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Explosão do Selo: Detona o selo de uma kunai marcada à distância, sem precisar estar perto.
+-- Explos\xE3o do Selo: Detona o selo de uma kunai marcada \xE0 dist\xE2ncia, sem precisar estar perto.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 222)

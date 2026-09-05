@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Suiton: Névoa Cortante: Uma névoa densa de gotículas afiadas cobre uma área maior à frente, encharcando e retardando quem passar.
+-- Suiton: N\xE9voa Cortante: Uma n\xE9voa densa de got\xEDculas afiadas cobre uma \xE1rea maior \xE0 frente, encharcando e retardando quem passar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 206)

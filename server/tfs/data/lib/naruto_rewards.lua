@@ -1,17 +1,17 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 -- Coloque em data/lib/naruto_rewards.lua e adicione dofile em data/lib/lib.lua.
 -- XP escalada por level (docs/sistemas/progressao-servidor.md; docs/sistemas/balanceamento.md:
--- 'XP p/ subir de level = 100*L + 100', ~5,5 kills por level em média no conteúdo já existente).
+-- 'XP p/ subir de level = 100*L + 100', ~5,5 kills por level em m\xE9dia no conte\xFAdo j\xE1 existente).
 --
--- Usada por TAREFAS (data/tasks.json) e DIÁRIAS (data/dailies.json): seu 'reward.xp' é um
--- número de KILLS EQUIVALENTES (tipicamente 5-8), não XP absoluto, convertido aqui para o
--- level ATUAL de quem entrega — a entrega vale sempre ~o mesmo tanto de kills, não um valor
--- fixo que fica trivial (jogador alto level) ou impossível (jogador baixo level) com o tempo.
--- Missões de história (data/npcs/*.json) continuam com reward.xp absoluto e hand-tuned
--- (docs/sistemas/balanceamento.md) e NÃO passam por esta função — decisão documentada em
--- docs/sistemas/progressao-servidor.md para não destuning números de quest já balanceados.
+-- Usada por TAREFAS (data/tasks.json) e DI\xC1RIAS (data/dailies.json): seu 'reward.xp' \xE9 um
+-- n\xFAmero de KILLS EQUIVALENTES (tipicamente 5-8), n\xE3o XP absoluto, convertido aqui para o
+-- level ATUAL de quem entrega \x97 a entrega vale sempre ~o mesmo tanto de kills, n\xE3o um valor
+-- fixo que fica trivial (jogador alto level) ou imposs\xEDvel (jogador baixo level) com o tempo.
+-- Miss\xF5es de hist\xF3ria (data/npcs/*.json) continuam com reward.xp absoluto e hand-tuned
+-- (docs/sistemas/balanceamento.md) e N\xC3O passam por esta fun\xE7\xE3o \x97 decis\xE3o documentada em
+-- docs/sistemas/progressao-servidor.md para n\xE3o destuning n\xFAmeros de quest j\xE1 balanceados.
 NarutoRewards = {}
-NarutoRewards.XP_PER_KILL_DIVISOR = 5.5  -- kills médios por level, ver balanceamento.md
+NarutoRewards.XP_PER_KILL_DIVISOR = 5.5  -- kills m\xE9dios por level, ver balanceamento.md
 
 function NarutoRewards.xpToNextLevel(level)
 	return 100 * level + 100

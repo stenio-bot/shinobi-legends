@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 -- Coloque em data/scripts/naruto/tasks.lua (revscriptsys carrega sozinho).
 local killEvent = CreatureEvent("NarutoTaskKill")
 function killEvent.onKill(player, target)
@@ -24,8 +24,8 @@ function login.onLogin(player)
 end
 login:register()
 
---- !tarefas: lista só as tarefas ATIVAS (aceitas) do jogador, com progresso. Para aceitar/
---- entregar, fale com o Mestre de Tarefas da região (palavras-chave {tarefa}/{entregar}).
+--- !tarefas: lista s\xF3 as tarefas ATIVAS (aceitas) do jogador, com progresso. Para aceitar/
+--- entregar, fale com o Mestre de Tarefas da regi\xE3o (palavras-chave {tarefa}/{entregar}).
 local talk = TalkAction("!tarefas")
 function talk.onSay(player, words, param)
 	local lines = {}
@@ -40,7 +40,7 @@ function talk.onSay(player, words, param)
 		end
 	end
 	if #lines == 0 then
-		player:sendTextMessage(MESSAGE_INFO_DESCR, "Nenhuma tarefa ativa. Fale com um Mestre de Tarefas da região e diga {tarefa} para aceitar uma.")
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Nenhuma tarefa ativa. Fale com um Mestre de Tarefas da regi\xE3o e diga {tarefa} para aceitar uma.")
 	else
 		player:sendTextMessage(MESSAGE_INFO_DESCR, table.concat(lines, " | "))
 	end

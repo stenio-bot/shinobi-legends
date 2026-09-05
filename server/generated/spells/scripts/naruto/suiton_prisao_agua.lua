@@ -1,12 +1,12 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Suiton: Prisão de Água: Uma esfera de água prende o alvo no lugar e o sufoca lentamente.
+-- Suiton: Pris\xE3o de \xC1gua: Uma esfera de \xE1gua prende o alvo no lugar e o sufoca lentamente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 207)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 30.6 + level * 1.17 + maglevel * 0.9
+	local base = 13.8618 + level * 0.53 + maglevel * 0.4077
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

@@ -273,12 +273,29 @@ dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 > jutsus (tier 2/3/personal) só tiveram `chakra_cost` reescalado pela razão de pool — nenhum
 > dano tocado, preservando a calibração das rodadas 2-4.
 
+> **Atualizado na rodada 6** (`docs/sistemas/balanceamento-relatorio-v6.md`): o híbrido excedia
+> o teto de +15% em 4 dos 6 bosses de referência — causa raiz NOVA identificada: 2 jutsus tier 1
+> de área (`raiton_corrente_estatica`/`suiton_nevoa_cortante`, cooldown 1,3s/1,6s, pensados como
+> controle desde a rodada 3) tinham `dano/cooldown` alto o bastante pra virar picks de DPS
+> não-intencionais — cooldown subiu pra **3,0s** (igual ao irmão `katon_sopro_brasas`). Isso só
+> resolveu parte; o resto exigiu um parâmetro de MODELO novo, não um número de jutsu:
+> `HYBRID_JUTSU_CADENCE_FRAC=0,22` (`tools/balance/sim.py`) estica o cooldown EFETIVO do jutsu
+> só pro build híbrido (arma continua na cadência cheia) — modela que um jogador que divide
+> atenção entre arma e jutsu não aproveita TODA janela de cast livre entre golpes (cabem 4-5
+> golpes de arma no cooldown de 9,0s do tier 1; o híbrido só "acerta o timing" de ~1 em 4-5). O
+> ninjutsu PURO não é afetado (já paga o custo de rotação certo). Resultado: 6 de 6 bosses de
+> referência dentro do teto (era 2 de 6), burst matematicamente inalterado (não depende de
+> cooldown). Verificado também: `groupcooldown` (`spells.cpp:429/583`, `CONDITION_
+> SPELLGROUPCOOLDOWN`) NÃO bloqueia o ataque básico de arma — só outro jutsu do mesmo grupo —
+> `CONDITION_EXHAUST_WEAPON`/`_COMBAT` estão "unused" nesta build do TFS 1.4.2; não é o lever do
+> híbrido, subido de 1000ms→2000ms só como piso de segurança (inerte pro kit atual).
+
 Escala por tier (com `required_level` de referência e ninjutsu = magic level real, ver acima):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
 | 1 projétil (pós-rodada-5) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **2,5-3,0% do pool** (era 25-30 fixo) | **9,0 s** (era 3,5 s) |
-| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus ganharam CD menor, ver §4 do relatório v3 — inalterados na rodada 4) |
+| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus tier 1 de área — `raiton_corrente_estatica`/`suiton_nevoa_cortante` — subiram de 1,3-1,6s pra **3,0s** na rodada 6, ver acima) |
 | 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–38,99 (3 recalibrados na r4, ver acima) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
 | 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |
 | 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–245 | 7,0–9,0 s |
@@ -330,6 +347,16 @@ e "utilitário/controle" que faltavam em fuuton (só existiam projétil e área)
 > mudaram pra equilibrar o "valor total dos 4 jutsus pessoais" entre os 9 personagens (meta
 > ±15%, ver `balanceamento-relatorio-v2.md` §7 — a tabela abaixo mantém os valores originais de
 > quando cada jutsu foi criado; `data/jutsus/personal.json` é sempre a fonte da verdade).
+
+> **Reverificado na rodada 6** (`balanceamento-relatorio-v6.md` §3): o script de proxy original
+> (`analyze_v2.py`) não sobreviveu entre sessões — a métrica foi reconstruída a partir da
+> descrição dos relatórios anteriores. Achado real (não introduzido nesta rodada):
+> `sabio_cerimonial` estava a **+88,4%** da média — `selo_de_exorcismo`/`circulo_de_selos`
+> (dano ~396/~429 em L19/L27) chegavam a quase 3× o dano de qualquer jutsu elemental do mesmo
+> nível pós-rodada-5. Nerf ×0,4 nesses dois; isso deslocou `herdeira_hyuga` pra fora por cima
+> (a média cai quando o maior outlier é corrigido), corrigido com nerf ×0,7 em
+> `palma_gentil`/`palma_dupla` (não-compartilhados dela). Os 9 personagens ficaram entre
+> −11,8% e +8,6% da média.
 
 **Pessoais (`data/jutsus/personal.json`, 20 jutsus — 16 restantes das 36 vagas reusam jutsus
 já existentes, ver `docs/sistemas/vilas-e-clas.md`):**

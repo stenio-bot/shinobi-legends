@@ -69,6 +69,18 @@ especialista em qualquer uma das trilhas, mas com acesso pleno a ambas. Meta da 
 perto do melhor" — ver relatório v2 §3 pros números reais (fica 6,6%–19,9% atrás do melhor build
 em cada boss, mediana ~13%).
 
+**Atualizado na rodada 4**: arma e jutsu passaram a rodar em cadências independentes (`interleave`
+em `simulate_fight`/`simulate_hunt`) — o híbrido ataca com a arma no intervalo normal E lança o
+jutsu por cima sempre que pronto/pagável, virando sistematicamente ≥ os builds puros.
+
+**Atualizado na rodada 6**: isso passou a exceder o teto de +15% em 4-5 dos 6 bosses de
+referência (nenhuma jutsu por jutsu fechava — a rotação sempre migra pro próximo candidato do
+kit assim que o atual é nerfado). Fix: `HYBRID_JUTSU_CADENCE_FRAC=0,22` (novo) estica o
+cooldown EFETIVO do jutsu só pro build híbrido (`cooldown_s / HYBRID_JUTSU_CADENCE_FRAC`, ~4,5×
+mais devagar) — modela que um jogador dividindo atenção entre arma e jutsu não aproveita toda
+janela de cast livre entre golpes (cabem 4-5 golpes de arma no cooldown de 9,0s do tier 1). O
+ninjutsu PURO não usa esse parâmetro (não é `interleave`). Ver relatório v6 §1.
+
 ### Cenário multi-alvo (rodada 2)
 
 `simulate_group_fight`/`simulate_group` simulam um pull de N cópias do mesmo monstro comum:
@@ -458,3 +470,65 @@ ao pool) — as três foram implementadas, não só uma.
   (420 contra ~300-350 de monstros vizinhos) alonga a luta o bastante pra puxar mais casts de
   tier 1 por ciclo de caça; não é um problema do NÚMERO de tier 1, é a variância entre monstros
   da mesma faixa de nível (ver relatório v5 §1).
+
+## Achados da rodada 6 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v6.md`
+
+Ataca as 3 pendências centrais da rodada 5 (híbrido, grupo 3+, personagens) + o conteúdo novo
+do Covil da Nuvem Vermelha.
+
+1. **Híbrido: 6 de 6 bosses de referência fechados** (era 2 de 6). Duas causas raiz, não uma:
+   (a) 2 jutsus tier 1 de área (`raiton_corrente_estatica`/`suiton_nevoa_cortante`, cooldown
+   1,3-1,6s, redesenhados como controle na rodada 3) eram picks de DPS não-intencionais por
+   causa do cooldown curto — subidos pra 3,0s (igual ao irmão `katon_sopro_brasas`); (b) novo
+   parâmetro de modelo `HYBRID_JUTSU_CADENCE_FRAC=0,22` esticando o cooldown EFETIVO do jutsu só
+   pro build híbrido (arma continua na cadência cheia) — modela que um jogador dividindo atenção
+   entre arma e jutsu não aproveita toda janela de cast livre. Nerfar jutsu por jutsu sozinho
+   NÃO fecha (a rotação sempre migra pro próximo melhor candidato do kit — "whack-a-mole",
+   testado e documentado no relatório v6 §1). Burst matematicamente inalterado (não depende de
+   cooldown, ver `jutsu_damage()`). **Verificado e descartado**: `groupcooldown` (o "cast delay"
+   sugerido pela missão) não bloqueia ataque básico de arma neste TFS (`CONDITION_
+   SPELLGROUPCOOLDOWN` só afeta OUTRO jutsu do mesmo grupo; `CONDITION_EXHAUST_WEAPON`/`_COMBAT`
+   estão "unused" em `server/tfs/src/enums.h`) — subido de 1000ms pra 2000ms como piso de
+   segurança, sem efeito mensurável no kit atual.
+2. **Grupo 3+: 2 de 12 cenários na faixa +30-60%** (era 1 de 12) — `curse_shaman` fechado
+   (+177%→+44%), `storm_monk`/`thunder_eagle`/`elite_cloud_guard` muito melhores mas ainda
+   fora (+234%/+178%/+112% → +76%/+91%/+17%). Achado novo: `hits_for_jutsu()` só aplica
+   `area_capacity(shape)` pra `type in ("area","beam")` — `type="projectile"` (todo tier 1,
+   mesmo com campo `shape` no JSON) sempre atinge 1 alvo em grupo, então monstros "none"-
+   elemento de nível baixo (`wolf`/`bandit`/`mercenary_bridge`) nunca se beneficiam de AoE antes
+   do tier 2. Fix de verdade exigiria mudar `type` (mecânica de spell, não número) — não aplicado
+   por risco ao playtest em andamento.
+3. **Personagens: 9 de 9 dentro de ±15%** (não reverificados desde a rodada 3/4) — proxy
+   reconstruída do zero (`analyze_v2.py` da rodada 2/3 não sobreviveu entre sessões). Achado
+   real (não desta rodada): `sabio_cerimonial` estava a +88,4% da média —
+   `selo_de_exorcismo`/`circulo_de_selos` chegavam a ~3× o dano de qualquer jutsu elemental do
+   mesmo nível pós-rodada-5. Nerfado ×0,4; isso deslocou `herdeira_hyuga` pra fora por cima
+   (a média cai quando o outlier é corrigido) — corrigido com nerf ×0,7 em
+   `palma_gentil`/`palma_dupla`. Todos os 9 entre −11,8% e +8,6%.
+4. **Bosses novos do Covil (2/3 dentro de ±20% de TTK com summons)**: `tools/balance/sim.py`
+   não modela fases/summons — simulação bespoke escrita só pra este check (não parte do
+   `sim.py` oficial). Achado ao ler `boss_phases.lua` gerado: fase de "fúria"
+   (`attack_multiplier`) NÃO aumenta o dano dos ataques do boss (comentário do próprio
+   `tools/export_tfs.py`: `onHealthChange` não altera `<attack>` do XML em runtime) — o efeito
+   real é cura de uma vez (`maxHealth×(mult-1)×0,10`) + velocidade de movimento maior.
+   `boss_rings_bearer`/`boss_crimson_ancestor` fechados reduzindo `count`/`hp` do summon
+   (verificado sem colateral: `invoked_path`/`crimson_echo` só existem como summon, sem spawn
+   físico nem quest); `boss_curse_partner` (`magma_serpent`, reusado em spawns/tarefas de
+   verdade — não tocado) ficou em +34,3% (era +79,5%), `death_rate=0,00` nos 3 (não impossível
+   pro taijutsu solo, meta de segurança cumprida).
+
+## Pendências honestas da rodada 6 (ver relatório v6 §7 pros números)
+
+- **Grupo 3+ continua não-uniforme** (10/12 fora da faixa) — 2 causas raiz distintas e
+  não resolvidas: (a) monstros sem AoE de verdade disponível no seu nível (mudança de `type` de
+  spell, maior que ajuste de número); (b) jutsus "campeão" compartilhados entre 2 níveis/
+  monstros bem diferentes não fecham com um multiplicador de dano único (mesma causa raiz das
+  rodadas 3-5, "um multiplicador não serve pra todo HP de pull").
+- **`boss_curse_partner` (Sócio Eterno) acima de +20% de TTK com summons** (+34,3%) — precisaria
+  de uma variante mais fraca dedicada do summon (`magma_serpent` reusado demais pra tocar
+  globalmente) ou um campo `hp_scale` no summon de fase (mudança de `tools/export_tfs.py`, não
+  só de dado).
+- **Proxy de personagens reconstruída sem o script original** — considerar versionar
+  `tools/balance/character_value.py` (ou equivalente) na rodada 7 pra não perder de novo.
+- **`wolf`/`bandit`/`mercenary_bridge`/`mist_guardian`/`white_clone`** seguem abaixo da faixa
+  de grupo, herdado, não coberto pelas mudanças desta rodada.

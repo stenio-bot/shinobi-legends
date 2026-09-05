@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Doton: Colapso do Terreno: O solo afunda num raio amplo e esmaga tudo que está dentro da cratera.
+-- Doton: Colapso do Terreno: O solo afunda num raio amplo e esmaga tudo que est\xE1 dentro da cratera.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 213)

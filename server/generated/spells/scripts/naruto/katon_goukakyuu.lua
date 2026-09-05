@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Katon: Grande Bola de Fogo: Dispara uma bola de fogo que explode no impacto.
 local combat = Combat()

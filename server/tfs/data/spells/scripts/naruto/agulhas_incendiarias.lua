@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Agulhas Incendiárias: Agulhas finas envoltas em chamas, lançadas com precisão cirúrgica.
+-- Agulhas Incendi\xE1rias: Agulhas finas envoltas em chamas, lan\xE7adas com precis\xE3o cir\xFArgica.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 200)

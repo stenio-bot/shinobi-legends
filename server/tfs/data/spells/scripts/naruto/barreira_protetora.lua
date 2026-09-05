@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Barreira Protetora: Uma barreira de chakra selado que absorve parte do dano recebido.
 local condition = Condition(CONDITION_REGENERATION)

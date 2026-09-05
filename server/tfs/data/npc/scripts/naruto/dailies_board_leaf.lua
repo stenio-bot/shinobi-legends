@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
@@ -81,6 +81,6 @@ local function deliverCallback(cid, message, keywords, parameters, node)
 	return true
 end
 keywordHandler:addKeyword({'entregar'}, deliverCallback, {})
-npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {diaria} para ver as 3 missões de hoje.")
+npcHandler:setMessage(MESSAGE_GREET, "Ol\xE1, |PLAYERNAME|. Diga {diaria} para ver as 3 miss\xF5es de hoje.")
 function onCreatureSay(cid, type, msg) npcHandler:onCreatureSay(cid, type, msg) end
 npcHandler:addModule(FocusModule:new())

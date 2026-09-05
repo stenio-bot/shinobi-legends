@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Raiton: Lança do Relâmpago: Um raio contínuo perfura em linha reta e atravessa vários inimigos.
+-- Raiton: Lan\xE7a do Rel\xE2mpago: Um raio cont\xEDnuo perfura em linha reta e atravessa v\xE1rios inimigos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 210)

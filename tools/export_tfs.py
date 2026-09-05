@@ -25,9 +25,27 @@ def load_folder(folder):
             out[o["id"]] = o
     return out
 
+def _lua_cp1252(text):
+    """Lua gerado: todo caractere nao-ASCII vira escape \\xNN em cp1252. O TFS repassa os bytes das
+    strings Lua como estao e o OTClient renderiza em cp1252 (fonte indexada por byte) — UTF-8 cru
+    aparece como 'MissÃ£o' nos baloes de NPC/monstro (playtest de historia, 2026-09-05). Os
+    arquivos gerados nao usam strings longas [[...]], entao o escape e' seguro em qualquer literal;
+    em comentarios so' fica menos legivel."""
+    out = []
+    for ch in text:
+        if ord(ch) < 128:
+            out.append(ch)
+        else:
+            for b in ch.encode("cp1252", errors="replace"):
+                out.append("\\x%02X" % b)
+    return "".join(out)
+
 def write(rel, text):
     p = os.path.join(OUT, rel)
     os.makedirs(os.path.dirname(p), exist_ok=True)
+    if rel.endswith(".lua"):
+        assert "[[" not in text, rel + ": string longa [[...]] nao suportada pelo escape cp1252"
+        text = _lua_cp1252(text)
     with open(p, "w", encoding="utf-8") as f:
         f.write(text)
 
@@ -381,6 +399,26 @@ for spell_idx, j in enumerate(jutsus.values(), start=1):
         mana_attr = f'mana="0" manapercent="{int(j["chakra_cost_percent"])}"'
     else:
         mana_attr = f'mana="{j["chakra_cost"]}"'
+    # RODADA 6 (item 1 da missão, "cast delay" global): revisitado `server/tfs/src/spells.cpp`
+    # (linha ~429 lê o atributo `groupcooldown`; linha ~583 checa `CONDITION_SPELLGROUPCOOLDOWN`
+    # antes de deixar castar; linhas ~769/888/952 aplicam a condição, duração=`groupCooldown`,
+    # subId=`group`) para decidir se vale a pena. Achado: essa condição só bloqueia OUTRO jutsu do
+    # MESMO `group` (aqui, "attack") — golpe de arma não é um jutsu, não tem CONDITION_SPELLCOOLDOWN
+    # nenhuma, e `CONDITION_EXHAUST_WEAPON`/`CONDITION_EXHAUST_COMBAT` (`server/tfs/src/enums.h`
+    # linhas ~332/343) estão marcados "unused" nesta build do TFS 1.4.2 — ou seja, NÃO existe
+    # mecanismo real neste servidor para atrasar o ataque básico depois de um cast (o "arma entre
+    # casts" do build híbrido, rodada 4, é fiel à engine real, não uma lacuna do simulador).
+    # `groupcooldown` não é, portanto, o lever do excesso de híbrido (resolvido via
+    # `HYBRID_JUTSU_CADENCE_FRAC` em tools/balance/sim.py + fix dos 2 jutsus tier 1 de área, ver
+    # relatório v6 §1) — mas subir de 1000ms (valor herdado sem documentação de nenhuma rodada
+    # anterior) para 2000ms (igual ao `ATTACK_INTERVAL_S`/attackspeed do player) é uma correção de
+    # higiene real e de baixo risco: hoje o cooldown mínimo de QUALQUER jutsu individual já é 2,0s
+    # (`agulhas_incendiarias`/`kunai_marcada`/outros pessoais, ver `data/jutsus/personal.json`), e
+    # todo elemental tier 1 está em 9,0s — então 2000ms nunca adiciona restrição ALÉM do cooldown
+    # próprio de cada jutsu hoje (inerte para o kit atual), só passa a valer como piso de segurança
+    # caso um jutsu futuro seja calibrado com cooldown <2s (evita spam de troca entre 2 jutsus
+    # diferentes do mesmo grupo mais rápido que o próprio intervalo de ataque do jogador).
+    GROUP_COOLDOWN_MS = 2000
     spells_xml.append(
         # spellid PRECISA ser único: sem ele, TFS 1.4.2 usa 0 para TODOS os instants
         # (spells.h: uint8_t spellId = 0) e o cooldown "cooldown_s" de QUALQUER jutsu
@@ -388,7 +426,7 @@ for spell_idx, j in enumerate(jutsus.values(), start=1):
         f'<instant group="{group}" name="{escape(j["name"])}" words="{spell_words(j)}" lvl="{j["required_level"]}" '
         f'{mana_attr} prem="0" range="{max(1, j["range"])}" needtarget="{need_target}" blockwalls="1" '
         f'aggressive="{0 if group == "healing" else 1}" spellid="{spell_idx}" '
-        f'cooldown="{int(j["cooldown_s"]*1000)}" groupcooldown="1000" needlearn="{0 if j["id"] in UNIVERSAL_JUTSU_IDS else 1}" '
+        f'cooldown="{int(j["cooldown_s"]*1000)}" groupcooldown="{GROUP_COOLDOWN_MS}" needlearn="{0 if j["id"] in UNIVERSAL_JUTSU_IDS else 1}" '
         f'script="naruto/{j["id"]}.lua">{voc_xml}\n</instant>')
 
     lua = [HEADER_LUA, f"-- {j['name']}: {j.get('description','')}"]

@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Kawarimi no Jutsu: Substituição: fica invulnerável por 1s e teleporta 2 tiles para trás.
+-- Kawarimi no Jutsu: Substitui\xE7\xE3o: fica invulner\xE1vel por 1s e teleporta 2 tiles para tr\xE1s.
 function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
 	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(pos, "sfx_poof") end
@@ -19,7 +19,7 @@ function onCastSpell(creature, variant)
 		creature:addCondition(cond)
 		return true
 	end
-	creature:sendCancelMessage("Não há espaço para a substituição.")
+	creature:sendCancelMessage("N\xE3o h\xE1 espa\xE7o para a substitui\xE7\xE3o.")
 	pos:sendMagicEffect(221)
 	return false
 end

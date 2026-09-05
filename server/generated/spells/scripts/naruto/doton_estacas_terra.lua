@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Doton: Estacas de Terra: Estacas de pedra irrompem do chão em cruz, prendendo quem estiver em cima.
+-- Doton: Estacas de Terra: Estacas de pedra irrompem do ch\xE3o em cruz, prendendo quem estiver em cima.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 212)

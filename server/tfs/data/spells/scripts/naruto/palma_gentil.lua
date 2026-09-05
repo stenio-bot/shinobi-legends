@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Palma Gentil: Um toque preciso em pontos de chakra que trava os movimentos do alvo.
 local combat = Combat()
@@ -6,7 +6,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 22 + level * 1.0 + maglevel * 0.9
+	local base = 15.4 + level * 0.7 + maglevel * 0.63
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

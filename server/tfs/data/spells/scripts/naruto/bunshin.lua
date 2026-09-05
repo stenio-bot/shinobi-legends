@@ -1,7 +1,7 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
 -- Bunshin no Jutsu: Cria 2 clones que distraem monstros por 6s.
--- TODO: criar monstro 'Clone' (cópia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
+-- TODO: criar monstro 'Clone' (c\xF3pia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
 function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
 	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(pos, "sfx_poof") end

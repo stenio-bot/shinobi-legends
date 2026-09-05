@@ -29,7 +29,32 @@ local results = {}
 local function check(name, cond, detail)
 	results[#results + 1] = {name = name, ok = cond and true or false, detail = detail}
 end
+-- O Lua gerado sai com acentos em cp1252 (tools/export_tfs.py::_lua_cp1252); os textos esperados
+-- neste arquivo estao em UTF-8, entao convertemos o esperado antes de comparar.
+local function utf8ToCp1252(str)
+  if type(str) ~= 'string' then return str end
+  local out, i, n = {}, 1, #str
+  while i <= n do
+    local b = str:byte(i)
+    local cp, len
+    local function cont(k) local c = str:byte(k); return c and c >= 0x80 and c <= 0xBF end
+    if b < 0x80 then cp, len = b, 1
+    elseif b >= 0xC2 and b <= 0xDF and cont(i + 1) then cp, len = (b - 0xC0) * 0x40 + (str:byte(i + 1) - 0x80), 2
+    elseif b >= 0xE0 and b <= 0xEF and cont(i + 1) and cont(i + 2) then cp, len = (b - 0xE0) * 0x1000 + (str:byte(i + 1) - 0x80) * 0x40 + (str:byte(i + 2) - 0x80), 3
+    else cp, len = b, 1 end -- byte solto (ja cp1252): passa direto
+    local map = {[0x2013]=0x96,[0x2014]=0x97,[0x2018]=0x91,[0x2019]=0x92,[0x201C]=0x93,[0x201D]=0x94,[0x2026]=0x85}
+    if cp < 0 then cp, len = b, 1 end
+    if cp < 0x100 then out[#out+1] = string.char(cp)
+    elseif map[cp] then out[#out+1] = string.char(map[cp])
+    else out[#out+1] = '?' end
+    i = i + len
+  end
+  return table.concat(out)
+end
+
 local function eq(name, got, want)
+  -- fixtures definidas neste arquivo ficam em UTF-8; o Lua gerado, em cp1252: normalizamos os dois lados
+  want = utf8ToCp1252(want); got = utf8ToCp1252(got)
 	check(name, got == want, "esperado " .. tostring(want) .. ", veio " .. tostring(got))
 end
 

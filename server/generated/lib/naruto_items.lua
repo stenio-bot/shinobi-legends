@@ -1,4 +1,4 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 NarutoItems = {
 	{id = 2480, key = 'bandana_leaf', type = 'armor', slot = 'head', level = 1, stack = 1, atk = 0, def_ = 1},
 	{id = 2467, key = 'vest_genin', type = 'armor', slot = 'body', level = 1, stack = 1, atk = 0, def_ = 4},

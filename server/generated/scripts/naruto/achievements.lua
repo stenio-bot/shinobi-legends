@@ -1,10 +1,10 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 -- Coloque em data/scripts/naruto/achievements.lua (revscriptsys carrega sozinho).
 -- `if not NarutoAchievements then return true end` em TODO gancho (achado real ao testar
 -- audio, docs/sistemas/audio.md): data/lib/naruto_achievements.lua so entra em memoria com
 -- REINICIO do servidor (dofile em data/lib/lib.lua, so roda no boot - nenhum /reload toca
--- libs); esta script (revscriptsys) já recarrega com /reload scripts|all. Sem a blindagem,
--- um servidor que já tinha os HOOKS mas ainda nao tinha a LIB (ex.: logo apos um /reload sem
+-- libs); esta script (revscriptsys) j\xE1 recarrega com /reload scripts|all. Sem a blindagem,
+-- um servidor que j\xE1 tinha os HOOKS mas ainda nao tinha a LIB (ex.: logo apos um /reload sem
 -- reiniciar) derrubava o onLogin de todo mundo com "attempt to index global
 -- 'NarutoAchievements' (a nil value)".
 local killEvent = CreatureEvent("NarutoAchievementKill")
@@ -34,10 +34,10 @@ function login.onLogin(player)
 end
 login:register()
 
--- Sem onEquip/"entrou na zona" genérico no TFS 1.4.2: um GlobalEvent periódico cobre visit_zone
--- e collect_set para todos os jogadores online (NarutoAchievements.pollPlayer). 7s é baixo o
--- bastante pra não demorar perceptivelmente depois de vestir o conjunto/entrar numa zona nova,
--- e alto o bastante pra não pesar com a contagem de jogadores esperada do projeto.
+-- Sem onEquip/"entrou na zona" gen\xE9rico no TFS 1.4.2: um GlobalEvent peri\xF3dico cobre visit_zone
+-- e collect_set para todos os jogadores online (NarutoAchievements.pollPlayer). 7s \xE9 baixo o
+-- bastante pra n\xE3o demorar perceptivelmente depois de vestir o conjunto/entrar numa zona nova,
+-- e alto o bastante pra n\xE3o pesar com a contagem de jogadores esperada do projeto.
 local poll = GlobalEvent("NarutoAchievementPoll")
 function poll.onThink(interval, lastExecution)
 	if not NarutoAchievements then return true end
@@ -53,7 +53,7 @@ poll:register()
 local talk = TalkAction("!conquistas")
 function talk.onSay(player, words, param)
 	if not NarutoAchievements then
-		player:sendTextMessage(MESSAGE_INFO_DESCR, "Conquistas ainda não carregadas neste servidor (precisa reiniciar).")
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Conquistas ainda n\xE3o carregadas neste servidor (precisa reiniciar).")
 		return false
 	end
 	local total, unlocked = #NarutoAchievements.list, 0

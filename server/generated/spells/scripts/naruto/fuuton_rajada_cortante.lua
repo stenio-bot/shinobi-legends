@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Fuuton: Rajada Cortante: Uma rajada em leque que retalha tudo à frente e desequilibra os atingidos.
+-- Fuuton: Rajada Cortante: Uma rajada em leque que retalha tudo \xE0 frente e desequilibra os atingidos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 216)

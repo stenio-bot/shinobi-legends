@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Salto do Selo: Teleporta instantaneamente até a última kunai marcada lançada.
+-- Salto do Selo: Teleporta instantaneamente at\xE9 a \xFAltima kunai marcada lan\xE7ada.
 local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, 5000)

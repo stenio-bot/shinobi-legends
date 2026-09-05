@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Contra-Ataque Calculado: Um golpe rápido que pune a brecha aberta pelo inimigo após prever seu ataque.
+-- Contra-Ataque Calculado: Um golpe r\xE1pido que pune a brecha aberta pelo inimigo ap\xF3s prever seu ataque.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 224)

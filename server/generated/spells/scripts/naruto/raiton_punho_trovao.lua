@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Raiton: Punho do Trovão: Concentra o raio na palma da mão e desfere um golpe devastador no alvo adjacente.
+-- Raiton: Punho do Trov\xE3o: Concentra o raio na palma da m\xE3o e desfere um golpe devastador no alvo adjacente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 208)

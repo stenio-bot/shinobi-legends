@@ -1,6 +1,6 @@
--- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
+-- GERADO por tools/export_tfs.py a partir de data/*.json. N\xC3O EDITE \xC0 M\xC3O.
 
--- Fuuton: Redemoinho Prisão: Um redemoinho de vento prende o alvo no ar, impedindo qualquer movimento.
+-- Fuuton: Redemoinho Pris\xE3o: Um redemoinho de vento prende o alvo no ar, impedindo qualquer movimento.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, 218)
