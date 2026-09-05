@@ -117,34 +117,37 @@ verdade. Resolvido:
 Estado: checkpoint `fff60df`. Sistemas de rank/exame/tarefas/diárias/achievements no servidor; mapa v2.1
 com 6 regiões; walk-cycle validado por filtro geométrico; 173 itens, 54 jutsus, 38 monstros, 21+8 NPCs.
 
-Em andamento (agentes paralelos, eu reviso):
+Feito (com hash), ordem aproximada de quando fechou:
 - [x] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água (`215721f`)
 - [x] Cliente UX: aba "Missões" no Menu Shinobi via opcode 210 `get_progress`; rank na janela de atributos; mensagens de sistema em pt-BR + fix cp1252 (`e0e683f`)
 - [x] Balanceamento rodada 1: simulador `tools/balance/sim.py`; stages de XP desligadas (eram 5–7×), skill mult 1.1, mana mult 1.3 (`eada82c`)
 - [x] Balanceamento rodada 2: bug do seletor no simulador, N de grupo por monstro, tier 1 ×0.35, paridade elemental/pessoal (`d1d96f8`)
 - [x] Balanceamento rodada 3: manamultiplier 1.1, tier 2/3 recalibrados, ninjutsu puro competitivo em L50–100 (`b9cd0ad`)
-- [ ] Balanceamento rodada 4 (decidir após o playtest): "burst" de tier 1 (hit ≥1,3× arma) é incompatível com paridade sustentada quando cooldown = intervalo de ataque; opção: cooldown 3–4s com hit maior e híbrido (arma entre casts) como jogo natural; modelar pílula de chakra no simulador; platô de arma L15→L20 (boss L19)
-
-Próximos (ordem de valor):
 - [x] Mapa v3: 8 NPCs posicionados, gates de rank 45001–45005, identidade visual de Ruínas/Montanha/Covil, bordas dirt_sand e snow_rock (`b8b8ded`)
-- [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [x] Playtest L1–20 rodada 1 (`docs/qa/playtest-l1-20.md`): achou 2 P0 (sem kit inicial; loja com erro Lua) — corrigidos em `1e4f280`
 - [x] Playtest rodada 2 (`docs/qa/playtest-l1-20-r2.md`): achou kit pela metade (firstitems.lua vanilla) e saudação só em inglês — corrigidos em `92166a7`; sem dados de combate (disco cheio interrompeu)
-- [x] Conquistas: 55 implementadas no servidor + seção na aba Missões (`e02aa0b`); validação in-game pendente
-- [x] Regeneração natural de HP/chakra e spawns iniciais reduzidos (`77def75`, `c62e75e`)
+- [x] Conquistas: 55 implementadas no servidor + seção na aba Missões (`e02aa0b`), 12 testes headless em luajit; validação in-game confirmada na rc `c2d716f`
+- [x] Regeneração natural de HP/chakra (condição permanente por vocação no login) e spawns da Trilha dos Lobos reduzidos para 1–2 lobos por ponto (`77def75`, `c62e75e`)
 - [x] Documento mãe do jogo `docs/00-biblia-do-jogo.md` (`2a0a261`)
-- [x] Som procedural: 51 SFX sintetizados + módulo `naruto_sounds` (`ef195b4`); falta música ambiente e sons de monstros (`docs/backlog-audio.md`)
-- [x] Playtest rodada 4 (`docs/qa/playtest-l1-20-r4.md`): interrompido por queda do servidor; achou conquista de zona destravando na vila — corrigido (`bea6efc`)
-- [ ] Playtest rodada 5 (em andamento): medir regen de chakra e curva L1–10
-- [x] Balanceamento rodada 4 (`7dee1ac`): hunt 30 min com regen/pílulas, tier 1 cooldown 3,5 s escalando por level, wakizashi temperado L15; custo tier 1 ×1,3
-- [x] Balanceamento rodada 5 (`1a46739`): pool 100+10L, regen por level, tier 1 com custo % do pool (manapercent) e cooldown 9 s; ninjutsu puro 6/6 bosses na meta; entra no próximo reinício do servidor
-- [ ] Balanceamento rodada 6: híbrido ≤ +15% (4/6 bosses acima), grupo 3+ uniforme, reverificar kits pessoais ±15%; validar a sensação do cooldown 9 s no playtest
-- [x] Playtest rodada 3 (`docs/qa/playtest-l1-20-r3.md`): combate real no L1; achou chakra sem regen e 4 lobos por spawn — corrigidos
-- [ ] (antigo) Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
-- [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`); sons ficam para depois
-- [ ] Criaturas procedurais (parcial, bloqueado por disco cheio — `gen_animals.py` e folhas 940–945 prontas; faltam variantes humanoides, mapping e validação in-game): lobo/cervo/águia/serpente/sapo/sanguessuga com 4 direções reais + variantes de paleta para humanoides que hoje compartilham looktype
+- [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`)
+- [x] Criaturas procedurais: lobo/cervo/águia/serpente/sapo/sanguessuga (940–945) com máscara de cor e 4 direções reais + variantes de paleta para 12 humanoides (946–957), fix de cores dessaturadas em `tibia_colors` (`79881e0`); rc de validação pós-integração (`c2d716f`)
+- [x] Som procedural: 51 SFX sintetizados (`tools/audio/gen_sfx.py` → ogg via `soundfile`), módulo `naruto_sounds` (opcode 210 `sfx` nos jutsus, level up, dano, morte de monstro, menu), opção "Sons do jogo" (`ef195b4`); falta música ambiente e sons de monstro (`docs/backlog-audio.md`)
+- [x] Playtest rodada 3 (`docs/qa/playtest-l1-20-r3.md`): combate real no L1 (2 kills, XP/h medido); achou chakra sem regen natural e 4 lobos por spawn — ambos corrigidos nas entradas de regen/spawn acima
+- [x] Balanceamento rodada 4 (`7dee1ac`): cenário de hunt 30 min com regen/pílulas no simulador, híbrido com cadências independentes, tier 1 com cooldown 3,5 s e escala por level, tier 2 recalibrado, wakizashi temperado (L15) fecha o platô de armas; custo de chakra do tier 1 ajustado para ×1,3 (não ×2) e hit L1 preservado
+- [x] Playtest rodada 4 (`docs/qa/playtest-l1-20-r4.md`): interrompido por queda externa do servidor antes de qualquer combate; achou conquista de zona destravando dentro da muralha da vila — corrigido (`bea6efc`)
+- [x] Balanceamento rodada 5 (`1a46739`): economia de chakra estrutural (pool 100+10L, regen por level reaplicada no advance, custo do tier 1 como % do pool via `manapercent`), tier 1 com cooldown 9 s e escala maior; ninjutsu puro 6/6 bosses na meta; entra no próximo reinício do servidor
+
+Em andamento:
+- [ ] Playtest rodada 5: medir em combate real o regen de chakra por level (rodada 5 de balanceamento) e a densidade reduzida da Trilha dos Lobos; curva L1–10 completa contra `docs/sistemas/progressao-jogador.md`
+
+Próximos (ordem de valor):
+- [ ] Balanceamento rodada 6: híbrido ≤ +15% (4/6 bosses acima do teto hoje), grupo 3+ uniforme, reverificar kits pessoais ±15%; validar a sensação do cooldown 9 s no playtest
+- [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
+- [ ] Música ambiente (`tools/audio/gen_music.py`, ainda não escrita — candidata a ferramenta separada de `gen_sfx.py`) e sons de monstro (`docs/backlog-audio.md`)
+- [ ] Direção/andar reais para os 12 humanoides que hoje só têm variante de paleta (mesma pose nas 4 direções e 3 fases de andar)
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
 - [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
+- [ ] Substituir os 13 looktypes MUGEN (900–926 em uso de produção) — risco legal de ADR-002, P0 de arte
 - [ ] Party com XP compartilhada, clãs, PvP em arena
 
 ## Marco 5 — Pós-lançamento

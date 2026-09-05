@@ -6,9 +6,11 @@ beta. Cada seção cita o(s) arquivo(s) de onde os números e fatos vêm; onde a
 este documento escreve conteúdo novo — marcado **(novo)** — e o mesmo texto foi replicado em
 `docs/lore/mundo.md` para não existirem duas versões da mesma lenda.*
 
-*Última revisão: 2026-09-05. Fontes principais: `CLAUDE.md`, `README.md`, `docs/00-visao-geral.md`,
+*Última revisão: 2026-09-05 (sincronizada com balanceamento rodada 5, som procedural, conquistas e
+playtests r3/r4). Fontes principais: `CLAUDE.md`, `README.md`, `docs/00-visao-geral.md`,
 `docs/01-roadmap.md`, `docs/02-arquitetura.md`, `docs/03-decisoes-tecnicas.md`, `docs/04-setup-ot.md`,
-`docs/lore/*.md`, `docs/sistemas/*.md`, `docs/qa/*.md`, `docs/backlog-sprites.md`, e todo `data/*.json`.*
+`docs/lore/*.md`, `docs/sistemas/*.md`, `docs/qa/*.md`, `docs/backlog-sprites.md`,
+`docs/backlog-audio.md`, e todo `data/*.json`.*
 
 ## Índice
 
@@ -416,6 +418,22 @@ de HP baixo** num único cast — ver `docs/sistemas/balanceamento-relatorio-v3.
 decisão de design explícita (fora do escopo declarado da rodada 5, que focou em economia de
 chakra e paridade 1×1).
 
+### Regeneração natural (HP e chakra)
+
+*Fonte: `docs/04-setup-ot.md` ("Notas de QA"), `docs/sistemas/balanceamento-relatorio-v4.md` §1,
+`-v5.md` §1, `docs/qa/playtest-l1-20-r3.md`.* No TFS 1.4.2 puro, HP/chakra só regeneram com comida.
+Este jogo aplica no login (`character_switch.lua`, gerado) uma `Condition(CONDITION_REGENERATION)`
+**permanente** (subId 9020, nunca expira, independe de comida) com valores por vocação — não é uma
+condição temporária, e não é suspensa em combate por nenhum código do projeto. Desde a rodada 5 de
+balanceamento os valores **escalam com o level do próprio jogador** e são recalculados/reaplicados
+a cada level-up (`NarutoRegen.apply`, chamado no login e em `CreatureEvent NarutoRegenAdvance`,
+mesmo padrão de `NarutoAchievementAdvance`): chakra `3 + level÷4` a cada 2s, HP `2 + level÷10` a
+cada 5s (antes da rodada 5: fixo, 3 chakra/2 HP a cada 5s, igual em qualquer nível). Achado real de
+playtest (rodada 3, `playtest-l1-20-r3.md`): mesmo com a condição regenerando corretamente, um spot
+de caça muito populoso (ex. a Trilha dos Lobos antes da redução de densidade) pode manter o
+jogador "em combate" por minutos seguidos, mascarando a percepção de regen — não é um bug de
+chakra, é o efeito esperado de ficar perto de monstros o tempo todo.
+
 ### Jutsus: papéis
 
 Cada elemento segue a mesma estrutura de 4 papéis (ver seção 3 e tabela completa na seção 7):
@@ -460,6 +478,35 @@ vez pelo comando `!diaria`. **Conquistas** (`data/achievements.json`, 55 entrada
 kill/boss/quest/exam/exploration/collection/task/daily/level) dão título e ryo — ex.: "Viajante de
 Floresta da Vila" por só visitar a região pela primeira vez.
 
+Todas as 55 conquistas têm lógica real no servidor desde `e02aa0b`, cobrindo os **10 tipos de
+condição** do schema (`docs/sistemas/progressao-servidor.md` §9): `kill_count`/`kill_specific`
+(hook direto no `CreatureEvent` de morte), `quest_chain_complete`/`grants_rank`/`level_reached`
+(hook direto no evento correspondente — completar quest, promover rank, subir level),
+`task_count`/`daily_streak` (hook direto na entrega de tarefa/diária), e três que **não têm evento
+nativo no TFS** e por isso rodam por poll periódico (`GlobalEvent NarutoAchievementPoll`, 7s):
+`visit_zone` (posição do jogador contra os mesmos retângulos de região usados na hora de construir
+o mapa), `collect_set` (conjunto de equipamento vestido) e `collect_item_count` (troféus na
+mochila) — latência de até 7s entre a condição ficar verdadeira e a mensagem aparecer, aceitável
+para conquista (não é uma checagem de gameplay sensível a frame). Recompensa é só **ryo** (o schema
+não tem campo de XP/item); ao desbloquear, o jogador recebe `"Conquista desbloqueada: <nome>!"`,
+um efeito visual (`fx_seal_glow`) e o título da última conquista passa a aparecer numa 2ª linha no
+`/look`. Comandos: `!conquistas` (resumo por categoria) e `/conquista [id]` (GM, força o
+desbloqueio para teste).
+
+### Som
+
+*Fonte: `docs/sistemas/audio.md`, `docs/backlog-audio.md`.* 51 SFX procedurais (síntese
+subtrativa/FM em `tools/audio/gen_sfx.py`, sem download de terceiros — ADR-002), cobrindo os 33
+`sfx` referenciados em `data/jutsus/*.json` mais 17-18 sons de base (dano recebido, morte de
+monstro, level up, item, moeda, UI, conquista). Tocado pelo módulo cliente `naruto_sounds` em 4
+ganchos: **(a)** efeito de jutsu visto na tela — opcode estendido 210, ação `"sfx"`
+(`NarutoJson.broadcastSfx`, chamado dentro de todo `onCastSpell` gerado); **(b)** level up e
+conquista, via `onTextMessage`; **(c)** dano recebido e morte de monstro, via `connect(Creature/
+LocalPlayer, {...})`; **(d)** UI (abrir/fechar o Menu Shinobi, clique de botão). Opção "Sons do
+jogo" no menu de opções (padrão ligado, volume 100). **Música segue sem trilha própria** — a opção
+de música existe no cliente mas fica desligada por padrão (nenhum arquivo além do tema genérico
+herdado do OTClient); é o único item de arte/som ainda 100% pendente (ver seção 9).
+
 ### NPCs e lojas
 
 21 NPCs em `data/npcs/*.json`, um mercador + um dador de missões por região, mais os NPCs novos de
@@ -487,11 +534,26 @@ O gate é um `MoveEvent` genérico (`rank_gate.lua`) que lê o actionid do **til
 barra quem não tem o rank mínimo com mensagem + teleporte de volta — testado in-game com conta sem
 rank (barrada) e conta GM (atravessa livre, por design).
 
+### Kit inicial e onboarding
+
+*Fonte: `docs/qa/playtest-l1-20-r2.md`, `-r3.md`, `-r4.md`.* O TFS vanilla entrega um kit próprio
+no primeiro login via `creaturescripts/scripts/firstitems.lua` (jaqueta, taco, mochila) que
+competia pelos mesmos slots do kit da vila gerado por `character_switch.lua` — achado de playtest
+(rodada 2), corrigido neutralizando `firstitems.lua` para só entregar a mochila de couro, deixando
+o kit da vila (bandana, colete de genin, calça ninja, sandálias, kunai/shuriken de ferro, amuleto
+da Academia) ocupar os 6 slots reais. Confirmado com contas 100% novas via AAC nos 3 playtests
+seguintes (r2/r3/r4): kit completo, HP/chakra no teto da vocação já no primeiro login.
+
 ### Morte e penalidades
 
-*Fonte: `data/progression.json`.* Ao morrer: perde 10% da XP do nível atual (nunca cai de nível) e
-dropa cada item não equipado da mochila com 30% de chance independente — os itens ficam no próprio
-corpo por 60 segundos (estilo Tibia clássico), não somem.
+*Fonte: `data/progression.json`, `docs/qa/playtest-l1-20-r3.md`.* Ao morrer: perde 10% da XP do
+nível atual (nunca cai de nível) e dropa cada item não equipado da mochila com 30% de chance
+independente — os itens ficam no próprio corpo por 60 segundos (estilo Tibia clássico), não somem.
+Achado de playtest: morrer **não reposiciona o personagem em tempo real** — o cliente fica
+~25-30s parado na tela de morte e cai por timeout de conexão; o jogador precisa logar de novo, e
+ao reconectar aparece no templo com HP/chakra cheios e o mesmo inventário (a perda de XP/drop já
+foi aplicada no instante da morte, antes da desconexão). Comportamento herdado do TFS clássico, não
+um bug — mas vale como nota de UX honesta: um jogador que não souber disso pode achar que travou.
 
 ### Social (hoje: nada)
 
@@ -555,97 +617,105 @@ monstros comuns + 1 ou mais bosses.*
 
 *Fonte: `data/jutsus/*.json` (54 jutsus: 5 Katon, 5 Suiton, 5 Raiton, 4 Doton, 4 Fuuton, 10
 universais/genéricos, 21 pessoais exclusivos — `data/element_sets.json` decide os 4 "de kit" por
-elemento, `data/characters.json` decide os 4 pessoais por personagem, ver seção 3), efeito visual
-em `docs/sistemas/combate-e-jutsus.md` (tabela de animação/missile).*
+elemento, `data/characters.json` decide os 4 pessoais por personagem, ver seção 3). Tabelas
+regeneradas diretamente de `data/jutsus/*.json` (campos `animation`/`sfx` na última coluna) após
+a rodada 5 de balanceamento (`docs/sistemas/balanceamento-relatorio-v5.md`): os 5 projéteis tier
+1 do kit elemental (nível 1, "burst à distância") agora custam uma **% do pool de chakra**
+(`chakra_cost_percent`/`manapercent`) em vez de um número fixo, e o cooldown desses 5 subiu de
+2,0s (rodada 3) → 3,5s (rodada 4) → **9,0s** (rodada 5, valor atual) — o resto do jutsu (custo
+fixo, cooldown) foi só reescalado pela mudança do pool de chakra (100+level×10, era
+50+level×10), sem tocar em dano/papel. Som: cada jutsu já tinha um `sfx` no JSON antes desta
+missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seção 5 "Som").
 
 ### Katon (Fogo) (5)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Katon: Grande Bola de Fogo | projectile | 15 | 2.0s | 1 | burst à distância (projétil básico, kit) + queimadura | impacto fx_fire_burst + missile ms_fireball |
-| Katon: Sopro de Brasas | area | 18 | 3.0s | 6 | área (reserva, fora do kit) + queimadura | fx_fire_cone (brasas) |
-| Katon: Flores de Fênix | area | 105 | 4.0s | 12 | área/cone (kit) + queimadura | fx_fire_cone |
-| Katon: Anel de Chamas | area | 147 | 6.0s | 20 | utilitário/área (kit) + queimadura | fx_fire_ring |
-| Katon: Dragão de Fogo | beam | 210 | 8.0s | 35 | burst forte em linha (kit) + queimadura | fx_fire_dragon |
+| Katon: Grande Bola de Fogo | projectile | 3,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + queimadura | `fx_fireball` · som `sfx_fire_whoosh` |
+| Katon: Sopro de Brasas | area | 26 | 3,0s | 6 | área (reserva, fora do kit) + queimadura | `fx_ember_cone` · som `sfx_fire_puff` |
+| Katon: Flores de Fênix | area | 136 | 6,0s | 12 | área/cone (kit) + queimadura | `fx_fire_cone` · som `sfx_fire_burst` |
+| Katon: Anel de Chamas | area | 176 | 6,0s | 20 | utilitário/área (kit) + queimadura | `fx_fire_ring` · som `sfx_fire_burst` |
+| Katon: Dragão de Fogo | beam | 236 | 8,0s | 35 | burst forte em linha (kit) + queimadura | `fx_fire_dragon` · som `sfx_dragon_roar` |
 
 ### Suiton (Água) (5)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Suiton: Projétil de Água | projectile | 12 | 2.0s | 1 | burst à distância (projétil básico, kit) + lentidão | impacto fx_water_splash + missile ms_water_bullet |
-| Suiton: Névoa Cortante | area | 15 | 1.6s | 6 | controle de área rápido (kit) + lentidão | fx_water_mist (cone) |
-| Suiton: Prisão de Água | target | 38 | 7.0s | 22 | controle/utilitário (kit) + paralisia | fx_water_vortex |
-| Suiton: Dragão de Água | beam | 158 | 6.0s | 25 | burst forte em linha (kit, teto do elemento) + lentidão | fx_water_dragon |
-| Suiton: Vórtice Devorador | area | 72 | 9.0s | 45 | área (reserva, fora do kit) + lentidão | fx_water_vortex |
+| Suiton: Projétil de Água | projectile | 2,5% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_water_bullet` · som `sfx_splash` |
+| Suiton: Névoa Cortante | area | 22 | 1,6s | 6 | controle de área rápido (kit) + lentidão | `fx_mist_cone` · som `sfx_mist` |
+| Suiton: Prisão de Água | target | 45 | 7,0s | 22 | controle/utilitário (kit) + paralisia | `fx_water_prison` · som `sfx_bubble` |
+| Suiton: Dragão de Água | beam | 184 | 6,0s | 25 | burst forte em linha (kit, teto do elemento) + lentidão | `fx_water_dragon` · som `sfx_wave` |
+| Suiton: Vórtice Devorador | area | 79 | 9,0s | 45 | área (reserva, fora do kit) + lentidão | `fx_water_vortex` · som `sfx_wave` |
 
 ### Raiton (Raio) (5)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Raiton: Agulha de Raio | projectile | 14 | 2.0s | 1 | burst à distância (projétil básico, kit) + paralisia | impacto fx_lightning_strike + missile ms_lightning_needle |
-| Raiton: Corrente Estática | area | 14 | 1.3s | 6 | controle de área rápido (kit) + paralisia | fx_static_field (cruz) |
-| Raiton: Lança do Relâmpago | beam | 140 | 5.5s | 18 | burst forte em linha (kit, teto do elemento) + paralisia | fx_lightning_lance |
-| Raiton: Armadura Elétrica | self | 36 | 16.0s | 24 | utilitário/buff (reserva, fora do kit) + cura contínua | fx_lightning_armor |
-| Raiton: Punho do Trovão | target | 175 | 7.0s | 30 | burst forte single-target (kit) + stun | fx_lightning_strike |
+| Raiton: Agulha de Raio | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + paralisia | `fx_lightning_needle` · som `sfx_zap` |
+| Raiton: Corrente Estática | area | 20 | 1,3s | 6 | controle de área rápido (kit) + paralisia | `fx_static_cross` · som `sfx_zap` |
+| Raiton: Lança do Relâmpago | beam | 170 | 6,5s | 18 | burst forte em linha (kit, teto do elemento) + paralisia | `fx_lightning_lance` · som `sfx_thunder` |
+| Raiton: Armadura Elétrica | self | 42 | 16,0s | 24 | utilitário/buff (reserva, fora do kit) + cura contínua | `fx_lightning_armor` · som `sfx_zap_loop` |
+| Raiton: Punho do Trovão | target | 200 | 7,0s | 30 | burst forte single-target (kit) + stun | `fx_thunder_fist` · som `sfx_thunder_hit` |
 
 ### Doton (Terra) (4)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Doton: Bala de Lama | projectile | 14 | 2.0s | 1 | burst à distância (projétil básico, kit) + lentidão | impacto fx_mud_splash + missile ms_mud_bullet |
-| Doton: Muralha de Pedra | self | 28 | 14.0s | 8 | utilitário/defensivo (kit) + cura contínua | casca de pedra fx_stone_shell |
-| Doton: Estacas de Terra | area | 140 | 6.0s | 22 | área/controle (kit) + paralisia | fx_earth_spikes |
-| Doton: Colapso do Terreno | area | 245 | 9.0s | 48 | área forte + stun (kit) + stun | fx_earth_collapse |
+| Doton: Bala de Lama | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_mud_bullet` · som `sfx_splat` |
+| Doton: Muralha de Pedra | self | 39 | 14,0s | 8 | utilitário/defensivo (kit) + cura contínua | `fx_stone_shell` · som `sfx_rock_rumble` |
+| Doton: Estacas de Terra | area | 166 | 6,0s | 22 | área/controle (kit) + paralisia | `fx_earth_spikes` · som `sfx_rock_crack` |
+| Doton: Colapso do Terreno | area | 268 | 9,0s | 48 | área forte (kit) + stun | `fx_earth_collapse` · som `sfx_quake` |
 
 ### Fuuton (Vento) (4)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Fuuton: Lâmina de Vento | projectile | 13 | 2.0s | 1 | burst à distância (projétil básico, kit) | impacto fx_wind_slash + missile ms_wind_blade |
-| Fuuton: Rajada Cortante | area | 119 | 4.5s | 16 | área/cone (kit) + lentidão | fx_wind_slash (cone) |
-| Fuuton: Redemoinho Prisão | target | 38 | 9.0s | 23 | controle/utilitário (kit) + paralisia | fx_wind_prison |
-| Fuuton: Tornado Cortante | beam | 217 | 8.0s | 36 | burst forte em linha (kit) + lentidão | fx_wind_tornado |
+| Fuuton: Lâmina de Vento | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) | `fx_wind_blade` · som `sfx_wind_cut` |
+| Fuuton: Rajada Cortante | area | 147 | 6,5s | 16 | área/cone (kit) + lentidão | `fx_wind_cone` · som `sfx_wind_burst` |
+| Fuuton: Redemoinho Prisão | target | 45 | 9,0s | 23 | controle/utilitário (kit) + paralisia | `fx_wind_prison` · som `sfx_wind_trap` |
+| Fuuton: Tornado Cortante | beam | 243 | 8,0s | 36 | burst forte em linha (kit) + lentidão | `fx_wind_tornado` · som `sfx_wind_roar` |
 
 ### Universais/genéricos (multi-personagem) (10)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Agulhas Multiplas | projectile | 14 | 2.0s | 1 | burst à distância | impacto fx_melee_hit + missile ms_senbon |
-| Punho Suave | target | 12 | 2.0s | 3 | single-target/controle + lentidão | fx_melee_hit |
-| Kawarimi no Jutsu | self | 20 | 12.0s | 5 | utilitário (substituição, universal) | fumaça branca fx_smoke_poof |
-| Bunshin no Jutsu | self | 25 | 15.0s | 8 | utilitário (invocação de clone) | fumaça roxa fx_shadow_clone |
-| Clone Sombrio | self | 35 | 20.0s | 10 | utilitário/buff | fx_smoke_poof |
-| Shousen: Palma Curativa | self | 35 | 10.0s | 10 | cura (heal_over_time) + cura contínua | brilho verde fx_heal_green |
-| Chute Giratorio | area | 22 | 4.0s | 14 | área/controle | fx_melee_hit (giro) |
-| Lamina de Chakra | beam | 28 | 5.0s | 20 | burst forte em linha | lâmina ciano fx_chakra_blade |
-| Doku: Névoa Venenosa | area | 46 | 6.0s | 25 | área/veneno (dano ao longo do tempo) + veneno | névoa fx_poison_mist |
-| Fuuin: Selo de Contenção | target | 45 | 12.0s | 40 | controle (selo) + paralisia | fx_seal_glow |
+| Agulhas Multiplas | projectile | 26 | 2,0s | 1 | burst à distância | `fx_needles` · som `sfx_metal_throw` |
+| Punho Suave | target | 20 | 2,0s | 3 | single-target/controle + lentidão | `fx_taijutsu_hit` · som `sfx_punch` |
+| Kawarimi no Jutsu | self | 30 | 12,0s | 5 | utilitário (substituição, universal) | `fx_log_poof` · som `sfx_poof` |
+| Bunshin no Jutsu | self | 35 | 15,0s | 8 | utilitário (invocação de clone) | `fx_clone_poof` · som `sfx_poof` |
+| Clone Sombrio | self | 47 | 20,0s | 10 | utilitário/buff | `fx_smoke_puff` · som `sfx_poof` |
+| Shousen: Palma Curativa | self | 47 | 10,0s | 10 | cura + cura contínua | `fx_heal_glow` · som `sfx_heal` |
+| Chute Giratorio | area | 28 | 4,0s | 14 | área/controle | `fx_taijutsu_spin` · som `sfx_whirl` |
+| Lamina de Chakra | beam | 34 | 5,0s | 20 | burst forte em linha | `fx_chakra_blade` · som `sfx_slash` |
+| Doku: Névoa Venenosa | area | 54 | 6,0s | 25 | área/veneno (dano ao longo do tempo) + veneno | `fx_poison_mist` · som `sfx_hiss` |
+| Fuuin: Selo de Contenção | target | 50 | 12,0s | 40 | controle (selo) + paralisia | `fx_seal_paper` · som `sfx_seal` |
 
 ### Pessoais (exclusivos de 1 personagem) (21)
 
-| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Raio Selado | projectile | 15 | 2.0s | 1 | burst à distância | impacto fx_lightning_strike + missile ms_lightning_needle |
-| Chute Ascendente | target | 16 | 2.5s | 2 | single-target/controle + lentidão | fx_melee_hit (ascendente) |
-| Kunai Marcada | projectile | 14 | 2.0s | 3 | burst à distância | impacto fx_melee_hit + missile ms_kunai |
-| Rasteira de Vento Leve | area | 14 | 3.0s | 4 | área/controle + lentidão | fx_wind_slash (rasteira) |
-| Agulhas Incendiárias | projectile | 14 | 2.0s | 5 | burst à distância + queimadura | impacto fx_fire_burst + missile ms_senbon |
-| Palma Gentil | target | 16 | 2.0s | 5 | single-target/controle + lentidão | fx_melee_hit |
-| Foco Ocular | self | 26 | 14.0s | 7 | utilitário/buff + cura contínua | fx_chakra_focus (olhos) |
-| Vigor Teimoso | self | 30 | 18.0s | 9 | utilitário/buff + cura contínua | aura fx_chakra_focus |
-| Visão de Alcance Total | self | 22 | 16.0s | 9 | utilitário/buff + cura contínua | fx_chakra_focus (veias) |
-| Lâmina Relâmpago | target | 22 | 2.2s | 10 | single-target/controle + paralisia | fx_lightning_strike (faísca na espada) |
-| Salto do Selo | self | 28 | 10.0s | 12 | utilitário/buff | teleporte fx_smoke_poof |
-| Barreira Protetora | self | 38 | 18.0s | 14 | utilitário/buff + cura contínua | fx_chakra_focus (barreira) |
-| Contra-Ataque Calculado | target | 20 | 6.0s | 15 | single-target/controle + stun | fx_melee_hit |
-| Soco Monstruoso | target | 24 | 4.0s | 16 | single-target/controle + stun | fx_earth_collapse (rachadura) |
-| Soco da Juventude | target | 26 | 4.5s | 18 | single-target/controle + stun | fx_melee_hit (pesado) |
-| Selo de Exorcismo | target | 34 | 6.0s | 19 | single-target/controle + paralisia | fx_seal_glow |
-| Corte Duplo | area | 32 | 4.5s | 20 | área/controle | fx_melee_hit (corte duplo) |
-| Palma Dupla | area | 36 | 5.0s | 24 | área/controle + paralisia | fx_melee_hit (duplo) |
-| Bainha Elétrica | self | 34 | 16.0s | 26 | utilitário/buff + cura contínua | fx_lightning_armor |
-| Círculo de Selos | area | 44 | 8.0s | 27 | área/controle + paralisia | fx_seal_glow (círculo) |
-| Explosão do Selo | area | 46 | 7.0s | 28 | área/controle + stun | fx_seal_glow (explosão) |
+| Raio Selado | projectile | 28 | 2,0s | 1 | burst à distância | `fx_lightning_bolt` · som `sfx_zap` |
+| Chute Ascendente | target | 27 | 2,5s | 2 | single-target/controle + lentidão | `fx_rising_kick` · som `sfx_kick` |
+| Kunai Marcada | projectile | 23 | 2,0s | 3 | burst à distância | `fx_marked_kunai` · som `sfx_metal_throw` |
+| Rasteira de Vento Leve | area | 22 | 3,0s | 4 | área/controle + lentidão | `fx_wind_sweep` · som `sfx_wind_cut` |
+| Agulhas Incendiárias | projectile | 21 | 2,0s | 5 | burst à distância + queimadura | `fx_burning_needles` · som `sfx_metal_throw` |
+| Palma Gentil | target | 24 | 2,0s | 5 | single-target/controle + lentidão | `fx_palm_strike` · som `sfx_punch` |
+| Foco Ocular | self | 37 | 14,0s | 7 | utilitário/buff + cura contínua | `fx_eye_glow` · som `sfx_focus` |
+| Vigor Teimoso | self | 41 | 18,0s | 9 | utilitário/buff + cura contínua | `fx_aura_orange` · som `sfx_shout` |
+| Visão de Alcance Total | self | 30 | 16,0s | 9 | utilitário/buff + cura contínua | `fx_eye_veins` · som `sfx_focus` |
+| Lâmina Relâmpago | target | 29 | 2,2s | 10 | single-target/controle + paralisia | `fx_sword_spark` · som `sfx_slash` |
+| Salto do Selo | self | 36 | 10,0s | 12 | utilitário/buff | `fx_flash_teleport` · som `sfx_teleport` |
+| Barreira Protetora | self | 48 | 18,0s | 14 | utilitário/buff + cura contínua | `fx_barrier_glow` · som `sfx_seal` |
+| Contra-Ataque Calculado | target | 25 | 6,0s | 15 | single-target/controle + stun | `fx_counter_strike` · som `sfx_punch` |
+| Soco Monstruoso | target | 30 | 4,0s | 16 | single-target/controle + stun | `fx_ground_crack` · som `sfx_heavy_punch` |
+| Soco da Juventude | target | 32 | 4,5s | 18 | single-target/controle + stun | `fx_heavy_punch` · som `sfx_heavy_punch` |
+| Selo de Exorcismo | target | 41 | 6,0s | 19 | single-target/controle + paralisia | `fx_seal_paper` · som `sfx_seal` |
+| Corte Duplo | area | 38 | 4,5s | 20 | área/controle | `fx_double_slash` · som `sfx_slash` |
+| Palma Dupla | area | 42 | 5,0s | 24 | área/controle + paralisia | `fx_double_palm` · som `sfx_double_hit` |
+| Bainha Elétrica | self | 39 | 16,0s | 26 | utilitário/buff + cura contínua | `fx_lightning_armor` · som `sfx_zap_loop` |
+| Círculo de Selos | area | 51 | 8,0s | 27 | área/controle + paralisia | `fx_seal_circle` · som `sfx_seal` |
+| Explosão do Selo | area | 53 | 7,0s | 28 | área/controle + stun | `fx_seal_explosion` · som `sfx_explosion` |
+
 
 ---
 
@@ -734,10 +804,20 @@ lanterna, cerca de bambu) e terreno com autoborder (grama↔água↔areia↔lama
 
 A maior parte da arte de criatura/NPC ainda é **placeholder**: sprites genéricos do Tibia vanilla
 recoloridos (procedural) ou recortes de planilhas de terceiros (`assets-src/import/`, "importado
-lateral"). Only 6 monstros (Lobo, Cervo, Águia, Sanguessuga, Sapo Gigante, e as 3 serpentes
-compartilhando um looktype com máscara de cor) têm arte procedural dedicada com 4 direções reais;
-os outros ~30 são silhueta importada com, no máximo, uma cor própria — nenhum ganhou direção ou
-ciclo de andar de verdade ainda.
+lateral"). Duas camadas de cobertura hoje (`docs/sistemas/arte-e-sprites.md`, "Criaturas
+procedurais"), nenhuma com pose/andar de verdade fora da primeira:
+- **6 monstros com arte 100% procedural e 4 direções reais** (looktypes 940–945, `gen_animals.py`):
+  Lobo, Cervo, Águia do Trovão (sempre em voo), Sanguessuga, Sapo Gigante, e as 3 serpentes
+  (Cobra da Floresta/Serpente Menor/Serpente de Magma) compartilhando o looktype 943 com máscara
+  de cor de verdade (`layers=2`).
+- **12 monstros humanoides com variante de paleta própria, mas pose única** (looktypes 946–957,
+  `gen_humanoid_variants.py`, hue-shift do PNG importado — `layers=1`, sem máscara): Bandido,
+  Bandido Arqueiro, Chefe dos Bandidos, Mercenário da Ponte, Batedor da Névoa, Ninja Renegado,
+  Guardião da Neblina, Marionete de Combate, Marionetista das Ruínas, Guerreiro Espectral, O
+  Sócio Eterno e Oni da Geleira — cada um com sua própria cor, mas a MESMA pose repetida nas 4
+  direções e nas 3 fases de "andar" (limitação da arte importada, não da ferramenta).
+- **~14 monstros ainda no looktype importado cru**, sem cor nem direção próprias (ex.:
+  `elite_cloud_guard`, os 3 `exam_rival_*`) — ver `docs/backlog-sprites.md`.
 
 ### ADR-002: material de terceiros só para teste privado, nunca versionado
 
@@ -762,9 +842,15 @@ armadura com variação visual no boneco — hoje nenhum set "veste" diferente d
 regiões novas (~55h) e UI (~43h). Prioridade nº 1 recomendada: os 5 personagens jogáveis P0 + os 8
 NPCs/bosses em looktype MUGEN (risco legal + maior visibilidade simultânea).
 
-### Som: pendente
+### Som: efeitos prontos, música pendente
 
-Não existe trilha sonora nem efeito sonoro implementado no jogo hoje. É item de roadmap, sem data.
+*Fonte: `docs/sistemas/audio.md`, `docs/backlog-audio.md` — ver seção 5 ("Som") para o resumo
+funcional.* 51 efeitos sonoros procedurais (síntese própria, `tools/audio/gen_sfx.py`, sem
+material de terceiros — mesma regra da ADR-002) cobrindo jutsu, combate e UI, tocados de verdade
+em jogo pelo módulo `naruto_sounds`. **Música segue 100% pendente**: nenhuma trilha própria existe,
+a opção "Música" do cliente fica desligada por padrão, e gerar música proceduralmente (progressão
+harmônica, não só um envelope de síntese) é reconhecidamente mais trabalhoso que os SFX curtos —
+`tools/audio/gen_music.py` é a ferramenta candidata, ainda não escrita.
 
 ---
 
@@ -835,45 +921,64 @@ Fonte (editar aqui): `data/*.json`, `docs/`, `assets-src/`, `client-otc/modules/
 O jogo roda ponta a ponta: OTClient compilado, TFS 1.4.2 com todo o conteúdo Naruto instalado,
 mapa próprio `valley` com as 6 regiões fisicamente construídas, sprites placeholder/procedurais
 próprios, ferramentas de GM (`/sl`). Números atuais: **173 itens, 54 jutsus, 38 monstros, 21 NPCs**,
-sistemas de rank/exame/tarefas/diárias/conquistas rodando no servidor, walk-cycle do outfit do
-jogador validado por filtro geométrico automático. Balanceamento passou por 3 rodadas completas de
-calibração via simulação (seção 5). Locale pt-BR cobre a UI, os nomes de sistema (Mana→Chakra) e a
-maior parte das mensagens de sistema do TFS (traduzidas no cliente, já que o núcleo C++ do TFS fala
-inglês). Menu Shinobi (Ctrl+J) com abas Personagem/Elemento/Jutsus/Missões/Comandos (GM) funcionando
-in-game, rank visível na janela de Atributos.
+sistemas de rank/exame/tarefas/diárias/**conquistas** (55, com lógica real, `e02aa0b`) rodando no
+servidor, walk-cycle do outfit do jogador validado por filtro geométrico automático. **Balanceamento
+passou por 5 rodadas completas de calibração via simulação** (seção 5): ninjutsu puro fecha 6 de 6
+bosses de referência dentro da meta de paridade desde a rodada 5 (`1a46739`,
+`docs/sistemas/balanceamento-relatorio-v5.md`). **Som**: 51 SFX procedurais tocando em jogo
+(`ef195b4`, seção 9) — música segue pendente. **Criaturas**: 6 monstros com arte procedural e 4
+direções reais + 12 humanoides com variante de paleta própria (`79881e0`, seção 9). Locale pt-BR
+cobre a UI, os nomes de sistema (Mana→Chakra) e a maior parte das mensagens de sistema do TFS
+(traduzidas no cliente, já que o núcleo C++ do TFS fala inglês). Menu Shinobi (Ctrl+J) com abas
+Personagem/Elemento/Jutsus/Missões (com seção Conquistas)/Comandos (GM) funcionando in-game, rank
+visível na janela de Atributos.
 
 ### Em andamento
 
-Balanceamento rodada 4 (decidir após playtest real): a tensão burst-vs-paridade-sustentada do tier
-1 (seção 5) segue sem decisão de design fechada; polimento de bordas de mapa (neve↔rocha, gelo↔rocha
-ainda retas em vários trechos); criaturas procedurais humanoides (10 monstros já ganharam cor
-própria via hue-shift, nenhum ganhou direção/andar reais ainda).
+**Balanceamento rodada 6** (próxima, não iniciada): fechar o híbrido dentro do teto de +15% (hoje
+2 de 6 bosses, os outros excedem — rodada 5 §3), uniformizar o cenário de grupo 3+ (+30-60% de
+meta, ainda não-uniforme desde a rodada 3), reverificar paridade de personagens (±15%, não
+reverificada desde a rodada 3), e validar a sensação do cooldown 9,0s do tier 1 com jogadores
+reais. **Playtest rodada 5** (em andamento/pendente): medir de fato o regen de chakra por level e
+a densidade reduzida da Trilha dos Lobos em combate real — as rodadas 3 e 4 já mediram parte disso
+(rodada 3: chakra travado por spawn denso, antes da rodada 5 de balanceamento; rodada 4: interrompida
+por queda de servidor externa antes de qualquer combate). Polimento de mapa (bordas neve↔rocha,
+gelo↔rocha ainda retas em vários trechos); criaturas procedurais humanoides (12 já têm cor própria,
+nenhuma ganhou direção/andar reais — limitação da arte importada, seção 9).
 
 ### Próximos passos (ordem de valor, conforme `01-roadmap.md`)
 
-1. Playtest rodada 3: chegar de fato aos primeiros monstros e medir XP/h + chakra real em combate
-   (bloqueado nas rodadas 1–2 por bugs de onboarding, já corrigidos, e por disco cheio na rodada 2).
-2. Vista de costas real para o personagem padrão (hoje sintetizada por código, não desenhada).
-3. Templos/vilas 2–4 no mapa físico (hoje só a Vila da Folha existe fisicamente; Névoa/Nuvem/Areia
+1. Balanceamento rodada 6: híbrido dentro do teto, grupo 3+ uniforme, personagens reverificados.
+2. Playtest rodada 5/6: confirmar em combate real o regen por level e a densidade de spawn
+   ajustada; medir XP/h contra a tabela da seção 4 pela primeira vez com dados completos.
+3. Polimento de mapa v3 (bordas neve/gelo↔rocha, antecâmaras do Covil).
+4. Música ambiente (`tools/audio/gen_music.py`, ainda não escrita) — único item de som pendente.
+5. Vista de costas real para o personagem padrão (hoje sintetizada por código, não desenhada).
+6. Templos/vilas 2–4 no mapa físico (hoje só a Vila da Folha existe fisicamente; Névoa/Nuvem/Areia
    só existem como vocação/dados, sem cidade própria no OTBM).
-4. Substituir os 13 looktypes MUGEN (P0 de arte, seção 9) antes de qualquer lançamento público.
-5. Party com XP compartilhada, clãs, PvP em arena (Marco 5 — pós-lançamento).
+7. Substituir os 13 looktypes MUGEN (P0 de arte, seção 9) antes de qualquer lançamento público.
+8. Party com XP compartilhada, clãs, PvP em arena (Marco 5 — pós-lançamento).
 
 ### Riscos e limitações honestas
 
 - **Os looktypes 900–926 (personagens MUGEN) violam a ADR-002 na prática** — não é dívida técnica
   comum, é risco legal de takedown se o jogo for distribuído assim (seção 9).
-- **Sprites de monstro/NPC são majoritariamente placeholder** — sem direção nem ciclo de andar
-  reais; "o jogo parece incompleto" é o feedback mais provável de um jogador novo hoje.
+- **Sprites de monstro/NPC são majoritariamente placeholder** — 6 animais com direção/andar reais,
+  12 humanoides com cor própria mas pose única, ~14 ainda sem cor nem direção (seção 9); "o jogo
+  parece incompleto" continua o feedback mais provável de um jogador novo.
 - **Vista de costas do personagem é sintetizada por código**, não desenhada — aproximação, não arte
   final.
-- **Sem som** — nenhuma trilha ou efeito sonoro implementado.
-- **Playtests ainda sem dados de combate reais**: as duas rodadas realizadas (`docs/qa/
-  playtest-l1-20*.md`) encontraram e corrigiram bugs de onboarding (kit inicial ausente, loja
-  quebrando, saudação só em inglês) mas nenhuma chegou a produzir uma curva de XP/h medida de
-  verdade contra a tabela da seção 4 — a comparação "tabela vs. realidade" ainda não foi feita.
+- **Sem música** — os 51 efeitos sonoros de combate/UI existem e tocam; trilha ambiente por
+  vila/bioma não existe (seção 9).
+- **Playtests com dados de combate parciais, não completos**: a rodada 3 (`playtest-l1-20-r3.md`)
+  produziu o primeiro combate real (2 kills, XP/h medido, achou o chakra sem regen que a rodada 5
+  de balanceamento endereçou) mas não chegou ao nível 2; a rodada 4 foi interrompida por queda do
+  servidor (evento externo, não um bug do jogo) antes de qualquer combate. A comparação completa
+  "tabela da seção 4 vs. realidade" ainda não foi feita.
 - **Só a Vila da Folha existe fisicamente no mapa** — as outras 3 vilas são vocação/dados sem
   cidade própria construída no OTBM ainda.
+- **Híbrido (arma+jutsu) excede o teto de paridade em 4 dos 6 bosses de referência** (seção 5) —
+  pendência conhecida de balanceamento desde a rodada 4, não resolvida na rodada 5.
 - **Sem party, clã, mercado ou PvP** — social é 100% roadmap, não uma omissão silenciosa (Marco 5).
 
 ---
@@ -901,6 +1006,9 @@ própria via hue-shift, nenhum ganhou direção/andar reais ainda).
 | **Boss** | Monstro especial com `phases` (mudança de comportamento por % de HP), respawn de horas, loot exclusivo. |
 | **OTBM** | Formato de mapa do Open Tibia, lido/gravado por `tools/map/otbm.py`, editável no Remere's Map Editor. |
 | **ADR** | Architecture/Design Decision Record — formato de decisão documentada em `docs/03-decisoes-tecnicas.md`. |
+| **`manapercent`** | Atributo do TFS que faz um jutsu custar uma % do chakra máximo em vez de um valor fixo (`chakra_cost_percent` no JSON) — usado nos 5 projéteis tier 1 elementais desde a rodada 5 de balanceamento. |
+| **Regen por level** | Regeneração natural de HP/chakra escalando com o level do jogador (desde a rodada 5), reaplicada a cada level-up — ver seção 5, "Regeneração natural". |
+| **Conquista** | Recompensa (título + ryo) por atingir uma condição fixa (`data/achievements.json`, 55 entradas, 10 tipos de condição) — ver seção 5. |
 
 ---
 
@@ -909,33 +1017,40 @@ própria via hue-shift, nenhum ganhou direção/andar reais ainda).
 *Lista curta para o dono do projeto corrigir — todo número deste documento veio de `data/`; onde
 dois documentos discordavam, usei `data/` como fonte e anoto a divergência aqui.*
 
-1. **Status de mapa das regiões novas.** `docs/lore/mundo.md` (seções 2 e 6, antes desta missão) e
-   `docs/sistemas/monstros-e-pvm.md` (tabela "Faixas de área", linhas de Costa das Marés e Covil da
-   Nuvem Vermelha) descreviam essas duas regiões como "dados prontos, sem mapa físico ainda", mas
-   `docs/sistemas/mapas.md` (seções "Regiões novas (v2.1)" e "Mapa v3") mostra as duas já
-   construídas fisicamente e validadas in-game desde 2026-09-04/05. **Corrigi os cabeçalhos e o
-   texto em `docs/lore/mundo.md` durante esta missão** (seções 2 e 6, mais a nota de abertura);
-   `docs/sistemas/monstros-e-pvm.md`, colunas "Zona (rect)" e "Status" das mesmas duas linhas,
-   continua com o texto antigo — sugiro trocar por "x 1000–1049, y 1120–1169" / "x 1400–1449, y
-   1000–1049" e "implementada (mapa v2.1)".
-2. **`data/villages.json` tem campos órfãos do protótipo Godot.** `starting_jutsus` (um jutsu por
+1. **`data/villages.json` tem campos órfãos do protótipo Godot.** `starting_jutsus` (um jutsu por
    vila) e `start_map`/`start_x`/`start_y` (mapas separados `leaf_village`/`mist_village`/
    `cloud_village`/`sand_village`) contradizem o modelo atual descrito em
    `docs/sistemas/combate-e-jutsus.md` ("vila não filtra mais jutsu", jutsu vem de Personagem +
-   Elemento) e o mapa único `valley` do TFS (`docs/sistemas/mapas.md`). Não editei `data/` (fora do
-   escopo desta missão) — sinalizo para quem decidir se esses campos ainda são lidos por algum
-   script legado ou podem ser removidos/atualizados.
-3. **`docs/sistemas/personagem-e-progressao.md` é anterior ao pivô ADR-005.** Descreve save em
+   Elemento) e o mapa único `valley` do TFS (`docs/sistemas/mapas.md`). Ainda não editado (fora do
+   escopo desta e da missão anterior) — sinalizo de novo para quem decidir se esses campos ainda
+   são lidos por algum script legado ou podem ser removidos/atualizados.
+2. **`docs/sistemas/personagem-e-progressao.md` é anterior ao pivô ADR-005.** Descreve save em
    `user://save_slot_N.json` (formato do protótipo Godot) — a persistência real hoje é MariaDB via
    TFS. Usei desse documento só as fórmulas de HP/Chakra (que batem exatamente com
    `data/progression.json`); o restante (seção "Save", menção a "vilas... definem jutsus
    iniciais") deveria ser marcado como histórico ou atualizado.
-4. **Preço de referência de pergaminho tier 3.** `docs/sistemas/economia.md` diz "pergaminho de
-   jutsu... tier 3: 50.000" como número de referência; os pergaminhos tier 3 reais em
-   `data/items/*.json` variam de 20.000 (Punho do Trovão, L30) a 45.000 (Colapso do Terreno, L48) —
-   nenhum chega a 50.000. Mesma ordem de grandeza, mas o número de referência do documento é
-   levemente otimista; os demais preços de `economia.md` (poção de chakra 30 ryo, onigiri 10 ryo)
-   batem exatamente com `data/items/consumables.json`.
+3. **`docs/sistemas/monstros-e-pvm.md` (linha do Cervo) ainda descreve o sprite antigo.** A linha
+   do Cervo (`forest_deer`, tabela de comportamento) diz "reaproveita o sprite do Lobo (`looktype
+   21`, `mon_wolf`) recolorido" — mas desde `79881e0` (criaturas procedurais) o Cervo tem looktype
+   **941** dedicado, 100% procedural, 4 direções reais (`tools/spr/gen_animals.py`,
+   `data/tfs_mapping.json`), sem relação nenhuma com o Lobo (looktype 940). Confirmado em
+   `docs/sistemas/arte-e-sprites.md` e nesta bíblia (seção 6, que já usa 941) — só
+   `monstros-e-pvm.md` ficou com o texto pré-procedural.
+4. **`docs/sistemas/arte-e-sprites.md` tem duas seções que se contradizem sobre cobertura de
+   criatura.** A tabela antiga "O que existe hoje (placeholder)" (perto do topo do arquivo) diz
+   que looktypes de criatura "1..897 ganham arte temática" sem distinguir grau de cobertura; a
+   seção nova "Criaturas procedurais" (final do arquivo, pós `79881e0`) detalha que só 6 monstros
+   têm 4 direções reais e 12 têm variante de paleta com pose única — a tabela antiga nunca foi
+   atualizada para refletir essa distinção, então lida isolada ela sugere uma cobertura mais
+   uniforme do que existe de verdade. Esta bíblia usa a seção mais recente como fonte (seção 9).
+5. **`docs/backlog-audio.md` pode estar desatualizado sobre `task_1e2c0ec0`.** O documento lista
+   como pendente uma falha de login (`NarutoAchievements` nil, bloqueando toda conta) encontrada
+   durante a sessão de áudio (`ef195b4`) e corrigida só em código, sem confirmação ao vivo na
+   época. Os playtests seguintes (r3, r4 — ambos posteriores, e a rc de validação `c2d716f`)
+   conseguiram logar múltiplas vezes sem esse erro reaparecer, sugerindo que já foi resolvido —
+   mas nenhum documento fecha esse achado explicitamente nem confirma se `task_1e2c0ec0` foi
+   encerrada. Não consegui confirmar 100% sem acesso ao rastreador de tasks; sinalizo para quem
+   tiver esse acesso fechar ou reabrir.
 
 ### O que ficou faltando (não coberto por esta bíblia)
 

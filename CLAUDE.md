@@ -75,6 +75,18 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - items.xml: `weaponType fist` não existe (Taijutsu = sword); tipo `sign` não existe.
 - Comentários OTML só em linha própria (`chave: valor  # x` quebra o parser).
 - stdout do TFS é bufferizado quando redirecionado: use `script -q log ./build/tfs` para ver prints em tempo real.
+- Regen de HP/mana no TFS puro só roda com comida; contornado com uma condição **permanente** (subId 9020) aplicada no login/level-up (`character_switch.lua` gerado) — não depende de comida.
+- `firstitems.lua` (creaturescript vanilla) foi neutralizado para só dar a mochila de couro; senão disputa os slots com o kit da vila.
+- `data/lib/*.lua` só carrega **no boot** do TFS — nenhum `/reload` (nem `all`) recarrega libs; um script recarregado que chama uma função nova de uma lib ainda não recarregada quebra com "attempt to call field ... (a nil value)" até o próximo restart.
+- `/reload global` recria do zero as libs em memória (re-executa os `dofile`) — rodar DEPOIS de `/reload scripts` apaga métodos que o script já tinha colado nelas (ex. `NarutoCharacters.apply`); ordem certa: `/reload global` → `/reload scripts` → `/reload npcs`.
+- `/reload scripts` **não** recarrega `data/creaturescripts/*.lua` (sistema clássico, não revscriptsys) — precisa de `/reload creaturescripts` ou `/reload all`.
+- `openShopWindow`/`luaOpenShopWindow` usa `buy=-1`/`sell=-1` como sentinela e `getField<uint32_t>` explode com esse valor; patch em `server/tfs/src/npc.cpp` lê como `int32_t` e trunca em 0 (exige recompilar o servidor).
+- `manapercent` no XML de spell faz o custo ser uma % do chakra máximo (`chakra_cost_percent` no JSON) em vez de um valor fixo — usado nos 5 jutsus tier 1 elementais desde a rodada 5 de balanceamento.
+
+## Ambiente compartilhado (servidor/cliente rodam para vários agentes)
+- Nunca rode `pkill -x OTClient` (mata sessões de outros agentes); mate só o PID que você mesmo abriu.
+- Nunca reinicie o servidor por conta própria — outra sessão de playtest/rc pode estar em andamento; o servidor às vezes cai ou reinicia sozinho por causa externa, não assuma que foi você.
+- **Disco**: a máquina de dev vive perto de 100% (`df -h /System/Volumes/Data`). Antes de `build_assets.py`, sessões de screenshots ou agentes paralelos, confira que há >2 GB livres; com ENOSPC até o harness dos agentes para de funcionar. Limpezas seguras: `~/Library/Application Support/shinobi/.shinobi/*.png`, `/tmp/otc_*.log`, `brew cleanup -s`, `~/vcpkg/downloads`.
 
 ## Como adicionar conteúdo
 - Monstro: entrada em `data/monsters/<area>.json` + spawn em `data/maps/forest_valley.json` + cor em `Monster._color_for`.
@@ -82,10 +94,12 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - Jutsu: `data/jutsus/<elemento>.json`; tier 1 é aprendido automaticamente por level/vila, tier 2+ via pergaminho.
 - Sempre rode `.venv/bin/python tools/validate_data.py` e o smoke test depois.
 - Balanceamento (HP/dano de monstro, dano de jutsu, TTK, XP/h, ryo/h): `python3 tools/balance/sim.py --matrix --json /tmp/matrix.json` roda a matriz nível x monstro x build (~30s, fórmulas reais do TFS) — ver `tools/balance/README.md` e `docs/sistemas/balanceamento-relatorio.md`.
+- Chakra sustentável numa caçada real (30 min, com/sem pílula): `python3 tools/balance/sim.py --hunt --json /tmp/hunt.json`.
 - Som (SFX de jutsu/combate/UI, síntese própria, sem downloads — ADR-002): `.venv/bin/python tools/audio/gen_sfx.py` gera `client-otc/data/sounds/naruto/*.ogg` (único formato que o cliente carrega) + `assets-src/audio/sfx_catalog.json`; toque com `modules.naruto_sounds.play('sfx_id')`. Ver `docs/sistemas/audio.md`.
+- Sprites de criatura procedurais: `tools/spr/gen_animals.py` (animais dedicados 100% procedurais, looktypes 940–945), `tools/spr/gen_humanoid_variants.py` (variante de paleta por hue-shift do PNG importado, looktypes 946–957), `tools/spr/gen_effects.py` (efeitos/misseis próprios dos jutsus). Ver `docs/sistemas/arte-e-sprites.md`.
 
 ## Armadilhas já encontradas
 - `var x := dict["k"]` não compila (tipo não inferível). Use `var x: float = dict["k"]`.
 - Headless roda frames mais rápido que tempo real: testes não podem depender de "N frames = N/60 s".
 - Jutsu "self" tem lógica por id em `JutsuExecutor._cast_self` (kawarimi, bunshin).
-- **Disco**: a máquina de dev vive perto de 100% (`df -h /System/Volumes/Data`). Antes de `build_assets.py`, sessões de screenshots ou agentes paralelos, confira que há >2 GB livres; com ENOSPC até o harness dos agentes para de funcionar. Limpezas seguras: `~/Library/Application Support/shinobi/.shinobi/*.png`, `/tmp/otc_*.log`, `brew cleanup -s`, `~/vcpkg/downloads`.
+- Disco: ver "Ambiente compartilhado" acima.
