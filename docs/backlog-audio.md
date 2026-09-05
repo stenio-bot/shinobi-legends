@@ -14,16 +14,25 @@ Ver `docs/sistemas/audio.md` para o que já existe (catálogo, síntese, ganchos
   restart). Bloqueava os testes de áudio no fim desta sessão; corrigido com blindagem
   defensiva, mas não aplicado ao vivo (precisa login funcionando pra rodar `/reload`).
 
-## Música ambiente por região
-Nada de trilha musical ainda — `enableMusicSound` foi posto em **desligado por padrão**
-justamente porque não há música nenhuma no client (`sounds/startup.ogg` é o único arquivo de
-música, herdado do OTClient original, tema genérico). Ideias para quando entrar em pauta:
-- Uma faixa curta em loop por vila/bioma (`data/maps/*.json` já tem zonas) — teria que ser
-  gerada proceduralmente também (ADR-002: nada de terceiros), o que é bem mais trabalhoso que
-  SFX curtos (precisa de progressão harmônica, não só um envelope). Candidato a ferramenta
-  separada (`tools/audio/gen_music.py`) em vez de estender `gen_sfx.py`.
-- `setMusic(filename)` já existe em `modules/client/client.lua` — só falta popular por região
-  (hoje é sempre `sounds/startup`).
+## Música ambiente por região — FEITO (2026-09-05)
+7 faixas em loop (60–85 s, OGG Vorbis, -12 dBFS) geradas por `tools/audio/gen_music.py`
+em cima de um motor reutilizável (`tools/audio/synth.py`), uma por região, catalogadas em
+`assets-src/audio/music_catalog.json` + espelho Lua. `client-otc/modules/naruto_sounds/
+naruto_music.lua` faz poll da posição a cada 2 s e troca de faixa com crossfade
+(`SoundChannel` de música). `enableMusicSound` virou **ligado por padrão**, com
+`musicSoundVolume` moderado (35). Testado ao vivo (7 trocas de região logadas, zero erro
+de carregamento) e validado por análise espectral (FFT/RMS/clipping) + 7 PNGs de
+forma de onda/espectrograma. Ver `docs/sistemas/audio.md` § Música ambiente por região
+para detalhes, paleta de cada faixa e limitações honestas (reverb é sintética, não IR
+real; `musicSoundVolume` já persistido a 100 no perfil de dev compartilhado — o novo
+default de 35 só pega num perfil novo).
+
+Ideias para uma próxima rodada (não feitas aqui):
+- Variar a faixa por hora do dia (dia/noite) dentro da mesma região.
+- Um "sting" musical curto (2–4 notas) ao entrar num boss (Marionetista, Espadachim,
+  Sócio Eterno etc.) antes de voltar pra faixa ambiente da região.
+- Testar a resolução de região com movimento a pé (não só `/tp`) para confirmar que o
+  poll de 2s não perde uma transição rápida perto de fronteira entre regiões.
 
 ## Sons de monstro
 `data/monsters/*.json` não tem campo de som hoje (só `data/jutsus/*.json` tem `sfx`). Para

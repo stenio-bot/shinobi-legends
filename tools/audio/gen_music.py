@@ -21,6 +21,7 @@ import synth as sy  # noqa: E402
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
 OUT_DIR = os.path.join(ROOT, "client-otc", "data", "sounds", "naruto", "music")
 OUT_CATALOG = os.path.join(ROOT, "assets-src", "audio", "music_catalog.json")
+OUT_CATALOG_LUA = os.path.join(ROOT, "client-otc", "modules", "naruto_sounds", "music_catalog.lua")
 RATE = sy.RATE
 PEAK_DBFS = -12.0
 LOOP_FADE_S = 3.0
@@ -447,6 +448,37 @@ TRACKS = {
 }
 
 
+def _lua_str(s):
+    return "'" + str(s).replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
+def write_catalog_lua(catalog):
+    """Espelha assets-src/audio/music_catalog.json como tabela Lua (mesmo padrao de
+    naruto_sounds/sfx_catalog.lua), para naruto_music.lua nao precisar de parser JSON."""
+    lines = [
+        "-- GERADO por tools/audio/gen_music.py a partir da sintese procedural (nao edite a mao).",
+        "-- Fonte da verdade: assets-src/audio/music_catalog.json (mesmo conteudo).",
+        "-- regiao -> {file='naruto/music/x.ogg', gain=0..1, region={x1,x2,y1,y2}, priority=N}",
+        f"NarutoMusicCatalog = {{",
+        f"\trate = {catalog['rate']},",
+        f"\tloop_fade_s = {catalog['loop_fade_s']},",
+        "\tresolve_order = {" + ", ".join(_lua_str(r) for r in catalog["resolve_order"]) + "},",
+        "\ttracks = {",
+    ]
+    for region_id, e in catalog["tracks"].items():
+        r = e["region"]
+        lines.append(
+            f"\t\t[{_lua_str(region_id)}] = {{file = {_lua_str(e['file'])}, gain = {e['gain']}, "
+            f"priority = {e['priority']}, title = {_lua_str(e['title'])}, "
+            f"region = {{x1 = {r['x1']}, x2 = {r['x2']}, y1 = {r['y1']}, y2 = {r['y2']}}}}},"
+        )
+    lines.append("\t},")
+    lines.append("}")
+    os.makedirs(os.path.dirname(OUT_CATALOG_LUA), exist_ok=True)
+    with open(OUT_CATALOG_LUA, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     catalog = {
@@ -483,6 +515,8 @@ def main():
         json.dump(catalog, f, indent=2, ensure_ascii=False)
         f.write("\n")
     print(f"catalogo escrito em {OUT_CATALOG}")
+    write_catalog_lua(catalog)
+    print(f"catalogo lua escrito em {OUT_CATALOG_LUA}")
 
 
 if __name__ == "__main__":

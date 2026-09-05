@@ -6,7 +6,7 @@ Module
   autoload: true
   autoload-priority: 1150
   reloadable: true
-  scripts: [ sfx_catalog, naruto_sounds ]
+  scripts: [ sfx_catalog, music_catalog, naruto_sounds, naruto_music ]
   dependencies:
     - corelib
     - gamelib

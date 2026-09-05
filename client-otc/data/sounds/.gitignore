@@ -1,3 +1,6 @@
 *
 !.gitignore
 !README.md
+# audio procedural do projeto (obra nossa, ADR-002 permite versionar)
+!naruto/
+!naruto/**

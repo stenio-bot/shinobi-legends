@@ -230,3 +230,159 @@ UI, morte de monstro, dano recebido).
   `NarutoSounds.play('sfx_coin'|'sfx_item_pickup'|'sfx_item_drop'|'sfx_door')` em nenhum evento
   real (não há um hook de "pegou item"/"abriu porta" no OTClient sem tocar em `game_*`; ver
   `docs/backlog-audio.md`).
+
+## Música ambiente por região (2026-09-05)
+
+7 faixas em loop (60–85 s cada, estéreo, 22.050 Hz, OGG Vorbis, pico normalizado em
+-12 dBFS), uma por região/bioma, 100% sintetizadas por código (ADR-002 — nenhum material
+de terceiros). Motor de síntese reutilizável em `tools/audio/synth.py` (osciladores seno
+com vibrato/sweep, triângulo, dente-de-serra, ruído seedado, filtros passa-baixa/alta/faixa
+de 1 polo — inclusive com cutoff variável no tempo —, envelope ADSR, delay com feedback,
+reverb sintética por convolução com um impulso de ruído decaindo exponencialmente,
+Karplus-Strong para cordas dedilhadas, escalas pentatônicas japonesas In/Yo + dórico +
+pentatônica menor, mixer com pan de potência igual e crossfade de loop equal-power).
+`tools/audio/gen_music.py` compõe as 7 faixas em cima desse motor e escreve:
+
+```
+.venv/bin/python tools/audio/gen_music.py
+```
+
+- `client-otc/data/sounds/naruto/music/*.ogg` (7 arquivos, ~2,7 MB no total — cada um bem
+  abaixo do teto de 1 MB pedido).
+- `assets-src/audio/music_catalog.json` — fonte da verdade: região → arquivo, ganho,
+  retângulo (`x1,x2,y1,y2`), prioridade, título, duração.
+- `client-otc/modules/naruto_sounds/music_catalog.lua` — espelho Lua (`NarutoMusicCatalog`),
+  gerado junto, mesmo padrão de `sfx_catalog.lua`.
+
+| Região | Arquivo | Duração | Tamanho | Paleta |
+|---|---|---|---|---|
+| Vila da Folha | `vila.ogg` | 76,0 s | 180 KB | Shakuhachi (seno+vibrato) em escala Yo pentatônica + koto Karplus-Strong esparso, tempo lento, aconchegante |
+| Floresta da Vila | `floresta_vila.ogg` | 76,0 s | 132 KB | Mesma paleta, mais clara/staccato, + pássaros sintéticos esparsos (chirp = sweep senoidal 2–5 kHz) |
+| Costa das Marés | `costa.ogg` | 80,0 s | 501 KB | Ondas = ruído passa-baixa com cutoff/envelope modulado por LFO lento (swell) + espuma (faixa 2,4 kHz), taiko esparso, melodia dórica |
+| Floresta da Morte | `floresta_morte.ogg` | 78,0 s | 481 KB | Drone grave (2 osciladores desafinados ~55/27,5 Hz batendo) + notas dissonantes (2ª menor/trítono) esparsas + tambor irregular (sem pulso fixo) |
+| Ruínas do Clã Marionetista | `ruinas.ogg` | 85,0 s | 624 KB | Koto Karplus-Strong desafinado (±3%), frases curtas com silêncio longo entre elas, reverb sintética de cauda longa (2,6 s) |
+| Montanha do Trovão | `montanha.ogg` | 80,0 s | 508 KB | Vento = ruído passa-faixa com centro/largura variando por 2 LFOs, trovão ocasional (crack + rumble, 3 eventos), taiko cerimonial esparso |
+| Covil da Nuvem Vermelha | `covil.ogg` | 80,0 s | 367 KB | Drone grave com leve saturação (`tanh`), shamisen agressivo (Karplus-Strong brilhante, ostinato de 8 notas), batida lenta tipo batimento cardíaco |
+
+Loop sem clique: cada faixa é gerada com conteúdo dentro de `[0, duração - cauda]` e depois
+passa por `synth.crossfade_loop_stereo` (funde o final com o início por equal-power, ~3 s) —
+o mesmo arquivo tocado em loop (via `SoundChannel:enqueue`, ver abaixo) não tem costura
+audível na transição fim→início.
+
+### Validação por análise (numpy FFT) — "escutar com os olhos"
+
+`tools/audio/analyze_music.py` lê cada `.ogg`, calcula RMS por janela de 1 s, checa
+clipping (pico ≥ 0,999 linear), faz FFT da faixa inteira e reparte energia por banda, e
+desenha um PNG por faixa (forma de onda + espectrograma) em `screenshots/music_<região>.png`
+— sem `matplotlib`/`Pillow` (não instalados; escrito um encoder PNG mínimo com `zlib` da
+stdlib para não puxar dependência pesada só para isso).
+
+```
+.venv/bin/python tools/audio/analyze_music.py
+```
+
+Resultado (05/09/2026): **nenhuma faixa com clipping**, pico real de cada arquivo entre
+-12,2 e -11,1 dBFS (bate com o alvo de -12 dBFS pedido, a pequena variação vem da própria
+compressão Vorbis). Energia por banda confirma a paleta esperada de cada região — a
+descrição abaixo é o que os 7 PNGs (abertos e olhados um a um) mostram:
+
+- **Vila / Floresta da Vila**: quase toda energia em 250–2500 Hz (melodia pentatônica);
+  no espectrograma a linha de fundamento sobe/desce em degraus repetidos (a frase do
+  shakuhachi) com traços verticais curtos (plucks de koto) e, na Floresta da Vila, riscos
+  diagonais curtos extras (os chirps de pássaro).
+- **Costa das Marés**: forma de onda com envelope ondulado claro (a maré subindo/descendo);
+  espectrograma denso em baixo/médio (ruído filtrado das ondas) com um traço claro esparso
+  perto da base (melodia dórica + taiko).
+- **Floresta da Morte**: 97,7% da energia abaixo de 80 Hz (drone grave) — no espectrograma
+  aparece como uma faixa fina bem no rodapé (a resolução do PNG cortada em 6 kHz não dá para
+  ver bem um sinal tão grave visualmente, mas o número da FFT confirma); linhas verticais
+  finas = as batidas irregulares do tambor.
+- **Ruínas**: forma de onda mostra grupos de picos curtos separados por vales quase planos —
+  exatamente o padrão "frase → silêncio longo → frase" pedido; fundo com textura de vento
+  fraco.
+- **Montanha do Trovão**: textura de ruído contínua e densa (vento passa-faixa) com bandas
+  verticais mais claras/escuras (os dois LFOs de centro de frequência) e riscos esparsos na
+  base (trovão/taiko).
+- **Covil**: forma de onda cheia o tempo todo (drone + shamisen); espectrograma com dezenas
+  de riscos verticais regulares e igualmente espaçados (o ostinato do shamisen a cada
+  ~0,42 s) sobre uma faixa brilhante no rodapé (96% da energia < 80 Hz, o drone).
+
+Nenhuma faixa é só ruído ou só silêncio — todas têm textura de fundo contínua (para nunca
+soar "morta" entre eventos) mais os elementos musicais pedidos por região.
+
+## Módulo cliente — `client-otc/modules/naruto_sounds/naruto_music.lua`
+
+Mesmo módulo/ambiente sandboxed de `naruto_sounds` (adicionado a `scripts:` do
+`.otmod`: `music_catalog, naruto_music`, e `naruto_sounds.lua`'s `init()`/`terminate()`
+chamam `NarutoMusic.init()`/`NarutoMusic.terminate()`).
+
+- **Poll de posição**: a cada 2 s (`cycleEvent`), se `g_game.isOnline()`, lê
+  `g_game.getLocalPlayer():getPosition()` e resolve a região testando os retângulos de
+  `NarutoMusicCatalog.tracks[*].region` na ordem de `resolve_order` (mais específico
+  primeiro — `vila` fica **dentro** do retângulo de `floresta_vila`, por isso a ordem
+  importa; as outras 5 regiões não se sobrepõem). Se a região resolvida for diferente da
+  atual, troca de faixa; se não bater com nenhum retângulo, mantém a faixa tocando (não
+  para a música por estar num "corredor" sem região definida).
+- **Troca com crossfade**: `SoundChannel` (canal de música, `SoundChannels.Music`) não
+  expõe um "loop nativo" pro Lua — `SoundSource` (a classe que `SoundChannel:play()`
+  devolve) não é `@bindclass` (só `SoundChannel` é, ver `soundsource.h` vs `soundchannel.h`),
+  então não dá pra chamar `:setLooping(true)` do lado do script. Em vez disso, usamos o
+  mesmo mecanismo que `modules/client/client.lua` já usa pra música de menu:
+  `channel:stop(fadetime)` (limpa a fila, fade-out) seguido de
+  `channel:enqueue('/sounds/'..arquivo, fadetime, ganho, 1)` — como só tem 1 item na fila,
+  `SoundChannel::update()` (C++) reenfileira a MESMA entrada sozinha toda vez que ela
+  termina (`pop_front` + `push_back` antes de tocar de novo), o que já produz o loop; o
+  crossfade de amostra dentro do próprio `.ogg` garante que a costura não estale.
+  `fadetime = 2.5 s` (dentro da faixa 2–3 s pedida).
+- **Opções**: `enableMusicSound` (client_options) virou **padrão ligado**
+  (`client-otc/modules/client_options/data_options.lua`), com `musicSoundVolume` em
+  **35** (volume moderado, pedido explícito da missão) em vez dos 100 anteriores. A
+  action de cada opção já mexe direto no canal (`SoundChannel:setEnabled`/`:setGain`) —
+  `naruto_music.lua` não precisa reimplementar isso, só loga quando a música está
+  desabilitada nas opções (para o log de teste não mentir "tocando" quando na verdade
+  está mudo).
+
+### Prova por log (região muda ao vivo)
+
+Teste manual com conta `slqa`/`slqa123` (rc copiado para `shinobirc.lua`, apagado ao
+terminar — ver `client-otc/tests/music_test_rc.lua`), `/tp` por 7 pontos (um por região +
+volta pra vila):
+
+```
+[MUSIC] regiao floresta_morte (Floresta da Morte) -> naruto/music/floresta_morte.ogg
+[MUSIC] regiao costa (Costa das Mares) -> naruto/music/costa.ogg
+[MUSIC] regiao ruinas (Ruinas do Cla Marionetista) -> naruto/music/ruinas.ogg
+[MUSIC] regiao montanha (Montanha do Trovao) -> naruto/music/montanha.ogg
+[MUSIC] regiao floresta_vila (Floresta da Vila) -> naruto/music/floresta_vila.ogg
+[MUSIC] regiao covil (Covil da Nuvem Vermelha) -> naruto/music/covil.ogg
+[MUSIC] regiao vila (Vila da Folha) -> naruto/music/vila.ogg
+```
+
+(log real, 05/09/2026 19:27, `/tmp/otc_musictest.log`) — **zero** ocorrências de
+`unable to open`/`Failed to load` no log inteiro da sessão. 5 screenshots capturados
+(`screenshots/music_01_vila.png` … `music_05_volta_vila.png`) confirmam visualmente a
+posição do personagem em cada teleporte (ex.: vila perto de Mestra Yuki/Ferreiro Genzo,
+covil perto de "O Mascarado das Sombras").
+
+### Limitações honestas
+
+- **Sem prova auditiva real** (mesma limitação estrutural dos SFX) — validado por log +
+  análise espectral (FFT/RMS/clipping) + inspeção visual dos 7 PNGs, não por ouvido.
+- **`musicSoundVolume` já persistido a 100 neste perfil de dev compartilhado.** O
+  mecanismo de default (`Config:setDefault`, chamado em `client_options/options.lua`
+  `controller:onInit()`) só grava o valor default numa chave que **ainda não existe** em
+  `~/Library/Application Support/shinobi/.shinobi/config.otml`. Essa chave específica já
+  tinha um valor salvo de sessões anteriores (100, herdado de antes desta missão) — o novo
+  default de 35 só vale para um perfil novo/limpo, não sobrescreve o que já está salvo
+  neste. Confirmado que o *mecanismo* funciona (`enableMusicSound` apareceu `true` no
+  `config.otml` deste mesmo teste, batendo com o novo default) — só o volume numérico
+  ficou "preso" no valor antigo por já existir. Não editei `config.otml` manualmente
+  (é um perfil compartilhado entre sessões de teste).
+- **Reverb/eco são sintéticos, não IR real.** `synth.synthetic_reverb` convolui com um
+  impulso de ruído decaindo exponencialmente (gerado por código, sem gravação de sala
+  real) — soa "cavernoso" o bastante para Ruínas, mas não é uma resposta acústica medida.
+- **Sem teste de troca de vocação/personagem interagindo com a música** (fora do escopo —
+  a resolução é só por posição, não depende de personagem/elemento).
+- **`ffmpeg`/`ffprobe` continuam ausentes** nesta máquina — a mesma observação já registrada
+  para os SFX vale aqui: validação via `soundfile` (Python)/análise numpy própria, não o
+  decoder binário do jogo.

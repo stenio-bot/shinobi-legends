@@ -251,6 +251,11 @@ function init()
     end
     g_logger.info('naruto_sounds: modulo iniciado (' ..
         (NarutoSfxCatalog and table.size(NarutoSfxCatalog) or 0) .. ' sfx no catalogo).')
+
+    -- musica ambiente por regiao (naruto_music.lua, mesmo modulo/ambiente sandboxed)
+    if NarutoMusic then
+        NarutoMusic.init()
+    end
 end
 
 function terminate()
@@ -263,6 +268,9 @@ function terminate()
         unregisterMessageMode(MessageModes.Game, onGameMessage)
         unregisterMessageMode(MessageModes.DamageReceived, onDamageReceivedMessage)
         messageModesConnected = false
+    end
+    if NarutoMusic then
+        NarutoMusic.terminate()
     end
 end
 

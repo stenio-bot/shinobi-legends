@@ -211,10 +211,11 @@ return {
             end
         end
     },
-    -- Musica ambiente desligada por padrao (docs/sistemas/audio.md): o projeto ainda nao
-    -- tem trilha propria, so os SFX gerados por tools/audio/gen_sfx.py.
+    -- Musica ambiente por regiao (docs/sistemas/audio.md, tools/audio/gen_music.py +
+    -- modules/naruto_sounds/naruto_music.lua) - ligada por padrao, mas com volume
+    -- moderado (35%) para nao competir com os SFX de combate/jutsu.
     enableMusicSound                  = {
-        value = false,
+        value = true,
         action = function(value, options, controller, panels, extraWidgets)
             if g_sounds then
                 g_sounds.getChannel(SoundChannels.Music):setEnabled(value)
@@ -222,7 +223,7 @@ return {
         end
     },
     musicSoundVolume                  = {
-        value = 100,
+        value = 35,
         action = function(value, options, controller, panels, extraWidgets)
             if g_sounds then
                 g_sounds.getChannel(SoundChannels.Music):setGain(value / 100)
