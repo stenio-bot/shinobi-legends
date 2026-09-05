@@ -282,3 +282,90 @@ No cliente, `client-otc/modules/naruto_theme/naruto_jutsus.lua` reage à troca d
 (evento `onOutfitChange` do `LocalPlayer`) preenchendo a barra de ação (slot 1) com os jutsus
 do personagem atual (`NarutoCharacterJutsus[looktype]`, gerado em `jutsus_data.lua`). A janela
 "Lista de Jutsus" continua filtrando por vila (vocação), não por personagem.
+
+## Efeitos e misseis (`animation` -> catálogo, 2026-09-05)
+
+Cobertura 1:1 dos 54 jutsus (`data/jutsus/*.json`, campo `animation`) para uma
+chave de `assets-src/sprites/effects.json` (catálogo procedural, ver
+`docs/sistemas/arte-e-sprites.md` § Efeitos). Regra: `type=projectile` usa o
+alias como MISSILE em voo (`COMBAT_PARAM_DISTANCEEFFECT`) e o IMPACTO
+(`COMBAT_PARAM_EFFECT`) cai no efeito padrão do elemento (ex. katon =
+`fx_fire_burst`); os demais tipos (area/beam/target/self) usam o alias
+diretamente como efeito. Implementado em `tools/export_tfs.py`
+(`jutsu_effect_id`/`jutsu_missile_id`, carregam o catálogo uma vez no topo
+do script). `kawarimi`/`bunshin`/`shousen` (e todo self-buff genérico) são
+casos especiais no gerador (não passam por `Combat()`) e usam a mesma função
+`jutsu_effect_id`, com `bunshin` propositalmente resolvendo para
+`fx_shadow_clone` (223) em vez do `fx_smoke_poof` (221) do `kawarimi` — a
+mesma string `CONST_ME_POFF` antes tornava os dois idênticos.
+
+| Jutsu | Elemento | Tipo | `animation` | Efeito/missile usado |
+|---|---|---|---|---|
+| `doton_bala_lama` | doton | projectile | `fx_mud_bullet` | impacto **fx_mud_splash**(215) + missile **ms_mud_bullet**(63) |
+| `doton_muralha_pedra` | doton | self | `fx_stone_shell` | efeito **fx_stone_shell**(214) |
+| `doton_estacas_terra` | doton | area | `fx_earth_spikes` | efeito **fx_earth_spikes**(212) |
+| `doton_colapso_terreno` | doton | area | `fx_earth_collapse` | efeito **fx_earth_collapse**(213) |
+| `fuuton_lamina_vento` | fuuton | projectile | `fx_wind_blade` | impacto **fx_wind_slash**(216) + missile **ms_wind_blade**(64) |
+| `fuuton_rajada_cortante` | fuuton | area | `fx_wind_cone` | efeito **fx_wind_slash**(216) |
+| `fuuton_tornado_cortante` | fuuton | beam | `fx_wind_tornado` | efeito **fx_wind_tornado**(217) |
+| `fuuton_redemoinho_prisao` | fuuton | target | `fx_wind_prison` | efeito **fx_wind_prison**(218) |
+| `katon_goukakyuu` | katon | projectile | `fx_fireball` | impacto **fx_fire_burst**(200) + missile **ms_fireball**(60) |
+| `katon_housenka` | katon | area | `fx_fire_cone` | efeito **fx_fire_cone**(202) |
+| `katon_karyuu_endan` | katon | beam | `fx_fire_dragon` | efeito **fx_fire_dragon**(203) |
+| `katon_sopro_brasas` | katon | area | `fx_ember_cone` | efeito **fx_fire_cone**(202) |
+| `katon_anel_chamas` | katon | area | `fx_fire_ring` | efeito **fx_fire_ring**(201) |
+| `kawarimi` | none | self | `fx_log_poof` | efeito **fx_smoke_poof**(221) |
+| `bunshin` | none | self | `fx_clone_poof` | efeito **fx_shadow_clone**(223) |
+| `shousen` | none | self | `fx_heal_glow` | efeito **fx_heal_green**(220) |
+| `fuuin_contencao` | none | target | `fx_seal_paper` | efeito **fx_seal_glow**(222) |
+| `doku_kiri` | none | area | `fx_poison_mist` | efeito **fx_poison_mist**(225) |
+| `clone_sombrio` | none | self | `fx_smoke_puff` | efeito **fx_smoke_poof**(221) |
+| `punho_suave` | none | target | `fx_taijutsu_hit` | efeito **fx_melee_hit**(224) |
+| `chute_giratorio` | none | area | `fx_taijutsu_spin` | efeito **fx_melee_hit**(224) |
+| `agulhas_multiplas` | none | projectile | `fx_needles` | impacto **fx_melee_hit**(224) + missile **ms_senbon**(67) |
+| `lamina_chakra` | none | beam | `fx_chakra_blade` | efeito **fx_chakra_blade**(226) |
+| `raio_selado` | raiton | projectile | `fx_lightning_bolt` | impacto **fx_lightning_strike**(208) + missile **ms_lightning_needle**(62) |
+| `fuuton_rasteira_vento` | fuuton | area | `fx_wind_sweep` | efeito **fx_wind_slash**(216) |
+| `vigor_teimoso` | none | self | `fx_aura_orange` | efeito **fx_chakra_focus**(219) |
+| `foco_ocular` | none | self | `fx_eye_glow` | efeito **fx_chakra_focus**(219) |
+| `agulhas_incendiarias` | katon | projectile | `fx_burning_needles` | impacto **fx_fire_burst**(200) + missile **ms_senbon**(67) |
+| `contra_ataque_calculado` | none | target | `fx_counter_strike` | efeito **fx_melee_hit**(224) |
+| `soco_monstruoso` | none | target | `fx_ground_crack` | efeito **fx_earth_collapse**(213) |
+| `palma_gentil` | none | target | `fx_palm_strike` | efeito **fx_melee_hit**(224) |
+| `visao_total` | none | self | `fx_eye_veins` | efeito **fx_chakra_focus**(219) |
+| `palma_dupla` | none | area | `fx_double_palm` | efeito **fx_melee_hit**(224) |
+| `soco_da_juventude` | none | target | `fx_heavy_punch` | efeito **fx_melee_hit**(224) |
+| `chute_ascendente` | none | target | `fx_rising_kick` | efeito **fx_melee_hit**(224) |
+| `lamina_relampago_pessoal` | raiton | target | `fx_sword_spark` | efeito **fx_lightning_strike**(208) |
+| `corte_duplo` | none | area | `fx_double_slash` | efeito **fx_melee_hit**(224) |
+| `bainha_eletrica` | raiton | self | `fx_lightning_armor` | efeito **fx_lightning_armor**(211) |
+| `kunai_marcada` | none | projectile | `fx_marked_kunai` | impacto **fx_melee_hit**(224) + missile **ms_kunai**(65) |
+| `salto_do_selo` | none | self | `fx_flash_teleport` | efeito **fx_smoke_poof**(221) |
+| `explosao_do_selo` | none | area | `fx_seal_explosion` | efeito **fx_seal_glow**(222) |
+| `barreira_protetora` | none | self | `fx_barrier_glow` | efeito **fx_chakra_focus**(219) |
+| `selo_de_exorcismo` | none | target | `fx_seal_paper` | efeito **fx_seal_glow**(222) |
+| `circulo_de_selos` | none | area | `fx_seal_circle` | efeito **fx_seal_glow**(222) |
+| `raiton_hari` | raiton | projectile | `fx_lightning_needle` | impacto **fx_lightning_strike**(208) + missile **ms_lightning_needle**(62) |
+| `raiton_punho_trovao` | raiton | target | `fx_thunder_fist` | efeito **fx_lightning_strike**(208) |
+| `raiton_corrente_estatica` | raiton | area | `fx_static_cross` | efeito **fx_static_field**(209) |
+| `raiton_lanca_relampago` | raiton | beam | `fx_lightning_lance` | efeito **fx_lightning_lance**(210) |
+| `raiton_armadura_eletrica` | raiton | self | `fx_lightning_armor` | efeito **fx_lightning_armor**(211) |
+| `suiton_mizudan` | suiton | projectile | `fx_water_bullet` | impacto **fx_water_splash**(204) + missile **ms_water_bullet**(61) |
+| `suiton_suiryuudan` | suiton | beam | `fx_water_dragon` | efeito **fx_water_dragon**(205) |
+| `suiton_nevoa_cortante` | suiton | area | `fx_mist_cone` | efeito **fx_water_mist**(206) |
+| `suiton_prisao_agua` | suiton | target | `fx_water_prison` | efeito **fx_water_vortex**(207) |
+| `suiton_vortice_devorador` | suiton | area | `fx_water_vortex` | efeito **fx_water_vortex**(207) |
+### Validação in-game
+
+`client-otc/tests/vfx_rc.lua` (copiado para `client-otc/shinobirc.lua` — arquivo
+compartilhado, removido ao final, nunca comitado): login `slqa`, `/lvl 60` +
+`/full`, troca de personagem/elemento via GM (`/personagem`, `/elemento`) e
+`/m Bandido` + `g_game.attack` antes de cada jutsu que precisa de alvo,
+3 screenshots a 150ms de intervalo por cast. Cobriu os 5 elementos (projétil +
+a assinatura de área/beam mais forte), `kawarimi`, `bunshin`, `shousen`,
+`lamina_chakra`, `doku_kiri` — 46 PNGs em `screenshots/vfx_*.png`. Resultado:
+burst de fogo visível no impacto do Bandido, trilha do dragão de fogo/água em
+vários tiles ao longo da linha, raio serrilhado amarelo bem legível na lança do
+relâmpago, fumaça branca do kawarimi x fumaça ROXA distinta do bunshin, cura
+verde pulsante, lâmina de chakra ciano brilhante, névoa de veneno cobrindo o chão
+em área. Ver detalhe completo em `docs/sistemas/arte-e-sprites.md`.

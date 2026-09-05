@@ -131,19 +131,24 @@ campo `element`/`shape`).
 
 | Categoria | Elemento(s) | Qtde de jutsus que usam | Quadros por efeito | Prioridade | Status atual | Fonte sugerida | Horas totais |
 |---|---|---|---|---|---|---|---|
-| Projétil (bola/lança) | katon, suiton, doton, raiton, fuuton, none | ~18 | 8 quadros de animação × 5 elementos = 40 | P1 | procedural (cores padrão do TFS: `CONST_ANI_FIRE/ICE/ENERGY/EARTH/HOLY/THROWINGSTAR`) | gerar por código (paleta) + polish depois | 20 |
-| Área (explosão/círculo/cone) | katon, suiton, doton, raiton, fuuton | ~16 | 12 quadros × 5 elementos = 60 | P1 | procedural (`CONST_ME_*AREA`/`STONES`/`ENERGYHIT` vanilla) | gerar por código + polish depois | 30 |
-| Beam/linha (`fuuton_tornado_cortante` e similares tier 3) | fuuton, raiton | ~4 | 12 quadros × 2 = 24 | P2 | procedural | gerar por código | 10 |
-| Self/buff (aura, cura, teleporte) | todos (heal_over_time, paralyze, teleporte) | ~16 | 8 quadros de aura | P2 | procedural (efeito padrão de cura/buff do TFS) | gerar por código | 12 |
-| Personagem (jutsus pessoais dos 9 personagens) | — | 20 (`data/jutsus/personal.json`) | reaproveita as categorias acima, mas com paleta/assinatura visual própria por personagem | P2 | procedural | gerar por código + variação de cor por personagem | 15 |
+| Projétil (bola/lança) | katon, suiton, doton, raiton, fuuton, none | ~18 | 1 fase × 9 direções (grade 3×3) | P1 | **`procedural` (concluído 2026-09-05)** — 8 misseis próprios (`tools/spr/gen_effects.py`), ids 60..67 | — | 0 |
+| Área (explosão/círculo/cone) | katon, suiton, doton, raiton, fuuton | ~16 | 5–7 fases | P1 | **`procedural` (concluído 2026-09-05)** — efeitos próprios por papel (impacto/cone/anel/etc.), ids 200..226 | — | 0 |
+| Beam/linha (`fuuton_tornado_cortante` e similares tier 3) | fuuton, raiton, katon, suiton, doton | 5 | 5–7 fases | P2 | **`procedural` (concluído 2026-09-05)** — `fx_fire_dragon`/`fx_water_dragon`/`fx_lightning_lance`/`fx_earth_collapse`/`fx_wind_tornado` | — | 0 |
+| Self/buff (aura, cura, teleporte, fumaça) | todos (heal_over_time, paralyze, teleporte, kawarimi/bunshin) | ~16 | 5–6 fases | P2 | **`procedural` (concluído 2026-09-05)** — `fx_heal_green`, `fx_smoke_poof`, `fx_shadow_clone` (distinto do poof, ver nota), `fx_chakra_focus`, `fx_lightning_armor`, `fx_stone_shell` | — | 0 |
+| Personagem (jutsus pessoais dos 9 personagens) | — | 20 (`data/jutsus/personal.json`) | reaproveita as categorias acima por alias (`fx_melee_hit`, `fx_chakra_blade`, `fx_seal_glow`...) | P2 | **`procedural` (concluído 2026-09-05)** — sem paleta própria por personagem ainda (ver limitações) | variação de cor por personagem, se o orçamento permitir | 8 |
 
-*Nota:* diferente de monstros/NPCs, os efeitos de jutsu **já são gerados por
-código/procedimento** hoje (constantes nativas do TFS) — não são um bloqueio visual
-tão grave quanto sprites de criatura idênticos, por isso a prioridade geral é P1/P2, não
-P0. Ainda assim, 54 jutsus com só ~6 combinações visuais distintas (uma por elemento)
-significa que jutsus tier 1/2/3 do mesmo elemento **parecem idênticos** — se o
-orçamento permitir, o próximo investimento de arte depois dos monstros é diferenciar
-visualmente ao menos os jutsus tier 3 (são o "show", ver `balanceamento.md` §6).
+*Atualização 2026-09-05:* os 54 jutsus agora têm efeito/missile PRÓPRIO (não mais os
+genéricos rotativos de `gen_placeholders.py`), gerados por
+`tools/spr/gen_effects.py` e catalogados em `assets-src/sprites/effects.json`
+(27 efeitos, ids 200–226; 8 misseis, ids 60–67; mais 14 "slots vanilla"
+`CONST_ME_*`/`CONST_ANI_*` redesenhados para os ataques elementais de MONSTRO,
+que só aceitam nome fixo — ver `docs/sistemas/arte-e-sprites.md` §Efeitos e
+`docs/sistemas/combate-e-jutsus.md` §Efeitos e misseis). Validado in-game com
+screenshots em `screenshots/vfx_*.png` (todos os 5 elementos, projétil + beam,
+kawarimi, bunshin, cura, lâmina de chakra, névoa venenosa). Limitações
+honestas: `fx_wind_tornado` lê mais como uma linha ondulada que uma coluna
+girando; jutsus "pessoais" sem elemento reaproveitam `fx_melee_hit`/
+`fx_chakra_focus` genéricos (sem assinatura visual própria por personagem).
 
 ## Itens (173 em `data/items/*.json`, incluindo os 47 novos de equipamento + 38 troféus desta missão)
 

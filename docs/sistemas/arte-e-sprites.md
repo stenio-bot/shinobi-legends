@@ -1682,3 +1682,126 @@ ponto a ponto) em `docs/sistemas/mapas.md#decoração-de-praia-e-mobiliário-do-
 - `seashell_spiral`/`seashell_fan` ficaram com `pickupable: true` (dá pra
   pegar) — decisão de bom senso (concha de praia é o tipo de bugiganga que
   faz sentido catalogar/vender), não um pedido explícito da missão.
+
+## Efeitos e misseis próprios dos jutsus (`gen_effects.py`, 2026-09-05)
+
+### Situação anterior
+
+Os 54 jutsus (`data/jutsus/*.json`) já tinham os campos `animation`/`sfx`
+preenchidos desde antes desta missão (nenhum estava vazio), mas **nada os
+lia**: `tools/export_tfs.py` mandava o mesmo par de efeito/missile POR
+ELEMENTO (`data/tfs_mapping.json` → `elements.<el>.area_effect`/`shoot`,
+nomes `CONST_ME_*`/`CONST_ANI_*` reais da Tibia) para TODOS os jutsus daquele
+elemento, e o `.dat` (`tools/spr/gen_placeholders.py`) preenche os 255 ids de
+efeito/missile do protocolo com arte **genérica rotativa** (`burst/sparks/
+smoke/slash/pulse`, tingida por um hash do id) — nenhum sprite "de fogo",
+"de água" etc. de verdade. Resultado: katon acertava com um "burst" que podia
+sair verde, suiton com um "slash" azul, sem relação com o elemento, e os 3
+jutsus de um mesmo elemento (projétil/área/beam) eram visualmente idênticos.
+
+### O que mudou
+
+`tools/spr/gen_effects.py` desenha por código (Pillow, ADR-002) **27 efeitos
+próprios** (ids **200–226**) e **8 misseis próprios** (ids **60–67**), 32×32,
+paleta de ≤4 tons por peça + contorno escuro de 1px (`char_synth.outline_1px`),
+5–7 fases por efeito. Ids escolhidos na faixa **livre** do protocolo: o enum
+`MagicEffectClasses` (`server/tfs/src/const.h`) só vai até 175 e `ShootType_t`
+até 54 (+ 254 reservado "internal use") — nada no TFS manda um número maior
+que isso para essas categorias, então 200+/60+ nunca colide com nenhum script
+vanilla ou de monstro.
+
+Cada chave do catálogo (`fx_fire_burst`, `ms_fireball`, `fx_smoke_poof`...)
+tem uma folha de PNGs em `assets-src/sprites/effects_src/<key>/f*.png`
+(versionada) e entra no `.dat` via **`assets-src/sprites/overrides/
+50_effects_naruto.json`** — mesmo esquema de `imports.json` (`root`/
+`build_dir`/`effects`/`missiles`), então `tools/spr/build_assets.py` aplica
+sem precisar de nenhuma mudança de código (o loop que já varre
+`assets-src/sprites/overrides/*.json` pega o arquivo novo sozinho). O
+catálogo "de verdade" — ids, papel, alias por jutsu — fica em
+**`assets-src/sprites/effects.json`** (não segue o esquema de build; é lido
+por `tools/export_tfs.py` para montar os números que vão no Lua).
+
+### Slots "vanilla" redesenhados (ataques de monstro)
+
+`data/monsters/*.json` → `monster_xml()` continua mandando o
+`shootEffect`/`areaEffect` por **nome** (`fire`, `icearea`...), porque
+`Monsters::deserializeSpell` (`server/tfs/src/monsters.cpp` +
+`getMagicEffect`/`getShootType` em `tools.cpp`) só resolve uma tabela fixa de
+nomes — nunca aceita número cru. Reescrever os ataques de monstro em Lua
+scriptado daria o mesmo resultado com risco bem maior (servidor compartilhado
+com playtest ao vivo), então a solução foi **redesenhar o PIXEL** dos ids que
+já existiam com esses nomes (nenhum sprite deste projeto é "de verdade",
+ADR-002, então trocar o desenho de um id não quebra nada):
+
+| Const (nome usado no XML/Lua) | Id | Arte nova (reaproveita a key) |
+|---|---|---|
+| `CONST_ME_FIREAREA` | 7 | `fx_fire_ring` |
+| `CONST_ME_ICEATTACK` | 44 | `fx_water_splash` |
+| `CONST_ME_ENERGYHIT` | 12 | `fx_lightning_strike` |
+| `CONST_ME_STONES` | 45 | `fx_earth_spikes` |
+| `CONST_ME_HOLYAREA` | 50 | `fx_wind_slash` (recolorido verde, não dourado) |
+| `CONST_ME_HITAREA` | 10 | `fx_melee_hit` |
+| `CONST_ME_POFF` | 3 | `fx_smoke_poof` |
+| `CONST_ME_MAGIC_GREEN` | 15 | `fx_heal_green` |
+| `CONST_ANI_FIRE` | 4 | `ms_fireball` |
+| `CONST_ANI_ICE` | 29 | `ms_water_bullet` |
+| `CONST_ANI_ENERGY` | 5 | `ms_lightning_needle` |
+| `CONST_ANI_EARTH` | 30 | `ms_mud_bullet` |
+| `CONST_ANI_HOLY` | 31 | `ms_wind_blade` |
+| `CONST_ANI_THROWINGSTAR` | 8 | `ms_shuriken` |
+
+Nenhum outro id vanilla (0..255) foi tocado. `data/tfs_mapping.json` não
+mudou — os NOMES continuam os mesmos, só o desenho por trás do id.
+
+### `assets-src/sprites/effects.json`: aliases e fallback por elemento
+
+O campo `animation` de cada jutsu (ex. `fx_fireball`, `fx_earth_collapse`,
+`fx_seal_paper`) é mapeado por `aliases` para uma key do catálogo — cobertura
+1:1 dos 54 jutsus (ver `docs/sistemas/combate-e-jutsus.md`). Jutsus
+`type=projectile` usam o alias como MISSILE (o `animation` descreve o objeto
+voando, ex. `fx_mud_bullet` → `ms_mud_bullet`) e o impacto usa o efeito
+padrão do elemento (`element_defaults`, ex. katon → `fx_fire_burst`) — a
+Tibia sempre separa `shootEffect` (missile) de `areaEffect`/impacto, e o
+`animation` de um jutsu de projétil nomeia só o primeiro. Jutsus sem elemento
+("pessoais": taijutsu, selos) reaproveitam `fx_melee_hit`/`fx_chakra_focus`/
+`fx_seal_glow` por falta de paleta própria — ver limitações.
+
+### Por que não alocar ids em `allocations.json`
+
+`assets-src/sprites/allocations.json` guarda a alocação dos **tiles** (ids de
+`items.otb`/clientId ≥ 30000/23726) e `tools/spr/tiles.py::allocate` **reescreve
+o arquivo inteiro** a cada build a partir de só 4 chaves (`next_server_id`,
+`next_client_id`, `by_key`, mais o `_doc`) — uma chave extra tipo `"effects"`
+seria apagada no build seguinte. Como o espaço de ids de efeito/missile é
+outro (u8, 1..255, nada a ver com `items.otb`) e o catálogo (~35 entradas) é
+pequeno e fechado, os ids ficam gravados diretamente em `assets-src/sprites/
+effects.json` (permanentes, append-only por convenção do arquivo — nunca
+renumere uma key já publicada).
+
+### Validação
+
+`tools/spr/build_assets.py` (override aplicado, `conferencia OTB -> .dat:
+OK`) → `tools/spr/dump_dat.py` (`validacao: OK`, `effect 255 things ids
+1..255`, `missile 255 things ids 1..255`) → `tools/export_tfs.py` (ids
+numéricos corretos nos `.lua` gerados, conferido em
+`katon_goukakyuu.lua`/`kawarimi.lua`/`bunshin.lua`/`shousen.lua`) →
+`bash tools/install_generated.sh` → `/reload spells` no servidor (sem
+reiniciar, servidor compartilhado com playtest) → sessão de screenshots
+(`client-otc/tests/vfx_rc.lua`, ver `docs/sistemas/combate-e-jutsus.md`).
+
+### Limitações honestas
+
+- `fx_wind_tornado` lê mais como uma linha esverdeada ondulando do que uma
+  coluna de vento girando — o template (arcos deslocados por linha) não
+  vendeu bem a ideia de funil a 32px; ficou aceitável, não bom.
+- `fx_lightning_armor`/`fx_wind_prison` (auras de self-buff) são discretas —
+  um anel pontilhado — comparado aos efeitos de impacto/beam, que ficaram bem
+  mais expressivos.
+- Jutsus "pessoais" (taijutsu, selos, armas) sem elemento reaproveitam um
+  punhado de efeitos genéricos (`fx_melee_hit`, `fx_chakra_focus`,
+  `fx_seal_glow`) — não têm assinatura visual própria por personagem (ex.
+  `agulhas_incendiarias`, que é katon, usa o missile `ms_senbon` sem tingir de
+  laranja/fogo).
+- Ataques de MONSTRO continuam limitados aos 6 slots vanilla redesenhados
+  (um efeito/missile por elemento, sem variação por jutsu) — os 27 efeitos
+  novos só aparecem nos jutsus do jogador.
