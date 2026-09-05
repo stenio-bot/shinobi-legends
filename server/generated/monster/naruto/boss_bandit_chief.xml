@@ -23,7 +23,7 @@
 			<attribute key="areaEffect" value="firearea"/>
 		</attack>
 	</attacks>
-	<defenses armor="12" defense="12"/>
+	<defenses armor="6" defense="6"/>
 	<elements>
 		<element icePercent="-50"/>
 		<element holyPercent="25"/>

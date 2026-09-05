@@ -357,6 +357,15 @@ duas metas, não uma questão de achar o número certo (relatório v8 §2). Píl
 (pequena/média/grande, ver seção 5) continuam o lever real de combate para estender uma rotação
 de jutsus tier 2/3 (custo fixo, inalterado) numa luta longa.
 
+**Rodada 9 (mudança de FILOSOFIA, não só de número)**: o orquestrador **rejeitou** o cooldown de
+27,0s ("um jutsu por meio minuto destrói a sensação de ninja") — voltou pra **9,0s**. E rejeitou
+o próprio teto "híbrido ≤+15%" que motivou os 27,0s: no Tibia (e aqui) jogar com arma + magia
+junto é o jogo normal, não uma exceção a conter. **O híbrido passa a ser o build de referência**
+— monstros/XP/progressão calibrados pelo TTK híbrido; taijutsu/ninjutsu puros só precisam ser
+**viáveis** (≥70% do DPS híbrido em todo nível 5-100, ≥60% nos 6 bosses de referência), não mais
+"perto do híbrido". A meta de chakra sem pílula (10-35%, todo nível) continua sem fechar — ver
+`docs/sistemas/balanceamento-relatorio-v9.md` §5.
+
 ---
 
 ## 4. Jornada do jogador
@@ -470,7 +479,15 @@ o timing" de castar numa fração das janelas livres, cadência esticada ~4,5×)
 substituiu pelo modelo real ("castar o tier 1 sempre que libera e tem chakra", cooldown sem
 esticamento — ver `docs/sistemas/balanceamento-relatorio-v8.md` §2); manter o teto de +15% com
 o novo modelo exigiu subir o cooldown do tier 1 de 9,0s para 27,0s (o custo percentual em si
-ficou igual). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
+ficou igual). **A rodada 9 rejeitou essa escolha**: o cooldown voltou a 9,0s e o teto de +15%
+foi removido de vez — o híbrido é agora o build de REFERÊNCIA (calibra monstro/XP/progressão),
+e os builds puros só precisam ficar ≥70% do DPS híbrido (todo nível 5-100) / ≥60% (nos 6
+bosses). Achado real da rodada 9: **≥60% nos bosses fecha** (3 dos 6 bosses de referência
+tiveram a armadura reduzida — a armadura mitiga só o dano de arma, não o de jutsu elemental,
+então baixá-la ajuda desproporcionalmente quem depende só de arma); **≥70% nos níveis comuns
+NÃO fecha em 64 de 96 níveis** (pior caso 46,3% em L16) — provado como tensão estrutural real
+com o burst ≥1,3×, não falta de tuning (ver `docs/sistemas/balanceamento-relatorio-v9.md` §4.3).
+Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
 L50–100 (números de dano dos jutsus "campeão" de cada elemento não mudaram na rodada 5) — bem
 mais apertado que a meta de ±10% pedida. Uma tensão real e documentada permanece sem solução
 fechada no cenário de GRUPO (3+ monstros): o mesmo número de dano que faz um jutsu tier 3

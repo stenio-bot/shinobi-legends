@@ -77,7 +77,8 @@ região, N por monstro — ver relatório v2 §1) + os mesmos 6 bosses em 1x1 la
 ### Build "hybrid" (rodada 2)
 
 Metade do tempo de treino de combate em taijutsu, metade em ninjutsu (`typical_skills_split`,
-`HYBRID_TAIJUTSU_FRAC`/`HYBRID_NINJUTSU_FRAC` = 0.5/0.5) — não é a média dos dois builds
+`HYBRID_TAIJUTSU_FRAC`/`HYBRID_NINJUTSU_FRAC` — **0.4/0.4 desde a rodada 4**, ver nota abaixo,
+não mais o 0.5/0.5 original) — não é a média dos dois builds
 "pura-raça", é um personagem que de fato joga assim: as duas skills ficam mais baixas que um
 especialista em qualquer uma das trilhas, mas com acesso pleno a ambas. Meta da missão: "híbrido
 perto do melhor" — ver relatório v2 §3 pros números reais (fica 6,6%–19,9% atrás do melhor build
@@ -103,6 +104,15 @@ esticamento). Isso deixou o híbrido forte demais contra boss no cooldown origin
 (até -44% de TTK vs. melhor puro) — o cooldown dos 5 tier 1 subiu para **27,0s** (custo
 percentual do pool inalterado, pra não quebrar "Genin L1 6-8 casts/pool") pra fechar o teto de
 +15% de novo. Ver relatório v8 §2.
+
+**Revertido na rodada 9 (decisão do orquestrador, mudança de FILOSOFIA)**: o cooldown de 27,0s
+foi rejeitado ("um jutsu por meio minuto destrói a sensação de ninja") e voltou a **9,0s** — e
+o teto "híbrido ≤+15%" que motivou tanto `HYBRID_JUTSU_CADENCE_FRAC` (rodada 6) quanto o
+cooldown de 27,0s (rodada 8) foi **removido de vez**. O híbrido passa a ser o build de
+**referência** do jogo (não mais algo a conter); a única meta sobre os builds puros agora é
+viabilidade (≥70% do DPS híbrido em todo nível 5-100, ≥60% nos 6 bosses) — ver "Achados da
+rodada 9" abaixo pro que isso abriu (ninjutsu excedendo o híbrido em 2 pontos, corrigido) e pro
+que ainda não fecha (viabilidade dos puros abaixo de L78, tensão estrutural real com o burst).
 
 ### Cenário multi-alvo (rodada 2)
 
@@ -675,3 +685,72 @@ seguidos de tier 1 no L1 sem sair de 108-110/110 de chakra (`docs/qa/playtest-l1
   numérico desta rodada (só pede os 6 bosses de referência).
 - **Margem do teto de boss não é folgada** (pior caso -13,4% de -15%, ~1,6pp de sobra) — revisitar
   se algum conteúdo futuro aumentar `level_scale` do tier 1 ou reduzir o cooldown de novo.
+
+## Achados da rodada 9 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v9.md`
+
+**Mudança de filosofia, não só de número.** O orquestrador rejeitou o cooldown de 27,0s da
+rodada 8 pós-fato ("um jutsu por meio minuto destrói a sensação de ninja") e voltou pra 9,0s —
+e junto rejeitou o próprio teto "híbrido ≤+15% sobre o melhor puro" que guiou as rodadas 4-8: no
+Tibia (e aqui) jogar com arma + magia é o jogo normal, não uma exceção a conter. **O híbrido
+passa a ser o build de referência**; monstros/XP/progressão são calibrados pelo TTK/XP-h
+híbrido; os builds puros só precisam ser viáveis (≥70% do DPS híbrido em todo nível 5-100,
+≥60% nos 6 bosses de referência) — nenhum é "o certo".
+
+1. **Nenhuma mudança de fórmula/modelo em `sim.py`** — o híbrido já castava "sempre que libera
+   e há chakra" desde a rodada 8; só um comentário novo documentando a filosofia e a pendência
+   estrutural do item 3 abaixo, onde o teto de +15% era citado.
+2. **3 bosses recalibrados pra fechar TTK 60-180s + viabilidade ≥60% ao mesmo tempo**:
+   `boss_bandit_chief` `defense` 12→6; `boss_mist_swordsman` `hp` 1700→2380 + `defense` 15→8
+   (TTK híbrido 52,0s→64,9s, estava abaixo do piso de 60s); `boss_white_serpent` `defense`
+   18→9. A armadura mitiga só o dano de arma (não o de jutsu), então baixá-la favorece
+   desproporcionalmente quem depende só de arma — mesmo lever fecha os dois lados (TTK E
+   viabilidade) nesses 3 bosses. Testado até `defense=0`: teto prático desse lever sozinho é
+   ~65-67% nesses bosses — `×0,5` (não zero) foi escolhido como meio-termo com folga.
+3. **Achado central (pendência, não resolvida)**: viabilidade dos puros ≥70% **falha em 64 de
+   96 níveis comuns (5-100)**, pior caso 46,3% (`mist_guardian` L16) — provado que é tensão
+   estrutural, não falta de tuning: qualquer nerf de tier 1 forte o bastante pra fechar 70% no
+   pior caso expande a falha de burst ≥1,3× de "L78-85,100" (status quo, 9 níveis) pra "L35-100"
+   ou pior (testado); zerar armadura do monstro comum (o único outro lever) chega no máximo a
+   ~60-67%, ainda abaixo de 70%. Causa raiz: mitigação assimétrica (armadura reduz arma, não
+   jutsu) + cooldown real de 9,0s (fixo pelo orquestrador) + `level_scale` do tier 1 calibrado
+   pra burst em quase todo nível. Recomendação: buffar item de arma L5-40 (não jutsu, não
+   monstro) — fora do escopo de arquivos desta rodada.
+4. **Ninjutsu excedendo o híbrido, corrigido**: `raiton_punho_trovao` (tier 3, req 30,
+   `cooldown_s=7,0` — mais curto que o tier 1) e `doton_colapso_terreno` (tier 3, req 48)
+   permitiam a ninjutsu puro um único cast que já superava metade do HP do monstro comum mais
+   próximo — mais rápido que o híbrido inteiro em 11 pontos de L30-35/L60-64. Fix:
+   `raiton_punho_trovao.chakra_cost` 200→320 (custo sozinho resolve, pool não permite 2º cast);
+   `doton_colapso_terreno.chakra_cost` 268→400 + `level_scale`/`base_damage`×0,9 (custo sozinho
+   não bastava — um ÚNICO cast já era grande demais). Zero overshoot confirmado em L5-100.
+5. **XP/h absoluto do simulador não bate com `progressao-jogador.md` — achado de métrica, não
+   de calibração**: a razão sim/doc CRESCE com o nível (24× em L5, quase 4000× em L100) e o
+   mesmo gap (mesma ordem de grandeza) já existe pro build `taijutsu` puro, ou seja, não é algo
+   introduzido pelo híbrido desta rodada. `simulate()`/`--hunt` medem "eficiência de caça pura"
+   (sem viagem/missão/espera de boss); o doc mede horas de jogo REAL (inclui isso tudo). A
+   métrica "kills por level" (que É ajustável por `data/monsters`) já bate com o design
+   existente — não mexi em HP/XP de monstro comum nenhum. Recomendação pra rodada 10: um
+   parâmetro novo de simulador (overhead de sessão real por bloco), não `data/monsters`.
+6. **Chakra sem pílula (10-35%, todo nível) continua não fechando** — oscila 0%-81,2%
+   dependendo do monstro mais próximo de cada nível (só L20 cai na faixa, 1 de 20 pontos).
+   Varredura de multiplicador de regen (0,3×-4,0× sobre `2+floor(level/4)`): reduzir regen só
+   piora; aumentar até ~1,15× é o melhor achado (3 de 20 na faixa) — não aplicado (ganho
+   marginal, mudar a regen precisaria de uma linha nova em `tools/export_tfs.py`, fora do
+   escopo desta sessão). Causa raiz é variância de HP entre monstros da mesma faixa (mesmo
+   achado da rodada 5 pro L20), não a fórmula de regen — recomendo manter `2+floor(level/4)`.
+7. **Grupo `ruin_puppet` (N=3) saiu da faixa +30-60%** (+42,1%→+22,5%) — confirmado que já
+   estava assim no estado "r9 parcial" recebido no início da sessão (idêntico antes/depois dos
+   2 fixes de tier 2/3 desta rodada) — efeito colateral herdado da reversão de cooldown 27s→9s
+   do orquestrador, não desta rodada. `thunder_eagle` (N=3) continua em +36,4%, dentro da faixa.
+
+## Pendências honestas da rodada 9 (ver relatório v9 §9 pros números)
+
+- **Viabilidade dos puros ≥70% falha em 2/3 dos níveis comuns 5-77** — tensão estrutural real
+  com burst ≥1,3× (fixo pelo cooldown do orquestrador); lever recomendado é buffar arma L5-40.
+- **Chakra sem pílula (10-35%) falha em 19 de 20 níveis testados** — causa raiz é variância de
+  HP entre monstros, não fórmula de regen; `1,15×(2+floor(level/4))` é o melhor achado (3/20).
+- **XP/h absoluto do simulador não é comparável 1:1 com `progressao-jogador.md`** — gap
+  estrutural de métrica (grind puro vs. jogo real), precisa de um parâmetro novo de simulador.
+- **`ruin_puppet` (grupo N=3) fora da faixa +30-60%** — herdado da reversão de cooldown do
+  orquestrador, não corrigido nesta rodada (risco de whack-a-mole nos jutsus de área doton).
+- **Kits (±15%) não reverificados numericamente** — confirmado que nenhum jutsu tocado é
+  referenciado por `personal.json`/`neutral.json`, mas a proxy não foi rodada de novo.

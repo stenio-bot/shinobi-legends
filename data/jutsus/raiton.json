@@ -33,7 +33,7 @@
     "element": "raiton",
     "type": "target",
     "range": 1,
-    "chakra_cost": 200,
+    "chakra_cost": 320,
     "cooldown_s": 7.0,
     "base_damage": 62.37,
     "level_scale": 9.1476,

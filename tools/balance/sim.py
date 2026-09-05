@@ -336,6 +336,34 @@ HYBRID_NINJUTSU_FRAC = 0.4
 # pílula — ver relatório v7 §5 "segunda leitura"), o que finalmente dá uma alavanca (custo do
 # tier 1) pra mirar a faixa 15-25% pedida — ver relatório v8 §2.
 
+# RODADA 9 (decisão do orquestrador, pós-v8 — mudança de FILOSOFIA, não só de número): o cooldown
+# de 27,0s foi REJEITADO e voltou para 9,0s ("um jutsu por meio minuto destrói a sensação de
+# ninja"). O "teto de híbrido ≤+15% sobre o melhor puro" citado em todo o histórico acima
+# DEIXA DE SER META — não existe mais nenhum teto artificial sobre o híbrido neste simulador
+# nem em `docs/sistemas/balanceamento.md`. Novo modelo mental: o **híbrido é o build de
+# referência** (arma + tier 1 sempre que libera cooldown e há chakra, exatamente como já
+# implementado acima desde a rodada 8 — nenhuma mudança de código nesta seção foi necessária,
+# só a reversão do cooldown em `data/jutsus/*.json` e a remoção da meta de teto nos docs).
+# Monstros/XP/h/progressão passam a ser calibrados pelo TTK HÍBRIDO (ver `run_hunt_matrix`/
+# `--matrix`); os builds puros (taijutsu/ninjutsu) só precisam ser VIÁVEIS (≥70% do DPS híbrido
+# em todo nível 5-100, ≥60% nos 6 bosses de referência) — não mais "perto do híbrido". Ver
+# `docs/sistemas/balanceamento-relatorio-v9.md` para os números completos: com o cooldown real
+# de 9,0s, o híbrido abre uma vantagem estrutural grande sobre taijutsu puro nos níveis baixos-
+# médios (armadura do monstro mitiga a arma mas NÃO o jutsu elemental — a mesma assimetria de
+# `blockHit`/`monsters.cpp` documentada desde a rodada 1 — então o burst do tier 1, fixo pra
+# manter ≥1,3× o hit de arma em quase todo L1-100, pesa proporcionalmente mais contra um
+# personagem cujo dano de arma ainda é baixo). A meta de ≥70% NÃO fecha em ~2/3 dos níveis
+# 5-77 sem violar o burst (testado: qualquer corte de `level_scale`/`base_damage` do tier 1
+# forte o bastante pra fechar 70% nos piores casos — L6/L13/L16, ~0,46-0,50 hoje — também derruba
+# o burst abaixo de 1,3× em dezenas de níveis abaixo de L78, o que a missão pede EXPLICITAMENTE
+# manter); zerar a armadura do monstro (o único outro lever que não toca jutsu) chega no máximo a
+# ~0,60-0,67 nesses mesmos piores casos — perto, mas ainda abaixo de 0,70. Pendência estrutural
+# honesta da rodada 9 (não resolvida): ver relatório v9 §4 pra números completos e a recomendação
+# (buffar item de arma L5-40, não o jutsu, é o lever que sobra). `HYBRID_TAIJUTSU_FRAC`/
+# `HYBRID_NINJUTSU_FRAC` continuam em 0.4/0.4 (declarados ~35 linhas acima, rodada 4-6) — SUBIR
+# essa fração pioraria a meta de 70% (mais treino de arma pro híbrido = híbrido ainda mais forte),
+# então não foi tocada nesta rodada.
+
 def typical_skills(level):
     """Skill 'típico' de um jogador médio no nível L: tries acumuladas = horas jogadas até esse
     nível (progressao-jogador.md) x ataques/hora x pontos/ataque x rateSkill (ou rateMagic para

@@ -12,6 +12,54 @@ Chakra do player  = 50 + level*10
 XP total          = 50*level^2 + 50*level   →  XP para subir de L para L+1 = 100*L + 100
 ```
 
+## Metas de balanceamento (rodada 9 — reescrita completa)
+
+**Mudança de filosofia (decisão do orquestrador, pós-rodada 8):** o cooldown do tier 1
+elemental voltou de 27,0s para **9,0s** ("um jutsu por meio minuto destrói a sensação de
+ninja") e o teto "híbrido ≤+15% sobre o melhor build puro", que guiou as rodadas 4-8, foi
+**removido** — não existe mais nenhum teto artificial sobre o híbrido neste jogo. No Tibia (e
+aqui) jogar com arma + magia junto é o jogo normal, não uma exceção a conter.
+
+**O build híbrido (arma + jutsus, castando o tier 1 sempre que o cooldown de 9s libera e há
+chakra) é o build de referência.** Monstros, XP/h e a tabela de progressão são calibrados pelo
+TTK/XP-por-hora híbrido — não mais por um "jogador médio" abstrato nem por um teto sobre o
+híbrido. Os builds puros (só taijutsu, só ninjutsu) só precisam ser **viáveis**, não iguais:
+
+1. **TTK/XP-por-hora do híbrido** é a métrica central de calibração de monstro/level/região —
+   ver `tools/balance/sim.py --matrix`/`--hunt` (build `hybrid`).
+2. **Curva de progressão**: XP/h por bloco e horas acumuladas até L100 devem bater com
+   `docs/sistemas/progressao-jogador.md` (±20%) usando o híbrido como referência. **Achado da
+   rodada 9**: a métrica "kills por level" (abaixo) já bate; o XP/h ABSOLUTO do simulador mede
+   "eficiência de caça pura" e é estruturalmente maior (15×-4000×, cresce com o nível) que o
+   XP/h "misto" do doc (que embute viagem/missão/espera de boss) — não é fechável só com
+   `data/monsters` sem quebrar kills-por-level; ver `balanceamento-relatorio-v9.md` §2 pro
+   detalhe e a recomendação (um parâmetro de "overhead de sessão real" no simulador).
+3. **Bosses**: TTK híbrido no level-alvo entre **60s e 180s**, `death_rate` ≤10% com poções
+   (fúria de fase real considerada, rodada 8). 6 bosses de referência: `boss_bandit_chief`(12),
+   `boss_mist_swordsman`(19), `boss_white_serpent`(25), `boss_puppeteer`(50),
+   `boss_ancestral_oni`(80), `boss_crimson_ancestor`(100).
+4. **Builds puros viáveis**: taijutsu puro e ninjutsu puro ≥70% do DPS híbrido em todo nível
+   5-100, e ≥60% nos 6 bosses de referência. Ninjutsu puro nunca deve exceder o híbrido (se
+   acontecer, o lever é o custo/dano fixo dos jutsus tier 2/3, não o tier 1). **Achado da
+   rodada 9**: ≥60% nos bosses fecha; ≥70% nos níveis comuns 5-100 **não fecha em 64 de 96
+   níveis** (pior caso 46,3%) — tensão estrutural real com o burst do item 6 abaixo (mitigação
+   de armadura reduz o dano de arma mas não o de jutsu elemental; qualquer nerf de tier 1 forte
+   o bastante pra fechar 70% no pior caso quebra burst em dezenas de níveis extras abaixo de
+   L78). Ver `balanceamento-relatorio-v9.md` §4.3 pra prova e recomendação (buffar item de arma
+   L5-40, não jutsu).
+5. **Chakra**: com regen `2+floor(level/4)` a cada 2s, numa hunt híbrida de 30 min: % do tempo
+   sem chakra pro tier 1 entre 10-35% (sem pílula) e ≤5% (com pílula); Genin L1 6-8 casts por
+   pool cheio. **Achado da rodada 9**: casts/pool e a meta com pílula fecham; sem pílula o
+   resultado oscila 0%-81% dependendo do monstro mais próximo do nível (não é função suave do
+   nível nem da regen) — testada varredura de regen 0,3×-4,0×, melhor achado é 1,15× (3 de 20
+   pontos na faixa, contra 1 de 20 hoje); causa raiz é variância de HP entre monstros da mesma
+   faixa, não a fórmula de regen. Ver `balanceamento-relatorio-v9.md` §5.
+6. **Manter**: burst do tier 1 ≥1,3× o hit de arma (aceito perder L78+); kits pessoais (9
+   personagens) dentro de ±15% de valor entre si; grupo de 3+ com ninjutsu +30-60% sobre
+   taijutsu onde há jutsu de área desbloqueado.
+7. `tools/validate_data.py` e `tools/export_tfs.py` passam sem erro; `--matrix` roda em
+   menos de 120s; `--json` de `--matrix`/`--group-matrix`/`--hunt` sempre válido.
+
 ## 1. HP de monstro
 
 ```
@@ -363,11 +411,21 @@ Escala por tier (com `required_level` de referência e ninjutsu = magic level re
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil (pós-rodada-8) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **12-14% do pool** (inalterado desde a rodada 7; era 2,5-3,0% na r5, 25-30 fixo antes) | **27,0 s** (era 9,0s desde a rodada 5 — subiu na rodada 8 pra manter o teto de híbrido ≤+15% com o cooldown REAL, ver `balanceamento-relatorio-v8.md` §2) |
+| 1 projétil (pós-rodada-9) | 3,7–4,3 | 5,25–5,40 | 0,110–0,120 | **12-14% do pool** (inalterado desde a rodada 7; era 2,5-3,0% na r5, 25-30 fixo antes) | **9,0 s** (subiu pra 27,0s na rodada 8 pra manter o antigo teto de híbrido ≤+15%; o orquestrador REJEITOU esse cooldown pós-rodada-8 — "um jutsu por meio minuto destrói a sensação de ninja" — e voltou a 9,0s; não existe mais teto de híbrido, ver `balanceamento-relatorio-v9.md`) |
 | 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus tier 1 de área — `raiton_corrente_estatica`/`suiton_nevoa_cortante` — subiram de 1,3-1,6s pra **3,0s** na rodada 6, ver acima) |
 | 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–43,2 (`katon_anel_chamas` subiu de 36,0 pra **43,2** na rodada 8, ver `balanceamento-relatorio-v8.md` §3) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
 | 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |
-| 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–245 | 7,0–9,0 s |
+| 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–400 | 7,0–9,0 s |
+
+> **Rodada 9**: `raiton_punho_trovao` (chakra 200→**320**) e `doton_colapso_terreno` (chakra
+> 268→**400**, `level_scale`×0,9, `base_damage`×0,9) recalibrados — com o cooldown do tier 1 de
+> volta a 9,0s (não mais 27,0s), o híbrido virou a referência e passou a ser possível medir
+> "ninjutsu puro excede o híbrido" de verdade pela primeira vez: esses 2 jutsus tier 3, ao
+> desbloquear (L30/L48), permitiam a ninjutsu puro um único cast que já superava metade do HP do
+> monstro comum mais próximo daquele nível — mais rápido que o híbrido inteiro (proibido pela
+> meta 4). Custo sozinho resolveu `raiton_punho_trovao` (o segundo cast fica inacessível);
+> `doton_colapso_terreno` precisou também de corte de dano (um único cast já era grande demais
+> pro custo isolar). Ver `balanceamento-relatorio-v9.md` §4.2.
 
 Regras que mantêm o tier 3 sendo o "show" sem virar obrigatório:
 - **dano por chakra** cai de tier 1 pra tier 3, mas o **dano por cooldown** sobe — tier 3 é
@@ -488,4 +546,4 @@ nenhuma vila limpe uma zona inteira com vantagem:
    por área, que é o alvo. Recompensa de missão não deve pagar o set inteiro.
 
 
-> **Rodada 9 (2026-09-05)**: regeneração de chakra passou de `3+floor(level/4)` para `2+floor(level/4)` a cada 2 s (1,0/s no L1, 3,5/s no L20) para o chakra voltar a ser recurso; cooldown do tier 1 fica em 9 s. Ver decisão no fim de `balanceamento-relatorio-v8.md`.
+> **Rodada 9 (2026-09-05)**: regeneração de chakra passou de `3+floor(level/4)` para `2+floor(level/4)` a cada 2 s (1,0/s no L1, 3,5/s no L20) para o chakra voltar a ser recurso; cooldown do tier 1 fica em 9 s (não mais 27s — decisão do orquestrador no fim de `balanceamento-relatorio-v8.md`). O teto "híbrido ≤+15%" foi removido de vez — ver a nova seção "Metas de balanceamento (rodada 9)" no topo deste documento e `balanceamento-relatorio-v9.md` pro detalhe completo: bosses (`boss_bandit_chief`/`boss_mist_swordsman`/`boss_white_serpent`) tiveram `defense` reduzida (12→6/15→8/18→9) e `boss_mist_swordsman` teve `hp` +40% (1700→2380) pra fechar TTK híbrido 60-180s e viabilidade de puro ≥60% ao mesmo tempo; `raiton_punho_trovao`/`doton_colapso_terreno` (tier 3) recalibrados pra ninjutsu puro nunca exceder o híbrido.

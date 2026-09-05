@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Espadachim da Névoa" nameDescription="o espadachim da névoa" race="blood" experience="1700" speed="440" manacost="0">
-	<health now="1700" max="1700"/>
+	<health now="2380" max="2380"/>
 	<look type="132" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
@@ -23,7 +23,7 @@
 			<attribute key="areaEffect" value="iceattack"/>
 		</attack>
 	</attacks>
-	<defenses armor="15" defense="15"/>
+	<defenses armor="8" defense="8"/>
 	<elements>
 		<element earthPercent="-50"/>
 		<element firePercent="25"/>

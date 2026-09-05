@@ -27,7 +27,7 @@
 		</attack>
 		<attack name="speed" interval="5000" chance="60" speedchange="-160" duration="4000" range="4" target="1"/>
 	</attacks>
-	<defenses armor="18" defense="18"/>
+	<defenses armor="9" defense="9"/>
 	<elements>
 		<element energyPercent="-50"/>
 		<element icePercent="25"/>
