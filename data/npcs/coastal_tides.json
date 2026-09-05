@@ -73,7 +73,7 @@
       {
         "id": "q_coastal_scouts",
         "name": "Olhos na neblina",
-        "text": "Batedores vigiam a estrada da costa. Mate 8.",
+        "text": "Batedores vigiam a estrada da costa — dizem que servem a um espadachim renegado escondido além da ponte. Afaste-os. Mate 8.",
         "objective": {
           "kill": "mist_scout",
           "count": 8
@@ -135,7 +135,8 @@
             "katana_ronin"
           ]
         },
-        "grants_rank_progress": "jonin"
+        "grants_rank_progress": "jonin",
+        "done_text": "Vocês salvaram esta ponte. Mas ouvi um batedor comentar, antes de cair, sobre uma floresta que mata os fracos rio acima — cuidado. Antes de ir, dê mais uma ronda: quero ter certeza que nenhum mercenário ficou pra trás."
       }
     ]
   },

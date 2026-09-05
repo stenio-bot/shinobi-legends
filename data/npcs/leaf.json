@@ -54,7 +54,7 @@
       {
         "id": "q_wolves_1",
         "name": "Lobos na trilha",
-        "text": "Os lobos estão atacando viajantes. Mate 5.",
+        "text": "Bem-vinda à Floresta da Vila, Genin. A Academia te ensinou o básico — hora de provar em campo. Os lobos andam atacando viajantes na trilha: mate 5.",
         "objective": {
           "kill": "wolf",
           "count": 5
@@ -62,6 +62,27 @@
         "reward": {
           "xp": 120,
           "ryo": 60,
+          "items": [
+            "health_potion_small"
+          ]
+        }
+      },
+      {
+        "id": "q_forest_deer_1",
+        "name": "Um agrado para o posto avançado",
+        "text": "Os cervos da floresta não fazem mal a ninguém, mas a carne deles rende um bom onigiri. Traga 3 para o posto avançado — não precisa caçar, eles nem revidam.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "onigiri",
+              "count": 3
+            }
+          ]
+        },
+        "reward": {
+          "xp": 150,
+          "ryo": 70,
           "items": [
             "health_potion_small"
           ]
@@ -155,7 +176,8 @@
           "items": [
             "backpack_leather"
           ]
-        }
+        },
+        "done_text": "Bom trabalho, Genin. Mas isso foi só a estrada perto de casa — a Floresta da Morte separa quem está pronto do resto do mundo, e ouvi dizer que mercadores da Costa das Marés estão contratando gente como você. Só uma última coisa: garanta que não sobrou nenhum bandido rondando a trilha."
       }
     ]
   },
@@ -268,7 +290,7 @@
         "id": "q_elder_toad_hunt",
         "name": "O sapo que não deveria existir",
         "rank": "B",
-        "text": "Antes do Exame, prove que sobrevive ao Sapo Ancião sozinho — sem pergaminho em jogo, só glória.",
+        "text": "Antes do Exame, prove que sobrevive ao Sapo Ancião sozinho — sem pergaminho em jogo, só glória. Guarde essa vitória na memória: a Instrutora Ibuki vai cobrar a mesma prova, oficialmente, quando você for atrás do Pergaminho do Céu.",
         "objective": {
           "kind": "kill",
           "kill": "boss_elder_toad",
@@ -301,7 +323,7 @@
       {
         "id": "q_white_serpent",
         "name": "A Serpente Branca",
-        "text": "Um renegado de pele pálida montou covil no fim da Floresta da Morte. Ele não é humano faz tempo. Mate a Serpente Branca.",
+        "text": "Um renegado de pele pálida montou covil no fim da Floresta da Morte. Ele não é humano faz tempo. Mate a Serpente Branca — e não estranhe se a Instrutora Ibuki pedir o mesmo depois, para valer, na hora do Pergaminho da Terra.",
         "objective": {
           "kill": "boss_white_serpent",
           "count": 1
@@ -378,7 +400,7 @@
       {
         "id": "exam_chunin_2a_pergaminho_ceu",
         "name": "Exame Chunin — Pergaminho do Céu",
-        "text": "Etapa 2: sobrevivência na Floresta da Morte. O Sapo Ancião guarda um Pergaminho do Céu. Traga-o.",
+        "text": "Etapa 2: sobrevivência na Floresta da Morte. O Sapo Ancião guarda um Pergaminho do Céu. Traga-o. Se já provou pro Rastreador Goro que aguenta essa luta sozinho, já sabe o que esperar — dessa vez tem pergaminho de verdade em jogo.",
         "objective": {
           "kind": "kill",
           "kill": "boss_elder_toad",
@@ -395,7 +417,7 @@
       {
         "id": "exam_chunin_2b_pergaminho_terra",
         "name": "Exame Chunin — Pergaminho da Terra",
-        "text": "Agora o Pergaminho da Terra. A Serpente Branca guarda o dela no fim da floresta — só entre se estiver pronto.",
+        "text": "Agora o Pergaminho da Terra. A Serpente Branca guarda o dela no fim da floresta — só entre se estiver pronto. Quem já enfrentou essa serpente a pedido do Goro sabe bem o que vem a seguir.",
         "objective": {
           "kind": "kill",
           "kill": "boss_white_serpent",
@@ -455,7 +477,8 @@
             "vest_chuunin"
           ]
         },
-        "grants_rank": "chunin"
+        "grants_rank": "chunin",
+        "done_text": "Chunin. Agora sim pode seguir — a Costa das Marés precisa de gente como você, se ainda não foi até lá, e as Ruínas do Clã Marionetista não vão esperar. Só quero ver com meus próprios olhos que você ainda aguenta a Floresta da Morte sem escolta: mate mais 1 ninja renegado antes de ir."
       }
     ]
   },

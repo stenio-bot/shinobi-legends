@@ -1,318 +1,318 @@
 [
-  {
-    "id": "wolf",
-    "name": "Lobo",
-    "description": "Caça em bando na floresta.",
-    "level": 2,
-    "hp": 60,
-    "attack": 8,
-    "defense": 2,
-    "speed": 4.5,
-    "element": "none",
-    "xp": 25,
-    "behavior": "aggressive",
-    "aggro_range": 5,
-    "attack_range": 1,
-    "attacks": [
-      {
-        "name": "Mordida",
-        "damage_min": 4,
-        "damage_max": 10,
-        "cooldown_s": 1.5,
-        "type": "melee"
-      }
+ {
+  "id": "wolf",
+  "name": "Lobo",
+  "description": "Caça em bando na floresta.",
+  "level": 2,
+  "hp": 60,
+  "attack": 8,
+  "defense": 2,
+  "speed": 4.5,
+  "element": "none",
+  "xp": 25,
+  "behavior": "aggressive",
+  "aggro_range": 5,
+  "attack_range": 1,
+  "attacks": [
+   {
+    "name": "Mordida",
+    "damage_min": 4,
+    "damage_max": 10,
+    "cooldown_s": 1.5,
+    "type": "melee"
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "wolf_pelt",
+    "chance": 0.5,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "onigiri",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "amuleto_academia",
+    "chance": 0.03,
+    "min": 1,
+    "max": 1
+   }
+  ],
+  "ryo_min": 2,
+  "ryo_max": 8,
+  "respawn_s": 30,
+  "sprite": "mon_wolf",
+  "article": "um"
+ },
+ {
+  "id": "bandit",
+  "name": "Bandido",
+  "description": "Ladrão de estrada com uma faca enferrujada.",
+  "level": 5,
+  "hp": 120,
+  "attack": 14,
+  "defense": 5,
+  "speed": 4,
+  "element": "none",
+  "xp": 60,
+  "behavior": "aggressive",
+  "aggro_range": 6,
+  "attack_range": 1,
+  "attacks": [
+   {
+    "name": "Facada",
+    "damage_min": 8,
+    "damage_max": 18,
+    "cooldown_s": 1.8,
+    "type": "melee"
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "bandit_emblem",
+    "chance": 0.6,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "kunai_iron",
+    "chance": 0.05,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "health_potion_small",
+    "chance": 0.08,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "amuleto_academia",
+    "chance": 0.04,
+    "min": 1,
+    "max": 1
+   }
+  ],
+  "ryo_min": 8,
+  "ryo_max": 25,
+  "respawn_s": 45,
+  "sprite": "mon_bandit",
+  "article": "um"
+ },
+ {
+  "id": "forest_snake",
+  "name": "Cobra da Floresta",
+  "description": "Venenosa. Foge quando ferida.",
+  "level": 4,
+  "hp": 70,
+  "attack": 10,
+  "defense": 3,
+  "speed": 5,
+  "element": "doton",
+  "xp": 45,
+  "behavior": "cowardly",
+  "aggro_range": 4,
+  "attack_range": 1,
+  "attacks": [
+   {
+    "name": "Picada",
+    "damage_min": 5,
+    "damage_max": 12,
+    "cooldown_s": 1.6,
+    "type": "melee",
+    "effects": [
+     {
+      "type": "poison",
+      "chance": 0.3,
+      "duration_s": 6,
+      "value": 2
+     }
+    ]
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "snake_fang",
+    "chance": 0.35,
+    "min": 1,
+    "max": 2
+   }
+  ],
+  "ryo_min": 3,
+  "ryo_max": 12,
+  "respawn_s": 40,
+  "sprite": "mon_snake",
+  "article": "uma"
+ },
+ {
+  "id": "bandit_archer",
+  "name": "Bandido Arqueiro",
+  "description": "Atira de longe e mantém distância.",
+  "level": 7,
+  "hp": 100,
+  "attack": 16,
+  "defense": 4,
+  "speed": 4,
+  "element": "none",
+  "xp": 80,
+  "behavior": "ranged",
+  "aggro_range": 7,
+  "attack_range": 5,
+  "attacks": [
+   {
+    "name": "Flecha",
+    "damage_min": 10,
+    "damage_max": 20,
+    "cooldown_s": 2.2,
+    "type": "projectile"
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "bandit_emblem",
+    "chance": 0.6,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "shuriken_iron",
+    "chance": 0.3,
+    "min": 3,
+    "max": 10
+   }
+  ],
+  "ryo_min": 10,
+  "ryo_max": 30,
+  "respawn_s": 50,
+  "sprite": "mon_bandit_archer",
+  "article": "um"
+ },
+ {
+  "id": "boss_bandit_chief",
+  "name": "Chefe dos Bandidos",
+  "description": "O bandido mais velho e mais experiente da estrada, não um ninja renomado — só alguém que sobreviveu bandido tempo demais. Boss da Floresta da Vila. Aparece a cada 2h.",
+  "level": 12,
+  "hp": 1500,
+  "attack": 30,
+  "defense": 12,
+  "speed": 4,
+  "element": "katon",
+  "xp": 1500,
+  "behavior": "aggressive",
+  "aggro_range": 8,
+  "attack_range": 1,
+  "boss": true,
+  "attacks": [
+   {
+    "name": "Golpe Pesado",
+    "damage_min": 25,
+    "damage_max": 45,
+    "cooldown_s": 2.0,
+    "type": "melee"
+   },
+   {
+    "name": "Giro de Lâmina",
+    "damage_min": 20,
+    "damage_max": 35,
+    "cooldown_s": 6.0,
+    "type": "area",
+    "shape": "circle_r1"
+   }
+  ],
+  "phases": [
+   {
+    "hp_percent": 50,
+    "summons": [
+     {
+      "monster_id": "bandit",
+      "count": 3
+     }
     ],
-    "loot": [
-      {
-        "item_id": "wolf_pelt",
-        "chance": 0.5,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "onigiri",
-        "chance": 0.1,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "amuleto_academia",
-        "chance": 0.03,
-        "min": 1,
-        "max": 1
-      }
-    ],
-    "ryo_min": 2,
-    "ryo_max": 8,
-    "respawn_s": 30,
-    "sprite": "mon_wolf",
-    "article": "um"
-  },
-  {
-    "id": "bandit",
-    "name": "Bandido",
-    "description": "Ladrão de estrada com uma faca enferrujada.",
-    "level": 5,
-    "hp": 120,
-    "attack": 14,
-    "defense": 5,
-    "speed": 4,
-    "element": "none",
-    "xp": 60,
-    "behavior": "aggressive",
-    "aggro_range": 6,
-    "attack_range": 1,
-    "attacks": [
-      {
-        "name": "Facada",
-        "damage_min": 8,
-        "damage_max": 18,
-        "cooldown_s": 1.8,
-        "type": "melee"
-      }
-    ],
-    "loot": [
-      {
-        "item_id": "bandit_emblem",
-        "chance": 0.6,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "kunai_iron",
-        "chance": 0.05,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "health_potion_small",
-        "chance": 0.08,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "amuleto_academia",
-        "chance": 0.04,
-        "min": 1,
-        "max": 1
-      }
-    ],
-    "ryo_min": 8,
-    "ryo_max": 25,
-    "respawn_s": 45,
-    "sprite": "mon_bandit",
-    "article": "um"
-  },
-  {
-    "id": "forest_snake",
-    "name": "Cobra da Floresta",
-    "description": "Venenosa. Foge quando ferida.",
-    "level": 4,
-    "hp": 70,
-    "attack": 10,
-    "defense": 3,
-    "speed": 5,
-    "element": "doton",
-    "xp": 45,
-    "behavior": "cowardly",
-    "aggro_range": 4,
-    "attack_range": 1,
-    "attacks": [
-      {
-        "name": "Picada",
-        "damage_min": 5,
-        "damage_max": 12,
-        "cooldown_s": 1.6,
-        "type": "melee",
-        "effects": [
-          {
-            "type": "poison",
-            "chance": 0.3,
-            "duration_s": 6,
-            "value": 2
-          }
-        ]
-      }
-    ],
-    "loot": [
-      {
-        "item_id": "snake_fang",
-        "chance": 0.35,
-        "min": 1,
-        "max": 2
-      }
-    ],
-    "ryo_min": 3,
-    "ryo_max": 12,
-    "respawn_s": 40,
-    "sprite": "mon_snake",
-    "article": "uma"
-  },
-  {
-    "id": "bandit_archer",
-    "name": "Bandido Arqueiro",
-    "description": "Atira de longe e mantém distância.",
-    "level": 7,
-    "hp": 100,
-    "attack": 16,
-    "defense": 4,
-    "speed": 4,
-    "element": "none",
-    "xp": 80,
-    "behavior": "ranged",
-    "aggro_range": 7,
-    "attack_range": 5,
-    "attacks": [
-      {
-        "name": "Flecha",
-        "damage_min": 10,
-        "damage_max": 20,
-        "cooldown_s": 2.2,
-        "type": "projectile"
-      }
-    ],
-    "loot": [
-      {
-        "item_id": "bandit_emblem",
-        "chance": 0.6,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "shuriken_iron",
-        "chance": 0.3,
-        "min": 3,
-        "max": 10
-      }
-    ],
-    "ryo_min": 10,
-    "ryo_max": 30,
-    "respawn_s": 50,
-    "sprite": "mon_bandit_archer",
-    "article": "um"
-  },
-  {
-    "id": "boss_bandit_chief",
-    "name": "Chefe dos Bandidos",
-    "description": "O bandido mais velho e mais experiente da estrada, não um ninja renomado — só alguém que sobreviveu bandido tempo demais. Boss da Floresta da Vila. Aparece a cada 2h.",
-    "level": 12,
-    "hp": 1500,
-    "attack": 30,
-    "defense": 12,
-    "speed": 4,
-    "element": "katon",
-    "xp": 1500,
-    "behavior": "aggressive",
-    "aggro_range": 8,
-    "attack_range": 1,
-    "boss": true,
-    "attacks": [
-      {
-        "name": "Golpe Pesado",
-        "damage_min": 25,
-        "damage_max": 45,
-        "cooldown_s": 2.0,
-        "type": "melee"
-      },
-      {
-        "name": "Giro de Lâmina",
-        "damage_min": 20,
-        "damage_max": 35,
-        "cooldown_s": 6.0,
-        "type": "area",
-        "shape": "circle_r1"
-      }
-    ],
-    "phases": [
-      {
-        "hp_percent": 50,
-        "summons": [
-          {
-            "monster_id": "bandit",
-            "count": 3
-          }
-        ],
-        "message": "Venham, seus inúteis!"
-      },
-      {
-        "hp_percent": 20,
-        "attack_multiplier": 1.5,
-        "message": "Não vou cair para um genin!"
-      }
-    ],
-    "loot": [
-      {
-        "item_id": "katana_ronin",
-        "chance": 0.15,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "scroll_shousen",
-        "chance": 0.1,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "gloves_taijutsu",
-        "chance": 0.2,
-        "min": 1,
-        "max": 1
-      },
-      {
-        "item_id": "health_potion_small",
-        "chance": 1.0,
-        "min": 3,
-        "max": 6
-      },
-      {
-        "item_id": "bandit_emblem",
-        "chance": 1.0,
-        "min": 5,
-        "max": 10
-      }
-    ],
-    "ryo_min": 300,
-    "ryo_max": 800,
-    "respawn_s": 7200,
-    "sprite": "mon_bandit_chief",
-    "article": "o"
-  },
-  {
-    "id": "forest_deer",
-    "name": "Cervo",
-    "description": "Não ataca (behavior passivo). Monstro de teste de PvM: só briga se você atacar primeiro.",
-    "level": 2,
-    "hp": 30,
-    "attack": 3,
-    "defense": 0,
-    "speed": 5,
-    "element": "none",
-    "xp": 5,
-    "behavior": "passive",
-    "aggro_range": 0,
-    "attack_range": 1,
-    "attacks": [
-      {
-        "name": "Coice",
-        "damage_min": 1,
-        "damage_max": 3,
-        "cooldown_s": 2.0,
-        "type": "melee"
-      }
-    ],
-    "loot": [
-      {
-        "item_id": "onigiri",
-        "chance": 0.2,
-        "min": 1,
-        "max": 1
-      }
-    ],
-    "ryo_min": 1,
-    "ryo_max": 3,
-    "respawn_s": 30,
-    "sprite": "mon_wolf",
-    "article": "um"
-  }
+    "message": "Venham, seus inúteis! Essa ‘nuvem vermelha’ que anda nos vigiando não fui eu quem escolhi, moleque — fui só pago."
+   },
+   {
+    "hp_percent": 20,
+    "attack_multiplier": 1.5,
+    "message": "Não vou cair para um genin!"
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "katana_ronin",
+    "chance": 0.15,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "scroll_shousen",
+    "chance": 0.1,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "gloves_taijutsu",
+    "chance": 0.2,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item_id": "health_potion_small",
+    "chance": 1.0,
+    "min": 3,
+    "max": 6
+   },
+   {
+    "item_id": "bandit_emblem",
+    "chance": 1.0,
+    "min": 5,
+    "max": 10
+   }
+  ],
+  "ryo_min": 300,
+  "ryo_max": 800,
+  "respawn_s": 7200,
+  "sprite": "mon_bandit_chief",
+  "article": "o"
+ },
+ {
+  "id": "forest_deer",
+  "name": "Cervo",
+  "description": "Não ataca (behavior passivo). Monstro de teste de PvM: só briga se você atacar primeiro.",
+  "level": 2,
+  "hp": 30,
+  "attack": 3,
+  "defense": 0,
+  "speed": 5,
+  "element": "none",
+  "xp": 5,
+  "behavior": "passive",
+  "aggro_range": 0,
+  "attack_range": 1,
+  "attacks": [
+   {
+    "name": "Coice",
+    "damage_min": 1,
+    "damage_max": 3,
+    "cooldown_s": 2.0,
+    "type": "melee"
+   }
+  ],
+  "loot": [
+   {
+    "item_id": "onigiri",
+    "chance": 0.2,
+    "min": 1,
+    "max": 1
+   }
+  ],
+  "ryo_min": 1,
+  "ryo_max": 3,
+  "respawn_s": 30,
+  "sprite": "mon_wolf",
+  "article": "um"
+ }
 ]
