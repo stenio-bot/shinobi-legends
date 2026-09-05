@@ -69,6 +69,12 @@ end
 
 --- Promove o jogador para 'rankId' se ele ainda não tiver esse rank ou superior. Aplica bônus
 --- de status, título e efeito. Retorna true se promoveu (false se já era esse rank ou maior).
+--- Empurra o `state` do opcode 210 (com o novo rank) para o cliente na hora - é assim que o
+--- rótulo "Rank: X" do menu Shinobi/status atualiza sem precisar relogar (docs/sistemas/
+--- cliente-ux.md). NarutoCharacters pode ainda não ter sido carregado (ordem de dofile em
+--- data/lib/lib.lua não é garantida entre libs "naruto_*"); a chamada só ACONTECE em runtime
+--- (login/talkaction/GM), quando todas as libs já terminaram de carregar - a guarda `if` é só
+--- para o caso raro de rodar sem naruto_characters.lua instalado.
 function NarutoRanks.promote(player, rankId)
 	local target = NarutoRanks.byRank[rankId]
 	if not target then return false end
@@ -77,5 +83,8 @@ function NarutoRanks.promote(player, rankId)
 	NarutoRanks.applyBonus(player)
 	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Parabéns! Você agora é " .. target.title .. "!")
 	player:getPosition():sendMagicEffect(CONST_ME_FIREWORK_YELLOW)
+	if NarutoCharacters and NarutoCharacters.sendState then
+		NarutoCharacters.sendState(player)
+	end
 	return true
 end

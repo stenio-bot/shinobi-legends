@@ -5,20 +5,20 @@
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>
 		<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="2.0"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="2.0"/><skill id="5" multiplier="1.5"/><skill id="6" multiplier="1.1"/>
 	</vocation>
-	<vocation id="1" clientid="1" name="Vila da Folha" description="um ninja da Vila da Folha" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="4.00" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="1">
+	<vocation id="1" clientid="1" name="Vila da Folha" description="um ninja da Vila da Folha" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="1.30" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="1">
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>
-		<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="1.67"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="2.0"/><skill id="5" multiplier="1.5"/><skill id="6" multiplier="1.1"/>
+		<skill id="0" multiplier="1.1"/><skill id="1" multiplier="1.1"/><skill id="2" multiplier="0.92"/><skill id="3" multiplier="1.1"/><skill id="4" multiplier="1.1"/><skill id="5" multiplier="1.1"/><skill id="6" multiplier="1.1"/>
 	</vocation>
-	<vocation id="2" clientid="2" name="Vila da Névoa" description="um ninja da Vila da Névoa" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="3.33" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="2">
+	<vocation id="2" clientid="2" name="Vila da Névoa" description="um ninja da Vila da Névoa" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="1.08" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="2">
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>
-		<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="2.0"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="2.0"/><skill id="5" multiplier="1.5"/><skill id="6" multiplier="1.1"/>
+		<skill id="0" multiplier="1.1"/><skill id="1" multiplier="1.1"/><skill id="2" multiplier="1.1"/><skill id="3" multiplier="1.1"/><skill id="4" multiplier="1.1"/><skill id="5" multiplier="1.1"/><skill id="6" multiplier="1.1"/>
 	</vocation>
-	<vocation id="3" clientid="3" name="Vila da Nuvem" description="um ninja da Vila da Nuvem" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="4.00" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="3">
+	<vocation id="3" clientid="3" name="Vila da Nuvem" description="um ninja da Vila da Nuvem" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="1.30" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="3">
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>
-		<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="2.0"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="1.67"/><skill id="5" multiplier="1.5"/><skill id="6" multiplier="1.1"/>
+		<skill id="0" multiplier="1.1"/><skill id="1" multiplier="1.1"/><skill id="2" multiplier="1.1"/><skill id="3" multiplier="1.1"/><skill id="4" multiplier="0.92"/><skill id="5" multiplier="1.1"/><skill id="6" multiplier="1.1"/>
 	</vocation>
-	<vocation id="4" clientid="4" name="Vila da Areia" description="um ninja da Vila da Areia" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="4.00" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="4">
+	<vocation id="4" clientid="4" name="Vila da Areia" description="um ninja da Vila da Areia" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="1.30" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="4">
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>
-		<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="2.0"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="2.0"/><skill id="5" multiplier="1.25"/><skill id="6" multiplier="1.1"/>
+		<skill id="0" multiplier="1.1"/><skill id="1" multiplier="1.1"/><skill id="2" multiplier="1.1"/><skill id="3" multiplier="1.1"/><skill id="4" multiplier="1.1"/><skill id="5" multiplier="0.92"/><skill id="6" multiplier="1.1"/>
 	</vocation>
 </vocations>

@@ -171,6 +171,14 @@ function NarutoCharacters.sendState(player, firstTime)
 	if char then for _, j in ipairs(char.jutsus) do active[#active + 1] = jutsuJson(j) end end
 	if element then for _, j in ipairs(element.jutsus) do active[#active + 1] = jutsuJson(j) end end
 
+	-- rank (docs/sistemas/progressao-servidor.md): discreto, so id/titulo/indice - o cliente
+	-- mostra ao lado do nome/skills. NarutoRanks pode nao existir (compat); nesse caso null.
+	local rankInfo = NarutoJson.null
+	if NarutoRanks then
+		local r = NarutoRanks.get(player)
+		rankInfo = {id = r.rank, title = r.title, index = r.index}
+	end
+
 	local state = {
 		type = 'state',
 		first_time = firstTime == true,
@@ -179,11 +187,131 @@ function NarutoCharacters.sendState(player, firstTime)
 		element = element and element.id or NarutoJson.null,
 		level = player:getLevel(),
 		village = villageIdOf(player) or NarutoJson.null,
+		rank = rankInfo,
 		characters = chars,
 		elements = els,
 		active_jutsus = active,
 	}
 	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(state))
+end
+
+-- ------------------------------------------------------------------ progresso (opcode 210,
+-- acao get_progress) - aba Missoes do menu Shinobi: rank + proximo rank (requisitos
+-- pendentes), tarefas ativas, diarias do dia e missoes de historia com status.
+-- NarutoRanks/NarutoQuests/NarutoTasks/NarutoDailies sao globais definidos em outras libs
+-- (data/lib/naruto_ranks.lua, naruto_quests.lua, naruto_tasks.lua, naruto_dailies.lua) - todas
+-- ja carregadas por dofile em data/lib/lib.lua antes de qualquer jogador logar; guardas `if X
+-- then` sao so para o caso raro de uma delas nao existir (compat, ex.: sem data/tasks.json).
+local function nextRankRequirements(player, nextRank)
+	local reqs = NarutoJson.array({})
+	if not NarutoQuests or not nextRank then return reqs end
+	local group = NarutoQuests.rankGroups[nextRank.rank]
+	if not group then return reqs end
+	for _, storage in ipairs(group) do
+		local q = NarutoQuests.byStorage and NarutoQuests.byStorage[storage]
+		if q then
+			reqs[#reqs + 1] = {
+				name = q.name,
+				npc = q.npcName or q.npc,
+				done = player:getStorageValue(storage) == NarutoQuests.DONE,
+			}
+		end
+	end
+	return reqs
+end
+
+local function rankProgressJson(player)
+	if not NarutoRanks then return NarutoJson.null end
+	local cur = NarutoRanks.get(player)
+	local out = {id = cur.rank, title = cur.title, index = cur.index}
+	local nextRank = NarutoRanks.byIndex[cur.index + 1]
+	if nextRank then
+		out.next = {
+			id = nextRank.rank, title = nextRank.title, index = nextRank.index,
+			minLevel = nextRank.minLevel, requirements = nextRankRequirements(player, nextRank),
+		}
+	else
+		out.next = NarutoJson.null
+	end
+	return out
+end
+
+local function tasksProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoTasks then return out end
+	local now = os.time()
+	for _, t in ipairs(NarutoTasks.list) do
+		local prog = player:getStorageValue(t.progressStorage)
+		if prog >= 0 then
+			local cooldownUntil = player:getStorageValue(t.cooldownStorage)
+			local remaining = 0
+			if cooldownUntil and cooldownUntil > now then
+				remaining = math.ceil((cooldownUntil - now) / 60)
+			end
+			out[#out + 1] = {
+				id = t.id, name = t.name, npc = t.npcName, monster = t.monster,
+				progress = prog, count = t.count, ready = prog >= t.count,
+				cooldownRemainingMin = remaining,
+			}
+		end
+	end
+	return out
+end
+
+local function dailiesProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoDailies then return out end
+	NarutoDailies.rollIfNeeded(player)
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			local status
+			if prog > entry.count then
+				status = 'delivered'
+			elseif prog == entry.count then
+				status = 'ready'
+			else
+				status = 'progress'
+			end
+			out[#out + 1] = {
+				slot = slot, id = entry.id, name = entry.name, monster = entry.monster,
+				progress = math.max(prog, 0), count = entry.count, status = status,
+			}
+		end
+	end
+	return out
+end
+
+local function missionsProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoQuests then return out end
+	for _, q in ipairs(NarutoQuests.list) do
+		local st = player:getStorageValue(q.storage)
+		local status
+		if st == NarutoQuests.DONE then
+			status = 'done'
+		elseif st < 0 then
+			status = 'available'
+		else
+			status = 'in_progress'
+		end
+		out[#out + 1] = {id = q.id, name = q.name, npc = q.npcName or q.npc, status = status}
+	end
+	return out
+end
+
+--- Monta e envia o `progress` para o cliente (opcode 210, buffer JSON) - aba Missoes.
+function NarutoCharacters.sendProgress(player)
+	if not player or not player:isPlayer() then return false end
+	local progress = {
+		type = 'progress',
+		rank = rankProgressJson(player),
+		tasks = tasksProgressJson(player),
+		dailies = dailiesProgressJson(player),
+		missions = missionsProgressJson(player),
+	}
+	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(progress))
 end
 
 -- ------------------------------------------------------------------ cliente -> servidor
@@ -203,6 +331,8 @@ function opcodeEvent.onExtendedOpcode(player, opcode, buffer)
 			player:sendCancelMessage(e or "Selecao invalida.")
 		end
 		NarutoCharacters.sendState(player)
+	elseif msg.type == 'get_progress' then
+		NarutoCharacters.sendProgress(player)
 	end
 	return true
 end
@@ -213,6 +343,13 @@ local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoOpcode")
 	local firstTime = player:getStorageValue(STORAGE_ONBOARDED) < 1
+	-- Reserva de chakra inicial: o TFS cria o jogador com 0 de mana e as vocacoes dao +10/level,
+	-- mas os jutsus tier 1 custam 12-15 — sem isso um Genin novo nao consegue lancar NADA
+	-- ate o level 3. Piso de 60 de chakra (equivale a ~4 jutsus tier 1), aplicado uma vez.
+	if firstTime and player:getMaxMana() < 60 then
+		player:setMaxMana(60)
+		player:addMana(60)
+	end
 	NarutoCharacters.apply(player, nil, nil, {silent = true, force = true, noState = true})
 	local pid = player:getId()
 	-- ~1s depois de entrar: o cliente ja carregou os modulos e escuta o opcode 210

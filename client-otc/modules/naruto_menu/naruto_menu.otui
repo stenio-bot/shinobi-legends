@@ -282,6 +282,100 @@ ShinobiJutsusTab < ShinobiTabPanel
     ShinobiListPanel
 
 // ---------------------------------------------------------------------------
+// aba Missoes: rank + proximo rank, tarefas ativas, diarias do dia e missoes
+// de historia. Tudo numa unica ShinobiListArea com cabecalhos de secao (mais
+// simples que 4 paineis/scrollbars separados; a lista toda e reconstruida do
+// zero a cada `progress` recebido, igual as outras abas).
+// ---------------------------------------------------------------------------
+ShinobiSectionHeader < Label
+  height: 18
+  margin-top: 6
+  margin-bottom: 2
+  color: $shGold
+  font: verdana-11px-antialised
+
+// linha generica: titulo + subtitulo (esquerda) e status/acao (direita).
+// Usada para tarefas, diarias, missoes de historia e requisitos de rank.
+ShinobiInfoRow < UIWidget
+  height: 36
+  focusable: false
+  image-source: /images/ui/panel_flat
+  image-border: 4
+  margin-bottom: 3
+
+  Button
+    id: actionButton
+    width: 78
+    height: 20
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+    visible: false
+
+  Label
+    id: statusLabel
+    width: 92
+    anchors.right: actionButton.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+    text-align: right
+    color: $shGrey
+
+  Label
+    id: titleLabel
+    anchors.left: parent.left
+    anchors.right: statusLabel.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 4
+    margin-right: 6
+    color: $shGold
+
+  Label
+    id: subLabel
+    anchors.left: titleLabel.left
+    anchors.right: statusLabel.left
+    anchors.top: titleLabel.bottom
+    margin-top: 2
+    margin-right: 6
+    color: $shGrey
+    text-wrap: true
+
+ShinobiMissionsTab < ShinobiTabPanel
+  Button
+    id: refreshButton
+    width: 96
+    anchors.right: parent.right
+    anchors.top: parent.top
+
+  ShinobiHint
+    id: hint
+    height: 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: refreshButton.left
+    margin-right: 6
+
+  VerticalScrollBar
+    id: listScrollBar
+    anchors.top: hint.bottom
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-top: 6
+    step: 24
+
+  ShinobiListArea
+    id: listArea
+    anchors.top: hint.bottom
+    anchors.left: parent.left
+    anchors.right: listScrollBar.left
+    anchors.bottom: parent.bottom
+    margin-top: 6
+    margin-right: 4
+
+    ShinobiListPanel
+
+// ---------------------------------------------------------------------------
 // aba Comandos (so GM)
 // ---------------------------------------------------------------------------
 ShinobiCommandButton < Button

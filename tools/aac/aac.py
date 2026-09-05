@@ -279,7 +279,7 @@ def create_character(account_name: str, account_password: str, char_name: str, s
                          skill_fishing, skill_fishing_tries)
                     VALUES
                         (%s, 1, %s, 1, %s, 0,
-                         150, 150, 0, 0, 400,
+                         150, 150, 60, 60, 400,
                          %s, %s, %s, %s, NULL,
                          0, 0, 0, 0, %s, 0,
                          2, %s,

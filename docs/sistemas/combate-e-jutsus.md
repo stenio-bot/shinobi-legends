@@ -153,6 +153,7 @@ o cliente carregar os módulos) e depois de qualquer mudança (`select`, `!perso
   "element": "suiton",          // ou null
   "level": 8,
   "village": "leaf",            // leaf | mist | cloud | sand
+  "rank": { "id": "genin", "title": "Genin da vila", "index": 1 },  // ou null (NarutoRanks ausente)
   "characters": [               // só os da vila do jogador (GM: todos os 9)
     {
       "id": "genin_laranja",
@@ -177,9 +178,62 @@ o cliente carregar os módulos) e depois de qualquer mudança (`select`, `!perso
 |---|---|
 | `{"type":"select","character":"genin_uchiha","element":"katon"}` | valida, aplica e responde `state`. Qualquer um dos dois campos pode vir `null`/ausente = **manter** o atual |
 | `{"type":"get_state"}` | responde `state` sem mudar nada |
+| `{"type":"get_progress"}` | responde `progress` (ver abaixo) sem mudar nada |
 
 Se a seleção for inválida (personagem de outra vila para um não-GM, id desconhecido) o
 servidor manda um `sendCancelMessage` **e** o `state` atual — o cliente nunca fica sem estado.
+
+**Servidor → cliente: `progress`** (ação `get_progress`, aba "Missões" do menu Shinobi —
+`docs/sistemas/cliente-ux.md`). Ao contrário do `state`, o `progress` **não** é empurrado
+sozinho pelo servidor: o cliente pede sob demanda (abrir a aba, botão "Atualizar", depois de
+`!diaria entregar`), porque a lista de 45 missões de história deixaria o payload
+desnecessariamente grande para mandar em todo login/troca de personagem.
+
+```json
+{
+  "type": "progress",
+  "rank": {
+    "id": "genin", "title": "Genin da vila", "index": 1,
+    "next": {                                   // null se já for Kage (rank máximo)
+      "id": "chunin", "title": "Chunin — aprovado no Exame Chunin", "index": 2, "minLevel": 20,
+      "requirements": [                         // 1 por quest do grupo (NarutoQuests.rankGroups)
+        { "name": "Exame Chunin — Torneio (3/3)", "npc": "Instrutora Ibuki", "done": false }
+      ]
+    }
+  },
+  "tasks": [   // só as ACEITAS (progressStorage >= 0), igual ao !tarefas
+    { "id": "task_wolf_1", "name": "...", "npc": "Mestre de Tarefas Jiro", "monster": "Lobo",
+      "progress": 3, "count": 8, "ready": false, "cooldownRemainingMin": 0 }
+  ],
+  "dailies": [  // as 3 do dia (NarutoDailies), status: progress | ready | delivered
+    { "slot": 1, "id": "daily_wolves", "name": "Diária: Alcateia", "monster": "Lobo",
+      "progress": 6, "count": 6, "status": "ready" }
+  ],
+  "missions": [  // TODAS as 45 quests de história (NarutoQuests.list), status:
+                 // available | in_progress | done
+    { "id": "q_lair_intro", "name": "Clones não sangram, mas caem",
+      "npc": "Capitã Anbu Suzu", "status": "available" }
+  ]
+}
+```
+
+Implementado em `NarutoCharacters.sendProgress` (mesmo arquivo gerado que `sendState`), com 4
+funções auxiliares (`rankProgressJson`, `tasksProgressJson`, `dailiesProgressJson`,
+`missionsProgressJson`) — cada uma faz `if not NarutoX then return {} end` antes de usar
+`NarutoRanks`/`NarutoTasks`/`NarutoDailies`/`NarutoQuests`, então o `progress` nunca quebra se
+uma dessas libs não estiver instalada (ex.: servidor sem `data/tasks.json`). `NarutoQuests`
+ganhou um índice reverso `NarutoQuests.byStorage[storage] -> quest` (usado por
+`rankProgressJson` para achar nome/NPC de cada requisito de rank) e cada quest/tarefa passou a
+carregar `npcName` (nome de exibição do NPC, ex. "Instrutora Ibuki") além do `npc` (id interno,
+ex. `exam_proctor_forest`) — os dois campos vêm de `tools/export_tfs.py`.
+
+**`state.rank` e `NarutoRanks.promote`**: `NarutoCharacters.sendState` agora inclui um campo
+`rank` (id/título/índice do rank atual, ou `null` se `NarutoRanks` não estiver carregado) — é
+esse campo que o cliente mostra na janela de Atributos (`docs/sistemas/cliente-ux.md`).
+`NarutoRanks.promote` (chamada por `grantQuestRankIfReady` ao concluir a quest final de um
+exame, ou por `/rank <id>` de GM) agora termina chamando `NarutoCharacters.sendState(player)`
+(guardado por `if NarutoCharacters and NarutoCharacters.sendState then`) — o rank na tela
+atualiza na hora da promoção, sem precisar reabrir o menu nem relogar.
 
 **O que `NarutoCharacters.apply(player, characterId, elementId, opts)` faz**, na ordem:
 libera os trajes da vila no 1º login → `player:addOutfit(look)` do personagem → `forgetSpell`

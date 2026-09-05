@@ -35,6 +35,7 @@ local OPCODE = 210
 -- paleta (copia de data/styles/50-ninja.otui; ver naruto_menu.otui)
 local COLOR_GREY = '#c0c8d4'
 local COLOR_GREEN = '#56a860'
+local COLOR_GOLD = '#e0c070'
 
 -- elementos: ordem, rotulo pt-BR e cor do botao. A lista de verdade (com os
 -- jutsus) vem do servidor; isto e so nome/cor de exibicao.
@@ -63,12 +64,13 @@ local WAITING = 'Aguardando servidor...'
 local menuWindow = nil
 local menuButton = nil
 local tabBar = nil
-local charTab, elemTab, jutsuTab, cmdTab = nil, nil, nil, nil
-local charTabButton, elemTabButton, jutsuTabButton, cmdTabButton = nil, nil, nil, nil
+local charTab, elemTab, jutsuTab, missionsTab, cmdTab = nil, nil, nil, nil, nil
+local charTabButton, elemTabButton, jutsuTabButton, missionsTabButton, cmdTabButton = nil, nil, nil, nil, nil
 local elementButtons = {}
 
 -- estado
 local lastState = nil
+local lastProgress = nil -- ultimo `progress` recebido (aba Missoes)
 local pendingElement = nil -- elemento marcado na aba (ainda nao enviado)
 
 -- noclip (GM)
@@ -217,6 +219,13 @@ end
 
 function sendSelect(characterId, elementId)
     return send({ type = 'select', character = characterId, element = elementId })
+end
+
+--- Pede o `progress` (aba Missoes): rank/proximo rank, tarefas ativas, diarias
+--- do dia e missoes de historia. Ver server/generated/scripts/naruto/
+--- character_switch.lua, NarutoCharacters.sendProgress.
+function requestProgress()
+    return send({ type = 'get_progress' })
 end
 
 -- ---------------------------------------------------------------------------
@@ -424,6 +433,153 @@ local function buildJutsusTab()
 end
 
 -- ---------------------------------------------------------------------------
+-- aba Missoes: rank + proximo rank, tarefas ativas, diarias do dia e missoes
+-- de historia (naruto_menu.otui: ShinobiSectionHeader/ShinobiInfoRow). Tudo
+-- vem do `progress` (opcode 210, ver requestProgress/onProgress).
+-- ---------------------------------------------------------------------------
+local function addSectionHeader(parent, text)
+    local lbl = g_ui.createWidget('ShinobiSectionHeader', parent)
+    lbl:setText(text)
+    return lbl
+end
+
+--- opts: title, sub, status, statusColor, actionText, onAction.
+local function addInfoRow(parent, opts)
+    local row = g_ui.createWidget('ShinobiInfoRow', parent)
+    row.titleLabel:setText(opts.title or '?')
+    row.subLabel:setText(opts.sub or '')
+    if opts.status then
+        row.statusLabel:setText(opts.status)
+        row.statusLabel:setColor(opts.statusColor or COLOR_GREY)
+    end
+    if opts.actionText then
+        row.actionButton:setVisible(true)
+        row.actionButton:setText(opts.actionText)
+        row.actionButton.onClick = opts.onAction
+    end
+    return row
+end
+
+--- Rotulo/cor comuns aos 3 vocabularios de status que o servidor manda:
+--- missoes (available/in_progress/done), tarefas (usa progress/ready direto)
+--- e diarias (progress/ready/delivered).
+local function progressStatusLabel(status)
+    if status == 'done' or status == 'delivered' then
+        return 'Conclu\xEDda', COLOR_GREEN
+    elseif status == 'ready' then
+        return 'PRONTA', COLOR_GOLD
+    elseif status == 'in_progress' or status == 'progress' then
+        return 'Em andamento', COLOR_GOLD
+    end
+    return 'Dispon\xEDvel', COLOR_GREY -- 'available'
+end
+
+local function buildMissionsTab()
+    local list = missionsTab.list
+    list:destroyChildren()
+    local p = lastProgress
+    if not p then
+        emptyList(list, 'Aguardando servidor... (feche e abra esta aba de novo se demorar)')
+        return
+    end
+
+    addSectionHeader(list, 'RANK')
+    local rank = p.rank
+    if not rank then
+        emptyList(list, 'Sistema de rank indispon\xEDvel no servidor.')
+    else
+        addInfoRow(list, { title = rank.title or rank.id or '?', sub = 'Seu rank atual.' })
+        local nxt = rank.next
+        if not nxt then
+            addInfoRow(list, { title = 'Rank m\xE1ximo alcan\xE7ado', sub = 'Voc\xEA chegou a Kage.' })
+        else
+            local reqs = nxt.requirements or {}
+            local doneCount = 0
+            for _, r in ipairs(reqs) do
+                if r.done then
+                    doneCount = doneCount + 1
+                end
+            end
+            addInfoRow(list, {
+                title = 'Pr\xF3ximo: ' .. (nxt.title or nxt.id or '?'),
+                sub = 'N\xEDvel m\xEDnimo ' .. tostring(nxt.minLevel or '?') .. '.',
+                status = doneCount .. '/' .. #reqs,
+                statusColor = (doneCount >= #reqs and #reqs > 0) and COLOR_GREEN or COLOR_GOLD,
+            })
+            for _, r in ipairs(reqs) do
+                local status, color = r.done and 'Conclu\xEDda' or 'Pendente', r.done and COLOR_GREEN or COLOR_GREY
+                addInfoRow(list, {
+                    title = r.name or '?',
+                    sub = 'NPC: ' .. (r.npc or '?'),
+                    status = status, statusColor = color,
+                })
+            end
+        end
+    end
+
+    addSectionHeader(list, 'TAREFAS ATIVAS')
+    local tasks = p.tasks or {}
+    if #tasks == 0 then
+        emptyList(list, 'Nenhuma tarefa aceita. Fale com um Mestre de Tarefas da regi\xE3o e diga {tarefa}.')
+    else
+        for _, t in ipairs(tasks) do
+            local status, color
+            if t.ready then
+                status, color = 'PRONTA', COLOR_GOLD
+            elseif (t.cooldownRemainingMin or 0) > 0 then
+                status, color = t.cooldownRemainingMin .. ' min', COLOR_GREY
+            else
+                status, color = (t.progress or 0) .. '/' .. (t.count or 0), COLOR_GREY
+            end
+            addInfoRow(list, {
+                title = t.name or '?',
+                sub = (t.monster or '?') .. ' - entregar com ' .. (t.npc or '?'),
+                status = status, statusColor = color,
+            })
+        end
+    end
+
+    addSectionHeader(list, 'DI\xC1RIAS DE HOJE')
+    local dailies = p.dailies or {}
+    if #dailies == 0 then
+        emptyList(list, 'Nenhuma di\xE1ria dispon\xEDvel para o seu level hoje.')
+    else
+        for _, d in ipairs(dailies) do
+            local status, color = progressStatusLabel(d.status)
+            local row = addInfoRow(list, {
+                title = d.name or '?',
+                sub = (d.monster or '') .. ': ' .. (d.progress or 0) .. '/' .. (d.count or 0),
+                status = status, statusColor = color,
+            })
+            if d.status == 'ready' then
+                row.actionButton:setVisible(true)
+                row.actionButton:setText('Entregar')
+                row.actionButton.onClick = function()
+                    g_game.talk('!diaria entregar')
+                    setStatus('Comando enviado: !diaria entregar')
+                    scheduleEvent(requestProgress, 500)
+                end
+            end
+        end
+    end
+
+    addSectionHeader(list, 'MISS\xD5ES')
+    local missions = p.missions or {}
+    if #missions == 0 then
+        emptyList(list, 'Nenhuma miss\xE3o cadastrada no servidor.')
+    else
+        for _, m in ipairs(missions) do
+            local status, color = progressStatusLabel(m.status)
+            addInfoRow(list, {
+                title = m.name or '?',
+                sub = 'NPC: ' .. (m.npc or '?'),
+                status = status, statusColor = color,
+            })
+        end
+    end
+end
+
+-- ---------------------------------------------------------------------------
 -- aba Comandos (so GM)
 -- ---------------------------------------------------------------------------
 local function talk(command)
@@ -543,6 +699,50 @@ function isNoclipEnabled()
 end
 
 -- ---------------------------------------------------------------------------
+-- traducao das mensagens de sistema (barra de chat) - naruto_theme/naruto_chat.lua
+--
+-- Por que isto mora AQUI (no controller de prioridade 1100) e nao dentro do
+-- proprio naruto_theme (prioridade 600): a lista de callbacks por "message
+-- mode" (modules/gamelib/textmessages.lua, registerMessageMode/
+-- messageModeCallbacks) so existe depois que game_textmessage.init() roda, e
+-- game_textmessage e carregado pelo load-later de game_interface - que, pela
+-- ordem de autoload de init.lua (ver docs/referencias/otclient-modulos.md),
+-- só terminou de carregar quando os modulos de prioridade 1000-9999
+-- (client_mods, onde entra o naruto_menu) comecam. Em naruto_theme (600) o
+-- game_textmessage as vezes ainda nem existe.
+--
+-- COMO: desregistra o callback original (modules.game_textmessage.
+-- displayMessage, acessivel de fora porque module.cpp poe cada modulo
+-- sandboxed em package.loaded[nome] = modules.<nome>) de todo "message mode"
+-- e registra um wrapper que traduz o texto (naruto_theme.translateMessage)
+-- antes de chamar o original - o resto do pipeline (console, texto flutuante,
+-- cor por tipo de item no loot etc.) continua igual, so o texto muda.
+local chatHooked = false
+local function hookChatTranslation()
+    if chatHooked then
+        return
+    end
+    local tm = modules.game_textmessage
+    local theme = modules.naruto_theme
+    if not tm or not tm.displayMessage or not tm.MessageTypes or not theme or not theme.translateMessage then
+        return
+    end
+    local original = tm.displayMessage
+    local function translated(mode, text)
+        local ok, out = pcall(theme.translateMessage, text)
+        return original(mode, (ok and out) or text)
+    end
+    local count = 0
+    for mode in pairs(tm.MessageTypes) do
+        unregisterMessageMode(mode, original)
+        registerMessageMode(mode, translated)
+        count = count + 1
+    end
+    chatHooked = true
+    log('tradutor de mensagens de sistema instalado (' .. count .. ' modos).')
+end
+
+-- ---------------------------------------------------------------------------
 -- montagem das abas
 -- ---------------------------------------------------------------------------
 local function createCommandsTab()
@@ -625,18 +825,81 @@ local function createTabs()
     jutsuTab.fillBarButton:setText('Preencher barra')
     jutsuTab.fillBarButton.onClick = fillActionBar
     jutsuTabButton = tabBar:addTab('Jutsus', jutsuTab)
+
+    missionsTab = g_ui.createWidget('ShinobiMissionsTab')
+    missionsTab:setId('shinobiMissionsTab')
+    missionsTab.list = missionsTab.listArea.list
+    missionsTab.hint:setText('Rank, tarefas ativas, di\xE1rias de hoje e miss\xF5es de hist\xF3ria.')
+    missionsTab.refreshButton:setText('Atualizar')
+    missionsTab.refreshButton.onClick = requestProgress
+    missionsTabButton = tabBar:addTab('Miss\xF5es', missionsTab)
+
+    -- pede o progress na hora de abrir a aba (o `progress` nao chega sozinho
+    -- do servidor como o `state`; so sob pedido, para nao gastar banda a toa).
+    local previousOnTabChange = tabBar.onTabChange
+    tabBar.onTabChange = function(bar, tab)
+        if previousOnTabChange then
+            previousOnTabChange(bar, tab)
+        end
+        if tab == missionsTabButton then
+            requestProgress()
+        end
+    end
+end
+
+-- ---------------------------------------------------------------------------
+-- rank na janela de Atributos (Ctrl+S / botao "Skills"): uma linha discreta
+-- "Rank: <titulo>" logo apos "Level", no mesmo estilo (SkillButton) das
+-- outras linhas. NAO editamos game_skills/skills.otui: criamos o widget em
+-- runtime e o inserimos na mesma lista (MiniWindowContents usa
+-- layout: verticalBox, entao mover com moveChildToIndex reflui o layout
+-- sozinho - ver docs/sistemas/cliente-ux.md).
+-- ---------------------------------------------------------------------------
+local rankRow = nil
+
+local function updateRankDisplay()
+    local rank = lastState and lastState.rank
+    local skills = modules.game_skills
+    local win = skills and skills.skillsWindow
+    if not win then
+        return -- game_skills nao carregou (nao deveria acontecer, mas nao trava por isso)
+    end
+    if not rankRow or rankRow:isDestroyed() then
+        local levelRow = win:recursiveGetChildById('level')
+        if not levelRow then
+            return
+        end
+        local parent = levelRow:getParent()
+        local idx = parent:getChildIndex(levelRow)
+        rankRow = g_ui.createWidget('SkillButton', parent)
+        rankRow:setId('shinobiRankRow')
+        rankRow:setHeight(15)
+        rankRow:setFocusable(false)
+        local nameLbl = g_ui.createWidget('SkillNameLabel', rankRow)
+        nameLbl:setText('Rank')
+        g_ui.createWidget('SkillValueLabel', rankRow) -- id: value (ver skills.otui)
+        parent:moveChildToIndex(rankRow, idx + 1)
+    end
+    if not rank then
+        rankRow:setVisible(false)
+        return
+    end
+    rankRow:setVisible(true)
+    rankRow.value:setText(rank.title or rank.id or '?')
 end
 
 -- ---------------------------------------------------------------------------
 -- state
 -- ---------------------------------------------------------------------------
 local function refreshAll()
+    updateRankDisplay()
     if not menuWindow then
         return
     end
     buildCharacterTab()
     buildElementTab()
     buildJutsusTab()
+    buildMissionsTab()
 
     -- a aba Comandos so existe para GM
     if isGm() and not cmdTabButton then
@@ -695,16 +958,34 @@ function onState(data)
     return true
 end
 
+--- Trata um `progress` ja decodificado (aba Missoes). Publico pelo mesmo
+--- motivo de onState: da pra testar via
+---   modules.naruto_menu.onProgress(json.decode(meuJson))
+function onProgress(data)
+    if type(data) ~= 'table' or data.type ~= 'progress' then
+        return false
+    end
+    lastProgress = decodeStrings(data)
+    if missionsTab then
+        buildMissionsTab()
+    end
+    log(string.format('progress recebido: rank=%s, %d tarefas, %d diarias, %d missoes',
+        tostring(data.rank and data.rank.id), data.tasks and #data.tasks or 0,
+        data.dailies and #data.dailies or 0, data.missions and #data.missions or 0))
+    return true
+end
+
 local function onExtendedOpcode(protocol, code, buffer)
     local ok, data = pcall(json.decode, buffer)
     if not ok then
         g_logger.error('naruto_menu: JSON invalido no opcode ' .. OPCODE .. ': ' .. tostring(data))
         return
     end
-    if not onState(data) then
-        log('mensagem ignorada (type = ' ..
-            tostring(type(data) == 'table' and data.type or '?') .. ')')
+    if onState(data) or onProgress(data) then
+        return
     end
+    log('mensagem ignorada (type = ' ..
+        tostring(type(data) == 'table' and data.type or '?') .. ')')
 end
 
 -- ---------------------------------------------------------------------------
@@ -782,10 +1063,13 @@ function menuController:onInit()
         self:bindKeyDown(entry[1], fn)
         self:bindKeyPress(entry[1], fn)
     end
+
+    hookChatTranslation()
 end
 
 function menuController:onGameStart()
     lastState = nil
+    lastProgress = nil
     pendingElement = nil
     noclipEnabled = false
     refreshAll()
@@ -803,6 +1087,7 @@ end
 function menuController:onGameEnd()
     noclipEnabled = false
     lastState = nil
+    lastProgress = nil
     hide()
 end
 
@@ -817,8 +1102,16 @@ function menuController:onTerminate()
         menuWindow = nil
     end
     tabBar = nil
-    charTab, elemTab, jutsuTab, cmdTab = nil, nil, nil, nil
-    charTabButton, elemTabButton, jutsuTabButton, cmdTabButton = nil, nil, nil, nil
+    charTab, elemTab, jutsuTab, missionsTab, cmdTab = nil, nil, nil, nil, nil
+    charTabButton, elemTabButton, jutsuTabButton, missionsTabButton, cmdTabButton = nil, nil, nil, nil, nil
     elementButtons = {}
     lastState = nil
+    lastProgress = nil
+    -- rankRow foi anexado na janela de Skills (modules.game_skills), fora da
+    -- arvore do menuWindow - destruir explicitamente, senao um reload do
+    -- modulo (reloadable: true) criaria uma segunda linha "Rank" duplicada.
+    if rankRow and not rankRow:isDestroyed() then
+        rankRow:destroy()
+    end
+    rankRow = nil
 end

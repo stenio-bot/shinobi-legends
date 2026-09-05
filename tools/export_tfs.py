@@ -475,15 +475,33 @@ voc = ['<?xml version="1.0" encoding="UTF-8"?>', HEADER_XML.rstrip("\n"), '<voca
        '\t\t<skill id="0" multiplier="1.5"/><skill id="1" multiplier="2.0"/><skill id="2" multiplier="2.0"/><skill id="3" multiplier="2.0"/><skill id="4" multiplier="2.0"/><skill id="5" multiplier="1.5"/><skill id="6" multiplier="1.1"/>',
        '\t</vocation>']
 skill_ids = {"taijutsu": 2, "genjutsu": 1, "shuriken": 4, "defense": 5}
+# Multiplicador base = 1.1 para TODAS as skills treináveis (data/skills.json: "tries_formula":
+# "50 * 1.1^(skill - 10)"). ANTES deste fix (tools/balance/, achado do simulador de balanceamento)
+# o gerador usava 1.5-2.0 (copiado de um template de vocação padrão do TFS) — com mult=2.0 o
+# custo em tentativas DOBRA por nível de skill, contradizendo o próprio data/skills.json e
+# deixando taijutsu/shuriken praticamente parados (skill ~17-25 do nível 5 ao 100). O simulador
+# (tools/balance/sim.py) mostrou que isso torna builds de taijutsu puro inviáveis (~100% de
+# morte contra monstros do mesmo nível a partir de L5) porque o dano de arma
+# (weapons.cpp:135 getMaxWeaponDamage) depende de `skill/4+1`, que fica baixo demais.
 for vid, v in villages.items():
     vm = M["villages"][vid]
-    mults = {0: 1.5, 1: 2.0, 2: 2.0, 3: 2.0, 4: 2.0, 5: 1.5, 6: 1.1}
+    mults = {0: 1.1, 1: 1.1, 2: 1.1, 3: 1.1, 4: 1.1, 5: 1.1, 6: 1.1}
     bonus = v["bonus_skill"]
-    mana_mult = 4.0
+    # manamultiplier: era 4.0 (padrão de vocação de mago do TFS/Tibia clássico, nunca calibrado
+    # pra este jogo). getReqMana(ML) = 1600*mult^(ML-1) (vocation.cpp:149, base 1600 fixo no
+    # C++, não editável por aqui) — com mult=4.0 o magic level (= skill "ninjutsu" nas fórmulas
+    # de jutsu, ver data/skills.json) mal sai do single-digit no jogo inteiro. tools/balance/
+    # sim.py mediu isso: jutsus tier 2/3 (base_damage + level*level_scale + maglevel*skill_scale)
+    # ficam com dano por segundo PIOR que o ataque de arma de taijutsu a partir de ~L15-20,
+    # quebrando a identidade "ninjutsu = burst" no meio/fim de jogo. mult=1.3 deixa o magic
+    # level crescer numa faixa comparável (em "poder ganho por hora jogada") às outras skills
+    # (agora 1.1) sem tornar o início de jogo (onde o magic level já é baixo de qualquer jeito)
+    # mais forte que o já medido.
+    mana_mult = 1.3
     if bonus in skill_ids:
         mults[skill_ids[bonus]] = round(mults[skill_ids[bonus]] / 1.2, 2)
     elif bonus == "ninjutsu":
-        mana_mult = 4.0 / 1.2
+        mana_mult = 1.3 / 1.2
     voc.append(f'\t<vocation id="{vm["vocation_id"]}" clientid="{vm["vocation_id"]}" name="{escape(v["name"])}" description="um ninja da {escape(v["name"])}" gaincap="5" gainhp="15" gainmana="10" gainhpticks="5" gainhpamount="2" gainmanaticks="5" gainmanaamount="3" manamultiplier="{mana_mult:.2f}" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="{vm["vocation_id"]}">')
     voc.append('\t\t<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0"/>')
     voc.append("\t\t" + "".join(f'<skill id="{i}" multiplier="{m}"/>' for i, m in mults.items()))
@@ -1037,6 +1055,14 @@ function NarutoCharacters.sendState(player, firstTime)
 	if char then for _, j in ipairs(char.jutsus) do active[#active + 1] = jutsuJson(j) end end
 	if element then for _, j in ipairs(element.jutsus) do active[#active + 1] = jutsuJson(j) end end
 
+	-- rank (docs/sistemas/progressao-servidor.md): discreto, so id/titulo/indice - o cliente
+	-- mostra ao lado do nome/skills. NarutoRanks pode nao existir (compat); nesse caso null.
+	local rankInfo = NarutoJson.null
+	if NarutoRanks then
+		local r = NarutoRanks.get(player)
+		rankInfo = {id = r.rank, title = r.title, index = r.index}
+	end
+
 	local state = {
 		type = 'state',
 		first_time = firstTime == true,
@@ -1045,11 +1071,131 @@ function NarutoCharacters.sendState(player, firstTime)
 		element = element and element.id or NarutoJson.null,
 		level = player:getLevel(),
 		village = villageIdOf(player) or NarutoJson.null,
+		rank = rankInfo,
 		characters = chars,
 		elements = els,
 		active_jutsus = active,
 	}
 	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(state))
+end
+
+-- ------------------------------------------------------------------ progresso (opcode 210,
+-- acao get_progress) - aba Missoes do menu Shinobi: rank + proximo rank (requisitos
+-- pendentes), tarefas ativas, diarias do dia e missoes de historia com status.
+-- NarutoRanks/NarutoQuests/NarutoTasks/NarutoDailies sao globais definidos em outras libs
+-- (data/lib/naruto_ranks.lua, naruto_quests.lua, naruto_tasks.lua, naruto_dailies.lua) - todas
+-- ja carregadas por dofile em data/lib/lib.lua antes de qualquer jogador logar; guardas `if X
+-- then` sao so para o caso raro de uma delas nao existir (compat, ex.: sem data/tasks.json).
+local function nextRankRequirements(player, nextRank)
+	local reqs = NarutoJson.array({})
+	if not NarutoQuests or not nextRank then return reqs end
+	local group = NarutoQuests.rankGroups[nextRank.rank]
+	if not group then return reqs end
+	for _, storage in ipairs(group) do
+		local q = NarutoQuests.byStorage and NarutoQuests.byStorage[storage]
+		if q then
+			reqs[#reqs + 1] = {
+				name = q.name,
+				npc = q.npcName or q.npc,
+				done = player:getStorageValue(storage) == NarutoQuests.DONE,
+			}
+		end
+	end
+	return reqs
+end
+
+local function rankProgressJson(player)
+	if not NarutoRanks then return NarutoJson.null end
+	local cur = NarutoRanks.get(player)
+	local out = {id = cur.rank, title = cur.title, index = cur.index}
+	local nextRank = NarutoRanks.byIndex[cur.index + 1]
+	if nextRank then
+		out.next = {
+			id = nextRank.rank, title = nextRank.title, index = nextRank.index,
+			minLevel = nextRank.minLevel, requirements = nextRankRequirements(player, nextRank),
+		}
+	else
+		out.next = NarutoJson.null
+	end
+	return out
+end
+
+local function tasksProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoTasks then return out end
+	local now = os.time()
+	for _, t in ipairs(NarutoTasks.list) do
+		local prog = player:getStorageValue(t.progressStorage)
+		if prog >= 0 then
+			local cooldownUntil = player:getStorageValue(t.cooldownStorage)
+			local remaining = 0
+			if cooldownUntil and cooldownUntil > now then
+				remaining = math.ceil((cooldownUntil - now) / 60)
+			end
+			out[#out + 1] = {
+				id = t.id, name = t.name, npc = t.npcName, monster = t.monster,
+				progress = prog, count = t.count, ready = prog >= t.count,
+				cooldownRemainingMin = remaining,
+			}
+		end
+	end
+	return out
+end
+
+local function dailiesProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoDailies then return out end
+	NarutoDailies.rollIfNeeded(player)
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			local status
+			if prog > entry.count then
+				status = 'delivered'
+			elseif prog == entry.count then
+				status = 'ready'
+			else
+				status = 'progress'
+			end
+			out[#out + 1] = {
+				slot = slot, id = entry.id, name = entry.name, monster = entry.monster,
+				progress = math.max(prog, 0), count = entry.count, status = status,
+			}
+		end
+	end
+	return out
+end
+
+local function missionsProgressJson(player)
+	local out = NarutoJson.array({})
+	if not NarutoQuests then return out end
+	for _, q in ipairs(NarutoQuests.list) do
+		local st = player:getStorageValue(q.storage)
+		local status
+		if st == NarutoQuests.DONE then
+			status = 'done'
+		elseif st < 0 then
+			status = 'available'
+		else
+			status = 'in_progress'
+		end
+		out[#out + 1] = {id = q.id, name = q.name, npc = q.npcName or q.npc, status = status}
+	end
+	return out
+end
+
+--- Monta e envia o `progress` para o cliente (opcode 210, buffer JSON) - aba Missoes.
+function NarutoCharacters.sendProgress(player)
+	if not player or not player:isPlayer() then return false end
+	local progress = {
+		type = 'progress',
+		rank = rankProgressJson(player),
+		tasks = tasksProgressJson(player),
+		dailies = dailiesProgressJson(player),
+		missions = missionsProgressJson(player),
+	}
+	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(progress))
 end
 
 -- ------------------------------------------------------------------ cliente -> servidor
@@ -1069,6 +1215,8 @@ function opcodeEvent.onExtendedOpcode(player, opcode, buffer)
 			player:sendCancelMessage(e or "Selecao invalida.")
 		end
 		NarutoCharacters.sendState(player)
+	elseif msg.type == 'get_progress' then
+		NarutoCharacters.sendProgress(player)
 	end
 	return true
 end
@@ -1079,6 +1227,13 @@ local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoOpcode")
 	local firstTime = player:getStorageValue(STORAGE_ONBOARDED) < 1
+	-- Reserva de chakra inicial: o TFS cria o jogador com 0 de mana e as vocacoes dao +10/level,
+	-- mas os jutsus tier 1 custam 12-15 — sem isso um Genin novo nao consegue lancar NADA
+	-- ate o level 3. Piso de 60 de chakra (equivale a ~4 jutsus tier 1), aplicado uma vez.
+	if firstTime and player:getMaxMana() < 60 then
+		player:setMaxMana(60)
+		player:addMana(60)
+	end
 	NarutoCharacters.apply(player, nil, nil, {silent = true, force = true, noState = true})
 	local pid = player:getId()
 	-- ~1s depois de entrar: o cliente ja carregou os modulos e escuta o opcode 210
@@ -1483,7 +1638,8 @@ for n in npcs.values():
         if grants_rank_progress:
             rank_fields += f", grantsRankProgress = '{grants_rank_progress}'"
         quest_defs.append(
-            f"\t{{id = '{q['id']}', npc = '{n['id']}', name = '{q['name']}', text = '{q['text'].replace(chr(39), chr(92)+chr(39))}', "
+            f"\t{{id = '{q['id']}', npc = '{n['id']}', npcName = '{n['name'].replace(chr(39), chr(92)+chr(39))}', "
+            f"name = '{q['name']}', text = '{q['text'].replace(chr(39), chr(92)+chr(39))}', "
             f"kind = '{kind}', monster = '{monster_name}', count = {count}, "
             f"storage = {storage}, reward = {{xp = {q['reward'].get('xp', 0)}, ryo = {q['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}"
             f"{extra_field}{rank_fields}}},")
@@ -1505,9 +1661,13 @@ NarutoQuests.list = {{
 {chr(10).join(quest_defs)}
 }}
 NarutoQuests.byNpc = {{}}
+-- storage -> quest (índice reverso usado pela aba Missões do menu Shinobi, opcode 210
+-- get_progress, para listar os requisitos pendentes do próximo rank por nome/NPC).
+NarutoQuests.byStorage = {{}}
 for _, q in ipairs(NarutoQuests.list) do
 	NarutoQuests.byNpc[q.npc] = NarutoQuests.byNpc[q.npc] or {{}}
 	table.insert(NarutoQuests.byNpc[q.npc], q)
+	NarutoQuests.byStorage[q.storage] = q
 end
 
 --- Checa progressão de rank (grants_rank/grants_rank_progress) depois de marcar uma quest
@@ -1706,6 +1866,12 @@ end
 
 --- Promove o jogador para 'rankId' se ele ainda não tiver esse rank ou superior. Aplica bônus
 --- de status, título e efeito. Retorna true se promoveu (false se já era esse rank ou maior).
+--- Empurra o `state` do opcode 210 (com o novo rank) para o cliente na hora - é assim que o
+--- rótulo "Rank: X" do menu Shinobi/status atualiza sem precisar relogar (docs/sistemas/
+--- cliente-ux.md). NarutoCharacters pode ainda não ter sido carregado (ordem de dofile em
+--- data/lib/lib.lua não é garantida entre libs "naruto_*"); a chamada só ACONTECE em runtime
+--- (login/talkaction/GM), quando todas as libs já terminaram de carregar - a guarda `if` é só
+--- para o caso raro de rodar sem naruto_characters.lua instalado.
 function NarutoRanks.promote(player, rankId)
 	local target = NarutoRanks.byRank[rankId]
 	if not target then return false end
@@ -1714,6 +1880,9 @@ function NarutoRanks.promote(player, rankId)
 	NarutoRanks.applyBonus(player)
 	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Parabéns! Você agora é " .. target.title .. "!")
 	player:getPosition():sendMagicEffect(CONST_ME_FIREWORK_YELLOW)
+	if NarutoCharacters and NarutoCharacters.sendState then
+		NarutoCharacters.sendState(player)
+	end
 	return true
 end
 """

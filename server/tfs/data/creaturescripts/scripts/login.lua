@@ -1,15 +1,18 @@
+-- Shinobi Legends: mensagem de boas-vindas traduzida (docs/sistemas/cliente-ux.md, secao
+-- "barra de chat"). Alteracao trivial e manual (este arquivo NAO e gerado por
+-- tools/export_tfs.py); nao mexe em nenhuma logica de jogo, so no texto.
 function onLogin(player)
 	local serverName = configManager.getString(configKeys.SERVER_NAME)
-	local loginStr = "Welcome to " .. serverName .. "!"
+	local loginStr = "Bem-vindo(a) a " .. serverName .. "!"
 	if player:getLastLoginSaved() <= 0 then
-		loginStr = loginStr .. " Please choose your outfit."
+		loginStr = loginStr .. " Escolha seu traje."
 		player:sendOutfitWindow()
 	else
 		if loginStr ~= "" then
 			player:sendTextMessage(MESSAGE_STATUS_DEFAULT, loginStr)
 		end
 
-		loginStr = string.format("Your last visit in %s: %s.", serverName, os.date("%d %b %Y %X", player:getLastLoginSaved()))
+		loginStr = string.format("Sua última visita em %s: %s.", serverName, os.date("%d/%m/%Y %H:%M:%S", player:getLastLoginSaved()))
 	end
 	player:sendTextMessage(MESSAGE_STATUS_DEFAULT, loginStr)
 
