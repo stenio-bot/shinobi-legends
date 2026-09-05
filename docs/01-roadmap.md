@@ -137,7 +137,8 @@ Próximos (ordem de valor):
 - [x] Playtest rodada 4 (`docs/qa/playtest-l1-20-r4.md`): interrompido por queda do servidor; achou conquista de zona destravando na vila — corrigido (`bea6efc`)
 - [ ] Playtest rodada 5 (em andamento): medir regen de chakra e curva L1–10
 - [x] Balanceamento rodada 4 (`7dee1ac`): hunt 30 min com regen/pílulas, tier 1 cooldown 3,5 s escalando por level, wakizashi temperado L15; custo tier 1 ×1,3
-- [ ] Balanceamento rodada 5: chakra sustentável em L5–15 (custo flat vs pool pequeno — avaliar `manapercent` ou pool inicial maior), grupo 3+ uniforme, híbrido ≤ +15%
+- [x] Balanceamento rodada 5 (`1a46739`): pool 100+10L, regen por level, tier 1 com custo % do pool (manapercent) e cooldown 9 s; ninjutsu puro 6/6 bosses na meta; entra no próximo reinício do servidor
+- [ ] Balanceamento rodada 6: híbrido ≤ +15% (4/6 bosses acima), grupo 3+ uniforme, reverificar kits pessoais ±15%; validar a sensação do cooldown 9 s no playtest
 - [x] Playtest rodada 3 (`docs/qa/playtest-l1-20-r3.md`): combate real no L1; achou chakra sem regen e 4 lobos por spawn — corrigidos
 - [ ] (antigo) Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
 - [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`); sons ficam para depois
