@@ -30,5 +30,8 @@
 		<item id="2148" countmax="440" chance="100000"/>
 		<item id="6868" countmax="2" chance="60000"/>  <!-- cloud_emblem -->
 		<item id="7591" countmax="2" chance="15000"/>  <!-- health_potion_large -->
+		<item id="11240" chance="6000"/>  <!-- botas_anbu_negro -->
+		<item id="8849" chance="5000"/>  <!-- senbon_anbu_negro -->
+		<item id="2142" chance="4000"/>  <!-- emblema_anbu_negro -->
 	</loot>
 </monster>

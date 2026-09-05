@@ -36,5 +36,7 @@
 		<item id="6555" chance="100000"/>  <!-- deserter_seal -->
 		<item id="1954" chance="10000"/>  <!-- scroll_katon_karyuu -->
 		<item id="7588" countmax="4" chance="100000"/>  <!-- health_potion_medium -->
+		<item id="15409" chance="12000"/>  <!-- calca_rastreador_sombrio -->
+		<item id="2402" chance="10000"/>  <!-- adaga_sombria -->
 	</loot>
 </monster>

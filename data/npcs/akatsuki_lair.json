@@ -3,8 +3,8 @@
     "id": "merchant_akatsuki_lair",
     "name": "Fornecedor Enji",
     "map": "covil_nuvem_vermelha",
-    "x": 10,
-    "y": 10,
+    "x": 1406,
+    "y": 1012,
     "_note": "PENDENTE de posição real: região 'covil_nuvem_vermelha' ainda não tem mapa físico (docs/lore/mundo.md, docs/sistemas/mapas.md, antes 'Fortaleza Akatsu'). x/y são placeholder até o agente de mapa desenhar a zona — ver data/maps/spawns_lore.json.",
     "type": "shop",
     "sells": [
@@ -23,11 +23,47 @@
     "id": "quest_giver_akatsuki_lair",
     "name": "Capitã Anbu Suzu",
     "map": "covil_nuvem_vermelha",
-    "x": 12,
-    "y": 12,
+    "x": 1406,
+    "y": 1010,
     "_note": "PENDENTE de posição real, ver merchant_akatsuki_lair acima. Dá as 4 missões finais do jogo, uma por boss, na ordem da masmorra (docs/lore/progressao.md).",
     "type": "quest",
     "quests": [
+      {
+        "id": "q_lair_intro",
+        "name": "Clones não sangram, mas caem",
+        "rank": "S",
+        "text": "Antes de encarar os quatro guardiões, prove que aguenta os clones brancos que patrulham os corredores. Mate 10.",
+        "objective": {
+          "kind": "kill",
+          "kill": "white_clone",
+          "count": 10
+        },
+        "reward": {
+          "xp": 45000,
+          "ryo": 10000,
+          "items": [
+            "capuz_anbu_negro"
+          ]
+        }
+      },
+      {
+        "id": "q_lair_guards",
+        "name": "A guarda da Aurora",
+        "rank": "S",
+        "text": "Os ninjas elite da Aurora não deixam ninguém passar sem lutar. Mate 8.",
+        "objective": {
+          "kind": "kill",
+          "kill": "elite_cloud_guard",
+          "count": 8
+        },
+        "reward": {
+          "xp": 55000,
+          "ryo": 13000,
+          "items": [
+            "manto_anbu_negro"
+          ]
+        }
+      },
       {
         "id": "q_lair_1_illusive_eye",
         "name": "Exame Anbu (1/2) — O Vigia Ilusório",
@@ -102,8 +138,8 @@
     "id": "task_master_lair",
     "name": "Mestre de Tarefas Kuro",
     "map": "covil_nuvem_vermelha",
-    "x": 14,
-    "y": 14,
+    "x": 1406,
+    "y": 1014,
     "_note": "PENDENTE de posição real (ver merchant_akatsuki_lair). Tarefas repetíveis de covil_nuvem_vermelha (data/tasks.json).",
     "type": "tasks"
   }

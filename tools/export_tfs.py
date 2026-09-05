@@ -133,6 +133,23 @@ element_sets = load_element_sets()
 def item_id(our_id):
     return int(M["items"].get(our_id, 0))
 
+UNMAPPED_REWARD_ITEMS = set()
+
+def reward_items_lua(item_ids_list):
+    """Lua de {id=.., count=1} para uma lista de item ids de recompensa (quest/task/daily).
+    Item sem id mapeado em data/tfs_mapping.json (item_id()==0) é OMITIDO (e listado no aviso
+    final) em vez de virar `{id=0, ...}`, que faria player:addItem(0, 1) falhar silenciosamente
+    (ou pior) em runtime — comum em conteúdo novo (ex.: troféus 'trophy_*') que ainda não tem
+    entrada em tfs_mapping.json (fora do escopo desta missão editar esse arquivo)."""
+    rows = []
+    for our_id in item_ids_list:
+        iid = item_id(our_id)
+        if iid == 0:
+            UNMAPPED_REWARD_ITEMS.add(our_id)
+            continue
+        rows.append(f"{{id = {iid}, count = 1}}")
+    return ", ".join(rows)
+
 # Ids que o items.xml original do TFS já usa. O mapping (data/tfs_mapping.json, de outro
 # agente) reaproveita ids vanilla como placeholder; se emitirmos uma segunda <item> com o
 # mesmo id o TFS avisa "Duplicate item with id" e o item vanilla vence. Então pulamos esses
@@ -1145,6 +1162,15 @@ talkElement:register()
 write("scripts/naruto/character_switch.lua", character_switch_script)
 
 # ---------------------------------------------------------------- NPCs
+NPC_QUIZ_NORMALIZE = """local function normalizeQuiz(s)
+	s = tostring(s):lower()
+	local map = {['\\195\\161']='a', ['\\195\\160']='a', ['\\195\\163']='a', ['\\195\\162']='a',
+		['\\195\\169']='e', ['\\195\\170']='e', ['\\195\\173']='i', ['\\195\\179']='o',
+		['\\195\\181']='o', ['\\195\\180']='o', ['\\195\\186']='u', ['\\195\\167']='c'}
+	for accented, plain in pairs(map) do s = s:gsub(accented, plain) end
+	return s
+end"""
+
 def npc_files(n):
     o = M["npc_outfits"].get(n["id"], {"type": 128, "head": 0, "body": 0, "legs": 0, "feet": 0})
     xml = ('<?xml version="1.0" encoding="UTF-8"?>\n' + HEADER_XML +
@@ -1154,8 +1180,8 @@ def npc_files(n):
            "NpcSystem.parseParameters(npcHandler)", "",
            "function onCreatureAppear(cid) npcHandler:onCreatureAppear(cid) end",
            "function onCreatureDisappear(cid) npcHandler:onCreatureDisappear(cid) end",
-           "function onCreatureSay(cid, type, msg) npcHandler:onCreatureSay(cid, type, msg) end",
            "function onThink() npcHandler:onThink() end", ""]
+    needs_custom_say = False
     if n["type"] == "shop":
         lua.append("local shopModule = ShopModule:new()\nnpcHandler:addModule(shopModule)")
         for iid in n.get("sells", []):
@@ -1166,8 +1192,88 @@ def npc_files(n):
                 lua.append(f"shopModule:addSellableItem({{'{it['name'].lower()}'}}, {item_id(it['id'])}, {it['sell_price']}, '{it['name'].lower()}')")
         lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{trade}} para ver o que tenho.")')
     elif n["type"] == "quest":
+        # NOVO (docs/lore/progressao.md, docs/sistemas/progressao-servidor.md): além do fluxo
+        # 'missao' de sempre, quests com objective.kind='keyword_quiz' (ex.: exam_chunin_1_teoria)
+        # abrem uma prova por palavra-chave (NPC pergunta, jogador responde livre, N perguntas
+        # em sequência; acertos >= quizMin aprovam). Estado da prova é por cid (em memória: se o
+        # jogador desconectar no meio, a prova reseta — ver pendências).
         lua.append("local QUESTS = NarutoQuests.byNpc['%s']" % n["id"])
+        lua.append(NPC_QUIZ_NORMALIZE)
         lua.append("""
+local quizState = {}  -- cid -> {quest = q, idx = 1, correct = 0}
+
+local function findActiveQuiz(player)
+	for _, q in ipairs(QUESTS) do
+		if q.kind == 'keyword_quiz' then
+			local st = player:getStorageValue(q.storage)
+			if st ~= NarutoQuests.DONE and st >= 0 and st < q.count then return q end
+		end
+	end
+	return nil
+end
+
+-- IMPORTANTE (2 achados de teste in-game, ver docs/sistemas/progressao-servidor.md):
+-- 1) 'cid' recebido pelo onCreatureSay GLOBAL (o do topo do arquivo, chamado direto pelo core
+--    do TFS) NÃO é um id estável — é um userdata Player NOVO a cada mensagem (endereço muda
+--    sempre, mesmo mensagens seguidas do mesmo jogador). Usá-lo como chave de tabela
+--    (quizState[cid]) falha sempre da 2a mensagem em diante. Já dentro do keywordHandler
+--    (questCallback/quizCallback) o 'cid' É um inteiro estável, porque npchandler.lua faz
+--    `local cid = creature:getId()` antes de chamar processMessage — só o onCreatureSay
+--    GLOBAL (nosso override, que roda ANTES de delegar pro npcHandler) recebe o userdata cru.
+-- 2) Passar esse userdata cru como 2º argumento de npcHandler:say(msg, cid) quebra em runtime
+--    ("Lua Script Error: luaAddEvent(). Argument #5 is unsafe"): say() agenda a resposta via
+--    addEvent (fila de 1s do NPC), que não aceita userdata (só tipos primitivos serializáveis).
+-- Correção: resolve 'cid' para o Player e usa SEMPRE player:getId() (inteiro) daqui pra baixo —
+-- como chave de quizState e como alvo de npcHandler:say().
+local function playerIdOf(cid)
+	local player = Player(cid)
+	return player and player:getId() or nil
+end
+
+local function askQuestion(pid, q, idx)
+	npcHandler:say(q.quiz[idx].question, pid)
+end
+
+local function startQuiz(cid, q)
+	local pid = playerIdOf(cid)
+	if not pid then return end
+	quizState[pid] = {quest = q, idx = 1, correct = 0}
+	askQuestion(pid, q, 1)
+end
+
+--- Retorna true se a mensagem foi consumida pela prova em andamento (jogador tem quiz ativo).
+local function handleQuizAnswer(cid, msg)
+	local pid = playerIdOf(cid)
+	local st = pid and quizState[pid]
+	if not st then return false end
+	local q = st.quest
+	local question = q.quiz[st.idx]
+	local m = normalizeQuiz(msg)
+	local hit = false
+	for _, kw in ipairs(question.keywords) do
+		if m:find(normalizeQuiz(kw), 1, true) then hit = true break end
+	end
+	if hit then st.correct = st.correct + 1 end
+	st.idx = st.idx + 1
+	local player = Player(pid)
+	if st.idx > #q.quiz then
+		local total = #q.quiz
+		local correct = st.correct
+		quizState[pid] = nil
+		if correct >= q.quizMin then
+			player:setStorageValue(q.storage, q.count)
+			local reply = NarutoQuests.talk(player, QUESTS)
+			npcHandler:say(string.format('Prova encerrada: %d/%d certas. %s', correct, total, reply), pid)
+		else
+			player:setStorageValue(q.storage, 0)
+			npcHandler:say(string.format('Prova encerrada: so %d/%d certas (precisa de %d). Diga {prova} para tentar de novo.', correct, total, q.quizMin), pid)
+		end
+	else
+		npcHandler:say((hit and 'Correto! ' or 'Nao e bem isso. ') .. q.quiz[st.idx].question, pid)
+	end
+	return true
+end
+
 local function questCallback(cid, message, keywords, parameters, node)
 	if not npcHandler:isFocused(cid) then return false end
 	local player = Player(cid)
@@ -1177,8 +1283,150 @@ local function questCallback(cid, message, keywords, parameters, node)
 end
 keywordHandler:addKeyword({'missao'}, questCallback, {})
 keywordHandler:addKeyword({'mission'}, questCallback, {})
-keywordHandler:addKeyword({'quest'}, questCallback, {})""")
+keywordHandler:addKeyword({'quest'}, questCallback, {})
+
+local function quizCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	local q = findActiveQuiz(player)
+	if not q then
+		npcHandler:say('Nada de prova por agora. Diga {missao} para ver o que tenho.', cid)
+		return true
+	end
+	startQuiz(cid, q)
+	return true
+end
+keywordHandler:addKeyword({'prova'}, quizCallback, {})
+keywordHandler:addKeyword({'quiz'}, quizCallback, {})""")
         lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{missao}} se quiser trabalho.")')
+        needs_custom_say = True
+    elif n["type"] == "tasks":
+        # NOVO (docs/sistemas/progressao-servidor.md): tarefas repetíveis (data/tasks.json).
+        lua.append("local TASKS = NarutoTasks.byNpc['%s'] or {}" % n["id"])
+        lua.append("""
+local function taskStatusLine(player, t)
+	local prog = player:getStorageValue(t.progressStorage)
+	if prog < 0 then
+		local cd = player:getStorageValue(t.cooldownStorage)
+		if cd and cd > os.time() then
+			return t.name .. ': em espera (' .. math.ceil((cd - os.time()) / 60) .. ' min)'
+		end
+		return t.name .. ': disponivel (diga {tarefa})'
+	elseif prog < t.count then
+		return t.name .. ': ' .. prog .. '/' .. t.count .. ' ' .. t.monster
+	else
+		return t.name .. ': PRONTA (diga {entregar})'
+	end
+end
+
+local function listCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	local lines = {}
+	for _, t in ipairs(TASKS) do
+		if player:getLevel() >= t.minLevel then lines[#lines + 1] = taskStatusLine(player, t) end
+	end
+	npcHandler:say(#lines > 0 and table.concat(lines, ' | ') or 'Nenhuma tarefa liberada para o seu level ainda.', cid)
+	return true
+end
+keywordHandler:addKeyword({'tarefas'}, listCallback, {})
+keywordHandler:addKeyword({'lista'}, listCallback, {})
+
+local function acceptCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	for _, t in ipairs(TASKS) do
+		if player:getLevel() >= t.minLevel then
+			local prog = player:getStorageValue(t.progressStorage)
+			if prog < 0 then
+				local cd = player:getStorageValue(t.cooldownStorage)
+				if not cd or cd <= os.time() then
+					player:setStorageValue(t.progressStorage, 0)
+					npcHandler:say('Tarefa aceita: ' .. t.name .. '. Mate ' .. t.count .. ' ' .. t.monster .. '.', cid)
+					return true
+				end
+			end
+		end
+	end
+	npcHandler:say('Nenhuma tarefa nova disponivel agora (level baixo demais ou tudo em espera/em andamento). Diga {tarefas} para ver.', cid)
+	return true
+end
+keywordHandler:addKeyword({'tarefa'}, acceptCallback, {})
+keywordHandler:addKeyword({'aceitar'}, acceptCallback, {})
+
+local function deliverCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	for _, t in ipairs(TASKS) do
+		local prog = player:getStorageValue(t.progressStorage)
+		if prog >= t.count then
+			player:setStorageValue(t.progressStorage, -1)
+			player:setStorageValue(t.cooldownStorage, os.time() + t.cooldownMin * 60)
+			local xp = NarutoRewards.scaledXp(player, t.reward.xp)
+			player:addExperience(xp, true)
+			if t.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, t.reward.ryo) end
+			for _, it in ipairs(t.reward.items) do player:addItem(it.id, it.count) end
+			npcHandler:say('Tarefa entregue: ' .. t.name .. '. +' .. xp .. ' xp, +' .. t.reward.ryo .. ' ryo.', cid)
+			return true
+		end
+	end
+	npcHandler:say('Nenhuma tarefa pronta para entregar.', cid)
+	return true
+end
+keywordHandler:addKeyword({'entregar'}, deliverCallback, {})""")
+        lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{tarefas}} (lista), {{tarefa}} (aceitar) ou {{entregar}}.")')
+    elif n["type"] == "dailies":
+        # NOVO: "Quadro de Missões" — mesma API de NarutoDailies usada por !diaria.
+        lua.append("""
+local function dailyLines(player)
+	NarutoDailies.rollIfNeeded(player)
+	local lines = {}
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			if prog < entry.count then
+				lines[#lines + 1] = slot .. ') ' .. entry.name .. ': ' .. math.max(prog, 0) .. '/' .. entry.count .. ' ' .. entry.monster
+			elseif prog == entry.count then
+				lines[#lines + 1] = slot .. ') ' .. entry.name .. ': PRONTA (diga {entregar})'
+			else
+				lines[#lines + 1] = slot .. ') ' .. entry.name .. ': ja entregue hoje'
+			end
+		end
+	end
+	return lines
+end
+
+local function showCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	local lines = dailyLines(player)
+	npcHandler:say(#lines > 0 and table.concat(lines, ' | ') or 'Nenhuma diaria disponivel para o seu level hoje.', cid)
+	return true
+end
+keywordHandler:addKeyword({'diaria'}, showCallback, {})
+keywordHandler:addKeyword({'diarias'}, showCallback, {})
+
+local function deliverCallback(cid, message, keywords, parameters, node)
+	if not npcHandler:isFocused(cid) then return false end
+	local player = Player(cid)
+	local ok, xp, ryo = NarutoDailies.deliver(player)
+	if ok then
+		npcHandler:say(string.format('Diarias entregues: +%d xp, +%d ryo.', xp, ryo), cid)
+	else
+		npcHandler:say('Nenhuma diaria pronta para entregar.', cid)
+	end
+	return true
+end
+keywordHandler:addKeyword({'entregar'}, deliverCallback, {})""")
+        lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{diaria}} para ver as 3 missões de hoje.")')
+    if needs_custom_say:
+        lua.append("""function onCreatureSay(cid, type, msg)
+	if handleQuizAnswer(cid, msg) then return end
+	npcHandler:onCreatureSay(cid, type, msg)
+end""")
+    else:
+        lua.append("function onCreatureSay(cid, type, msg) npcHandler:onCreatureSay(cid, type, msg) end")
     lua.append("npcHandler:addModule(FocusModule:new())")
     return xml, "\n".join(lua) + "\n"
 
@@ -1190,20 +1438,69 @@ for n in npcs.values():
 # ---------------------------------------------------------------- lib + quests (revscriptsys)
 base = int(M["storage_base"])
 quest_defs = []
+rank_groups = {}  # rank -> [storage, ...] (docs/lore/progressao.md: grants_rank/grants_rank_progress)
 qi = 0
 for n in npcs.values():
     for q in n.get("quests", []):
         qi += 1
-        items_lua = ", ".join(f"{{id = {item_id(i)}, count = 1}}" for i in q["reward"].get("items", []))
+        storage = base + qi
+        items_lua = reward_items_lua(q["reward"].get("items", []))
+        obj = q["objective"]
+        kind = obj.get("kind", "kill")
+        grants_rank = q.get("grants_rank")
+        grants_rank_progress = q.get("grants_rank_progress")
+        for r in (grants_rank, grants_rank_progress):
+            if r:
+                rank_groups.setdefault(r, []).append(storage)
+        extra_field = ""
+        if kind == "keyword_quiz":
+            quiz = obj.get("quiz", [])
+            quiz_min = max(1, math.ceil(len(quiz) * 0.6))
+            quiz_lua_rows = []
+            for qq in quiz:
+                kws = ", ".join(f"'{k.replace(chr(39), chr(92)+chr(39))}'" for k in qq.get("keywords", []))
+                quiz_lua_rows.append(f"{{question = '{qq['question'].replace(chr(39), chr(92)+chr(39))}', keywords = {{{kws}}}}}")
+            count = quiz_min  # para keyword_quiz, 'count' = mínimo de acertos (ver NPC gerado / npc_files)
+            monster_name = ""
+            extra_field = f", quiz = {{{', '.join(quiz_lua_rows)}}}, quizMin = {quiz_min}"
+        elif kind == "collect_item":
+            # entrega de itens (docs/lore/progressao.md/quest.schema.json): sem contador de
+            # mortes — a etapa checa, na hora de falar {missao}, se o jogador TEM os itens.
+            col_rows = []
+            for it in obj.get("items", []):
+                iid = item_id(it["item_id"])
+                nm = items[it["item_id"]]["name"] if it["item_id"] in items else it["item_id"]
+                col_rows.append(f"{{id = {iid}, count = {it['count']}, name = '{nm}'}}")
+            count = 0
+            monster_name = ""
+            extra_field = f", collectItems = {{{', '.join(col_rows)}}}"
+        else:
+            count = obj["count"]
+            monster_name = monsters[obj["kill"]]["name"]
+        rank_fields = ""
+        if grants_rank:
+            rank_fields += f", grantsRank = '{grants_rank}'"
+        if grants_rank_progress:
+            rank_fields += f", grantsRankProgress = '{grants_rank_progress}'"
         quest_defs.append(
             f"\t{{id = '{q['id']}', npc = '{n['id']}', name = '{q['name']}', text = '{q['text'].replace(chr(39), chr(92)+chr(39))}', "
-            f"monster = '{monsters[q['objective']['kill']]['name']}', count = {q['objective']['count']}, "
-            f"storage = {base + qi}, reward = {{xp = {q['reward'].get('xp', 0)}, ryo = {q['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}}},")
+            f"kind = '{kind}', monster = '{monster_name}', count = {count}, "
+            f"storage = {storage}, reward = {{xp = {q['reward'].get('xp', 0)}, ryo = {q['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}"
+            f"{extra_field}{rank_fields}}},")
+rank_groups_lua = "{\n" + "\n".join(
+    f"\t['{r}'] = {{{', '.join(str(s) for s in storages)}}}," for r, storages in rank_groups.items()
+) + "\n}"
 lib = HEADER_LUA + f"""-- Coloque em data/lib/naruto_quests.lua e adicione `dofile('data/lib/naruto_quests.lua')` em data/lib/lib.lua
--- Storage: -1/ausente = não iniciada, 0..count-1 = progresso, count = pronta, {base + 500} = entregue (marcador)
+-- Storage: -1/ausente = não iniciada, 0..count-1 = progresso (ou 0..quizMin-1 no quiz), count/quizMin = pronta,
+-- {base + 500} = entregue (marcador). kind='kill' (padrão) conta mortes (scripts/naruto/quests_kill.lua);
+-- kind='keyword_quiz' conta acertos da prova (ver npc/scripts/naruto/<npc>.lua, palavra-chave {{prova}}).
 NarutoQuests = {{}}
 NarutoQuests.RYO_ID = {item_id('ryo')}
 NarutoQuests.DONE = {base + 500}
+-- rank -> lista de storages das quests com grants_rank/grants_rank_progress daquele rank
+-- (docs/lore/progressao.md). Promoção só acontece quando TODAS estiverem DONE — ver
+-- NarutoRanks.checkProgress, chamado por NarutoQuests.talk ao concluir qualquer uma delas.
+NarutoQuests.rankGroups = {rank_groups_lua}
 NarutoQuests.list = {{
 {chr(10).join(quest_defs)}
 }}
@@ -1213,16 +1510,67 @@ for _, q in ipairs(NarutoQuests.list) do
 	table.insert(NarutoQuests.byNpc[q.npc], q)
 end
 
+--- Checa progressão de rank (grants_rank/grants_rank_progress) depois de marcar uma quest
+--- DONE. Retorna a mensagem extra de promoção, ou nil.
+local function grantQuestRankIfReady(player, q)
+	local rank = q.grantsRank or q.grantsRankProgress
+	if not rank or not NarutoRanks then return nil end
+	local group = NarutoQuests.rankGroups[rank]
+	if not group then return nil end
+	for _, storage in ipairs(group) do
+		if player:getStorageValue(storage) ~= NarutoQuests.DONE then return nil end
+	end
+	if NarutoRanks.promote(player, rank) then
+		return "Você agora é " .. NarutoRanks.byRank[rank].title .. "!"
+	end
+	return nil
+end
+
+--- Marca a quest DONE, aplica a recompensa e checa rank. Usada pelas 3 formas de conclusão
+--- (kill, keyword_quiz, collect_item) para não duplicar a lógica de recompensa.
+local function completeQuest(player, q)
+	player:setStorageValue(q.storage, NarutoQuests.DONE)
+	local xp = q.reward.xp
+	if xp > 0 then player:addExperience(xp, true) end
+	if q.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, q.reward.ryo) end
+	for _, it in ipairs(q.reward.items) do player:addItem(it.id, it.count) end
+	local msg = "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída."
+	local rankMsg = grantQuestRankIfReady(player, q)
+	if rankMsg then msg = msg .. " " .. rankMsg end
+	return msg
+end
+
 function NarutoQuests.talk(player, quests)
 	for _, q in ipairs(quests) do
 		local st = player:getStorageValue(q.storage)
 		if st ~= NarutoQuests.DONE then
-			if st >= q.count then
-				player:setStorageValue(q.storage, NarutoQuests.DONE)
-				player:addExperience(q.reward.xp, true)
-				if q.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, q.reward.ryo) end
-				for _, it in ipairs(q.reward.items) do player:addItem(it.id, it.count) end
-				return "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída.", true
+			if q.kind == 'keyword_quiz' then
+				if st < 0 then
+					player:setStorageValue(q.storage, 0)
+					return q.text .. " (Missão aceita: " .. q.name .. "). Diga {{prova}} quando estiver pronto para responder.", false
+				elseif st < q.count then
+					return "Prova ainda não feita. Diga {{prova}} para começar: " .. q.name .. ".", false
+				else
+					return completeQuest(player, q), true
+				end
+			elseif q.kind == 'collect_item' then
+				if st < 0 then
+					player:setStorageValue(q.storage, 0)
+					return q.text .. " (Missão aceita: " .. q.name .. ")", false
+				end
+				local missing = {{}}
+				for _, it in ipairs(q.collectItems) do
+					if player:getItemCount(it.id) < it.count then
+						missing[#missing + 1] = it.count .. "x " .. it.name
+					end
+				end
+				if #missing > 0 then
+					return "Ainda falta trazer: " .. table.concat(missing, ", ") .. ".", false
+				end
+				for _, it in ipairs(q.collectItems) do player:removeItem(it.id, it.count) end
+				return completeQuest(player, q), true
+			elseif st >= q.count then
+				return completeQuest(player, q), true
 			elseif st >= 0 then
 				return "Ainda não terminou? " .. q.name .. ": " .. st .. "/" .. q.count .. " " .. q.monster .. ".", false
 			else
@@ -1253,7 +1601,10 @@ function killEvent.onKill(player, target)
 	if not target:isMonster() then return true end
 	local name = target:getName()
 	for _, q in ipairs(NarutoQuests.list) do
-		if q.monster == name then
+		-- kind='keyword_quiz' NAO conta mortes: a etapa avança só respondendo a prova (ver
+		-- npc/scripts/naruto/<npc>.lua, palavra-chave {prova}) — evita que matar o monstro
+		-- 'decorativo' do objective.kill de compat destrave a prova sem responder nada.
+		if q.kind ~= 'keyword_quiz' and q.monster == name then
 			local st = player:getStorageValue(q.storage)
 			if st >= 0 and st < q.count then
 				player:setStorageValue(q.storage, st + 1)
@@ -1269,11 +1620,422 @@ local login = CreatureEvent("NarutoQuestKillLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoQuestKill")
 	player:registerEvent("NarutoBossPhases")
+	-- bônus de status do rank atual (docs/lore/progressao.md, ranks.json status_bonus): reaplica
+	-- a cada login porque a condição CONDITION_ATTRIBUTES não persiste entre sessões no TFS.
+	if NarutoRanks then NarutoRanks.applyBonus(player) end
 	return true
 end
 login:register()
 """
 write("scripts/naruto/quests_kill.lua", scripts)
+
+# ---------------------------------------------------------------- ranks (Genin -> Kage)
+# docs/lore/progressao.md + data/ranks.json. Storage único com o rank ATUAL do jogador.
+RANK_ORDER = ["genin", "chunin", "jonin", "anbu", "kage"]
+ranks_by_id = {r["rank"]: r for r in ranks_list}
+rank_lua_rows = []
+zone_min_index = {}
+for idx, rid in enumerate(RANK_ORDER, start=1):
+    r = ranks_by_id[rid]
+    u = r["unlocks"]
+    for area in u["areas"]:
+        zone_min_index.setdefault(area, idx)
+    areas_lua = ", ".join(f"'{a}'" for a in u["areas"])
+    sb = u.get("status_bonus", {})
+    rank_lua_rows.append(
+        f"\t{{rank = '{rid}', index = {idx}, minLevel = {r['min_level']}, "
+        f"title = '{u['title'].replace(chr(39), chr(92)+chr(39))}', areas = {{{areas_lua}}}, jutsuTier = {u['jutsu_tier']}, "
+        f"statusBonus = {{maxHp = {sb.get('max_hp', 0)}, maxChakra = {sb.get('max_chakra', 0)}, defense = {sb.get('defense', 0)}}}}},")
+zone_min_lua = "{\n" + "\n".join(f"\t['{z}'] = {i}," for z, i in zone_min_index.items()) + "\n}"
+ranks_lua = HEADER_LUA + f"""-- Coloque em data/lib/naruto_ranks.lua e adicione `dofile('data/lib/naruto_ranks.lua')`
+-- em data/lib/lib.lua (antes de naruto_quests.lua não é obrigatório: lookups são em runtime).
+--
+-- BÔNUS DE STATUS (status_bonus de data/ranks.json): o TFS 1.4.2 não tem setter direto de
+-- max HP/chakra/defesa. Escolha desta implementação: condição permanente CONDITION_ATTRIBUTES
+-- (ticks = -1) com subId fixo (NarutoRanks.BONUS_SUBID). CONDITION_PARAM_STAT_MAXHITPOINTS e
+-- _MAXMANAPOINTS somam diretamente ao HP/chakra máximo (suporte nativo do TFS, ver
+-- server/tfs/src/condition.cpp). 'defense' NÃO tem stat próprio (armor só vem de itens no TFS)
+-- — aproximado com CONDITION_PARAM_SKILL_SHIELD (pontos de skill Shield, que entram no cálculo
+-- de bloqueio/defesa). A condição é removida e recriada do zero a cada login/promoção para
+-- nunca acumular: o bônus ativo é sempre o do rank ATUAL, nunca a soma de ranks anteriores.
+NarutoRanks = {{}}
+NarutoRanks.STORAGE = 60010
+NarutoRanks.BONUS_SUBID = 9010
+NarutoRanks.list = {{
+{chr(10).join(rank_lua_rows)}
+}}
+NarutoRanks.byRank, NarutoRanks.byIndex = {{}}, {{}}
+for _, r in ipairs(NarutoRanks.list) do
+	NarutoRanks.byRank[r.rank] = r
+	NarutoRanks.byIndex[r.index] = r
+end
+NarutoRanks.FIRST = NarutoRanks.byIndex[1]
+
+-- área (docs/lore/mundo.md) -> índice mínimo de rank para entrar (de ranks.json unlocks.areas)
+NarutoRanks.zoneMinIndex = {zone_min_lua}
+
+--- Rank atual do jogador (storage NarutoRanks.STORAGE; ausente/inválido = Genin).
+function NarutoRanks.get(player)
+	local idx = player:getStorageValue(NarutoRanks.STORAGE)
+	if not idx or idx < 1 then idx = 1 end
+	return NarutoRanks.byIndex[idx] or NarutoRanks.FIRST
+end
+
+--- true se o rank atual do jogador já é suficiente para a área nomeada (docs/lore/mundo.md).
+--- Zona sem gate conhecida (não listada em nenhum unlocks.areas) é sempre livre.
+function NarutoRanks.canEnter(player, zone)
+	local need = NarutoRanks.zoneMinIndex[zone]
+	if not need then return true end
+	return NarutoRanks.get(player).index >= need
+end
+
+--- Remove e reaplica do zero a condição de bônus de status do rank ATUAL. Chamar no login
+--- (scripts/naruto/quests_kill.lua) e logo após NarutoRanks.promote.
+function NarutoRanks.applyBonus(player)
+	player:removeCondition(CONDITION_ATTRIBUTES, CONDITIONID_DEFAULT, NarutoRanks.BONUS_SUBID)
+	local b = NarutoRanks.get(player).statusBonus
+	if (b.maxHp or 0) == 0 and (b.maxChakra or 0) == 0 and (b.defense or 0) == 0 then return end
+	local cond = Condition(CONDITION_ATTRIBUTES, CONDITIONID_DEFAULT)
+	cond:setParameter(CONDITION_PARAM_TICKS, -1)
+	cond:setParameter(CONDITION_PARAM_SUBID, NarutoRanks.BONUS_SUBID)
+	if b.maxHp ~= 0 then cond:setParameter(CONDITION_PARAM_STAT_MAXHITPOINTS, b.maxHp) end
+	if b.maxChakra ~= 0 then cond:setParameter(CONDITION_PARAM_STAT_MAXMANAPOINTS, b.maxChakra) end
+	if b.defense ~= 0 then cond:setParameter(CONDITION_PARAM_SKILL_SHIELD, b.defense) end
+	player:addCondition(cond)
+end
+
+--- Promove o jogador para 'rankId' se ele ainda não tiver esse rank ou superior. Aplica bônus
+--- de status, título e efeito. Retorna true se promoveu (false se já era esse rank ou maior).
+function NarutoRanks.promote(player, rankId)
+	local target = NarutoRanks.byRank[rankId]
+	if not target then return false end
+	if target.index <= NarutoRanks.get(player).index then return false end
+	player:setStorageValue(NarutoRanks.STORAGE, target.index)
+	NarutoRanks.applyBonus(player)
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Parabéns! Você agora é " .. target.title .. "!")
+	player:getPosition():sendMagicEffect(CONST_ME_FIREWORK_YELLOW)
+	return true
+end
+"""
+write("lib/naruto_ranks.lua", ranks_lua)
+
+rank_gate_lua = HEADER_LUA + """-- Coloque em data/scripts/naruto/rank_gate.lua (revscriptsys carrega sozinho).
+-- Gate de área por rank (docs/lore/progressao.md): tiles com actionid 45001..45005 (= rank
+-- mínimo 1 Genin..5 Kage) barram quem não tem o rank. O agente de mapa aplica o actionid certo
+-- nos teleportes/portas de cada zona nova; sem isso o tile funciona normalmente (fallback: no-op).
+local gate = MoveEvent()
+gate:type("stepin")
+
+function gate.onStepIn(player, item, position, fromPosition)
+	local need = item:getActionId() - 45000
+	if need < 1 or need > 5 then return true end
+	if not NarutoRanks or NarutoRanks.get(player).index >= need then return true end
+	local reqRank = NarutoRanks.byIndex[need]
+	player:sendCancelMessage("Você precisa ser " .. (reqRank and reqRank.title or "de rank superior") .. " para entrar aqui.")
+	player:teleportTo(fromPosition, true)
+	fromPosition:sendMagicEffect(CONST_ME_POFF)
+	return true
+end
+
+gate:aid(45001, 45002, 45003, 45004, 45005)
+gate:register()
+"""
+write("scripts/naruto/rank_gate.lua", rank_gate_lua)
+
+rank_look_lua = HEADER_LUA + """-- Coloque em data/scripts/naruto/rank_look.lua (revscriptsys carrega sozinho).
+-- Título de rank no /look (docs/lore/progressao.md): usa o EventCallback nativo do TFS 1.4.2
+-- (data/scripts/lib/event_callbacks.lua, mesmo padrão de
+-- data/scripts/eventcallbacks/player/default_onLook.lua) em vez de editar
+-- data/events/scripts/player.lua à mão — o default_onLook roda primeiro (ordem alfabética de
+-- pasta) e monta "You see ...", este só acrescenta uma linha com o rank.
+local ec = EventCallback
+ec.onLook = function(self, thing, position, distance, description)
+	if NarutoRanks and thing:isCreature() and thing:isPlayer() then
+		local rank = NarutoRanks.get(thing)
+		description = description .. "\\nRank: " .. rank.title .. "."
+	end
+	return description
+end
+ec:register()
+"""
+write("scripts/naruto/rank_look.lua", rank_look_lua)
+
+# ---------------------------------------------------------------- NarutoRewards (XP escalada)
+rewards_lua = HEADER_LUA + """-- Coloque em data/lib/naruto_rewards.lua e adicione dofile em data/lib/lib.lua.
+-- XP escalada por level (docs/sistemas/progressao-servidor.md; docs/sistemas/balanceamento.md:
+-- 'XP p/ subir de level = 100*L + 100', ~5,5 kills por level em média no conteúdo já existente).
+--
+-- Usada por TAREFAS (data/tasks.json) e DIÁRIAS (data/dailies.json): seu 'reward.xp' é um
+-- número de KILLS EQUIVALENTES (tipicamente 5-8), não XP absoluto, convertido aqui para o
+-- level ATUAL de quem entrega — a entrega vale sempre ~o mesmo tanto de kills, não um valor
+-- fixo que fica trivial (jogador alto level) ou impossível (jogador baixo level) com o tempo.
+-- Missões de história (data/npcs/*.json) continuam com reward.xp absoluto e hand-tuned
+-- (docs/sistemas/balanceamento.md) e NÃO passam por esta função — decisão documentada em
+-- docs/sistemas/progressao-servidor.md para não destuning números de quest já balanceados.
+NarutoRewards = {}
+NarutoRewards.XP_PER_KILL_DIVISOR = 5.5  -- kills médios por level, ver balanceamento.md
+
+function NarutoRewards.xpToNextLevel(level)
+	return 100 * level + 100
+end
+
+function NarutoRewards.scaledXp(player, killsEquivalent)
+	local level = math.max(1, player:getLevel())
+	local xpPerKill = NarutoRewards.xpToNextLevel(level) / NarutoRewards.XP_PER_KILL_DIVISOR
+	return math.floor(xpPerKill * (killsEquivalent or 0))
+end
+"""
+write("lib/naruto_rewards.lua", rewards_lua)
+
+# ---------------------------------------------------------------- tarefas (Tibia tasks, repetíveis)
+if tasks_data is not None:
+    npc_name_by_id = {n["id"]: n["name"] for n in npcs.values()}
+    TASK_PROGRESS_BASE = 61000
+    TASK_COOLDOWN_BASE = 63000
+    task_defs = []
+    for i, t in enumerate(tasks_data, start=1):
+        items_lua = reward_items_lua(t["reward"].get("items", []))
+        mon = monsters.get(t["monster_id"])
+        mon_name = mon["name"] if mon else t["monster_id"]
+        npc_name = npc_name_by_id.get(t["npc"], t["npc"])
+        task_defs.append(
+            f"\t{{id = '{t['id']}', npc = '{t['npc']}', npcName = '{npc_name}', "
+            f"name = '{t['name'].replace(chr(39), chr(92)+chr(39))}', monster = '{mon_name}', count = {t['count']}, "
+            f"minLevel = {t.get('min_level', 1)}, cooldownMin = {t.get('cooldown_min', 0)}, "
+            f"progressStorage = {TASK_PROGRESS_BASE + i}, cooldownStorage = {TASK_COOLDOWN_BASE + i}, "
+            f"reward = {{xp = {t['reward'].get('xp', 0)}, ryo = {t['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}}},")
+    tasks_lib = HEADER_LUA + f"""-- Coloque em data/lib/naruto_tasks.lua e adicione dofile em data/lib/lib.lua.
+-- Tarefas repetíveis estilo Tibia tasks (data/tasks.json, docs/sistemas/progressao-servidor.md).
+-- progressStorage: -1 não aceita, 0..count-1 em andamento, count = pronta para entregar.
+-- cooldownStorage: epoch (os.time()) até quando a tarefa fica bloqueada após a última entrega.
+NarutoTasks = {{}}
+NarutoTasks.list = {{
+{chr(10).join(task_defs)}
+}}
+NarutoTasks.byNpc = {{}}
+for _, t in ipairs(NarutoTasks.list) do
+	NarutoTasks.byNpc[t.npc] = NarutoTasks.byNpc[t.npc] or {{}}
+	table.insert(NarutoTasks.byNpc[t.npc], t)
+end
+"""
+    write("lib/naruto_tasks.lua", tasks_lib)
+
+    tasks_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/tasks.lua (revscriptsys carrega sozinho).
+local killEvent = CreatureEvent("NarutoTaskKill")
+function killEvent.onKill(player, target)
+	if not target:isMonster() then return true end
+	local name = target:getName()
+	for _, t in ipairs(NarutoTasks.list) do
+		if t.monster == name then
+			local prog = player:getStorageValue(t.progressStorage)
+			if prog >= 0 and prog < t.count then
+				player:setStorageValue(t.progressStorage, prog + 1)
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, t.name .. ": " .. (prog + 1) .. "/" .. t.count)
+			end
+		end
+	end
+	return true
+end
+killEvent:register()
+
+local login = CreatureEvent("NarutoTaskLogin")
+function login.onLogin(player)
+	player:registerEvent("NarutoTaskKill")
+	return true
+end
+login:register()
+
+--- !tarefas: lista só as tarefas ATIVAS (aceitas) do jogador, com progresso. Para aceitar/
+--- entregar, fale com o Mestre de Tarefas da região (palavras-chave {tarefa}/{entregar}).
+local talk = TalkAction("!tarefas")
+function talk.onSay(player, words, param)
+	local lines = {}
+	for _, t in ipairs(NarutoTasks.list) do
+		local prog = player:getStorageValue(t.progressStorage)
+		if prog >= 0 then
+			if prog < t.count then
+				lines[#lines + 1] = t.name .. ": " .. prog .. "/" .. t.count .. " " .. t.monster
+			else
+				lines[#lines + 1] = t.name .. ": PRONTA (entregue com " .. t.npcName .. ")"
+			end
+		end
+	end
+	if #lines == 0 then
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Nenhuma tarefa ativa. Fale com um Mestre de Tarefas da região e diga {tarefa} para aceitar uma.")
+	else
+		player:sendTextMessage(MESSAGE_INFO_DESCR, table.concat(lines, " | "))
+	end
+	return false
+end
+talk:separator(" ")
+talk:register()
+"""
+    write("scripts/naruto/tasks.lua", tasks_script)
+else:
+    WARNINGS.append("data/tasks.json não existe: sistema de tarefas NÃO gerado (compat).")
+
+# ---------------------------------------------------------------- diárias
+if dailies_data is not None:
+    daily_defs = []
+    for d in dailies_data:
+        items_lua = reward_items_lua(d["reward"].get("items", []))
+        mon = monsters.get(d["monster_id"])
+        mon_name = mon["name"] if mon else d["monster_id"]
+        daily_defs.append(
+            f"\t{{id = '{d['id']}', name = '{d['name'].replace(chr(39), chr(92)+chr(39))}', "
+            f"text = '{d['text'].replace(chr(39), chr(92)+chr(39))}', monster = '{mon_name}', count = {d['count']}, "
+            f"levelMin = {d['level_min']}, levelMax = {d['level_max']}, "
+            f"reward = {{xp = {d['reward'].get('xp', 0)}, ryo = {d['reward'].get('ryo', 0)}, items = {{{items_lua}}}}}}},")
+    dailies_lib = HEADER_LUA + f"""-- Coloque em data/lib/naruto_dailies.lua e adicione dofile em data/lib/lib.lua.
+-- Missões diárias (data/dailies.json, docs/sistemas/progressao-servidor.md): a cada dia, 3
+-- entradas são sorteadas do pool cuja faixa [levelMin,levelMax] contém o level do jogador (na
+-- hora do sorteio). Simplificação vs. o pedido original: as 3 diárias do dia já ficam
+-- AUTO-ACEITAS (contam kills desde o sorteio, sem passo extra de 'aceitar por número') —
+-- '!diaria' mostra e '!diaria entregar' entrega; ver pendências no relatório da missão.
+-- SLOT_PROGRESS: -1 sem entrada nesse slot hoje, 0..count-1 em andamento, count = pronta,
+-- count+1 = já entregue hoje.
+NarutoDailies = {{}}
+NarutoDailies.DAY = 60020
+NarutoDailies.SLOT_POOL = {{60021, 60022, 60023}}
+NarutoDailies.SLOT_PROGRESS = {{60024, 60025, 60026}}
+NarutoDailies.pool = {{
+{chr(10).join(daily_defs)}
+}}
+
+local function today()
+	local t = os.date('*t')
+	return t.year * 400 + t.yday
+end
+
+local function bracketPool(level)
+	local out = {{}}
+	for i, d in ipairs(NarutoDailies.pool) do
+		if level >= d.levelMin and level <= d.levelMax then out[#out + 1] = i end
+	end
+	return out
+end
+
+--- Sorteia as 3 diárias do dia se ainda não sorteou hoje para este jogador (chamado no login,
+--- em !diaria e em qualquer kill, então nunca precisa ser chamado manualmente por fora).
+function NarutoDailies.rollIfNeeded(player)
+	if player:getStorageValue(NarutoDailies.DAY) == today() then return end
+	local pool = bracketPool(player:getLevel())
+	for i = #pool, 2, -1 do
+		local j = math.random(i)
+		pool[i], pool[j] = pool[j], pool[i]
+	end
+	for slot = 1, 3 do
+		local idx = pool[slot] or -1
+		player:setStorageValue(NarutoDailies.SLOT_POOL[slot], idx)
+		player:setStorageValue(NarutoDailies.SLOT_PROGRESS[slot], idx > 0 and 0 or -1)
+	end
+	player:setStorageValue(NarutoDailies.DAY, today())
+end
+
+function NarutoDailies.slotEntry(player, slot)
+	local idx = player:getStorageValue(NarutoDailies.SLOT_POOL[slot])
+	if not idx or idx < 1 then return nil end
+	return NarutoDailies.pool[idx]
+end
+
+function NarutoDailies.slotProgress(player, slot)
+	return player:getStorageValue(NarutoDailies.SLOT_PROGRESS[slot])
+end
+
+function NarutoDailies.onKill(player, monsterName)
+	NarutoDailies.rollIfNeeded(player)
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry and entry.monster == monsterName then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			if prog >= 0 and prog < entry.count then
+				player:setStorageValue(NarutoDailies.SLOT_PROGRESS[slot], prog + 1)
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Diária " .. entry.name .. ": " .. (prog + 1) .. "/" .. entry.count)
+			end
+		end
+	end
+end
+
+--- Entrega TODAS as diárias do dia que já estão prontas. Retorna (algumaEntregue, xpTotal, ryoTotal).
+function NarutoDailies.deliver(player)
+	NarutoDailies.rollIfNeeded(player)
+	local totalXp, totalRyo, any = 0, 0, false
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			if prog == entry.count then
+				any = true
+				local xp = NarutoRewards.scaledXp(player, entry.reward.xp)
+				player:addExperience(xp, true)
+				totalXp = totalXp + xp
+				if entry.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, entry.reward.ryo) end
+				totalRyo = totalRyo + entry.reward.ryo
+				for _, it in ipairs(entry.reward.items) do player:addItem(it.id, it.count) end
+				player:setStorageValue(NarutoDailies.SLOT_PROGRESS[slot], entry.count + 1)
+			end
+		end
+	end
+	return any, totalXp, totalRyo
+end
+"""
+    write("lib/naruto_dailies.lua", dailies_lib)
+
+    dailies_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/dailies.lua (revscriptsys carrega sozinho).
+local killEvent = CreatureEvent("NarutoDailyKill")
+function killEvent.onKill(player, target)
+	if not target:isMonster() then return true end
+	NarutoDailies.onKill(player, target:getName())
+	return true
+end
+killEvent:register()
+
+local login = CreatureEvent("NarutoDailyLogin")
+function login.onLogin(player)
+	player:registerEvent("NarutoDailyKill")
+	NarutoDailies.rollIfNeeded(player)
+	return true
+end
+login:register()
+
+--- !diaria: mostra as 3 diárias do dia (já auto-aceitas, ver naruto_dailies.lua) e progresso.
+--- !diaria entregar: entrega todas as que já estiverem prontas.
+local talk = TalkAction("!diaria")
+function talk.onSay(player, words, param)
+	NarutoDailies.rollIfNeeded(player)
+	param = param and param:trim() or ""
+	if param == "entregar" then
+		local ok, xp, ryo = NarutoDailies.deliver(player)
+		if ok then
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("Diárias entregues: +%d xp, +%d ryo.", xp, ryo))
+		else
+			player:sendCancelMessage("Nenhuma diária pronta para entregar.")
+		end
+		return false
+	end
+	local lines = {}
+	for slot = 1, 3 do
+		local entry = NarutoDailies.slotEntry(player, slot)
+		if entry then
+			local prog = NarutoDailies.slotProgress(player, slot)
+			if prog < entry.count then
+				lines[#lines + 1] = string.format("%d) %s: %d/%d %s", slot, entry.name, math.max(prog, 0), entry.count, entry.monster)
+			elseif prog == entry.count then
+				lines[#lines + 1] = string.format("%d) %s: PRONTA (!diaria entregar)", slot, entry.name)
+			else
+				lines[#lines + 1] = string.format("%d) %s: já entregue hoje", slot, entry.name)
+			end
+		end
+	end
+	player:sendTextMessage(MESSAGE_INFO_DESCR, #lines > 0 and table.concat(lines, " | ") or "Nenhuma diária disponível para o seu level hoje.")
+	return false
+end
+talk:separator(" ")
+talk:register()
+"""
+    write("scripts/naruto/dailies.lua", dailies_script)
+else:
+    WARNINGS.append("data/dailies.json não existe: sistema de diárias NÃO gerado (compat).")
 
 # bosses: fases via onHealthChange
 phases = [HEADER_LUA, "-- Coloque em data/scripts/naruto/boss_phases.lua", "local PHASES = {"]
@@ -1372,12 +2134,17 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `lib/naruto_characters.lua` | `data/lib/` + `dofile` em `lib.lua` (depois de naruto_villages.lua e naruto_json.lua) | `tools/install_generated.sh` |
 | `npc/naruto/*` | `data/npc/naruto/` | copiar a pasta |
 | `lib/naruto_quests.lua` | `data/lib/` + `dofile` em `lib.lua` | ver cabeçalho |
-| `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |
+| `lib/naruto_ranks.lua` | `data/lib/` + `dofile` em `lib.lua` | docs/lore/progressao.md |
+| `lib/naruto_rewards.lua` | `data/lib/` + `dofile` em `lib.lua` | XP escalada (tarefas/diárias) |
+| `lib/naruto_tasks.lua` | `data/lib/` + `dofile` em `lib.lua` | só se `data/tasks.json` existir |
+| `lib/naruto_dailies.lua` | `data/lib/` + `dofile` em `lib.lua` | só se `data/dailies.json` existir |
+| `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho (rank_gate, rank_look, tasks, dailies inclusos) |
 | `world/*-spawn.xml` | referência para o Remere's Map Editor | manual |
 
-Totais: {len(monsters)} monstros, {len(jutsus)} jutsus, {len(items)} itens, {len(npcs)} NPCs, {qi} missões, {len(villages)} vocações.
+Totais: {len(monsters)} monstros, {len(jutsus)} jutsus, {len(items)} itens, {len(npcs)} NPCs, {qi} missões, {len(villages)} vocações, {len(ranks_list)} ranks, {len(tasks_data) if tasks_data is not None else 0} tarefas, {len(dailies_data) if dailies_data is not None else 0} diárias (pool).
 """)
-print(f"OK: {len(monsters)} monstros, {len(jutsus)} jutsus, {len(items)} itens, {len(npcs)} NPCs, {qi} missões → server/generated/")
+print(f"OK: {len(monsters)} monstros, {len(jutsus)} jutsus, {len(items)} itens, {len(npcs)} NPCs, {qi} missões, {len(ranks_list)} ranks, "
+      f"{len(tasks_data) if tasks_data is not None else 0} tarefas, {len(dailies_data) if dailies_data is not None else 0} diárias → server/generated/")
 if SKIPPED_ITEM_IDS:
     print(f"\nAVISO: {len(SKIPPED_ITEM_IDS)} itens NÃO foram emitidos em items_naruto.xml porque o id do")
     print("mapping já existe no items.xml original do TFS (evita 'Duplicate item with id').")
@@ -1386,6 +2153,10 @@ if SKIPPED_ITEM_IDS:
         print(f"  - {our_id}: id {iid} SUBSTITUI o item vanilla (installer remove a entrada original)")
 elif not VANILLA_ITEM_IDS:
     print("AVISO: server/tfs/data/items/items.xml não encontrado; ids duplicados não foram verificados.")
+if UNMAPPED_REWARD_ITEMS:
+    print(f"\nAVISO: {len(UNMAPPED_REWARD_ITEMS)} itens de recompensa (quests/tarefas/diárias) sem id em")
+    print("data/tfs_mapping.json ('items') foram OMITIDOS da recompensa (não editável por esta missão):")
+    print("  " + ", ".join(sorted(UNMAPPED_REWARD_ITEMS)))
 
 # ---------------------------------------------------------------- cliente: jutsus_data.lua
 # O OTClient só conhece as spells da Tibia (modules/gamelib/spells.lua). Geramos aqui um

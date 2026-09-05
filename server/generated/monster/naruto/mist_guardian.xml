@@ -28,5 +28,6 @@
 	<loot>
 		<item id="2148" countmax="40" chance="100000"/>
 		<item id="7618" chance="10000"/>  <!-- health_potion_small -->
+		<item id="7458" chance="5000"/>  <!-- capuz_do_batedor -->
 	</loot>
 </monster>

@@ -131,4 +131,129 @@
 	<spawn centerx="1135" centery="1058" centerz="7" radius="1">
 		<npc name="Rastreador Goro" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
+	<spawn centerx="1026" centery="1145" centerz="7" radius="1">
+		<npc name="Mercador Itsuki" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1032" centery="1145" centerz="7" radius="1">
+		<npc name="Ancião Tazu" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1406" centery="1010" centerz="7" radius="1">
+		<npc name="Capitã Anbu Suzu" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1406" centery="1012" centerz="7" radius="1">
+		<npc name="Fornecedor Enji" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1010" centery="1150" centerz="7" radius="6">
+		<monster name="Mercenário da Ponte" x="0" y="0" z="7" spawntime="45"/>
+		<monster name="Mercenário da Ponte" x="2" y="-1" z="7" spawntime="45"/>
+		<monster name="Mercenário da Ponte" x="-2" y="1" z="7" spawntime="45"/>
+		<monster name="Mercenário da Ponte" x="1" y="2" z="7" spawntime="45"/>
+		<monster name="Mercenário da Ponte" x="-1" y="-2" z="7" spawntime="45"/>
+		<monster name="Mercenário da Ponte" x="3" y="0" z="7" spawntime="45"/>
+	</spawn>
+	<spawn centerx="1023" centery="1130" centerz="7" radius="6">
+		<monster name="Batedor da Névoa" x="0" y="0" z="7" spawntime="50"/>
+		<monster name="Batedor da Névoa" x="2" y="-1" z="7" spawntime="50"/>
+		<monster name="Batedor da Névoa" x="-2" y="1" z="7" spawntime="50"/>
+		<monster name="Batedor da Névoa" x="1" y="2" z="7" spawntime="50"/>
+	</spawn>
+	<spawn centerx="1029" centery="1139" centerz="7" radius="4">
+		<monster name="Guardião da Neblina" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Guardião da Neblina" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Guardião da Neblina" x="-2" y="1" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1029" centery="1166" centerz="7" radius="2">
+		<monster name="Espadachim da Névoa" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1209" centery="1011" centerz="7" radius="3">
+		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Marionete de Combate" x="1" y="0" z="7" spawntime="70"/>
+		<monster name="Marionete de Combate" x="-1" y="0" z="7" spawntime="70"/>
+		<monster name="Marionete de Combate" x="0" y="1" z="7" spawntime="70"/>
+		<monster name="Marionete de Combate" x="0" y="-1" z="7" spawntime="70"/>
+		<monster name="Marionete de Combate" x="1" y="1" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1224" centery="1025" centerz="7" radius="3">
+		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Sentinela de Pedra" x="1" y="0" z="7" spawntime="90"/>
+		<monster name="Sentinela de Pedra" x="-1" y="0" z="7" spawntime="90"/>
+		<monster name="Sentinela de Pedra" x="0" y="1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1207" centery="1035" centerz="7" radius="3">
+		<monster name="Guerreiro Espectral" x="0" y="0" z="7" spawntime="100"/>
+		<monster name="Guerreiro Espectral" x="1" y="0" z="7" spawntime="100"/>
+		<monster name="Guerreiro Espectral" x="-1" y="0" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1240" centery="1010" centerz="7" radius="3">
+		<monster name="Xamã da Maldição" x="0" y="0" z="7" spawntime="110"/>
+		<monster name="Xamã da Maldição" x="1" y="0" z="7" spawntime="110"/>
+		<monster name="Xamã da Maldição" x="-1" y="0" z="7" spawntime="110"/>
+	</spawn>
+	<spawn centerx="1232" centery="1025" centerz="7" radius="2">
+		<monster name="Desertor de Elite" x="0" y="0" z="7" spawntime="1800"/>
+	</spawn>
+	<spawn centerx="1242" centery="1025" centerz="7" radius="3">
+		<monster name="Marionetista das Ruínas" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1225" centery="1068" centerz="7" radius="4">
+		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="2" y="-1" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="-2" y="1" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="1" y="2" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="-1" y="-2" z="7" spawntime="70"/>
+	</spawn>
+	<spawn centerx="1225" centery="1077" centerz="7" radius="4">
+		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="-2" y="1" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="1" y="2" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1225" centery="1086" centerz="7" radius="4">
+		<monster name="Monge da Tempestade" x="0" y="0" z="7" spawntime="100"/>
+		<monster name="Monge da Tempestade" x="2" y="-1" z="7" spawntime="100"/>
+		<monster name="Monge da Tempestade" x="-2" y="1" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1225" centery="1095" centerz="7" radius="4">
+		<monster name="Serpente de Magma" x="0" y="0" z="7" spawntime="100"/>
+		<monster name="Serpente de Magma" x="2" y="-1" z="7" spawntime="100"/>
+		<monster name="Serpente de Magma" x="-2" y="1" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1221" centery="1106" centerz="7" radius="2">
+		<monster name="O Sócio Eterno" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1229" centery="1106" centerz="7" radius="2">
+		<monster name="Oni Ancestral" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1422" centery="1012" centerz="7" radius="12">
+		<monster name="Clone Branco" x="-11" y="-1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="-8" y="0" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="-6" y="1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="-3" y="-1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="-1" y="0" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="1" y="1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="3" y="-1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="6" y="0" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="8" y="1" z="7" spawntime="90"/>
+		<monster name="Clone Branco" x="11" y="-1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1422" centery="1012" centerz="7" radius="12">
+		<monster name="Ninja Elite da Aurora" x="-10" y="-1" z="7" spawntime="110"/>
+		<monster name="Ninja Elite da Aurora" x="-6" y="0" z="7" spawntime="110"/>
+		<monster name="Ninja Elite da Aurora" x="-2" y="1" z="7" spawntime="110"/>
+		<monster name="Ninja Elite da Aurora" x="2" y="-1" z="7" spawntime="110"/>
+		<monster name="Ninja Elite da Aurora" x="6" y="0" z="7" spawntime="110"/>
+		<monster name="Ninja Elite da Aurora" x="10" y="1" z="7" spawntime="110"/>
+	</spawn>
+	<spawn centerx="1414" centery="1007" centerz="7" radius="2">
+		<monster name="O Vigia Ilusório" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1422" centery="1017" centerz="7" radius="2">
+		<monster name="O Mascarado das Sombras" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1430" centery="1007" centerz="7" radius="2">
+		<monster name="O Portador dos Seis Caminhos" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
+	<spawn centerx="1442" centery="1012" centerz="7" radius="3">
+		<monster name="O Ancestral da Nuvem Vermelha" x="0" y="0" z="7" spawntime="7200"/>
+	</spawn>
 </spawns>

@@ -25,5 +25,6 @@
 		<item id="2148" countmax="25" chance="100000"/>
 		<item id="2229" chance="40000"/>  <!-- bandit_emblem -->
 		<item id="7618" chance="8000"/>  <!-- health_potion_small -->
+		<item id="2210" chance="4000"/>  <!-- bracelete_do_viajante -->
 	</loot>
 </monster>

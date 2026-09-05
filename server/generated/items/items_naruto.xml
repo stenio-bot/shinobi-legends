@@ -477,6 +477,505 @@
 	<attribute key="speed" value="30"/>
 	<!-- required_level 45: aplicar via movements.xml (level) -->
 </item>
+<item id="2126" name="amuleto da academia">  <!-- amuleto_academia (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Dado a todo genin recém-formado pela Academia. Quase não protege, mas ninguém esquece o primeiro amuleto."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="1"/>
+	<!-- required_level 1: aplicar via movements.xml (level) -->
+</item>
+<item id="7458" name="capuz do batedor">  <!-- capuz_do_batedor (uncommon) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Cobre o rosto contra vento e poeira da estrada — usado por quem já deixou a Floresta da Vila."/>
+	<attribute key="armor" value="2"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="9928" name="calça do batedor">  <!-- calca_do_batedor (uncommon) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Reforçada nos joelhos para longas patrulhas na Costa das Marés e na Floresta da Morte."/>
+	<attribute key="armor" value="4"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="2399" name="senbon de ferro">  <!-- senbon_de_ferro (uncommon) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Agulhas pesadas de arremesso, mais precisas que o shuriken comum."/>
+	<attribute key="attack" value="16"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="2210" name="bracelete do viajante">  <!-- bracelete_do_viajante (uncommon) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Marca de quem já matou o suficiente fora da vila para ser levado a sério."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillSword" value="2"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
+<item id="5917" name="bandana de chunin">  <!-- bandana_chuunin (uncommon) -->
+	<attribute key="weight" value="80"/>
+	<attribute key="description" value="Traz o símbolo da vila gravado na placa de metal. Só é entregue a quem passa no exame."/>
+	<attribute key="armor" value="5"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="2648" name="calça de chunin">  <!-- calca_chuunin (uncommon) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Tecido reforçado usado nas missões de rank C que se seguem ao exame."/>
+	<attribute key="armor" value="7"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="2642" name="sandália de chunin">  <!-- sandalia_chuunin (uncommon) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Sola fina o bastante para não fazer barulho, grossa o bastante para aguentar a Floresta da Morte."/>
+	<attribute key="armor" value="4"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="3967" name="máscara do rastreador sombrio">  <!-- mascara_rastreador_sombrio (rare) -->
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Filtra o pó das Ruínas do Clã Marionetista. Usada por quem persegue desertores de elite."/>
+	<attribute key="armor" value="10"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="8870" name="manto do rastreador sombrio">  <!-- manto_rastreador_sombrio (rare) -->
+	<attribute key="weight" value="800"/>
+	<attribute key="description" value="Tingido para se confundir com a pedra das ruínas ao entardecer."/>
+	<attribute key="armor" value="22"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="15409" name="calça do rastreador sombrio">  <!-- calca_rastreador_sombrio (rare) -->
+	<attribute key="weight" value="450"/>
+	<attribute key="description" value="Permite agachar entre os escombros sem rasgar."/>
+	<attribute key="armor" value="14"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="11303" name="botas do rastreador sombrio">  <!-- botas_rastreador_sombrio (rare) -->
+	<attribute key="weight" value="250"/>
+	<attribute key="description" value="Sola de couro de marionete — não deixa rastro em pó de pedra."/>
+	<attribute key="armor" value="8"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="2402" name="adaga sombria">  <!-- adaga_sombria (rare) -->
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete."/>
+	<attribute key="attack" value="54"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="7366" name="shuriken sombria">  <!-- shuriken_sombria (rare) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Bordas enegrecidas para não refletir luz no covil."/>
+	<attribute key="attack" value="56"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="2201" name="colar do rastreador">  <!-- colar_do_rastreador (rare) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Cada conta representa um desertor caçado com sucesso."/>
+	<attribute key="slotType" value="ring"/>
+	<!-- required_level 40: aplicar via movements.xml (level) -->
+</item>
+<item id="2476" name="colete de jonin">  <!-- colete_jonin (rare) -->
+	<attribute key="weight" value="900"/>
+	<attribute key="description" value="Entregue a quem vence o Espadachim da Névoa e o Marionetista das Ruínas — o Exame Jonin."/>
+	<attribute key="armor" value="28"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="2647" name="calça de jonin">  <!-- calca_jonin (rare) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Parte do uniforme padrão de Jonin, reforçada para a Montanha do Trovão."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="6132" name="botas de jonin">  <!-- botas_jonin (rare) -->
+	<attribute key="weight" value="280"/>
+	<attribute key="description" value="Sola grossa o bastante para o gelo da geleira e para a trilha de pedra vulcânica."/>
+	<attribute key="armor" value="10"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="2406" name="tantō de jonin">  <!-- tanto_jonin (rare) -->
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Forjado nas forjas da vila só para quem alcança o posto."/>
+	<attribute key="attack" value="68"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="3965" name="senbon de jonin">  <!-- senbon_jonin (rare) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Conjunto de agulhas com contrapeso perfeito, padrão dos Jonin."/>
+	<attribute key="attack" value="71"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="2166" name="bracelete de jonin">  <!-- bracelete_jonin (rare) -->
+	<attribute key="weight" value="25"/>
+	<attribute key="description" value="Gravado com o símbolo do posto — só é usado depois do Exame Jonin."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="3"/>
+	<!-- required_level 50: aplicar via movements.xml (level) -->
+</item>
+<item id="2496" name="elmo do caçador de onis">  <!-- elmo_cacador_de_onis (epic) -->
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Chifre de oni cravado na testeira — troféu de quem já sobreviveu ao gelo da Montanha do Trovão."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="2494" name="couraça do caçador de onis">  <!-- couraca_cacador_de_onis (epic) -->
+	<attribute key="weight" value="1300"/>
+	<attribute key="description" value="Placas de escama de magma reforçadas por cima do couro de oni."/>
+	<attribute key="armor" value="38"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="7894" name="grevas do caçador de onis">  <!-- grevas_cacador_de_onis (epic) -->
+	<attribute key="weight" value="700"/>
+	<attribute key="description" value="Protegem contra o gelo da geleira e o calor das fendas de magma na mesma subida."/>
+	<attribute key="armor" value="24"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="7891" name="botas do caçador de onis">  <!-- botas_cacador_de_onis (epic) -->
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Sola tripla — a única forma de aguentar a trilha inteira da Montanha do Trovão em um dia."/>
+	<attribute key="armor" value="14"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="7438" name="shuriken congelante">  <!-- shuriken_congelante (epic) -->
+	<attribute key="weight" value="450"/>
+	<attribute key="description" value="Forjada com estilhaços de gelo da geleira — nunca derrete de verdade."/>
+	<attribute key="attack" value="98"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="2161" name="talismã do caçador de onis">  <!-- talisma_cacador_de_onis (epic) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Feito com o chifre do primeiro oni que o portador derrotou sozinho."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillSword" value="3"/>
+	<!-- required_level 70: aplicar via movements.xml (level) -->
+</item>
+<item id="2490" name="capuz anbu negro">  <!-- capuz_anbu_negro (epic) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Sem brasão, sem nome — a marca de quem age direto sob as ordens do Kage."/>
+	<attribute key="armor" value="20"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="2489" name="manto anbu negro">  <!-- manto_anbu_negro (epic) -->
+	<attribute key="weight" value="1000"/>
+	<attribute key="description" value="Tecido escuro cortado para não fazer ruído nos corredores do Covil da Nuvem Vermelha."/>
+	<attribute key="armor" value="44"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="11304" name="calça anbu negra">  <!-- calca_anbu_negro (epic) -->
+	<attribute key="weight" value="550"/>
+	<attribute key="description" value="Parte do uniforme de operações que só o corpo Anbu usa."/>
+	<attribute key="armor" value="28"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="11240" name="botas anbu negras">  <!-- botas_anbu_negro (epic) -->
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Silenciosas o bastante para escoltar uma missão sem ser notado."/>
+	<attribute key="armor" value="16"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="8849" name="senbon anbu negro">  <!-- senbon_anbu_negro (epic) -->
+	<attribute key="weight" value="220"/>
+	<attribute key="description" value="Kit padrão de arremesso do corpo Anbu — preciso até no escuro."/>
+	<attribute key="attack" value="112"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="2142" name="emblema anbu negro">  <!-- emblema_anbu_negro (epic) -->
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Só é dado a quem prova, em campo, que aguenta o Exame Anbu."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillClub" value="4"/>
+	<!-- required_level 80: aplicar via movements.xml (level) -->
+</item>
+<item id="2493" name="capuz da aurora carmesim">  <!-- capuz_aurora_carmesim (epic) -->
+	<attribute key="weight" value="220"/>
+	<attribute key="description" value="Usado pelos ninjas elite da Aurora que guardam os corredores do Covil."/>
+	<attribute key="armor" value="22"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="8868" name="manto da aurora carmesim">  <!-- manto_aurora_carmesim (epic) -->
+	<attribute key="weight" value="1050"/>
+	<attribute key="description" value="Nuvens vermelhas bordadas sobre pano preto — quem usa já provou lealdade ou já morreu tentando escapar dela."/>
+	<attribute key="armor" value="50"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="23539" name="calça da aurora carmesim">  <!-- calca_aurora_carmesim (epic) -->
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="Parte do uniforme dos guardas de elite do Covil da Nuvem Vermelha."/>
+	<attribute key="armor" value="31"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="11118" name="botas da aurora carmesim">  <!-- botas_aurora_carmesim (epic) -->
+	<attribute key="weight" value="320"/>
+	<attribute key="description" value="Reforçadas para os corredores de pedra do covil final."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="8209" name="katana da aurora carmesim">  <!-- katana_aurora_carmesim (epic) -->
+	<attribute key="weight" value="650"/>
+	<attribute key="description" value="Lâmina confiscada de um clone branco derrotado."/>
+	<attribute key="attack" value="122"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="8850" name="shuriken da aurora carmesim">  <!-- shuriken_aurora_carmesim (epic) -->
+	<attribute key="weight" value="480"/>
+	<attribute key="description" value="Marcada com a nuvem vermelha da organização."/>
+	<attribute key="attack" value="126"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="2204" name="anel da aurora carmesim">  <!-- anel_aurora_carmesim (epic) -->
+	<attribute key="weight" value="25"/>
+	<attribute key="description" value="Tirado de um ninja elite da Aurora — ainda carrega um resquício do chakra dele."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="4"/>
+	<!-- required_level 90: aplicar via movements.xml (level) -->
+</item>
+<item id="2498" name="chapéu de kage">  <!-- chapeu_kage (legendary) -->
+	<attribute key="weight" value="250"/>
+	<attribute key="description" value="O símbolo mais alto de autoridade shinobi. Só é forjado quando o posto é conquistado de verdade."/>
+	<attribute key="armor" value="25"/>
+	<attribute key="slotType" value="head"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="2472" name="manto de kage">  <!-- manto_kage (legendary) -->
+	<attribute key="weight" value="1100"/>
+	<attribute key="description" value="Tecido com fios de chakra selado, feito para sobreviver ao Ancestral da Nuvem Vermelha."/>
+	<attribute key="armor" value="55"/>
+	<attribute key="slotType" value="body"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="10300" name="calça de kage">  <!-- calca_kage (legendary) -->
+	<attribute key="weight" value="650"/>
+	<attribute key="description" value="Última peça do uniforme reservado a quem termina a progressão de rank."/>
+	<attribute key="armor" value="35"/>
+	<attribute key="slotType" value="legs"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="11117" name="sandálias de kage">  <!-- sandalias_kage (legendary) -->
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="As últimas que um shinobi em ascensão precisa comprar."/>
+	<attribute key="armor" value="20"/>
+	<attribute key="slotType" value="feet"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="6528" name="lâmina do kage">  <!-- lamina_do_kage (legendary) -->
+	<attribute key="weight" value="700"/>
+	<attribute key="description" value="Forjada uma única vez, para o vencedor do Exame Kage."/>
+	<attribute key="attack" value="141"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="8851" name="leque de lâminas do kage">  <!-- leque_de_lamina_kage (legendary) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Arremessado em leque — cada lâmina volta à mão sozinha."/>
+	<attribute key="attack" value="143"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="7"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="2357" name="anel do kage">  <!-- anel_do_kage (legendary) -->
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Última prova de progressão — usado só por quem derrotou o Ancestral da Nuvem Vermelha."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="6"/>
+	<attribute key="skillSword" value="6"/>
+	<!-- required_level 100: aplicar via movements.xml (level) -->
+</item>
+<item id="7394" name="troféu: lobo">  <!-- trophy_wolf (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Lobo até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15415" name="troféu: bandido">  <!-- trophy_bandit (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Bandido até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="12650" name="troféu: cobra da floresta">  <!-- trophy_forest_snake (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Cobra da Floresta até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15416" name="troféu: bandido arqueiro">  <!-- trophy_bandit_archer (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Bandido Arqueiro até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10130" name="troféu: chefe dos bandidos">  <!-- trophy_boss_bandit_chief (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Chefe dos Bandidos até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7397" name="troféu: cervo">  <!-- trophy_forest_deer (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Cervo até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15417" name="troféu: mercenário da ponte">  <!-- trophy_mercenary_bridge (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Mercenário da Ponte até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10142" name="troféu: batedor da névoa">  <!-- trophy_mist_scout (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Batedor da Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7936" name="troféu: guardião da neblina">  <!-- trophy_mist_guardian (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Guardião da Neblina até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15418" name="troféu: aprendiz mascarado">  <!-- trophy_masked_apprentice (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Aprendiz Mascarado até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10131" name="troféu: espadachim da névoa">  <!-- trophy_boss_mist_swordsman (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Espadachim da Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11338" name="troféu: sanguessuga gigante">  <!-- trophy_leech (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sanguessuga Gigante até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10455" name="troféu: sapo gigante">  <!-- trophy_giant_toad (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sapo Gigante até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15419" name="troféu: ninja renegado">  <!-- trophy_rogue_ninja (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Ninja Renegado até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="12635" name="troféu: serpente menor">  <!-- trophy_lesser_serpent (common) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente Menor até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10132" name="troféu: sapo ancião">  <!-- trophy_boss_elder_toad (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sapo Ancião até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10529" name="troféu: serpente branca">  <!-- trophy_boss_white_serpent (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente Branca até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24757" name="troféu: rival do exame — pedra">  <!-- trophy_exam_rival_stone (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Pedra até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24758" name="troféu: rival do exame — som">  <!-- trophy_exam_rival_sound (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Som até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24759" name="troféu: rival do exame — névoa">  <!-- trophy_exam_rival_mist (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11161" name="troféu: marionete de combate">  <!-- trophy_ruin_puppet (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Marionete de Combate até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7395" name="troféu: sentinela de pedra">  <!-- trophy_stone_sentinel (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sentinela de Pedra até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7401" name="troféu: guerreiro espectral">  <!-- trophy_spectral_warrior (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Guerreiro Espectral até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11336" name="troféu: xamã da maldição">  <!-- trophy_curse_shaman (uncommon) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Xamã da Maldição até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7396" name="troféu: desertor de elite">  <!-- trophy_elite_deserter (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Desertor de Elite até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24760" name="troféu: marionetista das ruínas">  <!-- trophy_boss_puppeteer (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Marionetista das Ruínas até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10543" name="troféu: águia do trovão">  <!-- trophy_thunder_eagle (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Águia do Trovão até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10542" name="troféu: oni da geleira">  <!-- trophy_glacier_oni (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Oni da Geleira até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11315" name="troféu: monge da tempestade">  <!-- trophy_storm_monk (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Monge da Tempestade até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7964" name="troféu: serpente de magma">  <!-- trophy_magma_serpent (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente de Magma até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15420" name="troféu: o sócio eterno">  <!-- trophy_boss_curse_partner (epic) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Sócio Eterno até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="6435" name="troféu: oni ancestral">  <!-- trophy_boss_ancestral_oni (legendary) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Oni Ancestral até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7399" name="troféu: clone branco">  <!-- trophy_white_clone (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Clone Branco até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7398" name="troféu: ninja elite da aurora">  <!-- trophy_elite_cloud_guard (rare) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Ninja Elite da Aurora até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16004" name="troféu: o vigia ilusório">  <!-- trophy_boss_illusive_eye (legendary) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Vigia Ilusório até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16005" name="troféu: o mascarado das sombras">  <!-- trophy_boss_masked_puppeteer (legendary) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Mascarado das Sombras até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16006" name="troféu: o portador dos seis caminhos">  <!-- trophy_boss_rings_bearer (legendary) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Portador dos Seis Caminhos até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15619" name="troféu: o ancestral da nuvem vermelha">  <!-- trophy_boss_crimson_ancestor (legendary) -->
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Ancestral da Nuvem Vermelha até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
 <item id="2404" name="kunai de ferro">  <!-- kunai_iron (common) -->
 	<attribute key="weight" value="150"/>
 	<attribute key="description" value="Arma básica de todo genin."/>

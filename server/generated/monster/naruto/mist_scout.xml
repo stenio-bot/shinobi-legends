@@ -30,5 +30,6 @@
 	<loot>
 		<item id="2148" countmax="30" chance="100000"/>
 		<item id="7378" countmax="8" chance="30000"/>  <!-- shuriken_iron -->
+		<item id="2399" chance="5000"/>  <!-- senbon_de_ferro -->
 	</loot>
 </monster>

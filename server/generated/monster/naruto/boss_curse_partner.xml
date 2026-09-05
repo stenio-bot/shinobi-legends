@@ -37,5 +37,7 @@
 		<item id="6559" chance="100000"/>  <!-- cursed_heart -->
 		<item id="5952" chance="10000"/>  <!-- scroll_doton_colapso -->
 		<item id="8472" countmax="4" chance="100000"/>  <!-- soldier_pill -->
+		<item id="2406" chance="15000"/>  <!-- tanto_jonin -->
+		<item id="2494" chance="15000"/>  <!-- couraca_cacador_de_onis -->
 	</loot>
 </monster>

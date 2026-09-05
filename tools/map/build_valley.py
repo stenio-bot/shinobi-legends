@@ -702,8 +702,10 @@ def build(tpls, sid):
     b.notes.append("porta da torre do hokage em %r" % (tower_door,))
 
     # -- 6.5 bairro residencial (anel norte junto a torre + anel sul) ------
+    residential_doors = []
     for (sx, sy, key) in RESIDENTIAL_NORTH + RESIDENTIAL_SOUTH:
-        stamp_building(b, tpls, sid, key, sx, sy, ground=DIRT)
+        d = stamp_building(b, tpls, sid, key, sx, sy, ground=DIRT)
+        residential_doors.append(d)
     b.put(RESIDENTIAL_NORTH[0][0] - 1, RESIDENTIAL_NORTH[0][1] - 5, SIGN,
           text="Bairro Residencial")
 
@@ -716,8 +718,8 @@ def build(tpls, sid):
           text="Rua dos Mercadores - Ichiro, Hayato e Capita Rin")
 
     # -- 6.7 bloco civico (taverna + prisao), sem NPC (nao existe em data/npcs)
-    stamp_building(b, tpls, sid, "prison", PRISON_XY[0], PRISON_XY[1], ground=DIRT)
-    stamp_building(b, tpls, sid, "tavern", TAVERN_XY[0], TAVERN_XY[1], ground=DIRT)
+    prison_door = stamp_building(b, tpls, sid, "prison", PRISON_XY[0], PRISON_XY[1], ground=DIRT)
+    tavern_door = stamp_building(b, tpls, sid, "tavern", TAVERN_XY[0], TAVERN_XY[1], ground=DIRT)
     stamp_building(b, tpls, sid, "roof_orange", 1037, 1063, ground=DIRT)
     b.put(PRISON_XY[0], PRISON_XY[1] + 2, SIGN, text="Prisao da Vila")
     b.put(TAVERN_XY[0] + 1, TAVERN_XY[1] + 2, SIGN, text="Taverna do Vale")
@@ -844,6 +846,15 @@ def build(tpls, sid):
 
     # 13. Arena do Exame Chunin (teleporte de entrada na Academia) ---------
     build_arena(b, sid)
+
+    # v2.1: registra portas para o modulo de infill/regioes (tools/map/build_regions.py)
+    b.v21 = {
+        "prison_door": prison_door,
+        "tavern_door": tavern_door,
+        "residential_doors": residential_doors,
+        "shop_doors": dict(shop_doors),
+        "tower_door": tower_door,
+    }
 
     return b, npcs
 
@@ -1308,8 +1319,19 @@ def main():
         decor.place_village_decor(b, sid)
     else:
         print("AVISO: tiles de decoração sem id em allocations.json; ponte/cenário não aplicados")
+
+    # v2.1: preenchimento da vila (ressalvas do orquestrador) + regioes novas
+    # (Costa das Mares, Covil da Nuvem Vermelha, Ruinas do Cla, Montanha do
+    # Trovao) — tools/map/build_regions.py, modulo PURO no mesmo estilo de
+    # decor.py (so importa build_valley, nunca o edita).
+    import build_regions
+    region_npcs, add_region_spawns, region_notes = build_regions.build_all(b, sid, tpls)
+    npcs = npcs + region_npcs
+    b.notes.extend(region_notes)
+
     borders_placed = apply_borders(b, sid)
     sf = build_spawns(b, npcs)
+    add_region_spawns(sf)
 
     problems, walk, reach = validate(b, types, sf, npcs)
     if problems:

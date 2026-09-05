@@ -28,5 +28,7 @@
 	<loot>
 		<item id="2148" countmax="360" chance="100000"/>
 		<item id="6868" chance="50000"/>  <!-- cloud_emblem -->
+		<item id="2489" chance="5000"/>  <!-- manto_anbu_negro -->
+		<item id="11304" chance="5000"/>  <!-- calca_anbu_negro -->
 	</loot>
 </monster>

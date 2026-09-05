@@ -38,5 +38,7 @@
 		<item id="2131" chance="4000"/>  <!-- amulet_clan_seal -->
 		<item id="4857" chance="2000"/>  <!-- scroll_doton_estacas_terra -->
 		<item id="7588" countmax="3" chance="20000"/>  <!-- health_potion_medium -->
+		<item id="8870" chance="5000"/>  <!-- manto_rastreador_sombrio -->
+		<item id="2201" chance="4000"/>  <!-- colar_do_rastreador -->
 	</loot>
 </monster>

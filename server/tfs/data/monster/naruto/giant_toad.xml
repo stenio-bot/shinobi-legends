@@ -34,5 +34,6 @@
 		<item id="5880" chance="45000"/>  <!-- toad_skin -->
 		<item id="5881" chance="20000"/>  <!-- toad_oil -->
 		<item id="7589" chance="8000"/>  <!-- chakra_pill_medium -->
+		<item id="9928" chance="4000"/>  <!-- calca_do_batedor -->
 	</loot>
 </monster>

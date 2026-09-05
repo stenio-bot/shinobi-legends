@@ -37,5 +37,9 @@
 		<item id="6938" chance="60000"/>  <!-- ring_fragment_crimson -->
 		<item id="7591" countmax="10" chance="100000"/>  <!-- health_potion_large -->
 		<item id="8472" countmax="7" chance="100000"/>  <!-- soldier_pill -->
+		<item id="8850" chance="12000"/>  <!-- shuriken_aurora_carmesim -->
+		<item id="2204" chance="10000"/>  <!-- anel_aurora_carmesim -->
+		<item id="2498" chance="8000"/>  <!-- chapeu_kage -->
+		<item id="2472" chance="6000"/>  <!-- manto_kage -->
 	</loot>
 </monster>

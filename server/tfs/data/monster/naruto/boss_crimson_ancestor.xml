@@ -37,5 +37,10 @@
 		<item id="6938" countmax="3" chance="100000"/>  <!-- ring_fragment_crimson -->
 		<item id="7591" countmax="15" chance="100000"/>  <!-- health_potion_large -->
 		<item id="8472" countmax="10" chance="100000"/>  <!-- soldier_pill -->
+		<item id="10300" chance="15000"/>  <!-- calca_kage -->
+		<item id="11117" chance="15000"/>  <!-- sandalias_kage -->
+		<item id="6528" chance="10000"/>  <!-- lamina_do_kage -->
+		<item id="8851" chance="10000"/>  <!-- leque_de_lamina_kage -->
+		<item id="2357" chance="8000"/>  <!-- anel_do_kage -->
 	</loot>
 </monster>

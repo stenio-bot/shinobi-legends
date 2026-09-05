@@ -244,6 +244,239 @@ def unsharp(img, amount=0.6, radius=1):
     return Image.fromarray(a.astype(np.uint8), "RGBA")
 
 
+# ------------------------------------------------------------------ validacao do ciclo
+"""Filtro obrigatorio de quadros do ciclo de andar (feedback do orquestrador:
+golpes/agachamentos vazando para dentro do ciclo). Cinco regras:
+
+  (a) altura da bbox dentro de +-H_TOL_WALK px da altura do idle;
+  (b) largura <= W_RATIO_WALK x a largura do idle;
+  (c) centroide X da regiao de pele/cabeca (topo HEAD_FRAC da caixa), medido
+      em relacao ao centroide X do apoio dos pes (rodape FOOT_FRAC), variando
+      <= HEAD_TOL px em relacao ao mesmo offset no idle — um soco/chute que
+      inclina o tronco desloca a cabeca em relacao ao apoio muito mais que um
+      passo normal;
+  (d) fracao de pixels 'de efeito' (fora da paleta do PROPRIO personagem — a
+      paleta e extraida do idle — e saturados/claros o bastante para serem
+      chama/chakra/brilho, nao pano) abaixo de EFFECT_FRAC_MAX;
+  (e) diferenca de mascara (silhueta 24x32) entre quadros CONSECUTIVOS do ciclo
+      (fechando o loop ultimo->primeiro) entre MOTION_LO e MOTION_HI — menos
+      que isso e quadro duplicado, mais e uma pose diferente (chute/salto).
+
+As tolerancias em PIXELS (a, c) sao definidas para o sprite FINAL de 32px (o
+que o jogador realmente ve) — os rips MUGEN chegam em resolucoes bem maiores
+(40 a 90px de altura conforme o personagem), entao (a) e (c) sao convertidas
+para a resolucao do RECORTE por um fator de escala derivado do proprio idle
+(`scale = min(32/max(largura,altura do idle), 1)`), a MESMA logica de
+`imports.fit_uniform`. (b) e (e) ja sao proporcoes/fracoes normalizadas —
+independem de resolucao, sem necessidade de escala."""
+H_TOL_WALK = 2
+W_RATIO_WALK = 1.25
+HEAD_FRAC = 0.25
+FOOT_FRAC = 0.34
+HEAD_TOL = 3.0    # calibrado: 2.0 rejeitava o proprio ciclo ja curado/testado do
+                  # 128 (offsets de 2.7-3.4px de balanco NORMAL do passo real);
+                  # os golpes/chutes MUGEN encontrados na revisao ficam bem
+                  # acima disso (4-20px), entao a folga nao deixa passar golpe
+EFFECT_DIST = 70
+EFFECT_SAT_MIN = 0.55
+EFFECT_VAL_MIN = 0.45
+EFFECT_FRAC_MAX = 0.05
+MOTION_LO = 0.03
+MOTION_HI = 0.28  # calibrado: 0.25 cortava a transicao 0 do proprio ciclo
+                  # curado do 128 (27%, passo real); nos rips MUGEN o gap entre
+                  # passo real (5-18%) e golpe/agachamento (28-49%) e largo, a
+                  # folga de 3 pontos nao deixa golpe nenhum passar
+
+
+def validation_scale(idle_bbox, target=32):
+    """Fator de escala do recorte idle ate o sprite final (mesma conta de
+    `imports.fit_uniform`), usado para converter as tolerancias absolutas de
+    pixel (a, c) — definidas para o sprite de 32px — para a resolucao do
+    recorte bruto."""
+    iw, ih = idle_bbox[2] - idle_bbox[0], idle_bbox[3] - idle_bbox[1]
+    return min(target / float(max(iw, ih, 1)), 1.0)
+
+
+def head_foot_offset(img, head_frac=HEAD_FRAC, foot_frac=FOOT_FRAC):
+    """Centroide X da pele/cabeca (topo `head_frac` da bbox) MENOS o centroide X
+    do apoio dos pes (rodape `foot_frac`) — um numero estavel entre quadros de um
+    andar normal (o corpo balanca pouco em torno do apoio), que dispara alto num
+    soco/chute (torso inclina, braco/perna estende para um lado so)."""
+    a = np.array(img.convert("RGBA"))
+    op = a[:, :, 3] >= 128
+    h, w = op.shape
+    y1 = max(1, int(h * head_frac))
+    hys, hxs = np.where(op[:y1])
+    head_cx = float(hxs.mean()) if hxs.size else w / 2.0
+    fy0 = max(0, h - max(2, int(h * foot_frac)))
+    fys, fxs = np.where(op[fy0:])
+    foot_cx = float(fxs.mean()) if fxs.size else w / 2.0
+    return head_cx - foot_cx
+
+
+def effect_pixel_fraction(img, palette, dist=EFFECT_DIST, sat_min=EFFECT_SAT_MIN,
+                           val_min=EFFECT_VAL_MIN):
+    """Fracao de pixels opacos que NAO batem com a paleta do personagem (`palette`,
+    extraida do idle) E sao saturados/claros o bastante para serem efeito (chama,
+    chakra, brilho de golpe) — o pano/pele do proprio personagem, mesmo que
+    escuro ou colorido, ja esta representado na paleta."""
+    a = np.array(img.convert("RGBA"))
+    op = a[:, :, 3] >= 128
+    if not op.any() or not palette:
+        return 0.0
+    px = a[:, :, :3][op].astype(np.float32)
+    mx = px.max(axis=1)
+    mn = px.min(axis=1)
+    sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0.0)
+    val = mx / 255.0
+    pal = np.array(palette, dtype=np.float32)
+    d = np.sqrt(((px[:, None, :] - pal[None, :, :]) ** 2).sum(axis=2).min(axis=1))
+    is_effect = (d > dist) & (sat > sat_min) & (val > val_min)
+    return float(is_effect.mean())
+
+
+def mask24(img):
+    m = img.split()[3].point(lambda v: 255 if v >= 128 else 0)
+    return np.array(m.resize((24, 32), Image.NEAREST)) > 0
+
+
+def mask_diff(img_a, img_b):
+    return float((mask24(img_a) != mask24(img_b)).mean())
+
+
+def validate_frame(img, idle_img, idle_bbox, idle_offset, palette, scale=1.0):
+    """Valida UM quadro de andar contra o idle (regras a/b/c/d). `scale` (ver
+    `validation_scale`) converte as tolerancias absolutas de pixel (a, c),
+    definidas para o sprite final de 32px, para a resolucao do recorte bruto
+    deste personagem. Devolve (ok: bool, motivos: list[str])."""
+    reasons = []
+    b = img.getbbox()
+    if not b:
+        return False, ["quadro vazio"]
+    w, h = b[2] - b[0], b[3] - b[1]
+    iw, ih = idle_bbox[2] - idle_bbox[0], idle_bbox[3] - idle_bbox[1]
+    h_tol = H_TOL_WALK / scale
+    head_tol = HEAD_TOL / scale
+    if abs(h - ih) > h_tol:
+        reasons.append("altura %dpx difere do idle %dpx (tolerancia %.1fpx)" % (h, ih, h_tol))
+    if w > iw * W_RATIO_WALK:
+        reasons.append("largura %dpx > %.2fx a largura do idle (%dpx)" % (w, W_RATIO_WALK, iw))
+    off = head_foot_offset(img)
+    if abs(off - idle_offset) > head_tol:
+        reasons.append("centroide da cabeca desloca %.1fpx do idle (tolerancia %.1fpx) — "
+                        "pose de golpe/chute provavel" % (abs(off - idle_offset), head_tol))
+    ef = effect_pixel_fraction(img, palette)
+    if ef > EFFECT_FRAC_MAX:
+        reasons.append("%.0f%% de pixels de efeito fora da paleta do personagem" % (ef * 100))
+    return (len(reasons) == 0), reasons
+
+
+def validate_cycle(walk_imgs, idle_img):
+    """Valida as regras (a-d) quadro a quadro contra o idle e (e) quadro a
+    quadro CONSECUTIVO do ciclo (fecha o loop ultimo->primeiro). Devolve lista
+    paralela a `walk_imgs` de (ok, motivos)."""
+    idle_bbox = idle_img.getbbox() or (0, 0, idle_img.width, idle_img.height)
+    idle_offset = head_foot_offset(idle_img)
+    palette = extract_palette([idle_img], k=12)
+    scale = validation_scale(idle_bbox)
+    results = [list(validate_frame(im, idle_img, idle_bbox, idle_offset, palette, scale))
+               for im in walk_imgs]
+    n = len(walk_imgs)
+    for i in range(n):
+        j = (i + 1) % n
+        md = mask_diff(walk_imgs[i], walk_imgs[j])
+        if md < MOTION_LO:
+            results[i][0] = False
+            results[i][1].append("quase identico ao proximo quadro do ciclo (%.0f%% < %.0f%%): "
+                                  "duplicado" % (md * 100, MOTION_LO * 100))
+        elif md > MOTION_HI:
+            results[i][0] = False
+            results[i][1].append("muito diferente do proximo quadro do ciclo (%.0f%% > %.0f%%): "
+                                  "pose distinta (golpe/agachamento/pulo provavel)"
+                                  % (md * 100, MOTION_HI * 100))
+    return [(ok, reasons) for ok, reasons in results]
+
+
+def repair_cycle(items, idle_img, candidates, rejected_log, cycle_label):
+    """Versao generica de `import_mugen.repair_window` — para material com
+    poucos quadros ja curados a mao (ex.: o outfit do jogador, `import_player.py`),
+    onde nao ha uma lista `Frame` com `.no`/indice sequencial para procurar
+    vizinhos; aqui quem chama passa o pool de candidatos direto.
+
+    `items`: lista de (rotulo, PIL.Image) — o ciclo escolhido (idle + walk, ou
+    so o walk; quem valida e SEMPRE contra `idle_img`), pode reprovar.
+    `candidates`: lista de (rotulo, PIL.Image) — outros quadros disponiveis
+    para substituir (tipicamente todo o material, exceto os que ja estao no
+    ciclo). Mesmas DUAS passadas de `repair_window` (troca por candidato real
+    valido; so DEPOIS sintetiza a partir do vizinho REAL mais proximo do
+    ciclo, nunca de outra sintese). Devolve (imgs, labels)."""
+    labels = [lbl for lbl, _ in items]
+    imgs = [im for _, im in items]
+    n = len(imgs)
+    idle_bbox = idle_img.getbbox() or (0, 0, idle_img.width, idle_img.height)
+    idle_offset = head_foot_offset(idle_img)
+    palette = extract_palette([idle_img], k=12)
+    scale = validation_scale(idle_bbox)
+    used = set(labels)
+
+    # ---- passada 1: troca por candidato REAL que passe nas regras a-d E
+    # mantenha a continuidade (regra e) com quem ja esta nas posicoes vizinhas
+    # neste momento — sem isso o substituto e escolhido so pelo tamanho, sem
+    # relacao de movimento com o resto do ciclo, e a passada 2 acaba
+    # sintetizando o ciclo INTEIRO em vez de so o quadro ruim.
+    for pos in range(n):
+        ok, reasons = validate_frame(imgs[pos], idle_img, idle_bbox, idle_offset, palette, scale)
+        if ok:
+            continue
+        orig_label = labels[pos]
+        for lbl, cand_img in candidates:
+            if lbl in used:
+                continue
+            ok2, _ = validate_frame(cand_img, idle_img, idle_bbox, idle_offset, palette, scale)
+            if not ok2:
+                continue
+            good = True
+            if pos > 0:
+                good = good and MOTION_LO <= mask_diff(imgs[pos - 1], cand_img) <= MOTION_HI
+            if pos + 1 < n:
+                good = good and MOTION_LO <= mask_diff(cand_img, imgs[pos + 1]) <= MOTION_HI
+            if not good:
+                continue
+            rejected_log.append({
+                "ciclo": cycle_label, "posicao": pos, "quadro_rejeitado": str(orig_label),
+                "motivos": reasons, "substituido_por": lbl,
+            })
+            imgs[pos] = cand_img
+            labels[pos] = lbl
+            used.add(lbl)
+            break
+
+    # ---- passada 2: continuidade (regra e); sintetiza do vizinho REAL do
+    # ciclo mais proximo (nunca de outra sintese) quando ainda reprovar
+    results = validate_cycle(imgs, idle_img)
+    for pos, (ok, reasons) in enumerate(results):
+        if ok:
+            continue
+        orig_label = labels[pos]
+        real_neighbors = [p for p in (pos - 1, (pos + 1) % n)
+                          if not str(labels[p]).startswith("synth")]
+        if real_neighbors:
+            src_pos = real_neighbors[0]
+            base_img, base_label = imgs[src_pos], labels[src_pos]
+        else:
+            base_img, base_label = idle_img, "idle"
+        dx = 2 if pos % 2 == 0 else -2
+        synth_img = synth_walk_offset(base_img, leg_dx=dx, body_dy=1 if dx > 0 else -1, shear=dx // 2)
+        rejected_log.append({
+            "ciclo": cycle_label, "posicao": pos, "quadro_rejeitado": str(orig_label),
+            "motivos": reasons,
+            "substituido_por": "synth (deslocamento de pernas sobre %s)" % base_label,
+        })
+        imgs[pos] = synth_img
+        labels[pos] = "synth:%s" % base_label
+    return imgs, labels
+
+
 def outline_1px(img, color=(20, 16, 18), strength=255):
     """Redesenha um contorno escuro de 1px na borda da silhueta (pixels
     TRANSPARENTES adjacentes a pixels opacos viram opacos com `color`, so onde

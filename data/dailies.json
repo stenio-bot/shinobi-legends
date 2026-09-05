@@ -1,152 +1,882 @@
 [
   {
-    "id": "daily_wolves",
-    "name": "Diária: Alcateia",
-    "text": "A vila quer a alcateia da trilha enxugada por hoje. Mate 6 Lobos.",
+    "id": "daily_kill_wolf_001",
+    "name": "Diária: Lobo (1-5)",
+    "text": "Reduza a população de Lobo por perto — mate 12.",
     "monster_id": "wolf",
-    "count": 6,
+    "count": 12,
     "level_min": 1,
-    "level_max": 19,
-    "reward": {"xp": 8, "ryo": 100, "items": []}
+    "level_max": 5,
+    "reward": {
+      "xp": 6.0,
+      "ryo": 21,
+      "items": []
+    }
   },
   {
-    "id": "daily_snakes",
-    "name": "Diária: Serpentes",
-    "text": "Cobras da floresta atacaram viajantes de novo. Mate 6.",
-    "monster_id": "forest_snake",
-    "count": 6,
+    "id": "daily_kill_forest_deer_001b",
+    "name": "Diária: Cervo — segunda leva (1-5)",
+    "text": "Mais uma leva: 12 de Cervo na mesma região.",
+    "monster_id": "forest_deer",
+    "count": 12,
     "level_min": 1,
-    "level_max": 19,
-    "reward": {"xp": 8, "ryo": 100, "items": []}
+    "level_max": 5,
+    "reward": {
+      "xp": 5.4,
+      "ryo": 8,
+      "items": []
+    }
   },
   {
-    "id": "daily_bandits",
-    "name": "Diária: Bandidos",
-    "text": "A estrada leste precisa de patrulha hoje. Mate 8 Bandidos.",
-    "monster_id": "bandit",
+    "id": "daily_hunt_wolf_001c",
+    "name": "Diária: caçada rápida de Lobo (1-5)",
+    "text": "Uma leva mais curta e mais bem paga: 8 de Lobo, entregue direto no quadro.",
+    "monster_id": "wolf",
     "count": 8,
     "level_min": 1,
-    "level_max": 19,
-    "reward": {"xp": 9, "ryo": 130, "items": []}
+    "level_max": 5,
+    "reward": {
+      "xp": 5.6,
+      "ryo": 22,
+      "items": [
+        "health_potion_small"
+      ]
+    }
   },
   {
-    "id": "daily_leeches",
-    "name": "Diária: Sanguessugas",
-    "text": "A margem da Floresta da Morte está infestada de novo. Mate 8 Sanguessugas.",
+    "id": "daily_kill_bandit_archer_006",
+    "name": "Diária: Bandido Arqueiro (6-10)",
+    "text": "Reduza a população de Bandido Arqueiro por perto — mate 12.",
+    "monster_id": "bandit_archer",
+    "count": 12,
+    "level_min": 6,
+    "level_max": 10,
+    "reward": {
+      "xp": 6.0,
+      "ryo": 84,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_leech_006b",
+    "name": "Diária: Sanguessuga Gigante — segunda leva (6-10)",
+    "text": "Mais uma leva: 12 de Sanguessuga Gigante na mesma região.",
     "monster_id": "leech",
+    "count": 12,
+    "level_min": 6,
+    "level_max": 10,
+    "reward": {
+      "xp": 5.4,
+      "ryo": 106,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_bandit_archer_006c",
+    "name": "Diária: caçada rápida de Bandido Arqueiro (6-10)",
+    "text": "Uma leva mais curta e mais bem paga: 8 de Bandido Arqueiro, entregue direto no quadro.",
+    "monster_id": "bandit_archer",
     "count": 8,
-    "level_min": 1,
-    "level_max": 19,
-    "reward": {"xp": 8, "ryo": 110, "items": []}
+    "level_min": 6,
+    "level_max": 10,
+    "reward": {
+      "xp": 5.6,
+      "ryo": 88,
+      "items": [
+        "health_potion_small"
+      ]
+    }
   },
   {
-    "id": "daily_rivals",
-    "name": "Diária: Rivais do Exame",
-    "text": "Restos do torneio Chunin ainda rondam a floresta. Derrote 4 rivais (qualquer um).",
-    "monster_id": "exam_rival_stone",
-    "count": 4,
-    "level_min": 20,
-    "level_max": 49,
-    "reward": {"xp": 9, "ryo": 300, "items": []}
+    "id": "daily_kill_giant_toad_011",
+    "name": "Diária: Sapo Gigante (11-15)",
+    "text": "Reduza a população de Sapo Gigante por perto — mate 12.",
+    "monster_id": "giant_toad",
+    "count": 12,
+    "level_min": 11,
+    "level_max": 15,
+    "reward": {
+      "xp": 6.0,
+      "ryo": 178,
+      "items": []
+    }
   },
   {
-    "id": "daily_puppets",
-    "name": "Diária: Bonecos",
-    "text": "As ruínas continuam ativando bonecos de guerra sozinhos. Destrua 8 Marionetes de Combate.",
+    "id": "daily_kill_mercenary_bridge_011b",
+    "name": "Diária: Mercenário da Ponte — segunda leva (11-15)",
+    "text": "Mais uma leva: 12 de Mercenário da Ponte na mesma região.",
+    "monster_id": "mercenary_bridge",
+    "count": 12,
+    "level_min": 11,
+    "level_max": 15,
+    "reward": {
+      "xp": 5.4,
+      "ryo": 63,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_giant_toad_011c",
+    "name": "Diária: caçada rápida de Sapo Gigante (11-15)",
+    "text": "Uma leva mais curta e mais bem paga: 8 de Sapo Gigante, entregue direto no quadro.",
+    "monster_id": "giant_toad",
+    "count": 8,
+    "level_min": 11,
+    "level_max": 15,
+    "reward": {
+      "xp": 5.6,
+      "ryo": 187,
+      "items": [
+        "health_potion_small"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_rogue_ninja_016",
+    "name": "Diária: Ninja Renegado (16-20)",
+    "text": "Reduza a população de Ninja Renegado por perto — mate 12.",
+    "monster_id": "rogue_ninja",
+    "count": 12,
+    "level_min": 16,
+    "level_max": 20,
+    "reward": {
+      "xp": 6.0,
+      "ryo": 294,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_lesser_serpent_016b",
+    "name": "Diária: Serpente Menor — segunda leva (16-20)",
+    "text": "Mais uma leva: 12 de Serpente Menor na mesma região.",
+    "monster_id": "lesser_serpent",
+    "count": 12,
+    "level_min": 16,
+    "level_max": 20,
+    "reward": {
+      "xp": 5.4,
+      "ryo": 259,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_rogue_ninja_016c",
+    "name": "Diária: caçada rápida de Ninja Renegado (16-20)",
+    "text": "Uma leva mais curta e mais bem paga: 8 de Ninja Renegado, entregue direto no quadro.",
+    "monster_id": "rogue_ninja",
+    "count": 8,
+    "level_min": 16,
+    "level_max": 20,
+    "reward": {
+      "xp": 5.6,
+      "ryo": 308,
+      "items": [
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_ruin_puppet_021",
+    "name": "Diária: Marionete de Combate (21-25)",
+    "text": "Reduza a população de Marionete de Combate por perto — mate 8.",
     "monster_id": "ruin_puppet",
     "count": 8,
-    "level_min": 20,
-    "level_max": 49,
-    "reward": {"xp": 9, "ryo": 320, "items": []}
+    "level_min": 21,
+    "level_max": 25,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 284,
+      "items": []
+    }
   },
   {
-    "id": "daily_sentinels",
-    "name": "Diária: Sentinelas",
-    "text": "Sentinelas de pedra guardam o pátio central. Derrube 6.",
+    "id": "daily_kill_rogue_ninja_021b",
+    "name": "Diária: Ninja Renegado — segunda leva (21-25)",
+    "text": "Mais uma leva: 8 de Ninja Renegado na mesma região.",
+    "monster_id": "rogue_ninja",
+    "count": 8,
+    "level_min": 21,
+    "level_max": 25,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 179,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_ruin_puppet_021c",
+    "name": "Diária: caçada rápida de Marionete de Combate (21-25)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Marionete de Combate, entregue direto no quadro.",
+    "monster_id": "ruin_puppet",
+    "count": 4,
+    "level_min": 21,
+    "level_max": 25,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 223,
+      "items": [
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_ruin_puppet_026",
+    "name": "Diária: Marionete de Combate (26-30)",
+    "text": "Reduza a população de Marionete de Combate por perto — mate 8.",
+    "monster_id": "ruin_puppet",
+    "count": 8,
+    "level_min": 26,
+    "level_max": 30,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 284,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_stone_sentinel_026b",
+    "name": "Diária: Sentinela de Pedra — segunda leva (26-30)",
+    "text": "Mais uma leva: 8 de Sentinela de Pedra na mesma região.",
     "monster_id": "stone_sentinel",
-    "count": 6,
-    "level_min": 20,
-    "level_max": 49,
-    "reward": {"xp": 9, "ryo": 340, "items": []}
+    "count": 8,
+    "level_min": 26,
+    "level_max": 30,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 307,
+      "items": []
+    }
   },
   {
-    "id": "daily_shamans",
-    "name": "Diária: Xamãs",
-    "text": "Os selos de maldição precisam de manutenção — ou melhor, de destruição. Mate 6 Xamãs da Maldição.",
+    "id": "daily_hunt_ruin_puppet_026c",
+    "name": "Diária: caçada rápida de Marionete de Combate (26-30)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Marionete de Combate, entregue direto no quadro.",
+    "monster_id": "ruin_puppet",
+    "count": 4,
+    "level_min": 26,
+    "level_max": 30,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 223,
+      "items": [
+        "health_potion_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_stone_sentinel_031",
+    "name": "Diária: Sentinela de Pedra (31-35)",
+    "text": "Reduza a população de Sentinela de Pedra por perto — mate 8.",
+    "monster_id": "stone_sentinel",
+    "count": 8,
+    "level_min": 31,
+    "level_max": 35,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 336,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_spectral_warrior_031b",
+    "name": "Diária: Guerreiro Espectral — segunda leva (31-35)",
+    "text": "Mais uma leva: 8 de Guerreiro Espectral na mesma região.",
+    "monster_id": "spectral_warrior",
+    "count": 8,
+    "level_min": 31,
+    "level_max": 35,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 365,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_stone_sentinel_031c",
+    "name": "Diária: caçada rápida de Sentinela de Pedra (31-35)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Sentinela de Pedra, entregue direto no quadro.",
+    "monster_id": "stone_sentinel",
+    "count": 4,
+    "level_min": 31,
+    "level_max": 35,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 264,
+      "items": [
+        "chakra_pill_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_spectral_warrior_036",
+    "name": "Diária: Guerreiro Espectral (36-40)",
+    "text": "Reduza a população de Guerreiro Espectral por perto — mate 8.",
+    "monster_id": "spectral_warrior",
+    "count": 8,
+    "level_min": 36,
+    "level_max": 40,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 399,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_stone_sentinel_036b",
+    "name": "Diária: Sentinela de Pedra — segunda leva (36-40)",
+    "text": "Mais uma leva: 8 de Sentinela de Pedra na mesma região.",
+    "monster_id": "stone_sentinel",
+    "count": 8,
+    "level_min": 36,
+    "level_max": 40,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 307,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_spectral_warrior_036c",
+    "name": "Diária: caçada rápida de Guerreiro Espectral (36-40)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Guerreiro Espectral, entregue direto no quadro.",
+    "monster_id": "spectral_warrior",
+    "count": 4,
+    "level_min": 36,
+    "level_max": 40,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 314,
+      "items": [
+        "chakra_pill_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_curse_shaman_041",
+    "name": "Diária: Xamã da Maldição (41-45)",
+    "text": "Reduza a população de Xamã da Maldição por perto — mate 8.",
     "monster_id": "curse_shaman",
-    "count": 6,
-    "level_min": 20,
-    "level_max": 49,
-    "reward": {"xp": 10, "ryo": 400, "items": []}
+    "count": 8,
+    "level_min": 41,
+    "level_max": 45,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 462,
+      "items": []
+    }
   },
   {
-    "id": "daily_eagles",
-    "name": "Diária: Águias",
-    "text": "As águias do trovão voltaram a atacar a trilha da montanha. Abata 10.",
+    "id": "daily_kill_spectral_warrior_041b",
+    "name": "Diária: Guerreiro Espectral — segunda leva (41-45)",
+    "text": "Mais uma leva: 8 de Guerreiro Espectral na mesma região.",
+    "monster_id": "spectral_warrior",
+    "count": 8,
+    "level_min": 41,
+    "level_max": 45,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 365,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_curse_shaman_041c",
+    "name": "Diária: caçada rápida de Xamã da Maldição (41-45)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Xamã da Maldição, entregue direto no quadro.",
+    "monster_id": "curse_shaman",
+    "count": 4,
+    "level_min": 41,
+    "level_max": 45,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 363,
+      "items": [
+        "chakra_pill_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_curse_shaman_046",
+    "name": "Diária: Xamã da Maldição (46-50)",
+    "text": "Reduza a população de Xamã da Maldição por perto — mate 8.",
+    "monster_id": "curse_shaman",
+    "count": 8,
+    "level_min": 46,
+    "level_max": 50,
+    "reward": {
+      "xp": 4.0,
+      "ryo": 462,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_thunder_eagle_046b",
+    "name": "Diária: Águia do Trovão — segunda leva (46-50)",
+    "text": "Mais uma leva: 8 de Águia do Trovão na mesma região.",
     "monster_id": "thunder_eagle",
-    "count": 10,
-    "level_min": 50,
-    "level_max": 79,
-    "reward": {"xp": 9, "ryo": 550, "items": []}
+    "count": 8,
+    "level_min": 46,
+    "level_max": 50,
+    "reward": {
+      "xp": 3.6,
+      "ryo": 518,
+      "items": []
+    }
   },
   {
-    "id": "daily_oni",
-    "name": "Diária: Onis da Geleira",
-    "text": "Mais onis desceram da geleira. Mate 8.",
+    "id": "daily_hunt_curse_shaman_046c",
+    "name": "Diária: caçada rápida de Xamã da Maldição (46-50)",
+    "text": "Uma leva mais curta e mais bem paga: 4 de Xamã da Maldição, entregue direto no quadro.",
+    "monster_id": "curse_shaman",
+    "count": 4,
+    "level_min": 46,
+    "level_max": 50,
+    "reward": {
+      "xp": 2.8,
+      "ryo": 363,
+      "items": [
+        "chakra_pill_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_thunder_eagle_051",
+    "name": "Diária: Águia do Trovão (51-55)",
+    "text": "Reduza a população de Águia do Trovão por perto — mate 5.",
+    "monster_id": "thunder_eagle",
+    "count": 5,
+    "level_min": 51,
+    "level_max": 55,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 354,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_glacier_oni_051b",
+    "name": "Diária: Oni da Geleira — segunda leva (51-55)",
+    "text": "Mais uma leva: 5 de Oni da Geleira na mesma região.",
     "monster_id": "glacier_oni",
-    "count": 8,
-    "level_min": 50,
-    "level_max": 79,
-    "reward": {"xp": 9, "ryo": 600, "items": []}
+    "count": 5,
+    "level_min": 51,
+    "level_max": 55,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 360,
+      "items": []
+    }
   },
   {
-    "id": "daily_monks",
-    "name": "Diária: Monges da Tempestade",
-    "text": "Monges renegados atacam quem passa pela trilha alta. Mate 8.",
+    "id": "daily_hunt_thunder_eagle_051c",
+    "name": "Diária: caçada rápida de Águia do Trovão (51-55)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Águia do Trovão, entregue direto no quadro.",
+    "monster_id": "thunder_eagle",
+    "count": 3,
+    "level_min": 51,
+    "level_max": 55,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 334,
+      "items": [
+        "chakra_pill_medium"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_glacier_oni_056",
+    "name": "Diária: Oni da Geleira (56-60)",
+    "text": "Reduza a população de Oni da Geleira por perto — mate 5.",
+    "monster_id": "glacier_oni",
+    "count": 5,
+    "level_min": 56,
+    "level_max": 60,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 394,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_thunder_eagle_056b",
+    "name": "Diária: Águia do Trovão — segunda leva (56-60)",
+    "text": "Mais uma leva: 5 de Águia do Trovão na mesma região.",
+    "monster_id": "thunder_eagle",
+    "count": 5,
+    "level_min": 56,
+    "level_max": 60,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 324,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_glacier_oni_056c",
+    "name": "Diária: caçada rápida de Oni da Geleira (56-60)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Oni da Geleira, entregue direto no quadro.",
+    "monster_id": "glacier_oni",
+    "count": 3,
+    "level_min": 56,
+    "level_max": 60,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 371,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_glacier_oni_061",
+    "name": "Diária: Oni da Geleira (61-65)",
+    "text": "Reduza a população de Oni da Geleira por perto — mate 5.",
+    "monster_id": "glacier_oni",
+    "count": 5,
+    "level_min": 61,
+    "level_max": 65,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 394,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_storm_monk_061b",
+    "name": "Diária: Monge da Tempestade — segunda leva (61-65)",
+    "text": "Mais uma leva: 5 de Monge da Tempestade na mesma região.",
     "monster_id": "storm_monk",
-    "count": 8,
-    "level_min": 50,
-    "level_max": 79,
-    "reward": {"xp": 10, "ryo": 650, "items": []}
+    "count": 5,
+    "level_min": 61,
+    "level_max": 65,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 408,
+      "items": []
+    }
   },
   {
-    "id": "daily_magma",
-    "name": "Diária: Serpentes de Magma",
-    "text": "As fendas quentes voltaram a se abrir. Mate 8 Serpentes de Magma.",
+    "id": "daily_hunt_glacier_oni_061c",
+    "name": "Diária: caçada rápida de Oni da Geleira (61-65)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Oni da Geleira, entregue direto no quadro.",
+    "monster_id": "glacier_oni",
+    "count": 3,
+    "level_min": 61,
+    "level_max": 65,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 371,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_storm_monk_066",
+    "name": "Diária: Monge da Tempestade (66-70)",
+    "text": "Reduza a população de Monge da Tempestade por perto — mate 5.",
+    "monster_id": "storm_monk",
+    "count": 5,
+    "level_min": 66,
+    "level_max": 70,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 446,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_magma_serpent_066b",
+    "name": "Diária: Serpente de Magma — segunda leva (66-70)",
+    "text": "Mais uma leva: 5 de Serpente de Magma na mesma região.",
     "monster_id": "magma_serpent",
-    "count": 8,
-    "level_min": 50,
-    "level_max": 79,
-    "reward": {"xp": 10, "ryo": 700, "items": []}
+    "count": 5,
+    "level_min": 66,
+    "level_max": 70,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 444,
+      "items": []
+    }
   },
   {
-    "id": "daily_clones",
-    "name": "Diária: Clones Brancos",
-    "text": "O covil está produzindo clones descartáveis demais. Destrua 8.",
-    "monster_id": "white_clone",
-    "count": 8,
-    "level_min": 80,
-    "level_max": 100,
-    "reward": {"xp": 10, "ryo": 900, "items": []}
-  },
-  {
-    "id": "daily_elite_guard",
-    "name": "Diária: Guarda de Elite",
-    "text": "A guarda da Aurora precisa ser reduzida antes do próximo ataque. Mate 6.",
-    "monster_id": "elite_cloud_guard",
-    "count": 6,
-    "level_min": 80,
-    "level_max": 100,
-    "reward": {"xp": 10, "ryo": 950, "items": []}
-  },
-  {
-    "id": "daily_storm_review",
-    "name": "Diária: Revisão da Montanha",
-    "text": "Um Kage também revisita os próprios campos de treino. Mate 10 Monges da Tempestade.",
+    "id": "daily_hunt_storm_monk_066c",
+    "name": "Diária: caçada rápida de Monge da Tempestade (66-70)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Monge da Tempestade, entregue direto no quadro.",
     "monster_id": "storm_monk",
-    "count": 10,
-    "level_min": 80,
+    "count": 3,
+    "level_min": 66,
+    "level_max": 70,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 421,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_magma_serpent_071",
+    "name": "Diária: Serpente de Magma (71-75)",
+    "text": "Reduza a população de Serpente de Magma por perto — mate 5.",
+    "monster_id": "magma_serpent",
+    "count": 5,
+    "level_min": 71,
+    "level_max": 75,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 486,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_storm_monk_071b",
+    "name": "Diária: Monge da Tempestade — segunda leva (71-75)",
+    "text": "Mais uma leva: 5 de Monge da Tempestade na mesma região.",
+    "monster_id": "storm_monk",
+    "count": 5,
+    "level_min": 71,
+    "level_max": 75,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 408,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_magma_serpent_071c",
+    "name": "Diária: caçada rápida de Serpente de Magma (71-75)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Serpente de Magma, entregue direto no quadro.",
+    "monster_id": "magma_serpent",
+    "count": 3,
+    "level_min": 71,
+    "level_max": 75,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 458,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_magma_serpent_076",
+    "name": "Diária: Serpente de Magma (76-80)",
+    "text": "Reduza a população de Serpente de Magma por perto — mate 5.",
+    "monster_id": "magma_serpent",
+    "count": 5,
+    "level_min": 76,
+    "level_max": 80,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 486,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_white_clone_076b",
+    "name": "Diária: Clone Branco — segunda leva (76-80)",
+    "text": "Mais uma leva: 5 de Clone Branco na mesma região.",
+    "monster_id": "white_clone",
+    "count": 5,
+    "level_min": 76,
+    "level_max": 80,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 432,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_magma_serpent_076c",
+    "name": "Diária: caçada rápida de Serpente de Magma (76-80)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Serpente de Magma, entregue direto no quadro.",
+    "monster_id": "magma_serpent",
+    "count": 3,
+    "level_min": 76,
+    "level_max": 80,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 458,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_white_clone_081",
+    "name": "Diária: Clone Branco (81-85)",
+    "text": "Reduza a população de Clone Branco por perto — mate 5.",
+    "monster_id": "white_clone",
+    "count": 5,
+    "level_min": 81,
+    "level_max": 85,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 472,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_elite_cloud_guard_081b",
+    "name": "Diária: Ninja Elite da Aurora — segunda leva (81-85)",
+    "text": "Mais uma leva: 5 de Ninja Elite da Aurora na mesma região.",
+    "monster_id": "elite_cloud_guard",
+    "count": 5,
+    "level_min": 81,
+    "level_max": 85,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 528,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_white_clone_081c",
+    "name": "Diária: caçada rápida de Clone Branco (81-85)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Clone Branco, entregue direto no quadro.",
+    "monster_id": "white_clone",
+    "count": 3,
+    "level_min": 81,
+    "level_max": 85,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 446,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_elite_cloud_guard_086",
+    "name": "Diária: Ninja Elite da Aurora (86-90)",
+    "text": "Reduza a população de Ninja Elite da Aurora por perto — mate 5.",
+    "monster_id": "elite_cloud_guard",
+    "count": 5,
+    "level_min": 86,
+    "level_max": 90,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 578,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_white_clone_086b",
+    "name": "Diária: Clone Branco — segunda leva (86-90)",
+    "text": "Mais uma leva: 5 de Clone Branco na mesma região.",
+    "monster_id": "white_clone",
+    "count": 5,
+    "level_min": 86,
+    "level_max": 90,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 432,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_elite_cloud_guard_086c",
+    "name": "Diária: caçada rápida de Ninja Elite da Aurora (86-90)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Ninja Elite da Aurora, entregue direto no quadro.",
+    "monster_id": "elite_cloud_guard",
+    "count": 3,
+    "level_min": 86,
+    "level_max": 90,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 544,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_elite_cloud_guard_091",
+    "name": "Diária: Ninja Elite da Aurora (91-95)",
+    "text": "Reduza a população de Ninja Elite da Aurora por perto — mate 5.",
+    "monster_id": "elite_cloud_guard",
+    "count": 5,
+    "level_min": 91,
+    "level_max": 95,
+    "reward": {
+      "xp": 2.5,
+      "ryo": 578,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_white_clone_091b",
+    "name": "Diária: Clone Branco — segunda leva (91-95)",
+    "text": "Mais uma leva: 5 de Clone Branco na mesma região.",
+    "monster_id": "white_clone",
+    "count": 5,
+    "level_min": 91,
+    "level_max": 95,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 432,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_elite_cloud_guard_091c",
+    "name": "Diária: caçada rápida de Ninja Elite da Aurora (91-95)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Ninja Elite da Aurora, entregue direto no quadro.",
+    "monster_id": "elite_cloud_guard",
+    "count": 3,
+    "level_min": 91,
+    "level_max": 95,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 544,
+      "items": [
+        "health_potion_large"
+      ]
+    }
+  },
+  {
+    "id": "daily_kill_elite_cloud_guard_096",
+    "name": "Diária: Ninja Elite da Aurora (96-100)",
+    "text": "Reduza a população de Ninja Elite da Aurora por perto — mate 5.",
+    "monster_id": "elite_cloud_guard",
+    "count": 5,
+    "level_min": 96,
     "level_max": 100,
-    "reward": {"xp": 9, "ryo": 850, "items": []}
+    "reward": {
+      "xp": 2.5,
+      "ryo": 578,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_kill_white_clone_096b",
+    "name": "Diária: Clone Branco — segunda leva (96-100)",
+    "text": "Mais uma leva: 5 de Clone Branco na mesma região.",
+    "monster_id": "white_clone",
+    "count": 5,
+    "level_min": 96,
+    "level_max": 100,
+    "reward": {
+      "xp": 2.2,
+      "ryo": 432,
+      "items": []
+    }
+  },
+  {
+    "id": "daily_hunt_elite_cloud_guard_096c",
+    "name": "Diária: caçada rápida de Ninja Elite da Aurora (96-100)",
+    "text": "Uma leva mais curta e mais bem paga: 3 de Ninja Elite da Aurora, entregue direto no quadro.",
+    "monster_id": "elite_cloud_guard",
+    "count": 3,
+    "level_min": 96,
+    "level_max": 100,
+    "reward": {
+      "xp": 2.1,
+      "ryo": 544,
+      "items": [
+        "health_potion_large"
+      ]
+    }
   }
 ]

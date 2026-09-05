@@ -45,5 +45,9 @@
 		<item id="1967" chance="15000"/>  <!-- scroll_suiton_prisao_agua -->
 		<item id="5884" countmax="6" chance="100000"/>  <!-- cursed_talisman -->
 		<item id="7588" countmax="10" chance="100000"/>  <!-- health_potion_medium -->
+		<item id="11303" chance="20000"/>  <!-- botas_rastreador_sombrio -->
+		<item id="7366" chance="15000"/>  <!-- shuriken_sombria -->
+		<item id="2497" chance="12000"/>  <!-- mask_anbu -->
+		<item id="2476" chance="10000"/>  <!-- colete_jonin -->
 	</loot>
 </monster>

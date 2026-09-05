@@ -195,6 +195,12 @@
         "chance": 0.12,
         "min": 1,
         "max": 2
+      },
+      {
+        "item_id": "mascara_rastreador_sombrio",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 95,
@@ -280,6 +286,18 @@
         "chance": 0.2,
         "min": 1,
         "max": 3
+      },
+      {
+        "item_id": "manto_rastreador_sombrio",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "colar_do_rastreador",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 110,
@@ -352,6 +370,18 @@
         "chance": 1.0,
         "min": 2,
         "max": 4
+      },
+      {
+        "item_id": "calca_rastreador_sombrio",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "adaga_sombria",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 250,
@@ -494,6 +524,30 @@
         "chance": 1.0,
         "min": 5,
         "max": 10
+      },
+      {
+        "item_id": "botas_rastreador_sombrio",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "shuriken_sombria",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "mask_anbu",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "colete_jonin",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 3000,

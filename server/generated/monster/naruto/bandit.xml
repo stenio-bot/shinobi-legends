@@ -26,5 +26,6 @@
 		<item id="2229" chance="60000"/>  <!-- bandit_emblem -->
 		<item id="2404" chance="5000"/>  <!-- kunai_iron -->
 		<item id="7618" chance="8000"/>  <!-- health_potion_small -->
+		<item id="2126" chance="4000"/>  <!-- amuleto_academia -->
 	</loot>
 </monster>

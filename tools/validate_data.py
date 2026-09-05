@@ -219,10 +219,35 @@ if os.path.exists(dailies_path):
             if i not in item_ids:
                 errors.append(f"daily {d['id']}: item de recompensa desconhecido '{i}'")
 
+# data/achievements.json: conquistas (kills, missões, exames, exploração). Só dados
+# nesta missão de conteúdo (o servidor ainda não concede conquistas) — validação aditiva
+# de schema + referências que já existem (npc/monstro/rank), sem exigir o arquivo.
+achievements_path = os.path.join(ROOT, "achievements.json")
+if os.path.exists(achievements_path):
+    achievements = load(achievements_path)
+    achievement_schema = load(os.path.join(ROOT, "schemas", "achievement.schema.json"))
+    achievement_ids = set()
+    for a in achievements:
+        if V:
+            for e in V(achievement_schema).iter_errors(a):
+                errors.append(f"data/achievements.json [{a.get('id','?')}]: {e.message}")
+        if a["id"] in achievement_ids:
+            errors.append(f"achievements.json: id duplicado '{a['id']}'")
+        achievement_ids.add(a["id"])
+        cond = a.get("condition", {})
+        target = cond.get("target")
+        if cond.get("kind") == "kill_specific" and target and target not in monster_ids:
+            errors.append(f"achievement {a['id']}: monstro desconhecido '{target}'")
+        if cond.get("kind") == "quest_chain_complete" and target and target not in npc_ids:
+            errors.append(f"achievement {a['id']}: npc desconhecido '{target}'")
+        if cond.get("kind") == "grants_rank" and target and rank_ids and target not in rank_ids:
+            errors.append(f"achievement {a['id']}: rank desconhecido '{target}'")
+
 print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas, {len(characters)} personagens, {len(element_sets)} sets elementais")
 if os.path.exists(ranks_path): print(f"{len(rank_ids)} ranks")
 if os.path.exists(tasks_path): print(f"{len(task_ids)} tarefas")
 if os.path.exists(dailies_path): print(f"{len(daily_ids)} diárias (pool)")
+if os.path.exists(achievements_path): print(f"{len(achievement_ids)} conquistas")
 if errors:
     print("\n".join("ERRO " + e for e in errors)); sys.exit(1)
 print("OK — tudo válido")

@@ -1,0 +1,800 @@
+[
+  {
+    "id": "explore_floresta_da_vila",
+    "name": "Pisou em Floresta da Vila",
+    "description": "Visite Floresta da Vila pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "floresta_da_vila"
+    },
+    "reward": {
+      "title": "Viajante de Floresta da Vila",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "explore_costa_das_mares",
+    "name": "Pisou em Costa das Marés",
+    "description": "Visite Costa das Marés pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "costa_das_mares"
+    },
+    "reward": {
+      "title": "Viajante de Costa das Marés",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "explore_floresta_da_morte",
+    "name": "Pisou em Floresta da Morte",
+    "description": "Visite Floresta da Morte pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "floresta_da_morte"
+    },
+    "reward": {
+      "title": "Viajante de Floresta da Morte",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "explore_ruinas_do_cla_marionetista",
+    "name": "Pisou em Ruínas do Clã Marionetista",
+    "description": "Visite Ruínas do Clã Marionetista pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "ruinas_do_cla_marionetista"
+    },
+    "reward": {
+      "title": "Viajante de Ruínas do Clã Marionetista",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "explore_montanha_do_trovao",
+    "name": "Pisou em Montanha do Trovão",
+    "description": "Visite Montanha do Trovão pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "montanha_do_trovao"
+    },
+    "reward": {
+      "title": "Viajante de Montanha do Trovão",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "explore_covil_nuvem_vermelha",
+    "name": "Pisou em Covil da Nuvem Vermelha",
+    "description": "Visite Covil da Nuvem Vermelha pela primeira vez.",
+    "category": "exploration",
+    "condition": {
+      "kind": "visit_zone",
+      "target": "covil_nuvem_vermelha"
+    },
+    "reward": {
+      "title": "Viajante de Covil da Nuvem Vermelha",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "exam_chunin",
+    "name": "Aprovado no Exame Chunin",
+    "description": "Complete todas as etapas do Exame Chunin.",
+    "category": "exam",
+    "condition": {
+      "kind": "grants_rank",
+      "target": "chunin"
+    },
+    "reward": {
+      "title": "Chunin",
+      "ryo": 500
+    }
+  },
+  {
+    "id": "exam_jonin",
+    "name": "Aprovado no Exame Jonin",
+    "description": "Complete todas as etapas do Exame Jonin.",
+    "category": "exam",
+    "condition": {
+      "kind": "grants_rank",
+      "target": "jonin"
+    },
+    "reward": {
+      "title": "Jonin",
+      "ryo": 2000
+    }
+  },
+  {
+    "id": "exam_anbu",
+    "name": "Aprovado no Exame Anbu",
+    "description": "Complete todas as etapas do Exame Anbu.",
+    "category": "exam",
+    "condition": {
+      "kind": "grants_rank",
+      "target": "anbu"
+    },
+    "reward": {
+      "title": "Anbu",
+      "ryo": 8000
+    }
+  },
+  {
+    "id": "exam_kage",
+    "name": "Aprovado no Exame Kage",
+    "description": "Complete todas as etapas do Exame Kage.",
+    "category": "exam",
+    "condition": {
+      "kind": "grants_rank",
+      "target": "kage"
+    },
+    "reward": {
+      "title": "Kage",
+      "ryo": 30000
+    }
+  },
+  {
+    "id": "chain_floresta_da_vila",
+    "name": "História de Floresta da Vila",
+    "description": "Complete toda a cadeia de missões de Floresta da Vila (NPC quest_giver_leaf).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_leaf"
+    },
+    "reward": {
+      "title": "Herói de Floresta da Vila",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "chain_costa_das_mares",
+    "name": "História de Costa das Marés",
+    "description": "Complete toda a cadeia de missões de Costa das Marés (NPC quest_giver_coastal).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_coastal"
+    },
+    "reward": {
+      "title": "Herói de Costa das Marés",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "chain_floresta_da_morte",
+    "name": "História de Floresta da Morte",
+    "description": "Complete toda a cadeia de missões de Floresta da Morte (NPC quest_giver_swamp).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_swamp"
+    },
+    "reward": {
+      "title": "Herói de Floresta da Morte",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "chain_ruinas_do_cla_marionetista",
+    "name": "História de Ruínas do Clã Marionetista",
+    "description": "Complete toda a cadeia de missões de Ruínas do Clã Marionetista (NPC quest_giver_ruins).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_ruins"
+    },
+    "reward": {
+      "title": "Herói de Ruínas do Clã Marionetista",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "chain_montanha_do_trovao",
+    "name": "História de Montanha do Trovão",
+    "description": "Complete toda a cadeia de missões de Montanha do Trovão (NPC quest_giver_mountain).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_mountain"
+    },
+    "reward": {
+      "title": "Herói de Montanha do Trovão",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "chain_covil_nuvem_vermelha",
+    "name": "História de Covil da Nuvem Vermelha",
+    "description": "Complete toda a cadeia de missões de Covil da Nuvem Vermelha (NPC quest_giver_akatsuki_lair).",
+    "category": "quest",
+    "condition": {
+      "kind": "quest_chain_complete",
+      "target": "quest_giver_akatsuki_lair"
+    },
+    "reward": {
+      "title": "Herói de Covil da Nuvem Vermelha",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "boss_boss_bandit_chief",
+    "name": "Vitória sobre Chefe dos Bandidos",
+    "description": "Derrote Chefe dos Bandidos pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_bandit_chief",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Chefe dos Bandidos",
+      "ryo": 200
+    }
+  },
+  {
+    "id": "boss_boss_mist_swordsman",
+    "name": "Vitória sobre Espadachim da Névoa",
+    "description": "Derrote Espadachim da Névoa pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_mist_swordsman",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Espadachim da Névoa",
+      "ryo": 800
+    }
+  },
+  {
+    "id": "boss_boss_elder_toad",
+    "name": "Vitória sobre Sapo Ancião",
+    "description": "Derrote Sapo Ancião pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_elder_toad",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Sapo Ancião",
+      "ryo": 1200
+    }
+  },
+  {
+    "id": "boss_boss_white_serpent",
+    "name": "Vitória sobre Serpente Branca",
+    "description": "Derrote Serpente Branca pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_white_serpent",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Serpente Branca",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "boss_elite_deserter",
+    "name": "Vitória sobre Desertor de Elite",
+    "description": "Derrote Desertor de Elite pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "elite_deserter",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Desertor de Elite",
+      "ryo": 2000
+    }
+  },
+  {
+    "id": "boss_boss_puppeteer",
+    "name": "Vitória sobre Marionetista das Ruínas",
+    "description": "Derrote Marionetista das Ruínas pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_puppeteer",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Marionetista das Ruínas",
+      "ryo": 3000
+    }
+  },
+  {
+    "id": "boss_boss_curse_partner",
+    "name": "Vitória sobre O Sócio Eterno",
+    "description": "Derrote O Sócio Eterno pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_curse_partner",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de O Sócio Eterno",
+      "ryo": 6000
+    }
+  },
+  {
+    "id": "boss_boss_ancestral_oni",
+    "name": "Vitória sobre Oni Ancestral",
+    "description": "Derrote Oni Ancestral pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_ancestral_oni",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de Oni Ancestral",
+      "ryo": 12000
+    }
+  },
+  {
+    "id": "boss_boss_illusive_eye",
+    "name": "Vitória sobre O Vigia Ilusório",
+    "description": "Derrote O Vigia Ilusório pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_illusive_eye",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de O Vigia Ilusório",
+      "ryo": 15000
+    }
+  },
+  {
+    "id": "boss_boss_masked_puppeteer",
+    "name": "Vitória sobre O Mascarado das Sombras",
+    "description": "Derrote O Mascarado das Sombras pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_masked_puppeteer",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de O Mascarado das Sombras",
+      "ryo": 18000
+    }
+  },
+  {
+    "id": "boss_boss_rings_bearer",
+    "name": "Vitória sobre O Portador dos Seis Caminhos",
+    "description": "Derrote O Portador dos Seis Caminhos pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_rings_bearer",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de O Portador dos Seis Caminhos",
+      "ryo": 22000
+    }
+  },
+  {
+    "id": "boss_boss_crimson_ancestor",
+    "name": "Vitória sobre O Ancestral da Nuvem Vermelha",
+    "description": "Derrote O Ancestral da Nuvem Vermelha pelo menos uma vez.",
+    "category": "boss",
+    "condition": {
+      "kind": "kill_specific",
+      "target": "boss_crimson_ancestor",
+      "count": 1
+    },
+    "reward": {
+      "title": "Algoz de O Ancestral da Nuvem Vermelha",
+      "ryo": 40000
+    }
+  },
+  {
+    "id": "kills_total_100",
+    "name": "100 abates",
+    "description": "Derrote 100 monstros no total, de qualquer tipo.",
+    "category": "kill",
+    "condition": {
+      "kind": "kill_count",
+      "target": "any",
+      "count": 100
+    },
+    "reward": {
+      "title": "Caçador (100)",
+      "ryo": 100
+    }
+  },
+  {
+    "id": "kills_total_500",
+    "name": "500 abates",
+    "description": "Derrote 500 monstros no total, de qualquer tipo.",
+    "category": "kill",
+    "condition": {
+      "kind": "kill_count",
+      "target": "any",
+      "count": 500
+    },
+    "reward": {
+      "title": "Caçador (500)",
+      "ryo": 400
+    }
+  },
+  {
+    "id": "kills_total_1000",
+    "name": "1000 abates",
+    "description": "Derrote 1000 monstros no total, de qualquer tipo.",
+    "category": "kill",
+    "condition": {
+      "kind": "kill_count",
+      "target": "any",
+      "count": 1000
+    },
+    "reward": {
+      "title": "Caçador (1000)",
+      "ryo": 900
+    }
+  },
+  {
+    "id": "kills_total_5000",
+    "name": "5000 abates",
+    "description": "Derrote 5000 monstros no total, de qualquer tipo.",
+    "category": "kill",
+    "condition": {
+      "kind": "kill_count",
+      "target": "any",
+      "count": 5000
+    },
+    "reward": {
+      "title": "Caçador (5000)",
+      "ryo": 4000
+    }
+  },
+  {
+    "id": "kills_total_10000",
+    "name": "10000 abates",
+    "description": "Derrote 10000 monstros no total, de qualquer tipo.",
+    "category": "kill",
+    "condition": {
+      "kind": "kill_count",
+      "target": "any",
+      "count": 10000
+    },
+    "reward": {
+      "title": "Caçador (10000)",
+      "ryo": 9000
+    }
+  },
+  {
+    "id": "level_25",
+    "name": "Nível 25",
+    "description": "Alcance o nível 25.",
+    "category": "level",
+    "condition": {
+      "kind": "level_reached",
+      "target": "25",
+      "count": 25
+    },
+    "reward": {
+      "title": "Nível 25",
+      "ryo": 300
+    }
+  },
+  {
+    "id": "level_50",
+    "name": "Nível 50",
+    "description": "Alcance o nível 50.",
+    "category": "level",
+    "condition": {
+      "kind": "level_reached",
+      "target": "50",
+      "count": 50
+    },
+    "reward": {
+      "title": "Nível 50",
+      "ryo": 1500
+    }
+  },
+  {
+    "id": "level_75",
+    "name": "Nível 75",
+    "description": "Alcance o nível 75.",
+    "category": "level",
+    "condition": {
+      "kind": "level_reached",
+      "target": "75",
+      "count": 75
+    },
+    "reward": {
+      "title": "Nível 75",
+      "ryo": 6000
+    }
+  },
+  {
+    "id": "level_100",
+    "name": "Nível 100",
+    "description": "Alcance o nível 100.",
+    "category": "level",
+    "condition": {
+      "kind": "level_reached",
+      "target": "100",
+      "count": 100
+    },
+    "reward": {
+      "title": "Nível 100",
+      "ryo": 25000
+    }
+  },
+  {
+    "id": "tasks_completed_10",
+    "name": "10 tarefas entregues",
+    "description": "Entregue 10 tarefas no total (qualquer NPC 'tasks').",
+    "category": "task",
+    "condition": {
+      "kind": "task_count",
+      "target": "any",
+      "count": 10
+    },
+    "reward": {
+      "title": "Contratado (10)",
+      "ryo": 200
+    }
+  },
+  {
+    "id": "tasks_completed_50",
+    "name": "50 tarefas entregues",
+    "description": "Entregue 50 tarefas no total (qualquer NPC 'tasks').",
+    "category": "task",
+    "condition": {
+      "kind": "task_count",
+      "target": "any",
+      "count": 50
+    },
+    "reward": {
+      "title": "Contratado (50)",
+      "ryo": 1000
+    }
+  },
+  {
+    "id": "tasks_completed_100",
+    "name": "100 tarefas entregues",
+    "description": "Entregue 100 tarefas no total (qualquer NPC 'tasks').",
+    "category": "task",
+    "condition": {
+      "kind": "task_count",
+      "target": "any",
+      "count": 100
+    },
+    "reward": {
+      "title": "Contratado (100)",
+      "ryo": 2500
+    }
+  },
+  {
+    "id": "dailies_completed_7",
+    "name": "7 diárias completas",
+    "description": "Complete 7 missões diárias no total.",
+    "category": "daily",
+    "condition": {
+      "kind": "daily_streak",
+      "target": "any",
+      "count": 7
+    },
+    "reward": {
+      "title": "Disciplinado (7)",
+      "ryo": 150
+    }
+  },
+  {
+    "id": "dailies_completed_30",
+    "name": "30 diárias completas",
+    "description": "Complete 30 missões diárias no total.",
+    "category": "daily",
+    "condition": {
+      "kind": "daily_streak",
+      "target": "any",
+      "count": 30
+    },
+    "reward": {
+      "title": "Disciplinado (30)",
+      "ryo": 800
+    }
+  },
+  {
+    "id": "dailies_completed_100",
+    "name": "100 diárias completas",
+    "description": "Complete 100 missões diárias no total.",
+    "category": "daily",
+    "condition": {
+      "kind": "daily_streak",
+      "target": "any",
+      "count": 100
+    },
+    "reward": {
+      "title": "Disciplinado (100)",
+      "ryo": 3000
+    }
+  },
+  {
+    "id": "gearset_l1",
+    "name": "Conjunto completo: Kit de Genin",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 1 (Kit de Genin) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_1"
+    },
+    "reward": {
+      "title": "Kit de Genin",
+      "ryo": 20
+    }
+  },
+  {
+    "id": "gearset_l10",
+    "name": "Conjunto completo: Traje do Batedor",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 10 (Traje do Batedor) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_10"
+    },
+    "reward": {
+      "title": "Traje do Batedor",
+      "ryo": 200
+    }
+  },
+  {
+    "id": "gearset_l20",
+    "name": "Conjunto completo: Uniforme Chunin",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 20 (Uniforme Chunin) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_20"
+    },
+    "reward": {
+      "title": "Uniforme Chunin",
+      "ryo": 400
+    }
+  },
+  {
+    "id": "gearset_l30",
+    "name": "Conjunto completo: Vestes do Clã Marionetista",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 30 (Vestes do Clã Marionetista) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_30"
+    },
+    "reward": {
+      "title": "Vestes do Clã Marionetista",
+      "ryo": 600
+    }
+  },
+  {
+    "id": "gearset_l40",
+    "name": "Conjunto completo: Traje do Rastreador Sombrio",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 40 (Traje do Rastreador Sombrio) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_40"
+    },
+    "reward": {
+      "title": "Traje do Rastreador Sombrio",
+      "ryo": 800
+    }
+  },
+  {
+    "id": "gearset_l50",
+    "name": "Conjunto completo: Vestimenta de Jonin",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 50 (Vestimenta de Jonin) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_50"
+    },
+    "reward": {
+      "title": "Vestimenta de Jonin",
+      "ryo": 1000
+    }
+  },
+  {
+    "id": "gearset_l60",
+    "name": "Conjunto completo: Armadura Stormcaller",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 60 (Armadura Stormcaller) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_60"
+    },
+    "reward": {
+      "title": "Armadura Stormcaller",
+      "ryo": 1200
+    }
+  },
+  {
+    "id": "gearset_l70",
+    "name": "Conjunto completo: Armadura do Caçador de Onis",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 70 (Armadura do Caçador de Onis) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_70"
+    },
+    "reward": {
+      "title": "Armadura do Caçador de Onis",
+      "ryo": 1400
+    }
+  },
+  {
+    "id": "gearset_l80",
+    "name": "Conjunto completo: Manto Anbu Negro",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 80 (Manto Anbu Negro) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_80"
+    },
+    "reward": {
+      "title": "Manto Anbu Negro",
+      "ryo": 1600
+    }
+  },
+  {
+    "id": "gearset_l90",
+    "name": "Conjunto completo: Vestes da Aurora Carmesim",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 90 (Vestes da Aurora Carmesim) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_90"
+    },
+    "reward": {
+      "title": "Vestes da Aurora Carmesim",
+      "ryo": 1800
+    }
+  },
+  {
+    "id": "gearset_l100",
+    "name": "Conjunto completo: Vestes do Kage",
+    "description": "Vista as 5 peças de equipamento + arma do conjunto de nível 100 (Vestes do Kage) ao mesmo tempo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_set",
+      "target": "tier_100"
+    },
+    "reward": {
+      "title": "Vestes do Kage",
+      "ryo": 2000
+    }
+  },
+  {
+    "id": "trophies_all",
+    "name": "Caçador Lendário",
+    "description": "Obtenha os 38 troféus de tarefa, um de cada monstro do jogo.",
+    "category": "collection",
+    "condition": {
+      "kind": "collect_item_count",
+      "target": "trophy_*",
+      "count": 38
+    },
+    "reward": {
+      "title": "Caçador Lendário",
+      "ryo": 50000
+    }
+  }
+]

@@ -37,6 +37,28 @@
     "type": "quest",
     "quests": [
       {
+        "id": "q_ruins_intro",
+        "name": "Primeiras peças",
+        "rank": "D",
+        "text": "Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "puppet_joint",
+              "count": 8
+            }
+          ]
+        },
+        "reward": {
+          "xp": 4500,
+          "ryo": 1000,
+          "items": [
+            "health_potion_medium"
+          ]
+        }
+      },
+      {
         "id": "q_ruins_puppets",
         "name": "Ordens antigas",
         "text": "As marionetes ainda patrulham o pátio. Destrua 12 delas.",
@@ -65,6 +87,50 @@
           "ryo": 2400,
           "items": [
             "boots_clan_ruins"
+          ]
+        }
+      },
+      {
+        "id": "q_ruins_curse_lore",
+        "name": "Os selos que não se apagam",
+        "rank": "C",
+        "text": "Antes de enfrentar os xamãs, Ancião Kaito testa o que você já sabe sobre a maldição do clã.",
+        "objective": {
+          "kind": "keyword_quiz",
+          "kill": "curse_shaman",
+          "count": 1,
+          "quiz": [
+            {
+              "question": "O que mantém os bonecos do clã 'vivos' até hoje?",
+              "keywords": [
+                "selo",
+                "selos",
+                "maldicao",
+                "maldição"
+              ]
+            },
+            {
+              "question": "Quem mantém os selos de maldição ativos há gerações?",
+              "keywords": [
+                "xama",
+                "xamã",
+                "curse_shaman"
+              ]
+            },
+            {
+              "question": "Para onde o gênio desertor pretende fugir depois das Ruínas?",
+              "keywords": [
+                "toca do som",
+                "som"
+              ]
+            }
+          ]
+        },
+        "reward": {
+          "xp": 3000,
+          "ryo": 600,
+          "items": [
+            "colar_do_rastreador"
           ]
         }
       },

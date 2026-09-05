@@ -68,6 +68,24 @@
         }
       },
       {
+        "id": "q_forest_snakes",
+        "name": "Presas na relva",
+        "rank": "D",
+        "text": "As cobras da floresta andam mordendo quem passa perto do riacho. Mate 8.",
+        "objective": {
+          "kind": "kill",
+          "kill": "forest_snake",
+          "count": 8
+        },
+        "reward": {
+          "xp": 260,
+          "ryo": 90,
+          "items": [
+            "amuleto_academia"
+          ]
+        }
+      },
+      {
         "id": "q_bandits_1",
         "name": "Limpando a estrada",
         "text": "Bandidos na estrada leste. Mate 10.",
@@ -80,6 +98,46 @@
           "ryo": 200,
           "items": [
             "scroll_kawarimi"
+          ]
+        }
+      },
+      {
+        "id": "q_bandit_archers",
+        "name": "Flechas na copa das árvores",
+        "rank": "C",
+        "text": "Bandidos arqueiros se escondem nas árvores para emboscar viajantes. Mate 8.",
+        "objective": {
+          "kind": "kill",
+          "kill": "bandit_archer",
+          "count": 8
+        },
+        "reward": {
+          "xp": 500,
+          "ryo": 220,
+          "items": [
+            "shuriken_iron"
+          ]
+        }
+      },
+      {
+        "id": "q_forest_supplies",
+        "name": "Abastecendo a vila",
+        "rank": "C",
+        "text": "Antes de ir atrás do Chefe, a vila precisa de suprimentos: entregue 5 peles de lobo à Capitã Rin.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "wolf_pelt",
+              "count": 5
+            }
+          ]
+        },
+        "reward": {
+          "xp": 350,
+          "ryo": 150,
+          "items": [
+            "health_potion_small"
           ]
         }
       },
@@ -150,6 +208,46 @@
         }
       },
       {
+        "id": "q_lesser_serpents",
+        "name": "Ninhada de serpentes",
+        "rank": "D",
+        "text": "Serpentes menores se multiplicaram perto do santuário abandonado. Mate 10.",
+        "objective": {
+          "kind": "kill",
+          "kill": "lesser_serpent",
+          "count": 10
+        },
+        "reward": {
+          "xp": 1400,
+          "ryo": 400,
+          "items": [
+            "bandana_chuunin"
+          ]
+        }
+      },
+      {
+        "id": "q_forest_death_collect",
+        "name": "Peles curtidas",
+        "rank": "C",
+        "text": "Rastreador Goro precisa de peles de sapo curtidas para reforçar equipamentos. Traga 6.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "toad_skin",
+              "count": 6
+            }
+          ]
+        },
+        "reward": {
+          "xp": 1200,
+          "ryo": 350,
+          "items": [
+            "chakra_pill_medium"
+          ]
+        }
+      },
+      {
         "id": "q_toads",
         "name": "Coaxar da morte",
         "text": "Mate 10 sapos gigantes.",
@@ -162,6 +260,24 @@
           "ryo": 600,
           "items": [
             "vest_toad"
+          ]
+        }
+      },
+      {
+        "id": "q_elder_toad_hunt",
+        "name": "O sapo que não deveria existir",
+        "rank": "B",
+        "text": "Antes do Exame, prove que sobrevive ao Sapo Ancião sozinho — sem pergaminho em jogo, só glória.",
+        "objective": {
+          "kind": "kill",
+          "kill": "boss_elder_toad",
+          "count": 1
+        },
+        "reward": {
+          "xp": 4000,
+          "ryo": 1500,
+          "items": [
+            "sandalia_chuunin"
           ]
         }
       },

@@ -30,5 +30,6 @@
 		<item id="7378" countmax="15" chance="40000"/>  <!-- shuriken_iron -->
 		<item id="2412" chance="4000"/>  <!-- katana_ronin -->
 		<item id="2464" chance="2000"/>  <!-- vest_chuunin -->
+		<item id="5917" chance="5000"/>  <!-- bandana_chuunin -->
 	</loot>
 </monster>

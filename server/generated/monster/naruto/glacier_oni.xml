@@ -35,5 +35,6 @@
 		<item id="5893" chance="25000"/>  <!-- oni_horn -->
 		<item id="2477" chance="4000"/>  <!-- greaves_stormcaller -->
 		<item id="8472" countmax="2" chance="10000"/>  <!-- soldier_pill -->
+		<item id="2647" chance="6000"/>  <!-- calca_jonin -->
 	</loot>
 </monster>

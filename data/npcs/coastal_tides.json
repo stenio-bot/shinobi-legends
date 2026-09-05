@@ -3,8 +3,8 @@
     "id": "merchant_coastal",
     "name": "Mercador Itsuki",
     "map": "costa_das_mares",
-    "x": 10,
-    "y": 10,
+    "x": 1026,
+    "y": 1145,
     "_note": "PENDENTE de posição real: região 'costa_das_mares' ainda não tem mapa físico (docs/lore/mundo.md, docs/sistemas/mapas.md). x/y são placeholder até o agente de mapa desenhar a zona — ver data/maps/spawns_lore.json.",
     "type": "shop",
     "sells": [
@@ -26,8 +26,8 @@
     "id": "quest_giver_coastal",
     "name": "Ancião Tazu",
     "map": "costa_das_mares",
-    "x": 12,
-    "y": 12,
+    "x": 1032,
+    "y": 1145,
     "_note": "PENDENTE de posição real, ver merchant_coastal acima.",
     "type": "quest",
     "quests": [
@@ -44,6 +44,28 @@
           "ryo": 250,
           "items": [
             "health_potion_small"
+          ]
+        }
+      },
+      {
+        "id": "q_coastal_supplies",
+        "name": "Abastecendo os pescadores",
+        "rank": "D",
+        "text": "A vila de pescadores está sem suprimentos com a ponte bloqueada. Entregue 5 poções de vida pequenas ao Ancião Tazu.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "health_potion_small",
+              "count": 5
+            }
+          ]
+        },
+        "reward": {
+          "xp": 700,
+          "ryo": 200,
+          "items": [
+            "bracelete_do_viajante"
           ]
         }
       },
@@ -80,6 +102,24 @@
         }
       },
       {
+        "id": "q_coastal_apprentice",
+        "name": "O aprendiz mascarado",
+        "rank": "B",
+        "text": "Antes de chegar ao Espadachim, alguém precisa afastar o aprendiz que protege os flancos dele. Mate 6.",
+        "objective": {
+          "kind": "kill",
+          "kill": "masked_apprentice",
+          "count": 6
+        },
+        "reward": {
+          "xp": 3200,
+          "ryo": 900,
+          "items": [
+            "calca_do_batedor"
+          ]
+        }
+      },
+      {
         "id": "q_coastal_swordsman",
         "name": "O Espadachim da Névoa",
         "text": "Um espadachim renegado e seu aprendiz mascarado vieram sabotar a ponte que salvaria esta vila. Derrote os dois.",
@@ -102,8 +142,8 @@
     "id": "task_master_coastal",
     "name": "Mestre de Tarefas Umi",
     "map": "costa_das_mares",
-    "x": 14,
-    "y": 14,
+    "x": 1029,
+    "y": 1147,
     "_note": "PENDENTE de posição real (ver merchant_coastal). Tarefas repetíveis de costa_das_mares (data/tasks.json).",
     "type": "tasks"
   }

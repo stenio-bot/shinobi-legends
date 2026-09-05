@@ -35,5 +35,6 @@
 		<item id="2457" chance="5000"/>  <!-- mask_clan_ruins -->
 		<item id="2383" chance="3000"/>  <!-- kodachi_ruins -->
 		<item id="7590" countmax="2" chance="12000"/>  <!-- chakra_pill_large -->
+		<item id="3967" chance="5000"/>  <!-- mascara_rastreador_sombrio -->
 	</loot>
 </monster>

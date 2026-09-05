@@ -34,5 +34,6 @@
 		<item id="5891" countmax="3" chance="50000"/>  <!-- thunder_feather -->
 		<item id="7591" countmax="2" chance="12000"/>  <!-- health_potion_large -->
 		<item id="2646" chance="3000"/>  <!-- boots_stormcaller -->
+		<item id="3965" chance="6000"/>  <!-- senbon_jonin -->
 	</loot>
 </monster>

@@ -51,6 +51,28 @@
         }
       },
       {
+        "id": "q_mountain_relics",
+        "name": "Penas de valor",
+        "rank": "B",
+        "text": "Mestra Yuki comercia penas de águia do trovão com ferreiros da vila. Traga 8.",
+        "objective": {
+          "kind": "collect_item",
+          "items": [
+            {
+              "item_id": "thunder_feather",
+              "count": 8
+            }
+          ]
+        },
+        "reward": {
+          "xp": 18000,
+          "ryo": 5000,
+          "items": [
+            "senbon_jonin"
+          ]
+        }
+      },
+      {
         "id": "q_mountain_oni",
         "name": "O que desce do gelo",
         "text": "Onis da geleira invadiram o acampamento. Mate 10.",
@@ -79,6 +101,51 @@
           "ryo": 16000,
           "items": [
             "scroll_fuuin_contencao"
+          ]
+        }
+      },
+      {
+        "id": "q_mountain_lore",
+        "name": "O pacto que não morre",
+        "rank": "A",
+        "text": "Mestra Yuki quer garantir que você entende o que vai enfrentar no topo da montanha antes de deixá-lo subir.",
+        "objective": {
+          "kind": "keyword_quiz",
+          "kill": "storm_monk",
+          "count": 1,
+          "quiz": [
+            {
+              "question": "O que acontece quando um dos dois seres do topo morre sozinho?",
+              "keywords": [
+                "absorve",
+                "absorver",
+                "furia",
+                "fúria"
+              ]
+            },
+            {
+              "question": "Quem cobra um preço por cada vida que consome?",
+              "keywords": [
+                "sócio eterno",
+                "socio eterno",
+                "boss_curse_partner"
+              ]
+            },
+            {
+              "question": "Quem lançou essa dupla imortal contra vilas inteiras na guerra?",
+              "keywords": [
+                "nuvem vermelha",
+                "organizacao",
+                "organização"
+              ]
+            }
+          ]
+        },
+        "reward": {
+          "xp": 40000,
+          "ryo": 12000,
+          "items": [
+            "talisma_cacador_de_onis"
           ]
         }
       },

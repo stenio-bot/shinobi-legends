@@ -54,6 +54,12 @@
         "chance": 0.03,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "senbon_jonin",
+        "chance": 0.06,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 135,
@@ -125,6 +131,12 @@
         "chance": 0.1,
         "min": 1,
         "max": 2
+      },
+      {
+        "item_id": "calca_jonin",
+        "chance": 0.06,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 150,
@@ -201,6 +213,18 @@
         "chance": 0.18,
         "min": 1,
         "max": 3
+      },
+      {
+        "item_id": "botas_jonin",
+        "chance": 0.06,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "elmo_cacador_de_onis",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 170,
@@ -280,6 +304,18 @@
         "chance": 0.15,
         "min": 1,
         "max": 2
+      },
+      {
+        "item_id": "bracelete_jonin",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "grevas_cacador_de_onis",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 185,
@@ -361,6 +397,18 @@
         "chance": 1.0,
         "min": 2,
         "max": 4
+      },
+      {
+        "item_id": "tanto_jonin",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "couraca_cacador_de_onis",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 2500,
@@ -515,6 +563,30 @@
         "chance": 1.0,
         "min": 8,
         "max": 15
+      },
+      {
+        "item_id": "botas_cacador_de_onis",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "shuriken_congelante",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "talisma_cacador_de_onis",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "capuz_anbu_negro",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 4800,

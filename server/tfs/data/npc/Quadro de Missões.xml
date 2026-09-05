@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
+<npc name="Quadro de Missões" script="naruto/dailies_board_leaf.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100"/>
+	<look type="128" head="0" body="0" legs="0" feet="0"/>
+</npc>

@@ -12,7 +12,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto Kid",
-   "_quadros": "parado 0004; andar 0029/0030/0031 (real4); olha para a direita; lado ambiguo (conf 0.08): assumido direita; Sul = quadro de frente (arquivo 0066, classificado 'frente'); sintese de costas: pele~(248, 152, 64) cabelo~(131, 100, 15)",
+   "_quadros": "parado 0004; andar 0029/synth:29/synth:266 (real4); olha para a direita; REJEITADO quadro 32 (real4): centroide da cabeca desloca 5.8px do idle (tolerancia 4.5px) — pose de golpe/chute provavel -> 266; REJEITADO quadro 30 (real4): altura 42px difere do idle 48px (tolerancia 3.0px); muito diferente do proximo quadro do ciclo (39% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 29); REJEITADO quadro 31 (real4): altura 42px difere do idle 48px (tolerancia 3.0px); centroide da cabeca desloca 8.2px do idle (tolerancia 4.5px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 266); REJEITADO quadro 266 (real4): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 29); lado ambiguo (conf 0.08): assumido direita; Sul = quadro de frente (arquivo 0066, classificado 'frente'); cor de cabelo AJUSTADA A MAO (override): (255, 205, 60); sintese de costas: pele~(248, 152, 64) cabelo~(255, 205, 60); REJEITADOS: real4#3 32->266; real4#1 30->synth (deslocamento de pernas sobre 29); real4#2 31->synth (deslocamento de pernas sobre 266); real4#3 266->synth (deslocamento de pernas sobre 29)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -29,9 +29,9 @@
      "idle": "../extracted/mugen/900/idle_0004.png",
      "walk": [
       "../extracted/mugen/900/walk0_0029.png",
-      "../extracted/mugen/900/walk1_0030.png",
-      "../extracted/mugen/900/walk2_0031.png",
-      "../extracted/mugen/900/walk3_0032.png"
+      "../extracted/mugen/900/walk1_synth.png",
+      "../extracted/mugen/900/walk2_synth.png",
+      "../extracted/mugen/900/walk3_synth.png"
      ]
     },
     "2": {
@@ -39,9 +39,9 @@
      "idle": "../extracted/mugen/900/front_0066.png",
      "walk": [
       "../extracted/mugen/900/walk0_0029.png",
-      "../extracted/mugen/900/walk1_0030.png",
-      "../extracted/mugen/900/walk2_0031.png",
-      "../extracted/mugen/900/walk3_0032.png"
+      "../extracted/mugen/900/walk1_synth.png",
+      "../extracted/mugen/900/walk2_synth.png",
+      "../extracted/mugen/900/walk3_synth.png"
      ]
     },
     "3": {
@@ -56,7 +56,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sasuke Kid",
-   "_quadros": "parado 0005; andar 0028/0029/0030 (real4); olha para a direita; Sul = quadro de frente (arquivo 0048, classificado 'frente'); sintese de costas: pele~(232, 184, 160) cabelo~(17, 22, 26)",
+   "_quadros": "parado 0005; andar 0027/0044/0053 (real4); olha para a direita; REJEITADO quadro 28 (real4): largura 37px > 1.25x a largura do idle (28px) -> 27; REJEITADO quadro 29 (real4): altura 45px difere do idle 42px (tolerancia 2.6px); centroide da cabeca desloca 5.2px do idle (tolerancia 3.9px) — pose de golpe/chute provavel -> 44; REJEITADO quadro 30 (real4): centroide da cabeca desloca 4.8px do idle (tolerancia 3.9px) — pose de golpe/chute provavel -> 53; REJEITADO quadro 31 (real4): altura 45px difere do idle 42px (tolerancia 2.6px) -> 43; Sul = quadro de frente (arquivo 0048, classificado 'frente'); sintese de costas: pele~(232, 184, 160) cabelo~(17, 22, 26); REJEITADOS: real4#0 28->27; real4#1 29->44; real4#2 30->53; real4#3 31->43",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -72,20 +72,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/901/idle_0005.png",
      "walk": [
-      "../extracted/mugen/901/walk0_0028.png",
-      "../extracted/mugen/901/walk1_0029.png",
-      "../extracted/mugen/901/walk2_0030.png",
-      "../extracted/mugen/901/walk3_0031.png"
+      "../extracted/mugen/901/walk0_0027.png",
+      "../extracted/mugen/901/walk1_0044.png",
+      "../extracted/mugen/901/walk2_0053.png",
+      "../extracted/mugen/901/walk3_0043.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/901/front_0048.png",
      "walk": [
-      "../extracted/mugen/901/walk0_0028.png",
-      "../extracted/mugen/901/walk1_0029.png",
-      "../extracted/mugen/901/walk2_0030.png",
-      "../extracted/mugen/901/walk3_0031.png"
+      "../extracted/mugen/901/walk0_0027.png",
+      "../extracted/mugen/901/walk1_0044.png",
+      "../extracted/mugen/901/walk2_0053.png",
+      "../extracted/mugen/901/walk3_0043.png"
      ]
     },
     "3": {
@@ -100,7 +100,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sakura Kid",
-   "_quadros": "parado 0004; andar 0003/0004/0005 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0055, classificado 'frente'); sintese de costas: pele~(255, 204, 153) cabelo~(102, 51, 0)",
+   "_quadros": "parado 0004; andar 0003/0004/0005 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0055, classificado 'frente'); cor de cabelo AJUSTADA A MAO (override): (235, 120, 170); sintese de costas: pele~(255, 204, 153) cabelo~(235, 120, 170)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -144,7 +144,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Hinata",
-   "_quadros": "parado 0003; andar 0053/0054/0055 (real4); olha para a direita; Sul = quadro de frente (arquivo 0060, classificado 'frente'); sintese de costas: pele~(212, 131, 102) cabelo~(9, 9, 9)",
+   "_quadros": "parado 0003; andar 0076/0050/synth:50 (real4); olha para a direita; REJEITADO quadro 53 (real4): centroide da cabeca desloca 4.9px do idle (tolerancia 4.5px) — pose de golpe/chute provavel -> 76; REJEITADO quadro 54 (real4): centroide da cabeca desloca 11.4px do idle (tolerancia 4.5px) — pose de golpe/chute provavel -> 50; REJEITADO quadro 55 (real4): muito diferente do proximo quadro do ciclo (30% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 50); REJEITADO quadro 56 (real4): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 76); Sul = quadro de frente (arquivo 0060, classificado 'frente'); cor de cabelo AJUSTADA A MAO (override): (25, 35, 90); sintese de costas: pele~(133, 62, 37) cabelo~(25, 35, 90); REJEITADOS: real4#0 53->76; real4#1 54->50; real4#2 55->synth (deslocamento de pernas sobre 50); real4#3 56->synth (deslocamento de pernas sobre 76)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -160,20 +160,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/903/idle_0003.png",
      "walk": [
-      "../extracted/mugen/903/walk0_0053.png",
-      "../extracted/mugen/903/walk1_0054.png",
-      "../extracted/mugen/903/walk2_0055.png",
-      "../extracted/mugen/903/walk3_0056.png"
+      "../extracted/mugen/903/walk0_0076.png",
+      "../extracted/mugen/903/walk1_0050.png",
+      "../extracted/mugen/903/walk2_synth.png",
+      "../extracted/mugen/903/walk3_synth.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/903/front_0060.png",
      "walk": [
-      "../extracted/mugen/903/walk0_0053.png",
-      "../extracted/mugen/903/walk1_0054.png",
-      "../extracted/mugen/903/walk2_0055.png",
-      "../extracted/mugen/903/walk3_0056.png"
+      "../extracted/mugen/903/walk0_0076.png",
+      "../extracted/mugen/903/walk1_0050.png",
+      "../extracted/mugen/903/walk2_synth.png",
+      "../extracted/mugen/903/walk3_synth.png"
      ]
     },
     "3": {
@@ -188,7 +188,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Rock Lee",
-   "_quadros": "parado 0005; andar 0047/0048/0049 (real4); olha para a direita; lado ambiguo (conf 0.07): assumido direita; Sul = quadro de frente (arquivo 0024, classificado 'frente'); sintese de costas: pele~(166, 94, 30) cabelo~(0, 0, 0)",
+   "_quadros": "parado 0005; andar 0045/0048/0055 (real4); olha para a direita; REJEITADO quadro 47 (real4): centroide da cabeca desloca 11.2px do idle (tolerancia 4.3px) — pose de golpe/chute provavel -> 45; REJEITADO quadro 49 (real4): centroide da cabeca desloca 4.4px do idle (tolerancia 4.3px) — pose de golpe/chute provavel -> 55; lado ambiguo (conf 0.07): assumido direita; frente DESLIGADA a mao (override): pose de golpe/chute/pulo na revisao visual; Sul repete o perfil (Leste); sintese de costas: pele~(166, 94, 30) cabelo~(0, 0, 0); REJEITADOS: real4#0 47->45; real4#2 49->55",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -204,19 +204,19 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/904/idle_0005.png",
      "walk": [
-      "../extracted/mugen/904/walk0_0047.png",
+      "../extracted/mugen/904/walk0_0045.png",
       "../extracted/mugen/904/walk1_0048.png",
-      "../extracted/mugen/904/walk2_0049.png",
+      "../extracted/mugen/904/walk2_0055.png",
       "../extracted/mugen/904/walk3_0050.png"
      ]
     },
     "2": {
-     "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/904/front_0024.png",
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/904/idle_0005.png",
      "walk": [
-      "../extracted/mugen/904/walk0_0047.png",
+      "../extracted/mugen/904/walk0_0045.png",
       "../extracted/mugen/904/walk1_0048.png",
-      "../extracted/mugen/904/walk2_0049.png",
+      "../extracted/mugen/904/walk2_0055.png",
       "../extracted/mugen/904/walk3_0050.png"
      ]
     },
@@ -232,7 +232,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Tenten",
-   "_quadros": "parado 0005; andar 0113/0114/0115 (real4); olha para a direita; Sul = quadro de frente (arquivo 0192, classificado 'frente'); sintese de costas: pele~(206, 136, 74) cabelo~(12, 12, 20)",
+   "_quadros": "parado 0005; andar 0113/0114/0115 (real4); olha para a direita; frente DESLIGADA a mao (override): pose de golpe/chute/pulo na revisao visual; Sul repete o perfil (Leste); sintese de costas: pele~(206, 136, 74) cabelo~(12, 12, 20)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -255,8 +255,8 @@
      ]
     },
     "2": {
-     "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/905/front_0192.png",
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/905/idle_0005.png",
      "walk": [
       "../extracted/mugen/905/walk0_0113.png",
       "../extracted/mugen/905/walk1_0114.png",
@@ -276,7 +276,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Kakashi",
-   "_quadros": "parado 0004; andar 0028/0029/0030 (real4); olha para a direita; Sul = quadro de frente (arquivo 0020, classificado 'frente'); sintese de costas: pele~(222, 176, 143) cabelo~(111, 112, 119)",
+   "_quadros": "parado 0004; andar synth:31/0029/0030 (real4); olha para a direita; REJEITADO quadro 28 (real4): muito diferente do proximo quadro do ciclo (32% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 31); REJEITADO quadro 31 (real4): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 30); frente DESLIGADA a mao (override): pose de golpe/chute/pulo na revisao visual; Sul repete o perfil (Leste); cor de cabelo AJUSTADA A MAO (override): (195, 198, 206); sintese de costas: pele~(222, 176, 143) cabelo~(195, 198, 206); REJEITADOS: real4#0 28->synth (deslocamento de pernas sobre 31); real4#3 31->synth (deslocamento de pernas sobre 30)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -292,20 +292,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/906/idle_0004.png",
      "walk": [
-      "../extracted/mugen/906/walk0_0028.png",
+      "../extracted/mugen/906/walk0_synth.png",
       "../extracted/mugen/906/walk1_0029.png",
       "../extracted/mugen/906/walk2_0030.png",
-      "../extracted/mugen/906/walk3_0031.png"
+      "../extracted/mugen/906/walk3_synth.png"
      ]
     },
     "2": {
-     "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/906/front_0020.png",
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/906/idle_0004.png",
      "walk": [
-      "../extracted/mugen/906/walk0_0028.png",
+      "../extracted/mugen/906/walk0_synth.png",
       "../extracted/mugen/906/walk1_0029.png",
       "../extracted/mugen/906/walk2_0030.png",
-      "../extracted/mugen/906/walk3_0031.png"
+      "../extracted/mugen/906/walk3_synth.png"
      ]
     },
     "3": {
@@ -320,7 +320,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Minato",
-   "_quadros": "parado 0003; andar 0003/0004/0005 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0076, classificado 'frente'); sintese de costas: pele~(243, 216, 206) cabelo~(233, 209, 7)",
+   "_quadros": "parado 0003; andar 0003/0004/synth:4 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 5 (real3): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 4); Sul = quadro 3/4 virado (arquivo 0017, classificado '3/4'); sintese de costas: pele~(243, 216, 206) cabelo~(233, 209, 7); REJEITADOS: real3#2 5->synth (deslocamento de pernas sobre 4)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -338,17 +338,17 @@
      "walk": [
       "../extracted/mugen/907/walk0_0003.png",
       "../extracted/mugen/907/walk1_0004.png",
-      "../extracted/mugen/907/walk2_0005.png",
+      "../extracted/mugen/907/walk2_synth.png",
       "../extracted/mugen/907/walk3_synth.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/907/front_0076.png",
+     "idle": "../extracted/mugen/907/front_0017.png",
      "walk": [
       "../extracted/mugen/907/walk0_0003.png",
       "../extracted/mugen/907/walk1_0004.png",
-      "../extracted/mugen/907/walk2_0005.png",
+      "../extracted/mugen/907/walk2_synth.png",
       "../extracted/mugen/907/walk3_synth.png"
      ]
     },
@@ -364,7 +364,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Minato Edo",
-   "_quadros": "parado 0005; andar 0005/0006/0007 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0070, classificado 'frente'); sintese de costas: pele~(243, 216, 206) cabelo~(233, 209, 7)",
+   "_quadros": "parado 0005; andar 0005/0006/synth:6 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 7 (real3): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 6); Sul = quadro 3/4 virado (arquivo 0009, classificado '3/4'); sintese de costas: pele~(243, 216, 206) cabelo~(233, 209, 7); REJEITADOS: real3#2 7->synth (deslocamento de pernas sobre 6)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -382,17 +382,17 @@
      "walk": [
       "../extracted/mugen/908/walk0_0005.png",
       "../extracted/mugen/908/walk1_0006.png",
-      "../extracted/mugen/908/walk2_0007.png",
+      "../extracted/mugen/908/walk2_synth.png",
       "../extracted/mugen/908/walk3_synth.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/908/front_0070.png",
+     "idle": "../extracted/mugen/908/front_0009.png",
      "walk": [
       "../extracted/mugen/908/walk0_0005.png",
       "../extracted/mugen/908/walk1_0006.png",
-      "../extracted/mugen/908/walk2_0007.png",
+      "../extracted/mugen/908/walk2_synth.png",
       "../extracted/mugen/908/walk3_synth.png"
      ]
     },
@@ -408,7 +408,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Killer Bee",
-   "_quadros": "parado 0006; andar 0070/0071/0072 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0047, classificado 'frente'); sintese de costas: pele~(125, 98, 77) cabelo~(2, 2, 2)",
+   "_quadros": "parado 0006; andar synth:65/synth:72/synth:65 (real4); olha para a esquerda (tudo espelhado); REJEITADO quadro 73 (real4): centroide da cabeca desloca 7.9px do idle (tolerancia 5.4px) — pose de golpe/chute provavel -> 65; REJEITADO quadro 70 (real4): largura 54px > 1.25x a largura do idle (43px); centroide da cabeca desloca 12.3px do idle (tolerancia 5.4px) — pose de golpe/chute provavel; muito diferente do proximo quadro do ciclo (39% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 65); REJEITADO quadro 71 (real4): centroide da cabeca desloca 13.8px do idle (tolerancia 5.4px) — pose de golpe/chute provavel; muito diferente do proximo quadro do ciclo (35% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 72); REJEITADO quadro 72 (real4): largura 57px > 1.25x a largura do idle (43px); centroide da cabeca desloca 14.0px do idle (tolerancia 5.4px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 65); REJEITADO quadro 65 (real4): muito diferente do proximo quadro do ciclo (29% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre idle(6)); Sul = quadro de frente (arquivo 0047, classificado 'frente'); cor de cabelo AJUSTADA A MAO (override): (225, 195, 110); sintese de costas: pele~(168, 136, 112) cabelo~(225, 195, 110); REJEITADOS: real4#3 73->65; real4#0 70->synth (deslocamento de pernas sobre 65); real4#1 71->synth (deslocamento de pernas sobre 72); real4#2 72->synth (deslocamento de pernas sobre 65); real4#3 65->synth (deslocamento de pernas sobre idle(6))",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -428,19 +428,19 @@
      },
      "walk": [
       {
-       "src": "../extracted/mugen/909/walk0_0070.png",
+       "src": "../extracted/mugen/909/walk0_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk1_0071.png",
+       "src": "../extracted/mugen/909/walk1_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk2_0072.png",
+       "src": "../extracted/mugen/909/walk2_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk3_0073.png",
+       "src": "../extracted/mugen/909/walk3_synth.png",
        "mirror": true
       }
      ]
@@ -450,19 +450,19 @@
      "idle": "../extracted/mugen/909/front_0047.png",
      "walk": [
       {
-       "src": "../extracted/mugen/909/walk0_0070.png",
+       "src": "../extracted/mugen/909/walk0_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk1_0071.png",
+       "src": "../extracted/mugen/909/walk1_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk2_0072.png",
+       "src": "../extracted/mugen/909/walk2_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/909/walk3_0073.png",
+       "src": "../extracted/mugen/909/walk3_synth.png",
        "mirror": true
       }
      ]
@@ -479,7 +479,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Itachi",
-   "_quadros": "parado 0005; andar 0124/0125/0126 (real4); olha para a direita; Sul = quadro de frente (arquivo 0113, classificado 'frente'); sintese de costas: pele~(160, 57, 69) cabelo~(0, 0, 0)",
+   "_quadros": "parado 0005; andar 0132/0133/0136 (real4); olha para a direita; Sul = quadro de frente (arquivo 0113, classificado 'frente'); sintese de costas: pele~(160, 57, 69) cabelo~(0, 0, 0)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -495,20 +495,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/910/idle_0005.png",
      "walk": [
-      "../extracted/mugen/910/walk0_0124.png",
-      "../extracted/mugen/910/walk1_0125.png",
-      "../extracted/mugen/910/walk2_0126.png",
-      "../extracted/mugen/910/walk3_0127.png"
+      "../extracted/mugen/910/walk0_0132.png",
+      "../extracted/mugen/910/walk1_0133.png",
+      "../extracted/mugen/910/walk2_0136.png",
+      "../extracted/mugen/910/walk3_0137.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/910/front_0113.png",
      "walk": [
-      "../extracted/mugen/910/walk0_0124.png",
-      "../extracted/mugen/910/walk1_0125.png",
-      "../extracted/mugen/910/walk2_0126.png",
-      "../extracted/mugen/910/walk3_0127.png"
+      "../extracted/mugen/910/walk0_0132.png",
+      "../extracted/mugen/910/walk1_0133.png",
+      "../extracted/mugen/910/walk2_0136.png",
+      "../extracted/mugen/910/walk3_0137.png"
      ]
     },
     "3": {
@@ -523,7 +523,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Pain",
-   "_quadros": "parado 0008; andar 0036/0037/0038 (real4); olha para a direita; Sul = quadro de frente (arquivo 0009, classificado 'frente'); sintese de costas: pele~(231, 66, 33) cabelo~(106, 16, 19)",
+   "_quadros": "parado 0008; andar 0036/0008/0053 (real4); olha para a direita; REJEITADO quadro 37 (real4): altura 61px difere do idle 57px (tolerancia 3.6px); largura 30px > 1.25x a largura do idle (23px) -> 8; REJEITADO quadro 38 (real4): largura 32px > 1.25x a largura do idle (23px); centroide da cabeca desloca 7.6px do idle (tolerancia 5.3px) — pose de golpe/chute provavel -> 53; REJEITADO quadro 40 (real4): largura 32px > 1.25x a largura do idle (23px) -> 83; Sul = quadro de frente (arquivo 0009, classificado 'frente'); sintese de costas: pele~(231, 66, 33) cabelo~(3, 1, 1); REJEITADOS: real4#1 37->8; real4#2 38->53; real4#3 40->83",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -540,9 +540,9 @@
      "idle": "../extracted/mugen/911/idle_0008.png",
      "walk": [
       "../extracted/mugen/911/walk0_0036.png",
-      "../extracted/mugen/911/walk1_0037.png",
-      "../extracted/mugen/911/walk2_0038.png",
-      "../extracted/mugen/911/walk3_0040.png"
+      "../extracted/mugen/911/walk1_0008.png",
+      "../extracted/mugen/911/walk2_0053.png",
+      "../extracted/mugen/911/walk3_0083.png"
      ]
     },
     "2": {
@@ -550,9 +550,9 @@
      "idle": "../extracted/mugen/911/front_0009.png",
      "walk": [
       "../extracted/mugen/911/walk0_0036.png",
-      "../extracted/mugen/911/walk1_0037.png",
-      "../extracted/mugen/911/walk2_0038.png",
-      "../extracted/mugen/911/walk3_0040.png"
+      "../extracted/mugen/911/walk1_0008.png",
+      "../extracted/mugen/911/walk2_0053.png",
+      "../extracted/mugen/911/walk3_0083.png"
      ]
     },
     "3": {
@@ -567,7 +567,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Obito",
-   "_quadros": "parado 0003; andar 0082/0083/0084 (real4); olha para a direita; lado ambiguo (conf 0.14): assumido direita; Sul = quadro de frente (arquivo 0087, classificado 'frente'); sintese de costas: pele~(204, 157, 140) cabelo~(2, 2, 3)",
+   "_quadros": "parado 0003; andar synth:87/0083/0084 (real4); olha para a direita; REJEITADO quadro 85 (real4): largura 44px > 1.25x a largura do idle (27px); centroide da cabeca desloca 13.5px do idle (tolerancia 6.4px) — pose de golpe/chute provavel -> 87; REJEITADO quadro 82 (real4): muito diferente do proximo quadro do ciclo (31% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 87); lado ambiguo (conf 0.14): assumido direita; Sul = quadro de frente (arquivo 0087, classificado 'frente'); sintese de costas: pele~(204, 157, 140) cabelo~(2, 2, 3); REJEITADOS: real4#3 85->87; real4#0 82->synth (deslocamento de pernas sobre 87)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -583,20 +583,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/912/idle_0003.png",
      "walk": [
-      "../extracted/mugen/912/walk0_0082.png",
+      "../extracted/mugen/912/walk0_synth.png",
       "../extracted/mugen/912/walk1_0083.png",
       "../extracted/mugen/912/walk2_0084.png",
-      "../extracted/mugen/912/walk3_0085.png"
+      "../extracted/mugen/912/walk3_0087.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/912/front_0087.png",
      "walk": [
-      "../extracted/mugen/912/walk0_0082.png",
+      "../extracted/mugen/912/walk0_synth.png",
       "../extracted/mugen/912/walk1_0083.png",
       "../extracted/mugen/912/walk2_0084.png",
-      "../extracted/mugen/912/walk3_0085.png"
+      "../extracted/mugen/912/walk3_0087.png"
      ]
     },
     "3": {
@@ -611,7 +611,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Madara",
-   "_quadros": "parado 0005; andar 0025/0026/0027 (real4); olha para a esquerda (tudo espelhado); lado ambiguo (conf 0.10): assumido esquerda; Sul = quadro de frente (arquivo 0100, classificado 'frente'); sintese de costas: pele~(176, 42, 64) cabelo~(6, 7, 8)",
+   "_quadros": "parado 0005; andar 0055/0056/0057 (real4); olha para a direita; lado ambiguo (conf 0.06): assumido direita; Sul = quadro de frente (arquivo 0100, classificado 'frente'); sintese de costas: pele~(176, 42, 64) cabelo~(6, 6, 7)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -625,49 +625,22 @@
     },
     "1": {
      "_dir": "leste — perfil olhando para a direita",
-     "idle": {
-      "src": "../extracted/mugen/913/idle_0005.png",
-      "mirror": true
-     },
+     "idle": "../extracted/mugen/913/idle_0005.png",
      "walk": [
-      {
-       "src": "../extracted/mugen/913/walk0_0025.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk1_0026.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk2_0027.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk3_0028.png",
-       "mirror": true
-      }
+      "../extracted/mugen/913/walk0_0055.png",
+      "../extracted/mugen/913/walk1_0056.png",
+      "../extracted/mugen/913/walk2_0057.png",
+      "../extracted/mugen/913/walk3_0058.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/913/front_0100.png",
      "walk": [
-      {
-       "src": "../extracted/mugen/913/walk0_0025.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk1_0026.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk2_0027.png",
-       "mirror": true
-      },
-      {
-       "src": "../extracted/mugen/913/walk3_0028.png",
-       "mirror": true
-      }
+      "../extracted/mugen/913/walk0_0055.png",
+      "../extracted/mugen/913/walk1_0056.png",
+      "../extracted/mugen/913/walk2_0057.png",
+      "../extracted/mugen/913/walk3_0058.png"
      ]
     },
     "3": {
@@ -682,7 +655,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sasuke Taka",
-   "_quadros": "parado 0002; andar 0082/0083/0084 (real4); olha para a direita; Sul = quadro de frente (arquivo 0059, classificado 'frente'); sintese de costas: pele~(216, 144, 56) cabelo~(5, 5, 5)",
+   "_quadros": "parado 0002; andar 0087/0071/0072 (real4); olha para a direita; REJEITADO quadro 82 (real4): 9% de pixels de efeito fora da paleta do personagem -> 87; REJEITADO quadro 83 (real4): 10% de pixels de efeito fora da paleta do personagem -> 71; REJEITADO quadro 84 (real4): 11% de pixels de efeito fora da paleta do personagem -> 72; REJEITADO quadro 85 (real4): 7% de pixels de efeito fora da paleta do personagem -> synth (deslocamento de pernas sobre 72); Sul = quadro 3/4 virado (arquivo 0087, classificado '3/4'); sintese de costas: pele~(216, 144, 56) cabelo~(5, 5, 5); REJEITADOS: real4#0 82->87; real4#1 83->71; real4#2 84->72; real4#3 85->synth (deslocamento de pernas sobre 72)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -698,20 +671,20 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/914/idle_0002.png",
      "walk": [
-      "../extracted/mugen/914/walk0_0082.png",
-      "../extracted/mugen/914/walk1_0083.png",
-      "../extracted/mugen/914/walk2_0084.png",
-      "../extracted/mugen/914/walk3_0085.png"
+      "../extracted/mugen/914/walk0_0087.png",
+      "../extracted/mugen/914/walk1_0071.png",
+      "../extracted/mugen/914/walk2_0072.png",
+      "../extracted/mugen/914/walk3_synth.png"
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/914/front_0059.png",
+     "idle": "../extracted/mugen/914/front_0087.png",
      "walk": [
-      "../extracted/mugen/914/walk0_0082.png",
-      "../extracted/mugen/914/walk1_0083.png",
-      "../extracted/mugen/914/walk2_0084.png",
-      "../extracted/mugen/914/walk3_0085.png"
+      "../extracted/mugen/914/walk0_0087.png",
+      "../extracted/mugen/914/walk1_0071.png",
+      "../extracted/mugen/914/walk2_0072.png",
+      "../extracted/mugen/914/walk3_synth.png"
      ]
     },
     "3": {
@@ -726,7 +699,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sasuke Akatsuki",
-   "_quadros": "parado 0003; andar 0002/0003/0004 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0064, classificado 'frente'); sintese de costas: pele~(237, 208, 192) cabelo~(8, 8, 8)",
+   "_quadros": "parado 0003; andar synth:4/synth:4/0004 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 2 (real3): quase identico ao proximo quadro do ciclo (3% < 3%): duplicado -> synth (deslocamento de pernas sobre 4); REJEITADO quadro 3 (real3): quase identico ao proximo quadro do ciclo (2% < 3%): duplicado -> synth (deslocamento de pernas sobre 4); Sul = quadro de frente (arquivo 0064, classificado 'frente'); sintese de costas: pele~(237, 208, 192) cabelo~(8, 8, 8); REJEITADOS: real3#0 2->synth (deslocamento de pernas sobre 4); real3#1 3->synth (deslocamento de pernas sobre 4)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -742,8 +715,8 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/915/idle_0003.png",
      "walk": [
-      "../extracted/mugen/915/walk0_0002.png",
-      "../extracted/mugen/915/walk1_0003.png",
+      "../extracted/mugen/915/walk0_synth.png",
+      "../extracted/mugen/915/walk1_synth.png",
       "../extracted/mugen/915/walk2_0004.png",
       "../extracted/mugen/915/walk3_synth.png"
      ]
@@ -752,8 +725,8 @@
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/915/front_0064.png",
      "walk": [
-      "../extracted/mugen/915/walk0_0002.png",
-      "../extracted/mugen/915/walk1_0003.png",
+      "../extracted/mugen/915/walk0_synth.png",
+      "../extracted/mugen/915/walk1_synth.png",
       "../extracted/mugen/915/walk2_0004.png",
       "../extracted/mugen/915/walk3_synth.png"
      ]
@@ -770,7 +743,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sasuke Rinnegan",
-   "_quadros": "parado 0006; andar 0057/0058/0059 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0063, classificado 'frente'); sintese de costas: pele~(206, 163, 157) cabelo~(5, 5, 5)",
+   "_quadros": "parado 0006; andar 0191/0192/0193 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0063, classificado 'frente'); sintese de costas: pele~(205, 163, 156) cabelo~(5, 5, 5)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -790,19 +763,19 @@
      },
      "walk": [
       {
-       "src": "../extracted/mugen/916/walk0_0057.png",
+       "src": "../extracted/mugen/916/walk0_0191.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk1_0058.png",
+       "src": "../extracted/mugen/916/walk1_0192.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk2_0059.png",
+       "src": "../extracted/mugen/916/walk2_0193.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk3_0060.png",
+       "src": "../extracted/mugen/916/walk3_0194.png",
        "mirror": true
       }
      ]
@@ -812,19 +785,19 @@
      "idle": "../extracted/mugen/916/front_0063.png",
      "walk": [
       {
-       "src": "../extracted/mugen/916/walk0_0057.png",
+       "src": "../extracted/mugen/916/walk0_0191.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk1_0058.png",
+       "src": "../extracted/mugen/916/walk1_0192.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk2_0059.png",
+       "src": "../extracted/mugen/916/walk2_0193.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/916/walk3_0060.png",
+       "src": "../extracted/mugen/916/walk3_0194.png",
        "mirror": true
       }
      ]
@@ -841,7 +814,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sakura",
-   "_quadros": "parado 0005; andar 0017/0018/0019 (real4); olha para a direita; Sul = quadro de frente (arquivo 0060, classificado 'frente'); sintese de costas: pele~(211, 142, 106) cabelo~(128, 16, 56)",
+   "_quadros": "parado 0005; andar 0039/0040/0041 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0060, classificado 'frente'); cor de cabelo AJUSTADA A MAO (override): (235, 120, 170); sintese de costas: pele~(211, 142, 106) cabelo~(235, 120, 170)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -855,22 +828,49 @@
     },
     "1": {
      "_dir": "leste — perfil olhando para a direita",
-     "idle": "../extracted/mugen/917/idle_0005.png",
+     "idle": {
+      "src": "../extracted/mugen/917/idle_0005.png",
+      "mirror": true
+     },
      "walk": [
-      "../extracted/mugen/917/walk0_0017.png",
-      "../extracted/mugen/917/walk1_0018.png",
-      "../extracted/mugen/917/walk2_0019.png",
-      "../extracted/mugen/917/walk3_0020.png"
+      {
+       "src": "../extracted/mugen/917/walk0_0039.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk1_0040.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk2_0041.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk3_0042.png",
+       "mirror": true
+      }
      ]
     },
     "2": {
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/917/front_0060.png",
      "walk": [
-      "../extracted/mugen/917/walk0_0017.png",
-      "../extracted/mugen/917/walk1_0018.png",
-      "../extracted/mugen/917/walk2_0019.png",
-      "../extracted/mugen/917/walk3_0020.png"
+      {
+       "src": "../extracted/mugen/917/walk0_0039.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk1_0040.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk2_0041.png",
+       "mirror": true
+      },
+      {
+       "src": "../extracted/mugen/917/walk3_0042.png",
+       "mirror": true
+      }
      ]
     },
     "3": {
@@ -885,7 +885,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Sakura The Last",
-   "_quadros": "parado 0004; andar 0112/0114/0115 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0381, classificado 'frente'); sintese de costas: pele~(231, 191, 188) cabelo~(17, 26, 36)",
+   "_quadros": "parado 0004; andar 0153/0114/0115 (real4); olha para a esquerda (tudo espelhado); REJEITADO quadro 112 (real4): altura 71px difere do idle 66px (tolerancia 4.1px) -> 153; REJEITADO quadro 116 (real4): altura 71px difere do idle 66px (tolerancia 4.1px) -> 108; frente DESLIGADA a mao (override): pose de golpe/chute/pulo na revisao visual; Sul repete o perfil (Leste); sintese de costas: pele~(231, 191, 188) cabelo~(17, 26, 36); REJEITADOS: real4#0 112->153; real4#3 116->108",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -905,7 +905,7 @@
      },
      "walk": [
       {
-       "src": "../extracted/mugen/918/walk0_0112.png",
+       "src": "../extracted/mugen/918/walk0_0153.png",
        "mirror": true
       },
       {
@@ -917,17 +917,20 @@
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/918/walk3_0116.png",
+       "src": "../extracted/mugen/918/walk3_0108.png",
        "mirror": true
       }
      ]
     },
     "2": {
-     "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/918/front_0381.png",
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": {
+      "src": "../extracted/mugen/918/idle_0004.png",
+      "mirror": true
+     },
      "walk": [
       {
-       "src": "../extracted/mugen/918/walk0_0112.png",
+       "src": "../extracted/mugen/918/walk0_0153.png",
        "mirror": true
       },
       {
@@ -939,7 +942,7 @@
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/918/walk3_0116.png",
+       "src": "../extracted/mugen/918/walk3_0108.png",
        "mirror": true
       }
      ]
@@ -956,7 +959,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto Sennin",
-   "_quadros": "parado 0004; andar 0014/0015/0016 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0055, classificado 'frente'); sintese de costas: pele~(255, 125, 61) cabelo~(136, 70, 0)",
+   "_quadros": "parado 0004; andar synth:16/synth:16/synth:idle(4) (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 14 (real3): altura 47px difere do idle 55px (tolerancia 3.4px); centroide da cabeca desloca 17.2px do idle (tolerancia 5.2px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 16); REJEITADO quadro 15 (real3): altura 46px difere do idle 55px (tolerancia 3.4px); centroide da cabeca desloca 7.6px do idle (tolerancia 5.2px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 16); REJEITADO quadro 16 (real3): altura 46px difere do idle 55px (tolerancia 3.4px); centroide da cabeca desloca 10.3px do idle (tolerancia 5.2px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre idle(4)); Sul = quadro de frente (arquivo 0055, classificado 'frente'); sintese de costas: pele~(255, 125, 61) cabelo~(5, 5, 5); REJEITADOS: real3#0 14->synth (deslocamento de pernas sobre 16); real3#1 15->synth (deslocamento de pernas sobre 16); real3#2 16->synth (deslocamento de pernas sobre idle(4))",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -972,9 +975,9 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/919/idle_0004.png",
      "walk": [
-      "../extracted/mugen/919/walk0_0014.png",
-      "../extracted/mugen/919/walk1_0015.png",
-      "../extracted/mugen/919/walk2_0016.png",
+      "../extracted/mugen/919/walk0_synth.png",
+      "../extracted/mugen/919/walk1_synth.png",
+      "../extracted/mugen/919/walk2_synth.png",
       "../extracted/mugen/919/walk3_synth.png"
      ]
     },
@@ -982,9 +985,9 @@
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/919/front_0055.png",
      "walk": [
-      "../extracted/mugen/919/walk0_0014.png",
-      "../extracted/mugen/919/walk1_0015.png",
-      "../extracted/mugen/919/walk2_0016.png",
+      "../extracted/mugen/919/walk0_synth.png",
+      "../extracted/mugen/919/walk1_synth.png",
+      "../extracted/mugen/919/walk2_synth.png",
       "../extracted/mugen/919/walk3_synth.png"
      ]
     },
@@ -1000,7 +1003,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto KCM",
-   "_quadros": "parado 0005; andar 0019/0020/0021 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0004, classificado 'frente'); sintese de costas: pele~(212, 68, 24) cabelo~(247, 255, 98)",
+   "_quadros": "parado 0005; andar synth:21/synth:21/synth:idle(5) (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 19 (real3): altura 52px difere do idle 57px (tolerancia 3.6px) -> synth (deslocamento de pernas sobre 21); REJEITADO quadro 20 (real3): altura 51px difere do idle 57px (tolerancia 3.6px); muito diferente do proximo quadro do ciclo (39% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 21); REJEITADO quadro 21 (real3): altura 52px difere do idle 57px (tolerancia 3.6px); muito diferente do proximo quadro do ciclo (38% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre idle(5)); Sul = quadro de frente (arquivo 0004, classificado 'frente'); sintese de costas: pele~(212, 68, 24) cabelo~(247, 255, 98); REJEITADOS: real3#0 19->synth (deslocamento de pernas sobre 21); real3#1 20->synth (deslocamento de pernas sobre 21); real3#2 21->synth (deslocamento de pernas sobre idle(5))",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1016,9 +1019,9 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/920/idle_0005.png",
      "walk": [
-      "../extracted/mugen/920/walk0_0019.png",
-      "../extracted/mugen/920/walk1_0020.png",
-      "../extracted/mugen/920/walk2_0021.png",
+      "../extracted/mugen/920/walk0_synth.png",
+      "../extracted/mugen/920/walk1_synth.png",
+      "../extracted/mugen/920/walk2_synth.png",
       "../extracted/mugen/920/walk3_synth.png"
      ]
     },
@@ -1026,9 +1029,9 @@
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/920/front_0004.png",
      "walk": [
-      "../extracted/mugen/920/walk0_0019.png",
-      "../extracted/mugen/920/walk1_0020.png",
-      "../extracted/mugen/920/walk2_0021.png",
+      "../extracted/mugen/920/walk0_synth.png",
+      "../extracted/mugen/920/walk1_synth.png",
+      "../extracted/mugen/920/walk2_synth.png",
       "../extracted/mugen/920/walk3_synth.png"
      ]
     },
@@ -1044,7 +1047,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto 1 Calda",
-   "_quadros": "parado 0005; andar 0012/0013/0014 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0200, classificado 'frente'); sintese de costas: pele~(248, 192, 168) cabelo~(248, 16, 32)",
+   "_quadros": "parado 0005; andar synth:14/synth:14/synth:idle(5) (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 12 (real3): centroide da cabeca desloca 18.5px do idle (tolerancia 6.0px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 14); REJEITADO quadro 13 (real3): centroide da cabeca desloca 18.4px do idle (tolerancia 6.0px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 14); REJEITADO quadro 14 (real3): centroide da cabeca desloca 20.2px do idle (tolerancia 6.0px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre idle(5)); Sul = quadro de frente (arquivo 0200, classificado 'frente'); sintese de costas: pele~(248, 192, 168) cabelo~(248, 16, 32); REJEITADOS: real3#0 12->synth (deslocamento de pernas sobre 14); real3#1 13->synth (deslocamento de pernas sobre 14); real3#2 14->synth (deslocamento de pernas sobre idle(5))",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1060,9 +1063,9 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/921/idle_0005.png",
      "walk": [
-      "../extracted/mugen/921/walk0_0012.png",
-      "../extracted/mugen/921/walk1_0013.png",
-      "../extracted/mugen/921/walk2_0014.png",
+      "../extracted/mugen/921/walk0_synth.png",
+      "../extracted/mugen/921/walk1_synth.png",
+      "../extracted/mugen/921/walk2_synth.png",
       "../extracted/mugen/921/walk3_synth.png"
      ]
     },
@@ -1070,9 +1073,9 @@
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/921/front_0200.png",
      "walk": [
-      "../extracted/mugen/921/walk0_0012.png",
-      "../extracted/mugen/921/walk1_0013.png",
-      "../extracted/mugen/921/walk2_0014.png",
+      "../extracted/mugen/921/walk0_synth.png",
+      "../extracted/mugen/921/walk1_synth.png",
+      "../extracted/mugen/921/walk2_synth.png",
       "../extracted/mugen/921/walk3_synth.png"
      ]
     },
@@ -1088,7 +1091,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto 4 Caldas",
-   "_quadros": "parado 0076; andar 0079/0081/0082 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0508, classificado 'frente'); sintese de costas: pele~(200, 160, 130) cabelo~(222, 57, 0)",
+   "_quadros": "parado 0076; andar synth:82/synth:82/synth:idle(76) (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 79 (real3): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 82); REJEITADO quadro 81 (real3): altura 47px difere do idle 61px (tolerancia 4.5px); centroide da cabeca desloca 12.5px do idle (tolerancia 6.8px) — pose de golpe/chute provavel -> synth (deslocamento de pernas sobre 82); REJEITADO quadro 82 (real3): muito diferente do proximo quadro do ciclo (30% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre idle(76)); sem quadro de frente/3-4 no rip: Sul repete o perfil (Leste); sintese de costas: pele~(200, 160, 130) cabelo~(222, 57, 0); REJEITADOS: real3#0 79->synth (deslocamento de pernas sobre 82); real3#1 81->synth (deslocamento de pernas sobre 82); real3#2 82->synth (deslocamento de pernas sobre idle(76))",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1104,19 +1107,19 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/922/idle_0076.png",
      "walk": [
-      "../extracted/mugen/922/walk0_0079.png",
-      "../extracted/mugen/922/walk1_0081.png",
-      "../extracted/mugen/922/walk2_0082.png",
+      "../extracted/mugen/922/walk0_synth.png",
+      "../extracted/mugen/922/walk1_synth.png",
+      "../extracted/mugen/922/walk2_synth.png",
       "../extracted/mugen/922/walk3_synth.png"
      ]
     },
     "2": {
-     "_dir": "sul — quadro de frente/3-4 do proprio rip",
-     "idle": "../extracted/mugen/922/front_0508.png",
+     "_dir": "sul — o material e lateral: mesmo perfil do leste",
+     "idle": "../extracted/mugen/922/idle_0076.png",
      "walk": [
-      "../extracted/mugen/922/walk0_0079.png",
-      "../extracted/mugen/922/walk1_0081.png",
-      "../extracted/mugen/922/walk2_0082.png",
+      "../extracted/mugen/922/walk0_synth.png",
+      "../extracted/mugen/922/walk1_synth.png",
+      "../extracted/mugen/922/walk2_synth.png",
       "../extracted/mugen/922/walk3_synth.png"
      ]
     },
@@ -1132,7 +1135,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto 6 Caldas",
-   "_quadros": "parado 0022; andar 0030/0031/0032 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); sem quadro de frente/3-4 no rip: Sul repete o perfil (Leste); sintese de costas: pele~(200, 160, 130) cabelo~(198, 65, 0)",
+   "_quadros": "parado 0022; andar 0022/0033/synth:33 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 30 (real3): altura 46px difere do idle 57px (tolerancia 5.5px) -> 22; REJEITADO quadro 31 (real3): altura 45px difere do idle 57px (tolerancia 5.5px); centroide da cabeca desloca 10.4px do idle (tolerancia 8.2px) — pose de golpe/chute provavel -> 33; REJEITADO quadro 32 (real3): altura 47px difere do idle 57px (tolerancia 5.5px); centroide da cabeca desloca 9.0px do idle (tolerancia 8.2px) — pose de golpe/chute provavel -> 21; REJEITADO quadro 21 (real3): quase identico ao proximo quadro do ciclo (1% < 3%): duplicado -> synth (deslocamento de pernas sobre 33); sem quadro de frente/3-4 no rip: Sul repete o perfil (Leste); sintese de costas: pele~(200, 160, 130) cabelo~(254, 98, 0); REJEITADOS: real3#0 30->22; real3#1 31->33; real3#2 32->21; real3#2 21->synth (deslocamento de pernas sobre 33)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1148,9 +1151,9 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/923/idle_0022.png",
      "walk": [
-      "../extracted/mugen/923/walk0_0030.png",
-      "../extracted/mugen/923/walk1_0031.png",
-      "../extracted/mugen/923/walk2_0032.png",
+      "../extracted/mugen/923/walk0_0022.png",
+      "../extracted/mugen/923/walk1_0033.png",
+      "../extracted/mugen/923/walk2_synth.png",
       "../extracted/mugen/923/walk3_synth.png"
      ]
     },
@@ -1158,9 +1161,9 @@
      "_dir": "sul — o material e lateral: mesmo perfil do leste",
      "idle": "../extracted/mugen/923/idle_0022.png",
      "walk": [
-      "../extracted/mugen/923/walk0_0030.png",
-      "../extracted/mugen/923/walk1_0031.png",
-      "../extracted/mugen/923/walk2_0032.png",
+      "../extracted/mugen/923/walk0_0022.png",
+      "../extracted/mugen/923/walk1_0033.png",
+      "../extracted/mugen/923/walk2_synth.png",
       "../extracted/mugen/923/walk3_synth.png"
      ]
     },
@@ -1176,7 +1179,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto Ashura",
-   "_quadros": "parado 0004; andar 0020/0021/0022 (real4); olha para a esquerda (tudo espelhado); Sul = quadro de frente (arquivo 0135, classificado 'frente'); sintese de costas: pele~(255, 100, 33) cabelo~(255, 251, 138)",
+   "_quadros": "parado 0004; andar 0020/synth:20/synth:23 (real4); olha para a esquerda (tudo espelhado); REJEITADO quadro 21 (real4): muito diferente do proximo quadro do ciclo (33% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 20); REJEITADO quadro 22 (real4): altura 52px difere do idle 58px (tolerancia 3.6px); largura 53px > 1.25x a largura do idle (35px); centroide da cabeca desloca 7.3px do idle (tolerancia 5.4px) — pose de golpe/chute provavel; muito diferente do proximo quadro do ciclo (40% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 23); REJEITADO quadro 23 (real4): muito diferente do proximo quadro do ciclo (34% > 28%): pose distinta (golpe/agachamento/pulo provavel) -> synth (deslocamento de pernas sobre 20); Sul = quadro de frente (arquivo 0135, classificado 'frente'); sintese de costas: pele~(255, 100, 33) cabelo~(18, 18, 21); REJEITADOS: real4#1 21->synth (deslocamento de pernas sobre 20); real4#2 22->synth (deslocamento de pernas sobre 23); real4#3 23->synth (deslocamento de pernas sobre 20)",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1200,15 +1203,15 @@
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk1_0021.png",
+       "src": "../extracted/mugen/924/walk1_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk2_0022.png",
+       "src": "../extracted/mugen/924/walk2_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk3_0023.png",
+       "src": "../extracted/mugen/924/walk3_synth.png",
        "mirror": true
       }
      ]
@@ -1222,15 +1225,15 @@
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk1_0021.png",
+       "src": "../extracted/mugen/924/walk1_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk2_0022.png",
+       "src": "../extracted/mugen/924/walk2_synth.png",
        "mirror": true
       },
       {
-       "src": "../extracted/mugen/924/walk3_0023.png",
+       "src": "../extracted/mugen/924/walk3_synth.png",
        "mirror": true
       }
      ]
@@ -1247,7 +1250,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto Girl",
-   "_quadros": "parado 0006; andar 0005/0006/0007 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); Sul = quadro de frente (arquivo 0197, classificado 'frente'); sintese de costas: pele~(183, 82, 22) cabelo~(3, 3, 4)",
+   "_quadros": "parado 0006; andar 0110/0006/0133 (real3); olha para a direita; so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas); REJEITADO quadro 5 (real3): altura 47px difere do idle 55px (tolerancia 3.4px) -> 110; REJEITADO quadro 7 (real3): altura 51px difere do idle 55px (tolerancia 3.4px); largura 37px > 1.25x a largura do idle (28px) -> 133; Sul = quadro de frente (arquivo 0197, classificado 'frente'); sintese de costas: pele~(182, 82, 22) cabelo~(3, 3, 4); REJEITADOS: real3#0 5->110; real3#2 7->133",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1263,9 +1266,9 @@
      "_dir": "leste — perfil olhando para a direita",
      "idle": "../extracted/mugen/925/idle_0006.png",
      "walk": [
-      "../extracted/mugen/925/walk0_0005.png",
+      "../extracted/mugen/925/walk0_0110.png",
       "../extracted/mugen/925/walk1_0006.png",
-      "../extracted/mugen/925/walk2_0007.png",
+      "../extracted/mugen/925/walk2_0133.png",
       "../extracted/mugen/925/walk3_synth.png"
      ]
     },
@@ -1273,9 +1276,9 @@
      "_dir": "sul — quadro de frente/3-4 do proprio rip",
      "idle": "../extracted/mugen/925/front_0197.png",
      "walk": [
-      "../extracted/mugen/925/walk0_0005.png",
+      "../extracted/mugen/925/walk0_0110.png",
       "../extracted/mugen/925/walk1_0006.png",
-      "../extracted/mugen/925/walk2_0007.png",
+      "../extracted/mugen/925/walk2_0133.png",
       "../extracted/mugen/925/walk3_synth.png"
      ]
     },
@@ -1291,7 +1294,7 @@
    "tiles": 1,
    "duration": 200,
    "_personagem": "Naruto Kid Fox",
-   "_quadros": "parado 0001; andar 0013/0014/0015 (real4); olha para a direita; Sul = quadro de frente (arquivo 0044, classificado 'frente'); sintese de costas: pele~(132, 66, 25) cabelo~(255, 0, 0)",
+   "_quadros": "parado 0001; andar 0013/0003/0015 (real4); olha para a direita; REJEITADO quadro 14 (real4): altura 59px difere do idle 63px (tolerancia 3.9px) -> 3; REJEITADO quadro 16 (real4): altura 58px difere do idle 63px (tolerancia 3.9px) -> 44; Sul = quadro de frente (arquivo 0044, classificado 'frente'); sintese de costas: pele~(132, 66, 25) cabelo~(255, 0, 0); REJEITADOS: real4#1 14->3; real4#3 16->44",
    "directions": {
     "0": {
      "_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura da regiao do rosto na cor do cabelo + escurecimento; ver char_synth.synthesize_back). O rip nao tem costas real.",
@@ -1308,9 +1311,9 @@
      "idle": "../extracted/mugen/926/idle_0001.png",
      "walk": [
       "../extracted/mugen/926/walk0_0013.png",
-      "../extracted/mugen/926/walk1_0014.png",
+      "../extracted/mugen/926/walk1_0003.png",
       "../extracted/mugen/926/walk2_0015.png",
-      "../extracted/mugen/926/walk3_0016.png"
+      "../extracted/mugen/926/walk3_0044.png"
      ]
     },
     "2": {
@@ -1318,9 +1321,9 @@
      "idle": "../extracted/mugen/926/front_0044.png",
      "walk": [
       "../extracted/mugen/926/walk0_0013.png",
-      "../extracted/mugen/926/walk1_0014.png",
+      "../extracted/mugen/926/walk1_0003.png",
       "../extracted/mugen/926/walk2_0015.png",
-      "../extracted/mugen/926/walk3_0016.png"
+      "../extracted/mugen/926/walk3_0044.png"
      ]
     },
     "3": {

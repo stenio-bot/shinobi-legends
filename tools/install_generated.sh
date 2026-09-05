@@ -24,6 +24,11 @@ cp "$GEN"/XML/outfits.xml "$TFS/XML/outfits.xml"
 cp "$GEN"/lib/naruto_json.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_villages.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_characters.lua "$TFS/lib/"
+cp "$GEN"/lib/naruto_ranks.lua "$TFS/lib/"
+cp "$GEN"/lib/naruto_rewards.lua "$TFS/lib/"
+# tarefas/diárias são opcionais (só existem se data/tasks.json / data/dailies.json existirem)
+[ -f "$GEN/lib/naruto_tasks.lua" ] && cp "$GEN/lib/naruto_tasks.lua" "$TFS/lib/" || rm -f "$TFS/lib/naruto_tasks.lua"
+[ -f "$GEN/lib/naruto_dailies.lua" ] && cp "$GEN/lib/naruto_dailies.lua" "$TFS/lib/" || rm -f "$TFS/lib/naruto_dailies.lua"
 
 # Blocos delimitados por marcadores: substitui se já existir, senão insere antes da tag de fechamento.
 inject() {  # inject <arquivo> <tag_fechamento> <arquivo_bloco>
@@ -79,4 +84,16 @@ grep -q "naruto_items" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_items
 grep -q "naruto_json" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_json.lua')" >> "$TFS/lib/lib.lua"
 grep -q "naruto_villages" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_villages.lua')" >> "$TFS/lib/lib.lua"
 grep -q "naruto_characters" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_characters.lua')" >> "$TFS/lib/lib.lua"
+grep -q "naruto_ranks" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_ranks.lua')" >> "$TFS/lib/lib.lua"
+grep -q "naruto_rewards" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_rewards.lua')" >> "$TFS/lib/lib.lua"
+if [ -f "$TFS/lib/naruto_tasks.lua" ]; then
+  grep -q "naruto_tasks" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_tasks.lua')" >> "$TFS/lib/lib.lua"
+else
+  sed -i.bak "/naruto_tasks/d" "$TFS/lib/lib.lua" && rm -f "$TFS/lib/lib.lua.bak"
+fi
+if [ -f "$TFS/lib/naruto_dailies.lua" ]; then
+  grep -q "naruto_dailies" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_dailies.lua')" >> "$TFS/lib/lib.lua"
+else
+  sed -i.bak "/naruto_dailies/d" "$TFS/lib/lib.lua" && rm -f "$TFS/lib/lib.lua.bak"
+fi
 echo "instalado em $TFS"

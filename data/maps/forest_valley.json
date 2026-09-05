@@ -72,6 +72,30 @@
       "level_range": [1, 25],
       "note": "Arena de pedra 30x20 pro exame Chunin, teleporte de entrada na Academia Ninja (ACADEMY_GATE_TP). Coordenadas absolutas: x 1300-1329, y 1015-1034, centro (1314,1024,7).",
       "rect": [300, 15, 30, 20]
+    },
+    {
+      "name": "Costa das Marés",
+      "level_range": [12, 19],
+      "note": "NOVA (v2.1, tools/map/build_regions.py:build_coastal_tides). Vila de pescadores (4 cabanas) + praia + cais de madeira + arena do boss (Espadachim da Névoa) numa plataforma de pedra sobre a água + trecho de ponte inacabada (sabotada). Ligada à Vale da Folha por um ramal da trilha sul (extensão do caminho que hoje vai até o acampamento dos bandidos). Coordenadas absolutas (OTBM real, andar 7): x 1000-1049, y 1120-1169. Fronteira grama/areia é um corte reto (não existe par de borda grama<->areia em assets-src/sprites/tiles.json ainda).",
+      "rect": [340, 0, 50, 50]
+    },
+    {
+      "name": "Ruínas do Clã Marionetista",
+      "level_range": [25, 50],
+      "note": "Versão física COMPACTA (v2.1, tools/map/build_regions.py:build_ruins) — a zona 'Ruínas do Clã' acima é a versão abstrata usada pelo protótipo Godot (client-godot, não evolui mais); esta é a versão jogável de verdade no OTBM real. Complexo de paredes de pedra quebradas (5 grupos + 2 trechos de parede solta) com entulho (pedras/tocos/galhos), ligado à Floresta da Morte por um portão novo no muro leste (x=1199, y 1020-1021), e o Salão do Marionetista intacto no fundo leste com o boss. Coordenadas absolutas: x 1200-1249, y 1000-1049.",
+      "rect": [340, 55, 50, 50]
+    },
+    {
+      "name": "Montanha do Trovão",
+      "level_range": [50, 80],
+      "note": "Versão física COMPACTA (v2.1, tools/map/build_regions.py:build_mountain) — mesma ressalva da entrada 'Ruínas do Clã Marionetista' acima (a zona 'Montanha do Trovão' abaixo é a versão abstrata do protótipo Godot). Trilha de pedra sinuosa flanqueada por 'abismo' (água, intransponível) ligando ao fim das Ruínas; planalto no topo com os 2 bosses da Dupla Imortal e o portal gated (teleporte com actionid 45004, requer rank Anbu) para o Covil da Nuvem Vermelha. Coordenadas absolutas: x 1200-1249, y 1060-1109; portal em (1225,1103,7).",
+      "rect": [340, 110, 50, 50]
+    },
+    {
+      "name": "Covil da Nuvem Vermelha",
+      "level_range": [80, 100],
+      "note": "NOVA (v2.1, tools/map/build_regions.py:build_akatsuki_lair). Masmorra final ISOLADA (sem trilha a pé) — só alcançável pelo teleporte gated no topo da Montanha do Trovão (actionid 45004; o gate em si e a checagem de rank ficam a cargo do sistema de rank de outro agente, não implementado aqui). Hall de entrada + corredor + 4 salas de boss sequenciais (Vigia Ilusório, Mascarado das Sombras, Portador dos Seis Caminhos) + 1 sala final grande (Ancestral da Nuvem Vermelha). Coordenadas absolutas: x 1400-1449, y 1000-1049.",
+      "rect": [340, 165, 50, 50]
     }
   ],
   "spawns": [

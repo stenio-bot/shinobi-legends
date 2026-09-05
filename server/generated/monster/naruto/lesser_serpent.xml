@@ -29,5 +29,6 @@
 		<item id="2148" countmax="90" chance="100000"/>
 		<item id="5898" countmax="3" chance="45000"/>  <!-- snake_fang -->
 		<item id="8473" chance="20000"/>  <!-- antidote -->
+		<item id="2648" chance="5000"/>  <!-- calca_chuunin -->
 	</loot>
 </monster>

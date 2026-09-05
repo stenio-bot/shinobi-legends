@@ -32,3 +32,14 @@
 
 ## Economia (resumo, ver economia.md)
 Moeda: **ryo**. Itens têm `buy_price` (NPC vende) e `sell_price` (NPC compra, ~40% do buy).
+
+## Mapeamento para o TFS (ids vanilla)
+Todo item de `data/items/*.json` precisa de uma entrada em `data/tfs_mapping.json` (seção
+`items`: nosso id → id vanilla do Tibia 10.98, do mesmo tipo/slot — arma→arma, armadura
+corporal→body, capacete→head, pernas→legs, botas→feet, anel/colar→acessório,
+material→material/troféu). O `tools/export_tfs.py` usa esse id como placeholder e emite o
+item em `server/generated/items/items_naruto.xml` com **nosso** nome/atributos, sobrescrevendo
+o item vanilla original (`server/tfs/data/items/items.xml`); troque o id quando houver sprite
+próprio (ObjectBuilder) e regenere. `tools/check_mapping.py` falha (exit 1) se algum item ficar
+sem entrada no mapping ou se dois itens nossos reaproveitarem o mesmo id vanilla — rode-o junto
+com `tools/validate_data.py` sempre que adicionar itens novos.

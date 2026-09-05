@@ -48,5 +48,9 @@
 		<item id="1968" chance="12000"/>  <!-- scroll_suiton_vortice -->
 		<item id="5893" countmax="10" chance="100000"/>  <!-- oni_horn -->
 		<item id="7591" countmax="15" chance="100000"/>  <!-- health_potion_large -->
+		<item id="7891" chance="20000"/>  <!-- botas_cacador_de_onis -->
+		<item id="7438" chance="15000"/>  <!-- shuriken_congelante -->
+		<item id="2161" chance="15000"/>  <!-- talisma_cacador_de_onis -->
+		<item id="2490" chance="10000"/>  <!-- capuz_anbu_negro -->
 	</loot>
 </monster>

@@ -42,6 +42,12 @@
         "chance": 0.15,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "capuz_do_batedor",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 15,
@@ -106,6 +112,12 @@
         "chance": 0.08,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "calca_do_batedor",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 25,
@@ -168,6 +180,12 @@
         "chance": 0.02,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "bandana_chuunin",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 40,
@@ -217,6 +235,12 @@
       {
         "item_id": "antidote",
         "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "calca_chuunin",
+        "chance": 0.05,
         "min": 1,
         "max": 1
       }
@@ -323,6 +347,18 @@
       {
         "item_id": "scroll_heaven",
         "chance": 1.0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "sandalia_chuunin",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "senbon_de_ferro",
+        "chance": 0.15,
         "min": 1,
         "max": 1
       }
@@ -470,6 +506,18 @@
       {
         "item_id": "scroll_earth",
         "chance": 1.0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "bandana_chuunin",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "bracelete_do_viajante",
+        "chance": 0.15,
         "min": 1,
         "max": 1
       }

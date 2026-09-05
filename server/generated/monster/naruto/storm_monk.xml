@@ -36,5 +36,7 @@
 		<item id="2491" chance="4000"/>  <!-- helm_stormcaller -->
 		<item id="7367" chance="2000"/>  <!-- windblade_shuriken -->
 		<item id="7591" countmax="3" chance="18000"/>  <!-- health_potion_large -->
+		<item id="6132" chance="6000"/>  <!-- botas_jonin -->
+		<item id="2496" chance="5000"/>  <!-- elmo_cacador_de_onis -->
 	</loot>
 </monster>

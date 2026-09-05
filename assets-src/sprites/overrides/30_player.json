@@ -23,26 +23,23 @@
      ]
     },
     "1": {
-     "_dir": "leste (perfil para a direita) — 4a fase SINTETICA (deslocamento de pernas) somada as 3 reais",
+     "_dir": "leste (perfil para a direita) — ciclo validado/consertado (regras a-e, ver docs)",
      "idle": "sprite_0080.png",
      "walk": [
-      "sprite_0084.png",
-      "sprite_0083.png",
-      "sprite_0075.png",
-      "_synth/east_walk3_synth.png"
+      "_synth/east_walk0_84.png",
+      "_synth/east_walk1_83.png",
+      "_synth/east_walk2_75.png",
+      "_synth/east_walk3_synth_83.png"
      ]
     },
     "2": {
-     "_dir": "sul / de frente — 4a fase SINTETICA somada as 3 reais (0070, 0076, 0070-espelhado)",
+     "_dir": "sul / de frente — ciclo validado/consertado (regras a-e, ver docs)",
      "idle": "sprite_0071.png",
      "walk": [
-      "sprite_0070.png",
-      "sprite_0076.png",
-      {
-       "src": "sprite_0070.png",
-       "mirror": true
-      },
-      "_synth/south_walk3_synth.png"
+      "_synth/south_walk0_70.png",
+      "_synth/south_walk1_76.png",
+      "_synth/south_walk2_70mir.png",
+      "_synth/south_walk3_synth_70mir.png"
      ]
     },
     "3": {

@@ -37,5 +37,8 @@
 		<item id="6938" chance="50000"/>  <!-- ring_fragment_crimson -->
 		<item id="7591" countmax="8" chance="100000"/>  <!-- health_potion_large -->
 		<item id="8472" countmax="6" chance="100000"/>  <!-- soldier_pill -->
+		<item id="23539" chance="15000"/>  <!-- calca_aurora_carmesim -->
+		<item id="11118" chance="12000"/>  <!-- botas_aurora_carmesim -->
+		<item id="8209" chance="10000"/>  <!-- katana_aurora_carmesim -->
 	</loot>
 </monster>

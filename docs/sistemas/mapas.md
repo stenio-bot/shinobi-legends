@@ -293,9 +293,192 @@ tools/install_generated.sh                      # instala no servidor
 
 Os 6 "Rivais do Exame" e a NPC Instrutora Ibuki vieram de um pedido de
 `data/maps/spawns_lore.json` (agente de lore) que se encaixou diretamente na
-Arena nova — os outros pedidos desse arquivo (Costa das Marés, Covil Nuvem
-Vermelha, Ruínas do Clã, Montanha do Trovão) são regiões **sem mapa físico
-ainda**, fora do escopo desta missão (só existe o Vale da Folha hoje).
+Arena nova. Os outros 4 pedidos desse arquivo (Costa das Marés, Ruínas do
+Clã, Montanha do Trovão, Covil da Nuvem Vermelha) ganharam mapa físico na
+missão **v2.1** — ver seção abaixo.
+
+## Vila da Folha v2.1 (2026-09-04) — resposta às ressalvas do orquestrador
+
+A revisão do orquestrador aprovou a v2 com 5 ressalvas: (1) grandes áreas de
+terra batida vazia dentro da muralha; (2) prédios sem rua até a porta; (3)
+taverna e prisão sem interior; (4) templo sem nada dentro; (5) placas sem
+texto. `tools/map/build_regions.py` (novo módulo, mesmo estilo de `decor.py`:
+só importa `build_valley`, nunca o edita — chamado do `main()` via
+`build_regions.build_all(b, sid, tpls)`, depois de `decor.py` e antes de
+`apply_borders`) resolve as 5:
+
+1. **Quintais e becos** (`upgrade_village`): 4 casas novas nos maiores vazios
+   dentro da muralha (`house_green` em 1021,1036 e `blue_house` em 1045,1036
+   ao norte; `blue_house` em 1017,1063 e `house_green` em 1045,1063 ao sul —
+   os anchors batem com o mesmo padrão de porta-na-linha-de-baixo dos
+   prédios existentes). O resto do vazio vira **quintal** (grama + canteiro
+   de flor/touceira/arbusto/cerca/barril — pool de `assets-src/sprites/
+   tiles_decor.json`, mesma técnica de `decor.place_forest_decor`) perto de
+   qualquer parede, ou **beco de terra estreito** (quase vazio, só ~8% de
+   chance de um barril/caixote) longe delas — 172 tiles de quintal + 25
+   itens de beco na 1ª geração.
+2. **Rua até a porta**: 2 ruas de fundo novas, cobblestone, uma linha ao sul
+   de cada fileira de portas (`NORTH_LANE_Y = 1037`, `SOUTH_LANE_Y = 1064`,
+   61 tiles) — toda casa/taverna/prisão nova E antiga passou a ter a porta
+   colada numa rua (as lojas já tinham, desde a v2; a torre e o templo abrem
+   direto na praça). A rua norte respeita a praça (não repinta x 1022–1036,
+   já é piso de pedra) e encosta nela pelos dois lados.
+3. **Interior da Taverna e da Prisão**: mesmo padrão de teleporte-na-porta
+   dos shops (`build_shop_interior`), em salas novas no apêndice de
+   interiores (x 1300+): Taverna em **1300,1008–1306,1013** (mesas + cadeiras
+   + balcão + barris + lanternas), Prisão em **1310,1008–1315,1013** (2
+   celas separadas por grade de madeira — item vanilla 3798 "wooden bars" —
+   cada uma com cama vanilla 1754). Sem NPC (taverneiro/carcereiro não
+   existem em `data/npcs/`), só mobília.
+4. **Templo com conteúdo**: um ponto de "chama eterna" (ver nota abaixo) +
+   2 tochas em 1029,1041 (um tile ao norte da posição da town/spawn de
+   personagem novo, pra não bloquear ninguém nascendo ali) + placa "Templo"
+   colada na porta (1029,1047).
+5. **Placas com texto**: placa individual em cada uma das 3 lojas (além da
+   placa geral da rua) e a placa nova do templo — todas com `text=` (item
+   1440, o mesmo de sempre).
+
+> **Achado do tour in-game (2026-09-04).** A 1ª versão do altar usava
+> `STATUE` (item vanilla 1442) — o build/validate/BFS passaram limpo e o
+> preview Python mostrou o círculo placeholder "S" certinho, mas o tour com
+> o cliente real (`screenshots/mapa_v21_03_templo_altar.png`, zoom em
+> `/tmp/zoom_statue3.png`) revelou que o item **não aparece** na tela: o
+> OTBM tem o item 1442 na célula certa (conferido lendo o `.otbm` instalado
+> byte a byte), mas o sprite não é desenhado — client id 2025, na mesma
+> faixa de outros itens vanilla que renderizam bem (fonte 1922, balcão
+> 2317, baú 2472), então não é um id fora do range. Provável lacuna no
+> `Tibia.dat`/`.spr` próprio do projeto (`tools/spr/`, fora do escopo desta
+> missão) para um item que nunca tinha sido colocado no mapa antes. Trocado
+> por `CAMPFIRE` (1428, "campfire") — já confirmado renderizando de verdade
+> no acampamento dos bandidos — e reconferido lendo o `.otbm` reinstalado
+> (item 1428 na célula 1029,1041,7); combina melhor com o nome "Templo da
+> Chama" de quebra. A cadeira de madeira (item vanilla 1650) na Taverna tem
+> o mesmo sintoma (aparece como um losango cinza genérico em vez de uma
+> cadeira) — mantida mesmo assim porque é só decoração (não bloqueia BFS
+> nem gameplay); registrado como pendência no fim deste documento.
+
+## Regiões novas (v2.1) — Costa das Marés, Ruínas, Montanha, Covil
+
+Os 4 pedidos de `data/maps/spawns_lore.json` sem mapa físico ganharam
+região de verdade, todas em `tools/map/build_regions.py`, todas em x≥1200
+ou y≥1120 (fora do retângulo do mundo aberto atual, 1000–1199/1000–1119) —
+o cabeçalho do OTBM continua 2048×2048, folga de sobra. Nomes de monstro e
+NPC usados nos spawns são os campos `"name"` de `data/monsters/*.json` /
+`data/npc/<Nome>.xml` (já exportados por outro agente antes desta missão —
+conferido em `server/tfs/data/monster/naruto/` e `server/tfs/data/npc/`),
+não os ids `snake_case`.
+
+### Costa das Marés (nível 12–19)
+
+`build_coastal_tides`, x **1000–1049**, y **1120–1169**. Vila de pescadores
+pequena (4 cabanas `blue_house`, cada uma com um barril/caixote de
+equipamento de pesca ao lado — não existe item vanilla "rede de pesca"
+catalogado) em volta de um patio de areia; praia (chão vanilla `sand`, ids
+104/231/9059 — ground, não bloqueia) com fronteira reta pra grama (**sem
+borda dedicada**: o par grama↔areia não existe em
+`assets-src/sprites/tiles.json`, só grama↔terra/água/lama e cobble↔terra —
+documentado aqui em vez de forçar uma borda errada); 2 barcos pequenos
+(item vanilla 3587 "small boat", não bloqueia) encalhados na areia perto da
+água. Liga à Vale da Folha por um ramal da trilha sul: a mesma trilha que
+hoje vira pra leste rumo ao acampamento dos bandidos (1029,1090) continua
+reto pro sul até 1029,1142, com uma placa de bifurcação em 1025,1091 ("<-
+Vila da Folha \| Costa das Mares ->", pedido item 3 da missão).
+
+Cais de madeira (`bridge_wood_center`, reaproveitando os mesmos tiles da
+ponte do rio) saindo da praia (1029,1148) até uma **plataforma de pedra
+sobre a água** (1025,1163–1033,1168, com 2 tochas + placa) onde fica o boss.
+Um SEGUNDO trecho de cais, mais curto (1008,1148–1008,1157), termina no
+meio da água sem nada do outro lado — a **ponte inacabada** pedida na
+missão, com placa "Obra da ponte - sabotada pelos mercenários da guilda
+rival".
+
+Spawns: Mercenário da Ponte ×6, Batedor da Névoa ×4, Guardião da Neblina
+×3, Espadachim da Névoa (boss) ×1 na plataforma — o Aprendiz Mascarado é
+invocado em combate (fase 2 do boss), não tem spawn próprio, conforme
+`data/maps/spawns_lore.json`. NPCs: Mercador Itsuki (1026,1145) e Ancião
+Tazu (1032,1145) — `data/npcs/coastal_tides.json` atualizado (só x/y/map);
+Mestre de Tarefas Umi ganhou x/y (1029,1147) mas **não tem spawn no mapa**
+porque não existe `data/npc/Mestre de Tarefas Umi.xml` ainda (nenhum
+"Mestre de Tarefas" do jogo tem — gap pré-existente do exportador, não
+desta missão).
+
+### Ruínas do Clã Marionetista compacta (nível 25–50)
+
+`build_ruins`, x **1200–1249**, y **1000–1049**. A zona "Ruínas do Clã" que
+já existia em `data/maps/forest_valley.json` é a versão **abstrata** usada
+pelo protótipo Godot (não evolui mais); esta é a primeira versão **física**
+no OTBM de verdade. Portão novo no muro leste da Floresta da Morte
+(1199,1020–1021, tochas + placa de bifurcação "<- Floresta da Morte \|
+Ruínas do Clã Marionetista ->"), pátio de terra com **5 grupos de paredes
+de pedra quebradas** (só 2 lados fecham, norte com um trecho reaberto no
+meio — "a parede caiu" — e oeste) + 2 trechos de parede solta + entulho
+(pedras/tocos/galhos, mesmo pool de `decor.place_forest_decor`) encostado
+nas quinas. Salão do Marionetista **intacto** no fundo leste
+(1236,1015–1248,1035), com porta, 2 tochas e o boss no centro.
+
+Spawns: Marionete de Combate ×6, Sentinela de Pedra ×4, Guerreiro Espectral
+×3, Xamã da Maldição ×3 (roster geral de `data/monsters/ruins.json`,
+espalhados no pátio, longe das paredes pra não cair em cima de um canto),
+Desertor de Elite (mini-boss, **NOVO** pedido de `spawns_lore.json`) ×1 perto
+da porta do salão, Marionetista das Ruínas (boss) ×1 no centro do salão.
+Sem NPC (Tsubaki/Kaito já têm posição própria no mapa abstrato do Godot,
+`data/npcs/ruins.json`, fora do escopo de edição desta missão).
+
+### Montanha do Trovão compacta (nível 50–80)
+
+`build_mountain`, x **1200–1249**, y **1060–1109**. Mesma ressalva da
+Ruínas (a zona homônima em `forest_valley.json` é a versão abstrata; esta é
+a física). Corredor novo (1225,1049–1225,1060) liga o fim das Ruínas a
+esta zona pelo vão y 1050–1059 (nenhuma das duas usava essa faixa). Chão de
+pedra (`STONE_FLOOR`) numa trilha sinuosa (largura 16, curva por
+`(y%14)`) flanqueada por **água = abismo** (pedido da missão: "penhascos
+usando... água como abismo") dos dois lados — intransponível, bloqueia
+igual a qualquer água do jogo. Planalto no topo (1215,1099–1235,1109),
+achatado, com sinalização e o portal para o Covil.
+
+**Portal gated**: teleporte em **1225,1103** com `action_id=45004` (o
+"actionid = rank mínimo Anbu" pedido na missão — a checagem de rank em si é
+de outro agente, que deve ler esse actionid antes de deixar o teleporte
+agir; aqui só o item e o destino foram criados) para o Covil da Nuvem
+Vermelha, com placa ao lado explicando o requisito. Retorno: um pad
+separado em 1225,1102 (nunca a mesma célula do portal — regra anti-loop de
+sempre) volta pro topo da montanha.
+
+Spawns: Águia do Trovão ×5, Oni da Geleira ×4, Monge da Tempestade ×3,
+Serpente de Magma ×3 (ao longo da trilha), O Sócio Eterno (boss, **NOVO**
+pedido de `spawns_lore.json`) ×1 e Oni Ancestral (boss final) ×1 no
+planalto. Sem NPC (Genzo/Yuki já têm posição própria no mapa abstrato,
+`data/npcs/mountain.json`, fora do escopo de edição desta missão).
+
+### Covil da Nuvem Vermelha (nível 80–100)
+
+`build_akatsuki_lair`, x **1400–1449**, y **1000–1049**. **Masmorra
+isolada de propósito** — nenhuma trilha a pé liga a ela; o único acesso é o
+teleporte gated no topo da Montanha (acima). Hall de entrada
+(1400,1005–1409,1019, com o pad de chegada, o pad de retorno e as 2 NPCs)
+→ corredor de pedra (y 1011–1013) → 3 salas de boss alternando norte/sul
+(cada uma com porta própria abrindo pro corredor) → sala final grande
+(1436,1000–1449,1024, no extremo leste).
+
+| Sala | Boss | Nível |
+|---|---|---|
+| 1 (norte) | O Vigia Ilusório | 85 |
+| 2 (sul) | O Mascarado das Sombras | 90 |
+| 3 (norte) | O Portador dos Seis Caminhos | 95 |
+| Final (leste, grande) | O Ancestral da Nuvem Vermelha | 100 |
+
+Corredor patrulhado por Clone Branco ×10 e Ninja Elite da Aurora ×6 (offsets
+sempre com `dy` em {-1,0,1} — as 3 linhas do corredor nunca cruzam a parede
+de nenhuma sala, então qualquer `dx` dentro do corredor é seguro; foi
+exatamente o bug encontrado e corrigido na 1ª rodada de build, ver
+histórico do commit). NPCs: Capitã Anbu Suzu (1406,1010) e Fornecedor Enji
+(1406,1012) no hall — `data/npcs/akatsuki_lair.json` atualizado (só
+x/y/map); Mestre de Tarefas Kuro ganhou x/y (1406,1014) mas sem spawn, mesmo
+motivo do Mestre de Tarefas Umi acima.
+
+**Confirmado no tour in-game** (`screenshots/mapa_v21_10_covil_sala_final.png`):
+personagem tomou dano de "O Ancestral da Nuvem Vermelha" parado na sala
+final, boss vivo e atacando de verdade.
 
 ## Como regenerar
 
@@ -474,6 +657,9 @@ e no portão da Vila da Folha. A v2 do algoritmo não muda ONDE as peças vão
 # presets prontos (v2): full = mundo aberto inteiro (1000,1000-1199,1119);
 # interiors = lojas+arena (1298,998-1332,1036); vila_zoom = só a vila;
 # default = vila+floresta (área antiga)
+# presets novos (v2.1): vila_v21 = vila apos o infill; costa = Costa das
+# Mares (1000,1085-1049,1169); ruinas (1195,998-1249,1049); montanha
+# (1200,1058-1249,1109); covil (1398,998-1449,1036)
 .venv/bin/python tools/map/render_preview.py --preset full --labels --zoom 1 \
     --out screenshots/preview_v2_anotado.png
 # ou uma área especifica (--preset é ignorado se --area for passado):
@@ -482,10 +668,21 @@ e no portão da Vila da Folha. A v2 do algoritmo não muda ONDE as peças vão
 ```
 
 `--labels` desenha o nome de cada zona/loja/portão em cima do render (usa a
-lista `LABELS`/`INTERIOR_LABELS` do próprio `render_preview.py`, derivada das
-constantes de `build_valley.py` — atualiza sozinha se as coordenadas
-mudarem). `--zoom N` redimensiona o PNG final por N (nearest-neighbor, mantém
-os pixels nítidos) — útil para `vila_zoom --zoom 3`.
+lista `LABELS`/`INTERIOR_LABELS`/`REGION_LABELS` do próprio
+`render_preview.py`, derivada das constantes de `build_valley.py`/
+`build_regions.py` — atualiza sozinha se as coordenadas mudarem). `--zoom N`
+redimensiona o PNG final por N (nearest-neighbor, mantém os pixels
+nítidos) — útil para `vila_zoom --zoom 3`.
+
+> **v2.1**: `render_preview.py` agora roda o pipeline COMPLETO (`build` →
+> `carve_clearings` → `connect_clearings` → `decor.place_*` →
+> `build_regions.build_all` → `apply_borders`), igual ao `build_valley.py`
+> real — antes pulava `decor`/`build_regions`, então o preview mostrava a
+> vila v2 "crua", sem o infill nem as regiões novas. `SpriteBook` ganhou
+> placeholders extras (areia, cadeira, cama, grade de cela, barril/caixote
+> vanilla, barco pequeno) só pro preview Python ficar legível — o cliente
+> real usa o sprite de verdade (ou não, ver "Pendências da v2.1" sobre 1442
+> e 1650).
 
 Roda `build_valley` como biblioteca (mesma sequência exata do build real:
 `build` → `carve_clearings` → `connect_clearings` → `apply_borders`) e
@@ -758,6 +955,36 @@ atacando o personagem. Log do servidor sem erros/avisos durante toda a
 sessão. Essa é a confirmação "de verdade" (não só render Python) de que
 teleportes, fachadas, cerca e sinalização funcionam no jogo real.
 
+### Tour in-game da v2.1 (validação real, 2026-09-04/05)
+
+Mesmo processo (build + `walk_audit` limpos, `tools/install_generated.sh` +
+cópia + `pkill -x tfs` + subir de novo), agora por **10 pontos** cobrindo a
+vila v2.1 e as 4 regiões novas — `/god` + `/tp x,y,z` por ponto, 1
+screenshot cada (`screenshots/mapa_v21_*.png`):
+
+| # | Ponto | Confirmado no screenshot |
+|---|---|---|
+| 01 | Quarteirão novo (bairro N) | casa `house_green` nova + rua de fundo + quintal (grama/cerca/canteiro) |
+| 02 | Ruas de fundo (bloco S) | casas novas + cobblestone colado nas portas |
+| 03 | Altar do templo | (achado o bug do item 1442 — ver "Pendências da v2.1"; corrigido pra `CAMPFIRE`, reconferido só via leitura do `.otbm`, não por um 2º tour — ver nota abaixo) |
+| 04 | Interior da Taverna | chão de tatame, mesas+cadeiras+balcão+lanternas visíveis |
+| 05 | Interior da Prisão | celas + grade + camas |
+| 06 | Praia / vila de pescadores | areia, cabanas, caminho de terra até a vila |
+| 07 | Cais / arena do boss | plataforma de pedra sobre a água, **Espadachim da Névoa vivo** |
+| 08 | Salão do Marionetista | sala intacta no fundo das Ruínas |
+| 09 | Topo da Montanha | planalto + placa + **O Sócio Eterno e Oni Ancestral vivos** lado a lado |
+| 10 | Sala final do Covil | **O Ancestral da Nuvem Vermelha vivo**, atacou o personagem (dano registrado no log) |
+
+Log do servidor sem erros/avisos. **Concorrência entre agentes**: o rc
+temporário (`client-otc/shinobirc.lua`) é compartilhado — outro agente
+estava rodando seu próprio teste (tag de log `SLPROVA`) no mesmo arquivo
+durante esta missão. O tour desta missão (tag `TOURV21`) capturou as 10
+screenshots antes de o arquivo ser sobrescrito pelo do outro agente; a
+troca do item do altar (1442→1428, ver "Vila da Folha v2.1" acima) foi
+verificada só por leitura direta do `.otbm` instalado (item 1428 na célula
+1029,1041,7), sem um 2º tour ao vivo, pra não competir de novo pelo mesmo
+arquivo compartilhado enquanto a outra sessão ainda estava ativa.
+
 ### Pendências
 
 - 406 bolsões pequenos de tiles caminháveis (789 tiles, 4,5% do total
@@ -783,9 +1010,48 @@ teleportes, fachadas, cerca e sinalização funcionam no jogo real.
   in-game — screenshot `mapa_v2_02_rua_comercial.png` mostra o portão leste
   de verdade, sem essa confusão). Só um artefato de leitura da screenshot
   "vista de cima" nesta ferramenta de preview, não um bug de mapa.
-- Taverna e Prisão continuam sem interior (não há NPC de taverneiro/carcereiro
-  em `data/npcs/` para colocar lá dentro) — se um for criado, basta chamar
-  `build_shop_interior` de novo com a fachada e o NPC certos.
-- Os pedidos de `data/maps/spawns_lore.json` para Costa das Marés e Covil
-  Nuvem Vermelha continuam pendentes: são regiões **sem mapa físico** (fora
-  do Vale da Folha atual), fora do escopo desta missão.
+- ~~Taverna e Prisão continuam sem interior~~ **Resolvido na v2.1** — ver
+  "Vila da Folha v2.1" acima (`build_tavern_interior`/`build_prison_interior`
+  em `tools/map/build_regions.py`).
+- ~~Os pedidos de `data/maps/spawns_lore.json` para Costa das Marés e Covil
+  Nuvem Vermelha continuam pendentes~~ **Resolvido na v2.1** — ver "Regiões
+  novas (v2.1)" acima.
+
+### Pendências da v2.1 (2026-09-04/05)
+
+- **Item vanilla 1442 ("statue") e 1650 ("wooden chair") não renderizam no
+  cliente real** deste projeto (ficam invisíveis ou viram um losango cinza
+  genérico), apesar de presentes corretamente no `.otbm` (conferido lendo o
+  arquivo instalado) e de terem client id dentro da faixa normal de outros
+  itens que renderizam bem. A estátua foi trocada por `CAMPFIRE` (1428,
+  confirmado renderizando) no altar do templo; a cadeira da Taverna
+  (`build_tavern_interior`) foi mantida mesmo assim, por ser só decoração
+  não-bloqueante. Suspeita: lacuna no `Tibia.dat`/`.spr` próprio do projeto
+  (`tools/spr/`) para ids vanilla nunca antes colocados no mapa — fora do
+  escopo de `tools/map/`; recomendo o agente de sprites conferir a cobertura
+  desses 2 ids (e de qualquer outro item "nunca usado" antes de plantar no
+  mapa) antes de reaproveitar.
+- **Fronteira grama↔areia da Costa das Marés é um corte reto** — não existe
+  par de borda `grass_sand` em `assets-src/sprites/tiles.json` (só
+  `grass_dirt`, `grass_water`, `grass_mud`, `cobble_dirt`). Documentado
+  conforme instrução da missão; se um agente de sprites quiser, o par
+  seguiria a mesma receita de `tools/spr/gen_borders.py` (curva-base +
+  derivação das 12 peças).
+- **Mestre de Tarefas Umi/Kuro (Costa das Marés / Covil) não aparecem no
+  jogo**, mesmo com x/y atualizados em `data/npcs/*.json`: nenhum "Mestre de
+  Tarefas" do jogo tem NPC XML exportado ainda (`server/tfs/data/npc/` não
+  tem nenhum arquivo "Mestre de Tarefas *"), nem os das regiões antigas
+  (Vila da Folha, Ruínas, Montanha) — gap pré-existente do exportador/pipeline
+  de NPCs, não introduzido nem resolvido por esta missão.
+- **`client-otc/shinobirc.lua` é um recurso compartilhado entre agentes
+  concorrentes.** Durante a validação desta missão outro agente (testes de
+  outro sistema, tag de log `SLPROVA`) estava usando o mesmo arquivo ao
+  mesmo tempo — o rc desta missão (`TOURV21`) rodou e capturou as 10
+  screenshots antes de ser sobrescrito pelo do outro agente. Por isso o
+  arquivo foi deixado como estava (conteúdo do outro agente) ao final desta
+  missão, em vez de apagado — apagar no meio do uso de outra sessão
+  quebraria o teste dela. Nenhuma versão deste arquivo deve ser commitada,
+  não importa de qual agente seja o conteúdo no momento.
+- A Arena do boss da Costa das Marés e o Covil da Nuvem Vermelha não têm
+  waypoint OTBM próprio ainda (só as zonas antigas do Vale da Folha têm,
+  ver "Waypoints gravados" acima) — cosmético, não afeta jogabilidade.

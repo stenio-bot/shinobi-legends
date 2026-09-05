@@ -16,7 +16,11 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `lib/naruto_characters.lua` | `data/lib/` + `dofile` em `lib.lua` (depois de naruto_villages.lua e naruto_json.lua) | `tools/install_generated.sh` |
 | `npc/naruto/*` | `data/npc/naruto/` | copiar a pasta |
 | `lib/naruto_quests.lua` | `data/lib/` + `dofile` em `lib.lua` | ver cabeçalho |
-| `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |
+| `lib/naruto_ranks.lua` | `data/lib/` + `dofile` em `lib.lua` | docs/lore/progressao.md |
+| `lib/naruto_rewards.lua` | `data/lib/` + `dofile` em `lib.lua` | XP escalada (tarefas/diárias) |
+| `lib/naruto_tasks.lua` | `data/lib/` + `dofile` em `lib.lua` | só se `data/tasks.json` existir |
+| `lib/naruto_dailies.lua` | `data/lib/` + `dofile` em `lib.lua` | só se `data/dailies.json` existir |
+| `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho (rank_gate, rank_look, tasks, dailies inclusos) |
 | `world/*-spawn.xml` | referência para o Remere's Map Editor | manual |
 
-Totais: 38 monstros, 54 jutsus, 88 itens, 14 NPCs, 31 missões, 4 vocações.
+Totais: 38 monstros, 54 jutsus, 173 itens, 21 NPCs, 45 missões, 4 vocações, 5 ranks, 114 tarefas, 60 diárias (pool).

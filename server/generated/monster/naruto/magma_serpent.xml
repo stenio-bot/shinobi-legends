@@ -34,5 +34,7 @@
 		<item id="5893" chance="15000"/>  <!-- oni_horn -->
 		<item id="7382" chance="2000"/>  <!-- thunder_katana -->
 		<item id="8472" countmax="2" chance="15000"/>  <!-- soldier_pill -->
+		<item id="2166" chance="5000"/>  <!-- bracelete_jonin -->
+		<item id="7894" chance="5000"/>  <!-- grevas_cacador_de_onis -->
 	</loot>
 </monster>

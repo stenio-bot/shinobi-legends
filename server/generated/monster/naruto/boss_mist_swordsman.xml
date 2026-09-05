@@ -36,5 +36,7 @@
 		<item id="6352" chance="100000"/>  <!-- fang_of_the_swordsman -->
 		<item id="2412" chance="12000"/>  <!-- katana_ronin -->
 		<item id="7588" countmax="4" chance="100000"/>  <!-- health_potion_medium -->
+		<item id="2642" chance="20000"/>  <!-- sandalia_chuunin -->
+		<item id="5917" chance="15000"/>  <!-- bandana_chuunin -->
 	</loot>
 </monster>

@@ -25,5 +25,6 @@
 		<item id="2148" countmax="8" chance="100000"/>
 		<item id="5897" chance="50000"/>  <!-- wolf_pelt -->
 		<item id="2666" chance="10000"/>  <!-- onigiri -->
+		<item id="2126" chance="3000"/>  <!-- amuleto_academia -->
 	</loot>
 </monster>

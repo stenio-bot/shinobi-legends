@@ -34,6 +34,12 @@
         "chance": 0.08,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "bracelete_do_viajante",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 8,
@@ -71,6 +77,12 @@
         "chance": 0.3,
         "min": 3,
         "max": 8
+      },
+      {
+        "item_id": "senbon_de_ferro",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 10,
@@ -106,6 +118,12 @@
       {
         "item_id": "health_potion_small",
         "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "capuz_do_batedor",
+        "chance": 0.05,
         "min": 1,
         "max": 1
       }
@@ -151,6 +169,12 @@
       {
         "item_id": "apprentice_mask",
         "chance": 0.6,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "calca_do_batedor",
+        "chance": 0.08,
         "min": 1,
         "max": 1
       }
@@ -232,6 +256,18 @@
         "chance": 1.0,
         "min": 2,
         "max": 4
+      },
+      {
+        "item_id": "sandalia_chuunin",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "bandana_chuunin",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 400,

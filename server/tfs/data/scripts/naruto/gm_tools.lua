@@ -9,6 +9,8 @@
 -- /vila nome      troca de vila (vocação): folha, nevoa, nuvem, areia
 -- /god            level 100, skills 100, todos os jutsus, 1 milhão de ryo, mochila com todos os itens, melhor equipamento vestido
 -- /pvm            alterna entre o grupo God (ignorado por monstros) e God Vulnerável (id 7, pode ser atacado) — para testar PvM como GM
+-- /npc nome       invoca um NPC pelo nome exato (data/npc/<Nome>.xml) do lado do GM — útil para
+--                 testar diálogo de NPCs ainda sem posição definitiva no mapa físico
 -- /sl             lista estes comandos
 local GROUP_GOD = 6
 local GROUP_GOD_PVM = 7
@@ -281,3 +283,57 @@ function t.onSay(player, words, param)
 end
 t:separator(" ")
 t:register()
+
+-- ------------------------------------------------------------------------------------------
+-- Ferramentas de debug dos sistemas de progressão (docs/sistemas/progressao-servidor.md).
+-- /storage key [value]   lê (sem value) ou grava (com value) um storage do jogador.
+-- /rank [rankId]         mostra o rank atual (com HP/chakra/bônus) ou força uma promoção
+--                        (para teste — bypassa NarutoRanks.checkProgress/rankGroups).
+-- /zonecheck zona        mostra se o rank atual deixaria entrar na área nomeada
+--                        (docs/lore/mundo.md; ver NarutoRanks.canEnter).
+local debugCmds = TalkAction("/storage", "/rank", "/zonecheck", "/npc")
+function debugCmds.onSay(player, words, param)
+	if not isGod(player) then return true end
+	param = param and param:trim() or ""
+	if words == "/npc" then
+		if param == "" then player:sendCancelMessage("Uso: /npc Nome Exato (data/npc/<Nome>.xml)") return false end
+		local pos = player:getPosition()
+		local dir = player:getDirection()
+		local front = Position(pos)
+		front:getNextPosition(dir)
+		local npc = Game.createNpc(param, Tile(front) and front or pos, false, true)
+		if not npc then
+			player:sendCancelMessage("NPC '" .. param .. "' não encontrado (data/npc/" .. param .. ".xml existe?).")
+		else
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "NPC '" .. param .. "' invocado.")
+		end
+	elseif words == "/storage" then
+		local key, value = param:match("^(%-?%d+)%s*(%-?%d*)$")
+		if not key then player:sendCancelMessage("Uso: /storage key [value]") return false end
+		key = tonumber(key)
+		if value and value ~= "" then
+			player:setStorageValue(key, tonumber(value))
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "storage " .. key .. " = " .. value)
+		else
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "storage " .. key .. " = " .. tostring(player:getStorageValue(key)))
+		end
+	elseif words == "/rank" then
+		if not NarutoRanks then player:sendCancelMessage("NarutoRanks não carregado.") return false end
+		if param == "" then
+			local r = NarutoRanks.get(player)
+			player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("Rank: %s (%s). HP %d/%d, Chakra %d/%d.",
+				r.rank, r.title, player:getHealth(), player:getMaxHealth(), player:getMana(), player:getMaxMana()))
+		else
+			local ok = NarutoRanks.promote(player, param:lower())
+			if not ok then player:sendCancelMessage("Não promoveu (rank inválido, ou já é esse rank ou maior). Use /storage 60010 <indice> para forçar.") end
+		end
+	elseif words == "/zonecheck" then
+		if not NarutoRanks then player:sendCancelMessage("NarutoRanks não carregado.") return false end
+		if param == "" then player:sendCancelMessage("Uso: /zonecheck zona") return false end
+		local ok = NarutoRanks.canEnter(player, param)
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "canEnter('" .. param .. "') = " .. tostring(ok) .. " (rank atual: " .. NarutoRanks.get(player).rank .. ")")
+	end
+	return false
+end
+debugCmds:separator(" ")
+debugCmds:register()

@@ -596,7 +596,92 @@ direita → esquerda.
 `OVERRIDES`, no topo de `tools/spr/import_mugen.py`, fixa `idle`, `walk`
 (3 ou 4 números — 3 ganha a 4ª fase sintética), `faces` e `front` por looktype,
 pelo **número do arquivo**. Mesmos 11 casos da v1 (ver tabela no histórico do
-arquivo), sem mudança de motivo.
+arquivo), sem mudança de motivo. Casos novos (retrabalho "golpe/agachamento
+vazando pro ciclo", ver seção seguinte): `"904"`, `"905"`, `"918"` com
+`{"front": None}` — desliga o quadro de frente automático (era um chute
+voador/agachamento mirando arma na revisão visual), caindo no mesmo fallback
+de "sem candidato" (Sul repete o perfil do Leste).
+
+### Retrabalho 2: filtro obrigatório do ciclo de andar (regras a-e)
+
+Feedback de uma segunda rodada de revisão: mesmo com o ciclo de 4 fases
+"funcionando" (a costas sintetizada anda de verdade, ver seção acima), a
+**heurística às vezes escolhia um quadro de golpe/agachamento/pulo** para
+dentro do ciclo de andar — ex.: looktype 900 (Naruto Kid) tinha um soco de
+braço estendido no ciclo leste/oeste; 906 (Kakashi) tinha uma silhueta
+baixa/escura de agachamento vazando pro ciclo sul (que reusa os quadros do
+leste — ver "Encaixe"). A causa: o critério antigo (altura parecida + vão dos
+pés variando + paleta parecida) não olhava para a **forma da pose em si**,
+só para o tamanho da caixa — um soco ou chute que mantém altura/largura
+parecidas com o parado passava despercebido.
+
+**Cinco regras**, implementadas em `char_synth.validate_frame`/
+`validate_cycle` e usadas como **filtro obrigatório** (não mais só pontuação)
+antes de aceitar um quadro no ciclo:
+
+| Regra | O quê | Por quê |
+|---|---|---|
+| (a) altura | bbox do quadro dentro de ±2px da altura do idle (**escalado**: ver abaixo) | agachamento encolhe a caixa, salto/chute a estica |
+| (b) largura | ≤ 1,25× a largura do idle | soco/chute lateral estica a caixa muito mais que um passo |
+| (c) centroide da cabeça | offset X da pele/cabeça (topo 25%) em relação ao apoio dos pés (rodapé 34%), variando ≤2px do mesmo offset no idle (**escalado**) | soco/chute inclina o tronco — a cabeça se desloca em relação ao apoio muito mais que um passo normal |
+| (d) paleta | ≤5% de pixels "de efeito" (fora da paleta do PRÓPRIO personagem, extraída do idle, E saturados/claros o bastante pra ser chama/chakra/brilho) | golpes especiais trazem cor que o personagem não tem parado |
+| (e) continuidade | diferença de máscara (silhueta 24×32) entre quadros CONSECUTIVOS do ciclo (fecha o loop último→primeiro) entre 3% e 25% | menos = quadro duplicado; mais = pose diferente (chute/agachamento/pulo) |
+
+**Escala das tolerâncias em pixel (a, c):** os rips chegam em resoluções bem
+diferentes por personagem (40 a 90px de altura), mas as regras foram
+calibradas pensando no sprite FINAL de 32px. `char_synth.validation_scale`
+converte: `escala = min(32/maior_lado_do_idle, 1)`, a MESMA conta de
+`imports.fit_uniform`; a tolerância em px do recorte bruto vira
+`tolerância_final / escala`. Sem isso, um personagem grande (Tenten, 69px)
+teria tolerância apertada demais e um pequeno, solta demais.
+
+**Calibração:** os valores literais da missão (±2px, 25%) se mostraram
+corretos para pegar os golpes de verdade (offsets de cabeça de 5-20px, motion
+de 28-49% nos quadros ruins) mas **rejeitavam o próprio ciclo leste do
+outfit do jogador (128)**, já testado e documentado (offset de cabeça
+2,7-3,4px, motion 27% — balanço normal de um passo real, não golpe). Ajustado
+para `HEAD_TOL=3.0` e `MOTION_HI=0.28`: ainda corta todo golpe/agachamento
+encontrado na revisão, mas não reprova mais o passo legítimo do 128. As
+constantes ficam documentadas em `char_synth.py`, seção "validação do ciclo".
+
+**Conserto em duas passadas** (`import_mugen.repair_window` /
+`char_synth.repair_cycle`, usado por `import_player.py`): um quadro que
+reprova é **descartado e substituído**, nunca simplesmente removido do ciclo:
+
+1. Troca por um **quadro vizinho válido** — procura, por proximidade no rip
+   (ou no pool inteiro de 76 quadros, no caso do 128), outro quadro que passe
+   nas regras (a-d) **e** mantenha a transição (regra e) com quem já está nas
+   posições vizinhas naquele momento. Esse segundo requisito (adicionado
+   depois de um teste que só checava a-d) importa: sem ele, o substituto era
+   escolhido só pelo tamanho, sem relação de movimento com o resto do ciclo,
+   e a passada 2 acabava sintetizando o ciclo INTEIRO em vez de só o quadro
+   ruim (aconteceu com 903 Hinata, 909 Killer Bee e 918 Sakura The Last antes
+   do ajuste).
+2. Só **depois** de todas as trocas reais possíveis, valida a **continuidade**
+   do ciclo já atualizado; o que ainda reprovar vira **síntese de deslocamento
+   de pernas** (`char_synth.synth_walk_offset`) a partir do vizinho REAL mais
+   próximo do ciclo — nunca de outra síntese (evita encadear deslocamentos e
+   distorcer o quadro, sintese-sobre-sintese-sobre-sintese).
+
+Toda troca/síntese fica registrada — no console (`REJEITADO quadro N (ciclo):
+motivo -> substituto`), em `assets-src/sprites/mugen_frames.json`
+(`quadros_rejeitados`, por personagem: posição, motivo(s), quadro rejeitado,
+substituto) e em `assets-src/sprites/player_frames.json` para o 128.
+
+**Frente (Sul) também passou a ser filtrada**: `pick_front` agora usa largura
+mais apertada (1,6× → 1,35× a largura do idle) e checa a fração de pixels de
+efeito (regra d) — chute/golpe especial usado como "pose de frente" também é
+descartado, caindo no perfil do Leste.
+
+**Folha de revisão rotulada** (`assets-src/import/extracted/mugen/
+_cycle_<lt>.png`, um por personagem 900-926 **e** 128): mesmo layout de
+`_review_<lt>.png` (idle + 4 fases × 4 direções, ampliada 3×), com um rótulo
+por célula — o **número do quadro de origem** (verde) ou **"S"** (laranja)
+quando a fase é sintética. Todos os 28 foram olhados um a um; os únicos golpes
+residuais achados foram nos candidatos de FRENTE (Sul idle) de 904, 905 e 918
+(chute voador/agachamento mirando arma), corrigidos com `"front": None` (ver
+Overrides manuais acima) — o resto do material (parado + 4 fases de andar nas
+4 direções) ficou limpo em todos os 28.
 
 ### Comparativo de nitidez (`tools/spr/compare_sharpen.py`)
 
@@ -624,36 +709,42 @@ comportamento antigo).
 
 ### Tabela final por personagem
 
+Atualizada após o retrabalho 2 (filtro de validação a-e, seção acima) — vários
+quadros mudaram de número porque o antigo foi rejeitado (golpe/agachamento/
+pulo) e substituído por um vizinho válido ou por síntese ("S" na coluna
+Andar). Ver `assets-src/sprites/mugen_frames.json` (`quadros_rejeitados`) para
+o detalhe de cada troca.
+
 | Look | Nome | Parado | Andar (4 fases) | Frente (Sul) | Notas |
 |---|---|---|---|---|---|
-| 900 | Naruto Kid | 0004 | 0029/30/31/32 real4 | 0066 real | |
-| 901 | Sasuke Kid | 0005 | 0028/29/30/31 real4 | 0048 real | |
-| 902 | Sakura Kid | 0004 | 0003/04/05 + synth | 0055 real | sem ciclo real (override) |
-| 903 | Hinata | 0003 | 0053/54/55/56 real4 | 0060 real | |
-| 904 | Rock Lee | 0005 | 0047/48/49/50 real4 | 0024 real | |
-| 905 | Tenten | 0005 | 0113/14/15/118 real4 | 0192 real | leque gigante em todo quadro |
-| 906 | Kakashi | 0004 | 0028/29/30/31 real4 | 0020 real | |
-| 907 | Minato | 0003 | 0003/04/05 + synth | 0076 real | sem ciclo real (override) |
-| 908 | Minato Edo | 0005 | 0005/06/07 + synth | 0070 real | sem ciclo real (override) |
-| 909 | Killer Bee | 0006 | 0070/71/72/73 real4 | 0047 real | |
-| 910 | Itachi | 0005 | 0124/25/26/27 real4 | 0113 real | |
-| 911 | Pain | 0008 | 0036/37/38/40 real4 | 0009 real | idle por override |
-| 912 | Obito | 0003 | 0082/83/84/85 real4 | 0087 real | |
-| 913 | Madara | 0005 | 0025/26/27/28 real4 | 0100 real | |
-| 914 | Sasuke Taka | 0002 | 0082/83/84/85 real4 | 0059 real | |
-| 915 | Sasuke Akatsuki | 0003 | 0002/03/04 + synth | 0064 real | sem ciclo real (override) |
-| 916 | Sasuke Rinnegan | 0006 | 0057/58/59/60 real4 | 0063 real | |
-| 917 | Sakura | 0005 | 0017/18/19/20 real4 | 0060 real | |
-| 918 | Sakura The Last | 0004 | 0112/14/15/116 real4 | 0381 real | |
-| 919 | Naruto Sennin | 0004 | 0014/15/16 + synth | 0055 real | walk por override |
-| 920 | Naruto KCM | 0005 | 0019/20/21 + synth | 0004 real | walk por override |
-| 921 | Naruto 1 Calda | 0005 | 0012/13/14 + synth | 0200 real | quadrúpede, sem repintura de rosto |
-| 922 | Naruto 4 Caldas | 0076 | 0079/81/82 + synth | 0508 real | quadrúpede, sem repintura de rosto |
-| 923 | Naruto 6 Caldas | 0022 | 0030/31/32 + synth | **perfil (Leste)** | quadrúpede; sem candidato de frente |
-| 924 | Naruto Ashura | 0004 | 0020/21/22/23 real4 | 0135 real | |
-| 925 | Naruto Girl | 0006 | 0005/06/07 + synth | 0197 real | sem ciclo real (override) |
-| 926 | Naruto Kid Fox | 0001 | 0013/14/15/16 real4 | 0044 real | quadrúpede, sem repintura de rosto |
-| 128 | Jogador (Naruto laranja) | sprite_0071 (Sul) / 0080 (Leste) | 3 reais + 1 synth (todas direções) | 0071 real (já existia) | costas 100% sintetizada |
+| 900 | Naruto Kid | 0004 | 0029/S/S/S real4 | 0066 real | 4 quadros trocados/sintetizados; cor de cabelo ajustada a mão |
+| 901 | Sasuke Kid | 0005 | 0027/0044/0053/0043 real4 | 0048 real | 4 quadros trocados/sintetizados |
+| 902 | Sakura Kid | 0004 | 0003/04/05 + synth | 0055 real | sem ciclo real (override); cor de cabelo ajustada a mão |
+| 903 | Hinata | 0003 | 0076/0050/S/S real4 | 0060 real | 4 quadros trocados/sintetizados; cor de cabelo ajustada a mão |
+| 904 | Rock Lee | 0005 | 0045/0048/0055/0050 real4 | **perfil (Leste)** | frente desligada (era chute voador); 2 quadros trocados |
+| 905 | Tenten | 0005 | 0113/14/15/118 real4 | **perfil (Leste)** | frente desligada (era agachamento mirando arma); leque gigante em todo quadro |
+| 906 | Kakashi | 0004 | S/0029/0030/S real4 | **perfil (Leste)** | frente desligada (era alcance/joelho baixo — a "silhueta agachada" do feedback); cor de cabelo ajustada a mão; 2 quadros sintetizados |
+| 907 | Minato | 0003 | 0003/04/S real3 | 0017 real (3/4) | sem ciclo real (override); 1 quadro sintetizado |
+| 908 | Minato Edo | 0005 | 0005/06/S real3 | 0009 real (3/4) | sem ciclo real (override); 1 quadro sintetizado |
+| 909 | Killer Bee | 0006 | S/S/S/S real4 | 0047 real | cor de cabelo ajustada a mão (loiro claro); ciclo inteiro sintetizado (nenhum vizinho válido achado) |
+| 910 | Itachi | 0005 | 0132/33/36/37 real4 | 0113 real | limpo (sem rejeição) |
+| 911 | Pain | 0008 | 0036/0008/0053/0083 real4 | 0009 real | idle por override; 3 quadros trocados |
+| 912 | Obito | 0003 | S/0083/0084/0087 real4 | 0087 real | 2 quadros trocados/sintetizados |
+| 913 | Madara | 0005 | 0055/56/57/58 real4 | 0100 real | limpo (sem rejeição) |
+| 914 | Sasuke Taka | 0002 | 0087/0071/0072/S real4 | 0087 real (3/4) | 4 quadros trocados (efeito fora da paleta) |
+| 915 | Sasuke Akatsuki | 0003 | S/S/0004 real3 | 0064 real | sem ciclo real (override); 2 quadros sintetizados (duplicados) |
+| 916 | Sasuke Rinnegan | 0006 | 0191/92/93/94 real4 | 0063 real | limpo (sem rejeição) |
+| 917 | Sakura | 0005 | 0039/40/41/42 real4 | 0060 real | cor de cabelo ajustada a mão (rosa); limpo após troca automática de janela |
+| 918 | Sakura The Last | 0004 | 0153/0114/0115/0108 real4 | **perfil (Leste)** | frente desligada (era chute voador); 2 quadros trocados |
+| 919 | Naruto Sennin | 0004 | S/S/S real3 | 0055 real | walk por override; ciclo sintetizado (golpe com efeito grande) |
+| 920 | Naruto KCM | 0005 | S/S/S real3 | 0004 real | walk por override; ciclo sintetizado |
+| 921 | Naruto 1 Calda | 0005 | S/S/S real3 | 0200 real | quadrúpede, sem repintura de rosto; ciclo sintetizado |
+| 922 | Naruto 4 Caldas | 0076 | S/S/S real3 | **perfil (Leste)** | quadrúpede, sem repintura de rosto; ciclo sintetizado |
+| 923 | Naruto 6 Caldas | 0022 | 0022/0033/S real3 | **perfil (Leste)** | quadrúpede; sem candidato de frente |
+| 924 | Naruto Ashura | 0004 | 0020/S/S/S real4 | 0135 real | 3 quadros trocados/sintetizados |
+| 925 | Naruto Girl | 0006 | 0110/0006/0133 real3 | 0197 real | sem ciclo real (override); 2 quadros trocados |
+| 926 | Naruto Kid Fox | 0001 | 0013/0003/0015/0044 real4 | 0044 real | 2 quadros trocados |
+| 128 | Jogador (Naruto laranja) | sprite_0071 (Sul) / 0080 (Leste) | 3 reais + 1 synth (todas direções) | 0071 real (já existia) | costas 100% sintetizada; ciclo original (84/83/75 leste, 70/76/70-espelhado sul) validado LIMPO pelo filtro a-e |
 
 Todas as 28 entradas têm **Norte = costas sintetizada** (nunca copiada do rip) e
 **Leste/Oeste = perfil espelhado**. "real4"/"real3+synth" = quantas das 4 fases
@@ -715,16 +806,35 @@ direção com 3 screenshots a ~150ms de intervalo DURANTE o movimento →
   frente reconhecível (não repete o parado do Leste), pés no chão em todas as
   fases, **sem mudança de tamanho** ao virar em nenhum dos 8. 0 erros no log do
   cliente.
+- **Rodada 4** (retrabalho 2, filtro de validação a-e): mesmos 8 looktypes,
+  mesmo script. Ambiente **compartilhado com outro agente** rodando testes em
+  paralelo no mesmo servidor/conta `god` — o servidor foi reiniciado e o
+  cliente desconectado no meio do teste por duas vezes (telas de
+  seleção-de-personagem capturadas por engano em vez do jogo, descartadas
+  pelo tamanho de arquivo muito menor). Rodadas de reteste isoladas (só o
+  looktype afetado) fecharam a lacuna: **900** sem soco visível em
+  leste/oeste (cabelo loiro confirmado); **906** sem a pose de
+  agachamento/alcance no sul (era o quadro de frente 0053, agora desligado —
+  ver Overrides manuais); **909** com cabelo loiro claro confirmado e sem
+  chute/agachamento em nenhuma direção; **903** com cabelo azul-escuro
+  confirmado. Os 8 looktypes ficaram limpos nas 4 direções — 0 erros de
+  cliente relacionados à arte (os erros vistos foram todos de conexão com o
+  servidor compartilhado, não de sprite/thing).
 
 ### Limitações restantes
 
 - **Costas é sempre síntese**, nunca material real — em close-ups grandes lê-se
   como "cabelo cobrindo o rosto" mais do que uma anatomia de nuca desenhada à
   mão; a 32px na visão do jogo funciona bem.
-- 5 personagens (902, 907, 908, 915, 925) ainda não têm ciclo de andar real: 3
-  das 4 fases vêm do respirar (mudam pouco entre si) + 1 sintética — anda mais
-  suave que a v1 (que tinha 0 fases sintéticas e repetia o parado 3×), mas ainda
-  não é uma passada "de verdade".
+- Vários personagens não têm mais 4 fases 100% reais — o filtro de validação
+  (a-e, seção "Retrabalho 2" acima) troca ou sintetiza qualquer quadro que
+  pareça golpe/agachamento/pulo ou que não flua com o vizinho, então alguns
+  ciclos que antes eram "real4"/"real3" ficaram parcial ou totalmente
+  sintéticos quando o rip não tinha material limpo o bastante por perto (ex.:
+  909 Killer Bee ficou com o ciclo inteiro sintetizado). Isso é uma escolha
+  deliberada — prefere um passo sintético (sempre parece caminhada) a um
+  quadro de golpe real (não parece). Ver a coluna "Andar" da Tabela final por
+  personagem para o estado exato de cada um (`S` = fase sintética).
 - As 4 formas de raposa/quadrúpede (921-923, 926) não recebem repintura de rosto
   na síntese de costas (só escurecem) — não têm "cara" para apagar, e são
   reduzidas a ~37% do tamanho por serem largas.
@@ -739,6 +849,19 @@ direção com 3 screenshots a ~150ms de intervalo DURANTE o movimento →
   revisar, não é uma verdade automática; nomes como "vitória" ou "dano" numa
   folha de revisão podem estar errados sem que isso afete a arte final (que
   passa por seleção e revisão visual separadas).
+- O filtro de validação (a-e) mede geometria (altura/largura/centroide/paleta/
+  continuidade de máscara) — não "entende" a pose. Um golpe cuja caixa e
+  centroide fiquem parecidos com o parado (raro, mas visto em picks de
+  "frente" tipo braço estendido sem inclinar o tronco) pode passar; por isso a
+  revisão visual das 28 folhas `_cycle_<lt>.png` continua necessária, o filtro
+  reduz o trabalho manual mas não substitui a olhada.
+- O ambiente de teste in-game é **compartilhado** (servidor TFS e conta `god`
+  usados por outros agentes/sessões em paralelo, ver docs/sistemas gerais do
+  projeto) — reinícios de servidor e logins concorrentes desconectam o
+  cliente no meio de um teste sem aviso no Lua (a screenshot vira a tela de
+  seleção de personagem, não o jogo). Mitigado detectando o tamanho de
+  arquivo anômalo (a tela de login pesa ~400KB contra ~1MB de uma cena real)
+  e reexecutando só o looktype afetado.
 
 ## Terreno procedural (`gen_terrain.py` + `overrides/10_terrain.json`)
 

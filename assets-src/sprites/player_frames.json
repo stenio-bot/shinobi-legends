@@ -27,10 +27,10 @@
     "_dir": "leste (olhando para a direita)",
     "idle": 80,
     "walk": [
-     84,
-     83,
-     75,
-     "synth:east_walk3 (deslocamento de pernas sobre 0083)"
+     "84",
+     "83",
+     "75",
+     "synth:83"
     ],
     "_nota": "familia de perfil estreito (17-19 px de largura, 39-40 de altura, bracos cruzados). Ciclo medido pelos pes: 84 = pe direito no ar (vao 15px), 83 = pes juntos na passagem (vao 2px), 75 = pe esquerdo no ar (vao 13px). Mesma altura nas 3 fases -> sem solavanco vertical."
    },
@@ -38,13 +38,10 @@
     "_dir": "sul (de frente)",
     "idle": 71,
     "walk": [
-     70,
-     76,
-     {
-      "frame": 70,
-      "mirror": true
-     },
-     "synth:south_walk3 (deslocamento de pernas sobre 0070-mirror)"
+     "70",
+     "76",
+     "70m",
+     "synth:70m"
     ],
     "_nota": "quadros frontais de 39-40px. O material nao tem passo frontal; 70 tem massa de pe assimetrica, entao 70 e 70-espelhado dao a alternancia esquerda/direita e 76 (1px mais baixo) faz a passagem."
    },
@@ -83,5 +80,6 @@
   "Nao existe ciclo de andar frontal: a direcao 2 (sul) usa espelhamento para simular a alternancia de passo.",
   "A direcao 3 (oeste) e espelhada da 1 (leste), entao a bandana e o zíper aparecem trocados de lado — invisivel a 32px.",
   "Os quadros de 39-41px sao reduzidos a 80% e perdem ~1px de detalhe no rosto; o contorno azul-acinzentado do material sobrevive porque o alpha e binarizado depois da reducao."
- ]
+ ],
+ "quadros_rejeitados": []
 }

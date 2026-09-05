@@ -524,12 +524,31 @@ Comandos próprios (`server/tfs/data/scripts/naruto/gm_tools.lua`):
 | `/personagem <id\|nome>` | troca de personagem (GM troca de qualquer vila) |
 | `/elemento katon\|suiton\|raiton\|doton\|fuuton` | troca o set de 4 jutsus elementais |
 | `/pvm` | liga/desliga ser atacado por monstros (grupo God ↔ God Vulnerável, id 7) — ver "GM: /pvm" acima |
+| `/npc Nome Exato` | invoca (`Game.createNpc`) o NPC do lado do GM — testa diálogo de NPCs sem posição física no mapa ainda |
+| `/storage key [value]` | lê (sem `value`) ou grava um storage do próprio GM — depuração de quests/tarefas/diárias/rank |
+| `/rank [rankId]` | mostra o rank atual (+ HP/chakra) ou força uma promoção de teste (bypassa `NarutoQuests.rankGroups`) |
+| `/zonecheck zona` | mostra se o rank atual deixaria entrar na área nomeada (`NarutoRanks.canEnter`) |
 
 Jogadores normais (não-GM) trocam de personagem DENTRO da própria vila com `!personagem`
 (lista) / `!personagem <nome>` (troca) e de elemento com `!elemento` (lista) /
 `!elemento <katon|suiton|raiton|doton|fuuton>` — cada troca reaprende os 8 jutsus (4 pessoais
 + 4 do elemento) e reenvia o `state` pelo opcode 210. Ver `docs/sistemas/vilas-e-clas.md` →
 "Personagens e jutsus" e `docs/sistemas/combate-e-jutsus.md` → "Protocolo opcode 210".
+
+### Comandos de progressão (`docs/sistemas/progressao-servidor.md`)
+
+| Comando | Efeito |
+|---|---|
+| `!tarefas` | lista as tarefas ATIVAS do jogador (aceitas com um Mestre de Tarefas da região) com progresso |
+| `!diaria` | mostra as 3 missões diárias de hoje (sorteadas por faixa de level, já auto-aceitas) com progresso |
+| `!diaria entregar` | entrega todas as diárias do dia que já estiverem prontas |
+| `!pos` | (já existia, vanilla) mostra a posição atual |
+
+Tarefas: fale com o "Mestre de Tarefas" da região (`{tarefas}` lista o catálogo completo,
+`{tarefa}` aceita a primeira elegível, `{entregar}` entrega a primeira pronta). Diárias: o NPC
+"Quadro de Missões" da praça responde às mesmas palavras-chave (`{diaria}`/`{entregar}`) que
+`!diaria`. Exame Chunin (e futuros exames por quiz): fale com o NPC do exame, `{missao}` aceita
+a etapa, `{prova}` começa a prova por palavra-chave quando a etapa for do tipo quiz.
 
 Padrão TFS que importa: `/m Nome` (invoca monstro; patch: procura tile livre em volta), `/i nome do item`, `/goto Jogador`,
 `/c Jogador` (puxa), `/ghost`, `/reload talkactions|spells|monsters`, `/pos`. Nomes dos monstros: os do JSON ("Lobo",
@@ -538,3 +557,41 @@ Padrão TFS que importa: `/m Nome` (invoca monstro; patch: procura tile livre em
 
 Teste automatizado do fluxo: `tools/autotest_client.sh` (servidor no ar) — loga como GM, `/arena`, `/lvl 20`, invoca
 Lobo e Sapo Gigante, ataca, solta jutsu, tira screenshots em `screenshots/`.
+
+## 7. Criar conta pelo site (AAC)
+
+Em vez de inserir conta/personagem na mão via `mysql`, use o AAC local
+(`tools/aac/`): um site em Python puro (`http.server` + `pymysql`, sem
+framework) que cria conta e personagem direto no mesmo banco do TFS.
+
+```bash
+tools/aac.sh                    # sobe em background em http://127.0.0.1:8080/
+tools/aac.sh status             # confere se está no ar
+tools/aac.sh stop                # derruba
+```
+
+Precisa de `pymysql` no `.venv` do projeto (`.venv/bin/pip install pymysql`,
+já instalado neste checkout) — as credenciais do banco são lidas de
+`server/tfs/config.lua`, nunca hardcoded.
+
+Páginas: `/` (instruções), `/criar-conta` (nome/senha/confirmação/e-mail
+opcional), `/criar-personagem` (escolhe vila → personagem inicial daquela
+vila, com preview do outfit → nome do personagem + sexo + login da conta),
+`/conta` (login → lista os personagens). Detalhes de cada coluna gravada em
+`players`/`accounts`, das validações e das pendências conhecidas (só a Vila da
+Folha tem templo de verdade no mapa atual — as outras 3 vilas nascem lá até
+terem mapa próprio) estão em `tools/aac/README.md`.
+
+Depois de criar a conta e o personagem no site, entre no cliente com
+servidor `127.0.0.1`, porta `7171`, protocolo `1098`, usando a conta e a
+senha criadas — o personagem nasce no templo da vila, level 1, com o outfit
+escolhido, e o **Menu Shinobi abre sozinho** na aba Personagem (primeira
+entrada em jogo, `first_time`).
+
+Testado em 2026-09-04: conta + personagem criados via `curl -X POST`,
+conferidos no banco (`level=1`, `vocation`/`town_id`/`looktype` corretos,
+senha em SHA1) e logados de verdade com `tools/autotest_client.sh <conta>
+<senha>` — o personagem nasceu no templo da Vila da Folha com o outfit do
+"Genin Laranja" e o Menu Shinobi abriu sozinho (screenshots
+`screenshots/aac_01_spawn_templo.png` e `screenshots/aac_02_hud.png`). Conta
+de teste apagada do banco ao final.

@@ -28,6 +28,18 @@
         "chance": 0.5,
         "min": 1,
         "max": 1
+      },
+      {
+        "item_id": "manto_anbu_negro",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "calca_anbu_negro",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 180,
@@ -78,6 +90,24 @@
         "chance": 0.15,
         "min": 1,
         "max": 2
+      },
+      {
+        "item_id": "botas_anbu_negro",
+        "chance": 0.06,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "senbon_anbu_negro",
+        "chance": 0.05,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "emblema_anbu_negro",
+        "chance": 0.04,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 220,
@@ -153,6 +183,18 @@
         "chance": 1.0,
         "min": 3,
         "max": 6
+      },
+      {
+        "item_id": "capuz_aurora_carmesim",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "manto_aurora_carmesim",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 5100,
@@ -230,6 +272,24 @@
         "chance": 1.0,
         "min": 3,
         "max": 6
+      },
+      {
+        "item_id": "calca_aurora_carmesim",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "botas_aurora_carmesim",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "katana_aurora_carmesim",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 5400,
@@ -315,6 +375,30 @@
         "chance": 1.0,
         "min": 4,
         "max": 7
+      },
+      {
+        "item_id": "shuriken_aurora_carmesim",
+        "chance": 0.12,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "anel_aurora_carmesim",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "chapeu_kage",
+        "chance": 0.08,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "manto_kage",
+        "chance": 0.06,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 5700,
@@ -396,6 +480,36 @@
         "chance": 1.0,
         "min": 6,
         "max": 10
+      },
+      {
+        "item_id": "calca_kage",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "sandalias_kage",
+        "chance": 0.15,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "lamina_do_kage",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "leque_de_lamina_kage",
+        "chance": 0.1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "item_id": "anel_do_kage",
+        "chance": 0.08,
+        "min": 1,
+        "max": 1
       }
     ],
     "ryo_min": 6000,

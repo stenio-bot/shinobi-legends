@@ -2029,10 +2029,6 @@
 		<attribute key="weight" value="490" />
 		<attribute key="slotType" value="necklace" />
 	</item>
-	<item id="2126" article="a" name="bronze necklace">
-		<attribute key="weight" value="410" />
-		<attribute key="slotType" value="necklace" />
-	</item>
 	<item id="2127" article="an" name="emerald bangle">
 		<attribute key="weight" value="179" />
 	</item>
@@ -2081,10 +2077,6 @@
 	</item>
 	<item id="2141" article="a" name="holy falcon">
 		<attribute key="weight" value="840" />
-	</item>
-	<item id="2142" article="an" name="ancient amulet">
-		<attribute key="weight" value="840" />
-		<attribute key="slotType" value="necklace" />
 	</item>
 	<item id="2143" article="a" name="white pearl">
 		<attribute key="weight" value="20" />
@@ -2138,14 +2130,6 @@
 	<item id="2160" article="a" name="crystal coin">
 		<attribute key="weight" value="10" />
 	</item>
-	<item id="2161" article="a" name="strange talisman">
-		<attribute key="weight" value="290" />
-		<attribute key="slotType" value="necklace" />
-		<attribute key="charges" value="200" />
-		<attribute key="showcharges" value="1" />
-		<attribute key="absorbPercentEnergy" value="10" />
-		<attribute key="showattributes" value="1" />
-	</item>
 	<item id="2162" article="a" name="magic light wand">
 		<attribute key="slotType" value="ammo" />
 		<attribute key="weight" value="1500" />
@@ -2163,13 +2147,6 @@
 		<attribute key="weight" value="100" />
 		<attribute key="slotType" value="ring" />
 		<attribute key="transformEquipTo" value="2202" />
-		<attribute key="stopduration" value="1" />
-		<attribute key="showduration" value="1" />
-	</item>
-	<item id="2166" article="a" name="power ring">
-		<attribute key="weight" value="80" />
-		<attribute key="slotType" value="ring" />
-		<attribute key="transformEquipTo" value="2203" />
 		<attribute key="stopduration" value="1" />
 		<attribute key="showduration" value="1" />
 	</item>
@@ -2343,14 +2320,6 @@
 		<attribute key="absorbPercentPhysical" value="6" />
 		<attribute key="showattributes" value="1" />
 	</item>
-	<item id="2201" article="a" name="dragon necklace">
-		<attribute key="weight" value="630" />
-		<attribute key="slotType" value="necklace" />
-		<attribute key="charges" value="200" />
-		<attribute key="showcharges" value="1" />
-		<attribute key="absorbPercentFire" value="8" />
-		<attribute key="showattributes" value="1" />
-	</item>
 	<item id="2202" article="a" name="stealth ring (invisibility)">
 		<attribute key="weight" value="100" />
 		<attribute key="slotType" value="ring" />
@@ -2369,16 +2338,6 @@
 		<attribute key="skillFist" value="6" />
 		<attribute key="duration" value="1800" />
 		<attribute key="showduration" value="1" />
-	</item>
-	<item id="2204" article="an" name="energy ring (magic shield)">
-		<attribute key="weight" value="80" />
-		<attribute key="slotType" value="ring" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="transformDeEquipTo" value="2167" />
-		<attribute key="duration" value="600" />
-		<attribute key="showduration" value="1" />
-		<attribute key="manashield" value="1" />
-		<attribute key="showattributes" value="1" />
 	</item>
 	<item id="2205" article="a" name="life ring (faster regeneration)">
 		<attribute key="weight" value="80" />
@@ -2422,15 +2381,6 @@
 		<attribute key="slotType" value="ring" />
 		<attribute key="transformEquipTo" value="2212" />
 		<attribute key="stopduration" value="1" />
-		<attribute key="showduration" value="1" />
-	</item>
-	<item id="2210" article="a" name="sword ring (sword fighting +4)">
-		<attribute key="weight" value="90" />
-		<attribute key="slotType" value="ring" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="transformDeEquipTo" value="2207" />
-		<attribute key="skillSword" value="4" />
-		<attribute key="duration" value="1800" />
 		<attribute key="showduration" value="1" />
 	</item>
 	<item id="2211" article="an" name="axe ring (axe fighting +4)">
@@ -3001,11 +2951,6 @@
 		<attribute key="weight" value="1300" />
 		<attribute key="description" value="It is the djinn leader's sleeping lamp." />
 	</item>
-	<item id="2357" article="a" name="ring of wishes">
-		<attribute key="description" value="(This item has 3 charges left)." />
-		<attribute key="weight" value="90" />
-		<attribute key="slotType" value="ring" />
-	</item>
 	<item id="2358" name="boots of waterwalking">
 		<attribute key="description" value="(This item has 5 charges left)." />
 		<attribute key="weight" value="770" />
@@ -3213,14 +3158,6 @@
 		<attribute key="attack" value="16" />
 		<attribute key="weaponType" value="club" />
 	</item>
-	<item id="2399" article="a" name="throwing star">
-		<attribute key="weight" value="200" />
-		<attribute key="attack" value="30" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="shootType" value="throwingstar" />
-		<attribute key="maxHitChance" value="76" />
-		<attribute key="range" value="4" />
-	</item>
 	<item id="2400" article="a" name="magic sword">
 		<attribute key="description" value="It's the Sword of Valor." />
 		<attribute key="weight" value="4200" />
@@ -3236,12 +3173,6 @@
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
-	<item id="2402" article="a" name="silver dagger">
-		<attribute key="weight" value="1020" />
-		<attribute key="defense" value="7" />
-		<attribute key="attack" value="9" />
-		<attribute key="weaponType" value="sword" />
-	</item>
 	<item id="2403" article="a" name="knife">
 		<attribute key="weight" value="420" />
 		<attribute key="defense" value="5" />
@@ -3253,12 +3184,6 @@
 		<attribute key="defense" value="4" />
 		<attribute key="attack" value="5" />
 		<attribute key="weaponType" value="axe" />
-	</item>
-	<item id="2406" article="a" name="short sword">
-		<attribute key="weight" value="3500" />
-		<attribute key="defense" value="11" />
-		<attribute key="attack" value="11" />
-		<attribute key="weaponType" value="sword" />
 	</item>
 	<item id="2407" article="a" name="bright sword">
 		<attribute key="description" value="The blade shimmers in light blue." />
@@ -3644,11 +3569,6 @@
 		<attribute key="armor" value="12" />
 		<attribute key="slotType" value="head" />
 	</item>
-	<item id="2472" article="a" name="magic plate armor">
-		<attribute key="weight" value="8500" />
-		<attribute key="armor" value="17" />
-		<attribute key="slotType" value="body" />
-	</item>
 	<item id="2473" article="a" name="viking helmet">
 		<attribute key="weight" value="3900" />
 		<attribute key="armor" value="4" />
@@ -3664,11 +3584,6 @@
 		<attribute key="weight" value="6800" />
 		<attribute key="armor" value="8" />
 		<attribute key="slotType" value="head" />
-	</item>
-	<item id="2476" article="a" name="knight armor">
-		<attribute key="weight" value="12000" />
-		<attribute key="armor" value="12" />
-		<attribute key="slotType" value="body" />
 	</item>
 	<item id="2479" article="a" name="strange helmet">
 		<attribute key="weight" value="4600" />
@@ -3715,42 +3630,10 @@
 		<attribute key="armor" value="8" />
 		<attribute key="slotType" value="legs" />
 	</item>
-	<item id="2489" article="a" name="dark armor">
-		<attribute key="weight" value="12000" />
-		<attribute key="armor" value="10" />
-		<attribute key="slotType" value="body" />
-	</item>
-	<item id="2490" article="a" name="dark helmet">
-		<attribute key="weight" value="4600" />
-		<attribute key="armor" value="6" />
-		<attribute key="slotType" value="head" />
-	</item>
-	<item id="2493" article="a" name="demon helmet">
-		<attribute key="description" value="You hear an evil whispering from inside." />
-		<attribute key="weight" value="2950" />
-		<attribute key="armor" value="10" />
-		<attribute key="slotType" value="head" />
-	</item>
-	<item id="2494" article="a" name="demon armor">
-		<attribute key="weight" value="8000" />
-		<attribute key="armor" value="16" />
-		<attribute key="slotType" value="body" />
-	</item>
 	<item id="2495" name="demon legs">
 		<attribute key="weight" value="7000" />
 		<attribute key="armor" value="9" />
 		<attribute key="slotType" value="legs" />
-	</item>
-	<item id="2496" article="a" name="horned helmet">
-		<attribute key="weight" value="5100" />
-		<attribute key="armor" value="11" />
-		<attribute key="slotType" value="head" />
-	</item>
-	<item id="2498" article="a" name="royal helmet">
-		<attribute key="description" value="An excellent masterpiece of a smith." />
-		<attribute key="weight" value="4800" />
-		<attribute key="armor" value="9" />
-		<attribute key="slotType" value="head" />
 	</item>
 	<item id="2499" article="an" name="amazon helmet">
 		<attribute key="weight" value="2950" />
@@ -4263,23 +4146,9 @@
 		<attribute key="armor" value="2" />
 		<attribute key="slotType" value="feet" />
 	</item>
-	<item id="2642" name="sandals">
-		<attribute key="weight" value="600" />
-		<attribute key="slotType" value="feet" />
-	</item>
 	<item id="2644" name="bunnyslippers">
 		<attribute key="weight" value="600" />
 		<attribute key="slotType" value="feet" />
-	</item>
-	<item id="2647" name="plate legs">
-		<attribute key="weight" value="5000" />
-		<attribute key="armor" value="7" />
-		<attribute key="slotType" value="legs" />
-	</item>
-	<item id="2648" name="chain legs">
-		<attribute key="weight" value="3500" />
-		<attribute key="armor" value="3" />
-		<attribute key="slotType" value="legs" />
 	</item>
 	<item id="2650" article="a" name="jacket">
 		<attribute key="weight" value="2400" />
@@ -7127,25 +6996,12 @@
 		<attribute key="weaponType" value="axe" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
-	<item id="3965" article="a" name="hunting spear">
-		<attribute key="weight" value="2200" />
-		<attribute key="attack" value="32" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="shootType" value="huntingspear" />
-		<attribute key="maxHitChance" value="80" />
-		<attribute key="range" value="3" />
-	</item>
 	<item id="3966" article="a" name="banana staff">
 		<attribute key="weight" value="5000" />
 		<attribute key="defense" value="15" />
 		<attribute key="attack" value="25" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="extradef" value="2" />
-	</item>
-	<item id="3967" article="a" name="tribal mask">
-		<attribute key="weight" value="2500" />
-		<attribute key="armor" value="2" />
-		<attribute key="slotType" value="head" />
 	</item>
 	<item id="3968" article="a" name="leopard armor">
 		<attribute key="weight" value="9500" />
@@ -9150,12 +9006,6 @@
 		<attribute key="weight" value="500" />
 	</item>
 	<item fromid="5915" toid="5916" article="a" name="large throne" />
-	<item id="5917" article="a" name="bandana">
-		<attribute key="description" value="It is quite fashionable as well as useful for anyone spending huge amounts of time in the sun." />
-		<attribute key="weight" value="850" />
-		<attribute key="armor" value="1" />
-		<attribute key="slotType" value="head" />
-	</item>
 	<item id="5918" name="pirate knee breeches">
 		<attribute key="weight" value="1200" />
 		<attribute key="armor" value="1" />
@@ -10295,13 +10145,6 @@
 		<attribute key="defense" value="26" />
 		<attribute key="weaponType" value="shield" />
 	</item>
-	<item id="6132" article="a" name="pair of soft boots">
-		<attribute key="weight" value="800" />
-		<attribute key="slotType" value="feet" />
-		<attribute key="transformEquipTo" value="2640" />
-		<attribute key="stopduration" value="1" />
-		<attribute key="showduration" value="1" />
-	</item>
 	<item fromid="6133" toid="6159" article="a" name="tree wall" />
 	<item fromid="6160" toid="6172" article="a" name="grass roof" />
 	<item fromid="6173" toid="6174" name="stairs">
@@ -10927,7 +10770,6 @@
 		<attribute key="weaponType" value="shield" />
 	</item>
 	<item id="6434" article="a" name="blue tapestry" />
-	<item id="6435" article="a" name="demon trophy" />
 	<item fromid="6436" toid="6437" article="a" name="framework window">
 		<attribute key="type" value="door" />
 		<attribute key="blockprojectile" value="1" />
@@ -11106,14 +10948,6 @@
 	<item id="6527" article="a" name="christmas token">
 		<attribute key="description" value="Collect enough of these to trade them for valuable prizes." />
 		<attribute key="weight" value="5" />
-	</item>
-	<item id="6528" name="the avenger">
-		<attribute key="description" value="This holy blade was forged of shattered dreams." />
-		<attribute key="weight" value="6400" />
-		<attribute key="defense" value="38" />
-		<attribute key="attack" value="50" />
-		<attribute key="weaponType" value="sword" />
-		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="6529" article="an" name="infernal bolt">
 		<attribute key="weight" value="90" />
@@ -12145,15 +11979,6 @@
 		<attribute key="shootType" value="onyxarrow" />
 		<attribute key="maxHitChance" value="94" />
 	</item>
-	<item id="7366" article="a" name="viper star">
-		<attribute key="weight" value="200" />
-		<attribute key="attack" value="28" />
-		<attribute key="hitChance" value="80" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="shootType" value="greenstar" />
-		<attribute key="maxHitChance" value="76" />
-		<attribute key="range" value="4" />
-	</item>
 	<item id="7369" article="a" name="golden goblet">
 		<attribute key="weight" value="3500" />
 	</item>
@@ -12280,28 +12105,7 @@
 	<item id="7393" article="a" name="demon trophy">
 		<attribute key="weight" value="500" />
 	</item>
-	<item id="7394" article="a" name="wolf trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7395" article="an" name="orc trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7396" article="a" name="behemoth trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7397" article="a" name="deer trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7398" article="a" name="cyclops trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7399" article="a" name="dragon lord trophy">
-		<attribute key="weight" value="500" />
-	</item>
 	<item id="7400" article="a" name="lion trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="7401" article="a" name="minotaur trophy">
 		<attribute key="weight" value="500" />
 	</item>
 	<item id="7402" article="a" name="dragon slayer">
@@ -12554,15 +12358,6 @@
 		<attribute key="attack" value="37" />
 		<attribute key="weaponType" value="club" />
 	</item>
-	<item id="7438" article="an" name="elvish bow">
-		<attribute key="description" value="This beautifully ornamented bow was made by a skilled elvish bowmaker." />
-		<attribute key="weight" value="3900" />
-		<attribute key="slotType" value="two-handed" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="ammoType" value="arrow" />
-		<attribute key="range" value="6" />
-		<attribute key="hitChance" value="5" />
-	</item>
 	<item id="7439" article="a" name="berserk potion">
 		<attribute key="description" value="Drinking this potion increases temporarily your fighting skill while decreasing your defense." />
 		<attribute key="weight" value="200" />
@@ -12657,12 +12452,6 @@
 		<attribute key="armor" value="2" />
 		<attribute key="slotType" value="feet" />
 		<attribute key="speed" value="-12" />
-	</item>
-	<item id="7458" article="a" name="fur cap">
-		<attribute key="description" value="It feels nice and warm on your ears." />
-		<attribute key="weight" value="1800" />
-		<attribute key="armor" value="3" />
-		<attribute key="slotType" value="head" />
 	</item>
 	<item id="7459" article="a" name="pair of earmuffs">
 		<attribute key="description" value="They feel nice and warm on your ears." />
@@ -14349,13 +14138,6 @@
 		<attribute key="showcharges" value="1" />
 		<attribute key="showattributes" value="1" />
 	</item>
-	<item id="7891" name="magma boots">
-		<attribute key="weight" value="750" />
-		<attribute key="armor" value="2" />
-		<attribute key="absorbPercentFire" value="5" />
-		<attribute key="absorbPercentIce" value="-5" />
-		<attribute key="slotType" value="feet" />
-	</item>
 	<item id="7892" name="glacier shoes">
 		<attribute key="weight" value="750" />
 		<attribute key="armor" value="2" />
@@ -14369,13 +14151,6 @@
 		<attribute key="absorbPercentEnergy" value="5" />
 		<attribute key="absorbPercentEarth" value="-5" />
 		<attribute key="slotType" value="feet" />
-	</item>
-	<item id="7894" name="magma legs">
-		<attribute key="weight" value="1900" />
-		<attribute key="armor" value="8" />
-		<attribute key="absorbPercentFire" value="6" />
-		<attribute key="absorbPercentIce" value="-6" />
-		<attribute key="slotType" value="legs" />
 	</item>
 	<item id="7895" name="lightning legs">
 		<attribute key="weight" value="1900" />
@@ -14522,9 +14297,6 @@
 	</item>
 	<item id="7934" article="a" name="test-tube holder" />
 	<item id="7935" article="a" name="potion stand" />
-	<item id="7936" article="a" name="trophy stand">
-		<attribute key="weight" value="970" />
-	</item>
 	<item id="7937" article="a" name="potion stand" />
 	<item id="7938" article="a" name="large hole">
 		<attribute key="floorchange" value="down" />
@@ -14578,9 +14350,6 @@
 	<item id="7963" article="a" name="marlin">
 		<attribute key="description" value="This rare fish is almost too precious to simply be eaten. Maybe you can find a collector." />
 		<attribute key="weight" value="1800" />
-	</item>
-	<item id="7964" article="a" name="marlin trophy">
-		<attribute key="weight" value="500" />
 	</item>
 	<item id="7965" article="a" name="badger fur">
 		<attribute key="weight" value="1000" />
@@ -14735,13 +14504,6 @@
 		<attribute key="weight" value="100" />
 		<attribute key="decayTo" value="0" />
 		<attribute key="duration" value="120" />
-	</item>
-	<item id="8209" article="a" name="crimson sword" editorsuffix=" (Old notchy one)">
-		<attribute key="description" value="Its blade is very notchy" />
-		<attribute key="weight" value="3600" />
-		<attribute key="defense" value="10" />
-		<attribute key="attack" value="18" />
-		<attribute key="weaponType" value="sword" />
 	</item>
 	<item fromid="8210" toid="8213" article="a" name="cave entrance">
 		<attribute key="floorchange" value="down" />
@@ -15431,31 +15193,6 @@
 		<attribute key="description" value="There is cookie dough on it." />
 		<attribute key="weight" value="1200" />
 	</item>
-	<item id="8849" article="a" name="modified crossbow">
-		<attribute key="weight" value="3500" />
-		<attribute key="slotType" value="two-handed" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="ammoType" value="bolt" />
-		<attribute key="range" value="5" />
-		<attribute key="hitChance" value="1" />
-	</item>
-	<item id="8850" article="a" name="chain bolter">
-		<attribute key="weight" value="5500" />
-		<attribute key="slotType" value="two-handed" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="ammoType" value="bolt" />
-		<attribute key="range" value="3" />
-		<attribute key="attack" value="4" />
-	</item>
-	<item id="8851" article="a" name="royal crossbow">
-		<attribute key="weight" value="12000" />
-		<attribute key="slotType" value="two-handed" />
-		<attribute key="weaponType" value="distance" />
-		<attribute key="ammoType" value="bolt" />
-		<attribute key="range" value="6" />
-		<attribute key="hitChance" value="3" />
-		<attribute key="attack" value="5" />
-	</item>
 	<item id="8852" name="the devileye">
 		<attribute key="weight" value="5500" />
 		<attribute key="slotType" value="two-handed" />
@@ -15550,26 +15287,12 @@
 		<attribute key="absorbPercentFire" value="12" />
 		<attribute key="absorbPercentIce" value="-12" />
 	</item>
-	<item id="8868" article="a" name="velvet mantle">
-		<attribute key="description" value="The smooth tissue seems to sparkle." />
-		<attribute key="weight" value="2850" />
-		<attribute key="armor" value="12" />
-		<attribute key="absorbPercentEnergy" value="12" />
-		<attribute key="absorbPercentEarth" value="-12" />
-		<attribute key="slotType" value="body" />
-	</item>
 	<item id="8869" article="a" name="greenwood coat">
 		<attribute key="weight" value="2850" />
 		<attribute key="armor" value="12" />
 		<attribute key="absorbPercentEarth" value="12" />
 		<attribute key="absorbPercentFire" value="-12" />
 		<attribute key="slotType" value="body" />
-	</item>
-	<item id="8870" article="a" name="spirit cloak">
-		<attribute key="armor" value="8" />
-		<attribute key="slotType" value="body" />
-		<attribute key="weight" value="2650" />
-		<attribute key="magiclevelpoints" value="1" />
 	</item>
 	<item id="8871" article="a" name="focus cape">
 		<attribute key="weight" value="2100" />
@@ -17251,10 +16974,6 @@
 		<attribute key="slotType" value="head" />
 		<attribute key="weight" value="500" />
 	</item>
-	<item id="9928" name="leaf legs">
-		<attribute key="slotType" value="legs" />
-		<attribute key="weight" value="1200" />
-	</item>
 	<item id="9929" article="a" name="flower dress">
 		<attribute key="slotType" value="body" />
 		<attribute key="weight" value="1900" />
@@ -17934,21 +17653,6 @@
 		<attribute key="writeable" value="1" />
 		<attribute key="maxTextLen" value="128" />
 	</item>
-	<item id="10130" article="a" name="golden trophy of excellence">
-		<attribute key="weight" value="1300" />
-		<attribute key="writeable" value="1" />
-		<attribute key="maxTextLen" value="128" />
-	</item>
-	<item id="10131" article="a" name="silver trophy of excellence">
-		<attribute key="weight" value="1300" />
-		<attribute key="writeable" value="1" />
-		<attribute key="maxTextLen" value="128" />
-	</item>
-	<item id="10132" article="a" name="bronze trophy of excellence">
-		<attribute key="weight" value="1300" />
-		<attribute key="writeable" value="1" />
-		<attribute key="maxTextLen" value="128" />
-	</item>
 	<item id="10133" article="a" name="gold medal">
 		<attribute key="weight" value="1240" />
 		<attribute key="writeable" value="1" />
@@ -17991,11 +17695,6 @@
 	</item>
 	<item id="10141" article="a" name="heavy medal">
 		<attribute key="weight" value="5500" />
-		<attribute key="writeable" value="1" />
-		<attribute key="maxTextLen" value="128" />
-	</item>
-	<item id="10142" article="an" name="elven trophy">
-		<attribute key="weight" value="900" />
 		<attribute key="writeable" value="1" />
 		<attribute key="maxTextLen" value="128" />
 	</item>
@@ -18300,12 +17999,6 @@
 		<attribute key="armor" value="3" />
 		<attribute key="slotType" value="head" />
 	</item>
-	<item id="10300" name="trousers of the ancients">
-		<attribute key="description" value="These atavistic trousers already served the forefathers of mankind." />
-		<attribute key="weight" value="30" />
-		<attribute key="armor" value="2" />
-		<attribute key="slotType" value="legs" />
-	</item>
 	<item id="10301" article="a" name="scythe of the reaper">
 		<attribute key="description" value="This scythe has harvested countless souls and still hungers for more." />
 		<attribute key="weight" value="3000" />
@@ -18507,12 +18200,6 @@
 	<item id="10454" article="a" name="headache pill">
 		<attribute key="weight" value="20" />
 	</item>
-	<item id="10455" article="a" name="pigeon trophy">
-		<attribute key="description" value="It's a symbol of peace handed out by the gods." />
-		<attribute key="weight" value="400" />
-		<attribute key="writeable" value="1" />
-		<attribute key="maxTextLen" value="128" />
-	</item>
 	<item fromid="10456" toid="10467" name="dark sand" />
 	<item id="10468" article="a" name="closed door" editorsuffix=" (Locked)">
 		<attribute key="type" value="door" />
@@ -18712,9 +18399,6 @@
 		<attribute key="duration" value="600" />
 		<attribute key="corpseType" value="blood" />
 	</item>
-	<item id="10529" article="a" name="sea serpent trophy">
-		<attribute key="weight" value="500" />
-	</item>
 	<item id="10530" article="the" name="famous golden bug">
 		<attribute key="description" value="It's given to skilled discoverers of extra nasty bugs and to great scholars writing useful reports." />
 		<attribute key="weight" value="1250" />
@@ -18751,14 +18435,6 @@
 	</item>
 	<item id="10540" article="a" name="limestone railing" />
 	<item id="10541" article="a" name="statue of Fafnar" />
-	<item id="10542" article="a" name="golden Fafnar trophy">
-		<attribute key="description" value="You read: |PLAYERNAME| kept all ten fire basins burning and is one of the true lightbearers of this world." />
-		<attribute key="weight" value="900" />
-	</item>
-	<item id="10543" article="a" name="silver Fafnar trophy">
-		<attribute key="description" value="You read: |PLAYERNAME| helped to keep the fire basins burning and is one of the lightbearers of this world." />
-		<attribute key="weight" value="900" />
-	</item>
 	<item fromid="10544" toid="10545" article="an" name="elemental cannon" />
 	<item id="10546" article="a" name="magic wall" />
 	<item id="10547" article="an" name="energy field" />
@@ -19255,20 +18931,6 @@
 		<attribute key="description" value="This crest seems important. You shouldn't lose it." />
 		<attribute key="weight" value="500" />
 	</item>
-	<item id="11117" name="crystal boots">
-		<attribute key="armor" value="3" />
-		<attribute key="absorbPercentIce" value="3" />
-		<attribute key="absorbPercentEnergy" value="-3" />
-		<attribute key="slotType" value="feet" />
-		<attribute key="weight" value="1850" />
-	</item>
-	<item id="11118" name="dragon scale boots">
-		<attribute key="armor" value="3" />
-		<attribute key="absorbPercentFire" value="3" />
-		<attribute key="absorbPercentIce" value="-3" />
-		<attribute key="slotType" value="feet" />
-		<attribute key="weight" value="1850" />
-	</item>
 	<item id="11119" article="a" name="heart backpack">
 		<attribute key="weight" value="1800" />
 		<attribute key="containerSize" value="20" />
@@ -19355,9 +19017,6 @@
 	<item fromid="11145" toid="11152" name="muddy floor" />
 	<item id="11153" article="a" name="dry riverbed" />
 	<item fromid="11154" toid="11160" name="muddy floor" />
-	<item id="11161" article="a" name="bonebeast trophy">
-		<attribute key="weight" value="500" />
-	</item>
 	<item fromid="11162" toid="11163" name="corned fish" />
 	<item id="11164" article="a" name="weapons crate">
 		<attribute key="description" value="This crate contains a set of weapons." />
@@ -19513,13 +19172,6 @@
 	</item>
 	<item id="11239" article="a" name="statue">
 		<attribute key="allowDistRead" value="true" />
-	</item>
-	<item id="11240" name="guardian boots">
-		<attribute key="armor" value="3" />
-		<attribute key="absorbPercentPhysical" value="2" />
-		<attribute key="absorbPercentHoly" value="-2" />
-		<attribute key="slotType" value="feet" />
-		<attribute key="weight" value="2250" />
 	</item>
 	<item id="11241" article="an" name="expedition backpack">
 		<attribute key="weight" value="1800" />
@@ -19777,18 +19429,6 @@
 		<attribute key="slotType" value="head" />
 		<attribute key="absorbPercentPhysical" value="5" />
 	</item>
-	<item id="11303" name="Zaoan shoes">
-		<attribute key="weight" value="700" />
-		<attribute key="armor" value="1" />
-		<attribute key="slotType" value="feet" />
-		<attribute key="speed" value="10" />
-	</item>
-	<item id="11304" name="Zaoan legs">
-		<attribute key="weight" value="6600" />
-		<attribute key="armor" value="8" />
-		<attribute key="slotType" value="legs" />
-		<attribute key="absorbPercentPhysical" value="2" />
-	</item>
 	<item id="11305" article="a" name="drakinata">
 		<attribute key="weight" value="5400" />
 		<attribute key="defense" value="20" />
@@ -19850,9 +19490,6 @@
 	</item>
 	<item id="11314" article="a" name="weaver's wandtip" plural="weaver's wandtips">
 		<attribute key="weight" value="170" />
-	</item>
-	<item id="11315" article="a" name="draken trophy">
-		<attribute key="weight" value="600" />
 	</item>
 	<item id="11316" article="a" name="dead draken spellweaver">
 		<attribute key="containerSize" value="30" />
@@ -19932,14 +19569,8 @@
 	<item id="11335" article="a" name="broken halberd">
 		<attribute key="weight" value="210" />
 	</item>
-	<item id="11336" article="a" name="lizard trophy">
-		<attribute key="weight" value="1200" />
-	</item>
 	<item id="11337" article="a" name="petrified scream">
 		<attribute key="weight" value="150" />
-	</item>
-	<item id="11338" article="a" name="disgusting trophy">
-		<attribute key="weight" value="700" />
 	</item>
 	<item id="11339" article="a" name="clay lump">
 		<attribute key="description" value="You could use it and try to form a statue out for it." />
@@ -21349,10 +20980,6 @@
 		<attribute key="duration" value="60" />
 		<attribute key="corpseType" value="undead" />
 	</item>
-	<item id="12635" article="a" name="souleater trophy">
-		<attribute key="slotType" value="ammo" />
-		<attribute key="weight" value="500" />
-	</item>
 	<item id="12636" article="a" name="lizard essence">
 		<attribute key="weight" value="150" />
 	</item>
@@ -21428,9 +21055,6 @@
 		<attribute key="attack" value="48" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="extradef" value="2" />
-	</item>
-	<item id="12650" article="a" name="snake god trophy">
-		<attribute key="weight" value="500" />
 	</item>
 	<item id="12651" article="a" name="black jade cobra">
 		<attribute key="slotType" value="ammo" />
@@ -24244,13 +23868,6 @@
 		<attribute key="armor" value="8" />
 		<attribute key="slotType" value="head" />
 	</item>
-	<item id="15409" article="a" name="depth ocrea">
-		<attribute key="weight" value="4800" />
-		<attribute key="armor" value="8" />
-		<attribute key="slotType" value="legs" />
-		<attribute key="absorbPercentManaDrain" value="15" />
-		<attribute key="showattributes" value="1" />
-	</item>
 	<item id="15410" name="depth calcei">
 		<attribute key="weight" value="3700" />
 		<attribute key="armor" value="3" />
@@ -24285,30 +23902,6 @@
 		<attribute key="attack" value="49" />
 		<attribute key="defense" value="24" />
 		<attribute key="weaponType" value="club" />
-	</item>
-	<item id="15415" article="a" name="trophy of Obujos">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15416" />
-	</item>
-	<item id="15416" article="a" name="trophy of Obujos">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15415" />
-	</item>
-	<item id="15417" article="a" name="trophy of Tanjis">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15418" />
-	</item>
-	<item id="15418" article="a" name="trophy of Tanjis">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15417" />
-	</item>
-	<item id="15419" article="a" name="trophy of Jaul">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15420" />
-	</item>
-	<item id="15420" article="a" name="trophy of Jaul">
-		<attribute key="weight" value="500" />
-		<attribute key="rotateTo" value="15419" />
 	</item>
 	<item id="15421" article="a" name="spellsinger's seal">
 		<attribute key="weight" value="190" />
@@ -24642,9 +24235,6 @@
 		<attribute key="description" value="These scribblings are almost unreadable." />
 	</item>
 	<item fromid="15577" toid="15618" name="decoration" />
-	<item id="15619" article="a" name="trophy of Obujos">
-		<attribute key="weight" value="500" />
-	</item>
 	<item id="15620" article="a" name="trophy of Tanjis">
 		<attribute key="weight" value="500" />
 	</item>
@@ -24738,18 +24328,6 @@
 	<item fromid="15820" toid="15823" name="counter" />
 	<item id="15985" article="a" name="slain pharaoh" />
 	<item id="16003" article="a" name="CM token">
-		<attribute key="description" value="It was awarded during the festivities of the worlds 15th anniversary." />
-		<attribute key="weight" value="1250" />
-	</item>
-	<item id="16004" name="Delany's golden bug trophy">
-		<attribute key="description" value="It was awarded during the festivities of the worlds 15th anniversary." />
-		<attribute key="weight" value="1250" />
-	</item>
-	<item id="16005" name="Bolfrim's golden bug trophy">
-		<attribute key="description" value="It was awarded during the festivities of the worlds 15th anniversary." />
-		<attribute key="weight" value="1250" />
-	</item>
-	<item id="16006" name="Siramal's golden bug trophy">
 		<attribute key="description" value="It was awarded during the festivities of the worlds 15th anniversary." />
 		<attribute key="weight" value="1250" />
 	</item>
@@ -32769,12 +32347,6 @@
 		<attribute key="slotType" value="body" />
 		<attribute key="weight" value="5500" />
 	</item>
-	<item id="23539" name="alloy legs">
-		<attribute key="armor" value="6" />
-		<attribute key="slotType" value="legs" />
-		<attribute key="speed" value="20" />
-		<attribute key="weight" value="4500" />
-	</item>
 	<item id="23540" name="metal spats">
 		<attribute key="armor" value="1" />
 		<attribute key="slotType" value="feet" />
@@ -34542,18 +34114,6 @@
 	<item fromid="24751" toid="24752" article="a" name="wereboar trophy" />
 	<item fromid="24753" toid="24754" article="a" name="werebear trophy" />
 	<item fromid="24755" toid="24756" article="a" name="trophy of Feroxa" />
-	<item id="24757" article="a" name="werebadger trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="24758" article="a" name="wereboar trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="24759" article="a" name="werebear trophy">
-		<attribute key="weight" value="500" />
-	</item>
-	<item id="24760" article="a" name="trophy of Feroxa">
-		<attribute key="weight" value="500" />
-	</item>
 	<item id="24762" article="a" name="water channel">
 		<attribute key="description" value="It draws you nearer." />
 		<attribute key="type" value="teleport" />
@@ -37453,6 +37013,505 @@
 	<attribute key="skillSword" value="5"/>
 	<attribute key="speed" value="30"/>
 	
+</item>
+<item id="2126" name="amuleto da academia">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Dado a todo genin recém-formado pela Academia. Quase não protege, mas ninguém esquece o primeiro amuleto."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="1"/>
+	
+</item>
+<item id="7458" name="capuz do batedor">  
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Cobre o rosto contra vento e poeira da estrada — usado por quem já deixou a Floresta da Vila."/>
+	<attribute key="armor" value="2"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="9928" name="calça do batedor">  
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Reforçada nos joelhos para longas patrulhas na Costa das Marés e na Floresta da Morte."/>
+	<attribute key="armor" value="4"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="2399" name="senbon de ferro">  
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Agulhas pesadas de arremesso, mais precisas que o shuriken comum."/>
+	<attribute key="attack" value="16"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2210" name="bracelete do viajante">  
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Marca de quem já matou o suficiente fora da vila para ser levado a sério."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillSword" value="2"/>
+	
+</item>
+<item id="5917" name="bandana de chunin">  
+	<attribute key="weight" value="80"/>
+	<attribute key="description" value="Traz o símbolo da vila gravado na placa de metal. Só é entregue a quem passa no exame."/>
+	<attribute key="armor" value="5"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="2648" name="calça de chunin">  
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Tecido reforçado usado nas missões de rank C que se seguem ao exame."/>
+	<attribute key="armor" value="7"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="2642" name="sandália de chunin">  
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Sola fina o bastante para não fazer barulho, grossa o bastante para aguentar a Floresta da Morte."/>
+	<attribute key="armor" value="4"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="3967" name="máscara do rastreador sombrio">  
+	<attribute key="weight" value="150"/>
+	<attribute key="description" value="Filtra o pó das Ruínas do Clã Marionetista. Usada por quem persegue desertores de elite."/>
+	<attribute key="armor" value="10"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="8870" name="manto do rastreador sombrio">  
+	<attribute key="weight" value="800"/>
+	<attribute key="description" value="Tingido para se confundir com a pedra das ruínas ao entardecer."/>
+	<attribute key="armor" value="22"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="15409" name="calça do rastreador sombrio">  
+	<attribute key="weight" value="450"/>
+	<attribute key="description" value="Permite agachar entre os escombros sem rasgar."/>
+	<attribute key="armor" value="14"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="11303" name="botas do rastreador sombrio">  
+	<attribute key="weight" value="250"/>
+	<attribute key="description" value="Sola de couro de marionete — não deixa rastro em pó de pedra."/>
+	<attribute key="armor" value="8"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="2402" name="adaga sombria">  
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete."/>
+	<attribute key="attack" value="54"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="7366" name="shuriken sombria">  
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Bordas enegrecidas para não refletir luz no covil."/>
+	<attribute key="attack" value="56"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="5"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2201" name="colar do rastreador">  
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Cada conta representa um desertor caçado com sucesso."/>
+	<attribute key="slotType" value="ring"/>
+	
+</item>
+<item id="2476" name="colete de jonin">  
+	<attribute key="weight" value="900"/>
+	<attribute key="description" value="Entregue a quem vence o Espadachim da Névoa e o Marionetista das Ruínas — o Exame Jonin."/>
+	<attribute key="armor" value="28"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="2647" name="calça de jonin">  
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Parte do uniforme padrão de Jonin, reforçada para a Montanha do Trovão."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="6132" name="botas de jonin">  
+	<attribute key="weight" value="280"/>
+	<attribute key="description" value="Sola grossa o bastante para o gelo da geleira e para a trilha de pedra vulcânica."/>
+	<attribute key="armor" value="10"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="2406" name="tantō de jonin">  
+	<attribute key="weight" value="400"/>
+	<attribute key="description" value="Forjado nas forjas da vila só para quem alcança o posto."/>
+	<attribute key="attack" value="68"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="3965" name="senbon de jonin">  
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Conjunto de agulhas com contrapeso perfeito, padrão dos Jonin."/>
+	<attribute key="attack" value="71"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2166" name="bracelete de jonin">  
+	<attribute key="weight" value="25"/>
+	<attribute key="description" value="Gravado com o símbolo do posto — só é usado depois do Exame Jonin."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="3"/>
+	
+</item>
+<item id="2496" name="elmo do caçador de onis">  
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Chifre de oni cravado na testeira — troféu de quem já sobreviveu ao gelo da Montanha do Trovão."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="2494" name="couraça do caçador de onis">  
+	<attribute key="weight" value="1300"/>
+	<attribute key="description" value="Placas de escama de magma reforçadas por cima do couro de oni."/>
+	<attribute key="armor" value="38"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="7894" name="grevas do caçador de onis">  
+	<attribute key="weight" value="700"/>
+	<attribute key="description" value="Protegem contra o gelo da geleira e o calor das fendas de magma na mesma subida."/>
+	<attribute key="armor" value="24"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="7891" name="botas do caçador de onis">  
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="Sola tripla — a única forma de aguentar a trilha inteira da Montanha do Trovão em um dia."/>
+	<attribute key="armor" value="14"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="7438" name="shuriken congelante">  
+	<attribute key="weight" value="450"/>
+	<attribute key="description" value="Forjada com estilhaços de gelo da geleira — nunca derrete de verdade."/>
+	<attribute key="attack" value="98"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2161" name="talismã do caçador de onis">  
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Feito com o chifre do primeiro oni que o portador derrotou sozinho."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillSword" value="3"/>
+	
+</item>
+<item id="2490" name="capuz anbu negro">  
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Sem brasão, sem nome — a marca de quem age direto sob as ordens do Kage."/>
+	<attribute key="armor" value="20"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="2489" name="manto anbu negro">  
+	<attribute key="weight" value="1000"/>
+	<attribute key="description" value="Tecido escuro cortado para não fazer ruído nos corredores do Covil da Nuvem Vermelha."/>
+	<attribute key="armor" value="44"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="11304" name="calça anbu negra">  
+	<attribute key="weight" value="550"/>
+	<attribute key="description" value="Parte do uniforme de operações que só o corpo Anbu usa."/>
+	<attribute key="armor" value="28"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="11240" name="botas anbu negras">  
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Silenciosas o bastante para escoltar uma missão sem ser notado."/>
+	<attribute key="armor" value="16"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="8849" name="senbon anbu negro">  
+	<attribute key="weight" value="220"/>
+	<attribute key="description" value="Kit padrão de arremesso do corpo Anbu — preciso até no escuro."/>
+	<attribute key="attack" value="112"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2142" name="emblema anbu negro">  
+	<attribute key="weight" value="30"/>
+	<attribute key="description" value="Só é dado a quem prova, em campo, que aguenta o Exame Anbu."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="skillClub" value="4"/>
+	
+</item>
+<item id="2493" name="capuz da aurora carmesim">  
+	<attribute key="weight" value="220"/>
+	<attribute key="description" value="Usado pelos ninjas elite da Aurora que guardam os corredores do Covil."/>
+	<attribute key="armor" value="22"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="8868" name="manto da aurora carmesim">  
+	<attribute key="weight" value="1050"/>
+	<attribute key="description" value="Nuvens vermelhas bordadas sobre pano preto — quem usa já provou lealdade ou já morreu tentando escapar dela."/>
+	<attribute key="armor" value="50"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="23539" name="calça da aurora carmesim">  
+	<attribute key="weight" value="600"/>
+	<attribute key="description" value="Parte do uniforme dos guardas de elite do Covil da Nuvem Vermelha."/>
+	<attribute key="armor" value="31"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="11118" name="botas da aurora carmesim">  
+	<attribute key="weight" value="320"/>
+	<attribute key="description" value="Reforçadas para os corredores de pedra do covil final."/>
+	<attribute key="armor" value="18"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="8209" name="katana da aurora carmesim">  
+	<attribute key="weight" value="650"/>
+	<attribute key="description" value="Lâmina confiscada de um clone branco derrotado."/>
+	<attribute key="attack" value="122"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="8850" name="shuriken da aurora carmesim">  
+	<attribute key="weight" value="480"/>
+	<attribute key="description" value="Marcada com a nuvem vermelha da organização."/>
+	<attribute key="attack" value="126"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="6"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2204" name="anel da aurora carmesim">  
+	<attribute key="weight" value="25"/>
+	<attribute key="description" value="Tirado de um ninja elite da Aurora — ainda carrega um resquício do chakra dele."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="4"/>
+	
+</item>
+<item id="2498" name="chapéu de kage">  
+	<attribute key="weight" value="250"/>
+	<attribute key="description" value="O símbolo mais alto de autoridade shinobi. Só é forjado quando o posto é conquistado de verdade."/>
+	<attribute key="armor" value="25"/>
+	<attribute key="slotType" value="head"/>
+	
+</item>
+<item id="2472" name="manto de kage">  
+	<attribute key="weight" value="1100"/>
+	<attribute key="description" value="Tecido com fios de chakra selado, feito para sobreviver ao Ancestral da Nuvem Vermelha."/>
+	<attribute key="armor" value="55"/>
+	<attribute key="slotType" value="body"/>
+	
+</item>
+<item id="10300" name="calça de kage">  
+	<attribute key="weight" value="650"/>
+	<attribute key="description" value="Última peça do uniforme reservado a quem termina a progressão de rank."/>
+	<attribute key="armor" value="35"/>
+	<attribute key="slotType" value="legs"/>
+	
+</item>
+<item id="11117" name="sandálias de kage">  
+	<attribute key="weight" value="350"/>
+	<attribute key="description" value="As últimas que um shinobi em ascensão precisa comprar."/>
+	<attribute key="armor" value="20"/>
+	<attribute key="slotType" value="feet"/>
+	
+</item>
+<item id="6528" name="lâmina do kage">  
+	<attribute key="weight" value="700"/>
+	<attribute key="description" value="Forjada uma única vez, para o vencedor do Exame Kage."/>
+	<attribute key="attack" value="141"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="8851" name="leque de lâminas do kage">  
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Arremessado em leque — cada lâmina volta à mão sozinha."/>
+	<attribute key="attack" value="143"/>
+	<attribute key="weaponType" value="distance"/>
+	<attribute key="range" value="7"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2357" name="anel do kage">  
+	<attribute key="weight" value="20"/>
+	<attribute key="description" value="Última prova de progressão — usado só por quem derrotou o Ancestral da Nuvem Vermelha."/>
+	<attribute key="slotType" value="ring"/>
+	<attribute key="magiclevelpoints" value="6"/>
+	<attribute key="skillSword" value="6"/>
+	
+</item>
+<item id="7394" name="troféu: lobo">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Lobo até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15415" name="troféu: bandido">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Bandido até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="12650" name="troféu: cobra da floresta">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Cobra da Floresta até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15416" name="troféu: bandido arqueiro">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Bandido Arqueiro até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10130" name="troféu: chefe dos bandidos">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Chefe dos Bandidos até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7397" name="troféu: cervo">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Cervo até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15417" name="troféu: mercenário da ponte">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Mercenário da Ponte até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10142" name="troféu: batedor da névoa">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Batedor da Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7936" name="troféu: guardião da neblina">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Guardião da Neblina até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15418" name="troféu: aprendiz mascarado">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Aprendiz Mascarado até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10131" name="troféu: espadachim da névoa">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Espadachim da Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11338" name="troféu: sanguessuga gigante">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sanguessuga Gigante até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10455" name="troféu: sapo gigante">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sapo Gigante até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15419" name="troféu: ninja renegado">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Ninja Renegado até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="12635" name="troféu: serpente menor">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente Menor até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10132" name="troféu: sapo ancião">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sapo Ancião até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10529" name="troféu: serpente branca">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente Branca até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24757" name="troféu: rival do exame — pedra">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Pedra até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24758" name="troféu: rival do exame — som">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Som até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24759" name="troféu: rival do exame — névoa">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Rival do Exame — Névoa até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11161" name="troféu: marionete de combate">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Marionete de Combate até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7395" name="troféu: sentinela de pedra">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Sentinela de Pedra até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7401" name="troféu: guerreiro espectral">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Guerreiro Espectral até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11336" name="troféu: xamã da maldição">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Xamã da Maldição até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7396" name="troféu: desertor de elite">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Desertor de Elite até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="24760" name="troféu: marionetista das ruínas">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Marionetista das Ruínas até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10543" name="troféu: águia do trovão">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Águia do Trovão até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="10542" name="troféu: oni da geleira">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Oni da Geleira até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="11315" name="troféu: monge da tempestade">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Monge da Tempestade até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7964" name="troféu: serpente de magma">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Serpente de Magma até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15420" name="troféu: o sócio eterno">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Sócio Eterno até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="6435" name="troféu: oni ancestral">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Oni Ancestral até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7399" name="troféu: clone branco">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Clone Branco até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="7398" name="troféu: ninja elite da aurora">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou Ninja Elite da Aurora até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16004" name="troféu: o vigia ilusório">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Vigia Ilusório até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16005" name="troféu: o mascarado das sombras">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Mascarado das Sombras até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="16006" name="troféu: o portador dos seis caminhos">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Portador dos Seis Caminhos até a exaustão. Item de coleção — confere o título de caçador."/>
+</item>
+<item id="15619" name="troféu: o ancestral da nuvem vermelha">  
+	<attribute key="weight" value="10"/>
+	<attribute key="description" value="Prova de que você caçou O Ancestral da Nuvem Vermelha até a exaustão. Item de coleção — confere o título de caçador."/>
 </item>
 <item id="2404" name="kunai de ferro">  
 	<attribute key="weight" value="150"/>

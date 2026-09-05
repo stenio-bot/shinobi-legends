@@ -37,5 +37,7 @@
 		<item id="6938" chance="50000"/>  <!-- ring_fragment_crimson -->
 		<item id="7591" countmax="8" chance="100000"/>  <!-- health_potion_large -->
 		<item id="8472" countmax="6" chance="100000"/>  <!-- soldier_pill -->
+		<item id="2493" chance="15000"/>  <!-- capuz_aurora_carmesim -->
+		<item id="8868" chance="12000"/>  <!-- manto_aurora_carmesim -->
 	</loot>
 </monster>

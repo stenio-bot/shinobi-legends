@@ -31,6 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "spr"))
 
 import build_valley as BV  # noqa: E402
+import build_regions as BR  # noqa: E402
 
 ROOT = BV.ROOT
 SPRITES = BV.SPRITES
@@ -43,6 +44,13 @@ FULL_AREA = (1000, 1000, 1199, 1119)     # mapa jogavel inteiro (sem interiores/
 INTERIORS_AREA = (1298, 998, 1332, 1036)  # apendice: interiores das lojas + arena
 VILLAGE_ZOOM_AREA = (1009, 1029, 1050, 1070)
 FALLBACK = (200, 40, 200, 255)           # magenta: "sprite nao encontrado"
+
+# v2.1 — regioes novas (tools/map/build_regions.py)
+COASTAL_AREA = (1000, 1085, 1049, 1169)
+RUINS_AREA = (1195, 998, 1249, 1049)
+MOUNTAIN_AREA = (1200, 1058, 1249, 1109)
+LAIR_AREA = (1398, 998, 1449, 1036)
+VILLAGE_V21_AREA = (1009, 1029, 1050, 1070)   # mesma area do vila_zoom, apos o infill
 
 #: rotulos (nome, x, y) para a versao anotada — coordenadas do MUNDO (nao px).
 #: y eh a linha de cima do texto; o texto desce a partir dai.
@@ -73,6 +81,23 @@ INTERIOR_LABELS = [
     ("Interior - Hayato", BV.INTERIOR_HAYATO[0], BV.INTERIOR_HAYATO[1] - 2),
     ("Interior - Rin", BV.INTERIOR_RIN[0], BV.INTERIOR_RIN[1] - 2),
     ("Arena do Exame Chunin", BV.ARENA[0], BV.ARENA[1] - 2),
+]
+
+#: rotulos das regioes novas (v2.1, tools/map/build_regions.py)
+REGION_LABELS = [
+    ("Costa das Mares", BR.COAST_PATH_X - 6, BR.COAST_Y0 + 14),
+    ("Vila de Pescadores", BR.COAST_PATH_X - 10, 1138),
+    ("Cais / Arena do Boss", BR.COAST_PATH_X - 4, 1160),
+    ("Ponte inacabada (sabotada)", BR.COAST_X0 + 6, 1146),
+    ("Ruinas do Cla Marionetista", BR.RUINS_X0 + 3, BR.RUINS_Y0 + 1),
+    ("Salao do Marionetista", BR.RUINS_X1 - 13, BR.RUINS_Y0 + 13),
+    ("Montanha do Trovao", BR.MOUNT_TRAIL_X - 6, BR.MOUNT_Y0 + 1),
+    ("Topo / Portal Covil", BR.MOUNT_TRAIL_X - 8, BR.MOUNT_Y1 - 11),
+    ("Covil da Nuvem Vermelha - Hall", BR.LAIR_HALL[0] + 1, BR.LAIR_HALL[1] - 2),
+    ("Sala 1 - Vigia Ilusorio", BR.LAIR_ROOM1[0], BR.LAIR_ROOM1[1] - 2),
+    ("Sala 2 - Mascarado", BR.LAIR_ROOM2[0], BR.LAIR_ROOM2[3] + 1),
+    ("Sala 3 - Portador", BR.LAIR_ROOM3[0], BR.LAIR_ROOM3[1] - 2),
+    ("Sala Final - Ancestral", BR.LAIR_FINAL[0] + 1, BR.LAIR_FINAL[1] - 2),
 ]
 
 
@@ -148,16 +173,40 @@ class SpriteBook:
         1662: ((120, 90, 60, 255), "B"),    # bench
         1740: ((190, 150, 40, 255), "X"),   # chest
         1442: ((140, 140, 150, 255), "S"),  # statue
+        # v2.1 — Costa das Mares / interiores da taverna+prisao (ids vanilla
+        # sem PNG de override; so' pro preview Python ficar legivel).
+        104: ((222, 202, 140, 255), "A"),   # sand (ground)
+        231: ((222, 202, 140, 255), "A"),   # sand (ground)
+        9059: ((222, 202, 140, 255), "A"),  # sand (ground)
+        1650: ((140, 90, 50, 255), "c"),    # wooden chair
+        1614: ((150, 100, 60, 255), "m"),   # big table
+        1754: ((180, 60, 60, 255), "b"),    # bed (prisao)
+        3798: ((110, 110, 110, 255), "|"),  # wooden bars (grade da cela)
+        1770: ((140, 100, 60, 255), "o"),   # barrel (vanilla)
+        1739: ((140, 100, 60, 255), "x"),   # crate (vanilla)
+        3587: ((100, 70, 40, 255), "V"),     # small boat (vanilla, costa das mares)
     }
+
+    #: ids que sao CHAO (precisam preencher o tile inteiro e opaco, senao o
+    #: fundo escuro do canvas aparece atraves do alpha=0 da elipse).
+    _GROUND_PLACEHOLDERS = {104, 231, 9059}
 
     def _placeholder(self, sid):
         color, letter = self._EXTRA_PLACEHOLDERS[sid]
         img = self._cache.get(("_ph", sid))
         if img is None:
-            img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
-            d = ImageDraw.Draw(img)
-            d.ellipse((3, 3, CELL - 3, CELL - 3), fill=color, outline=(0, 0, 0, 255))
-            d.text((CELL // 2 - 4, CELL // 2 - 7), letter, fill=(255, 255, 255, 255))
+            if sid in self._GROUND_PLACEHOLDERS:
+                img = Image.new("RGBA", (CELL, CELL), color)
+                d = ImageDraw.Draw(img)
+                shade = tuple(max(0, c - 30) for c in color[:3]) + (255,)
+                for i in range(0, CELL, 8):
+                    d.line((i, 0, i, CELL), fill=shade)
+                    d.line((0, i, CELL, i), fill=shade)
+            else:
+                img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+                d = ImageDraw.Draw(img)
+                d.ellipse((3, 3, CELL - 3, CELL - 3), fill=color, outline=(0, 0, 0, 255))
+                d.text((CELL // 2 - 4, CELL // 2 - 7), letter, fill=(255, 255, 255, 255))
             self._cache[("_ph", sid)] = img
         return (img, 1, CELL)
 
@@ -254,6 +303,11 @@ PRESETS = {
     "full": FULL_AREA,
     "interiors": INTERIORS_AREA,
     "vila_zoom": VILLAGE_ZOOM_AREA,
+    "vila_v21": VILLAGE_V21_AREA,
+    "costa": COASTAL_AREA,
+    "ruinas": RUINS_AREA,
+    "montanha": MOUNTAIN_AREA,
+    "covil": LAIR_AREA,
 }
 
 
@@ -279,6 +333,14 @@ def main():
     b, npcs = BV.build(tpls, sid)
     BV.carve_clearings(b)
     BV.connect_clearings(b)
+    import decor
+    if all(k in sid for k in ("bridge_wood_center", "rock_small", "street_torch")):
+        decor.place_bridge(b, sid)
+        decor.place_forest_decor(b, sid, b.rng)
+        decor.place_camp_decor(b, sid)
+        decor.place_village_decor(b, sid)
+    import build_regions
+    build_regions.build_all(b, sid, tpls)
     placed = BV.apply_borders(b, sid)
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
@@ -287,7 +349,7 @@ def main():
     n_labels = 0
     if args.labels:
         canvas = Image.open(args.out).convert("RGBA")
-        all_labels = LABELS + INTERIOR_LABELS
+        all_labels = LABELS + INTERIOR_LABELS + REGION_LABELS
         n_labels = draw_labels(canvas, area, all_labels)
         canvas.save(args.out)
 

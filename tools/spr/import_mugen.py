@@ -109,6 +109,32 @@ OVERRIDES = {
     "922": {"idle": 76, "walk": [79, 81, 82], "faces": "right"},    # 4 caldas: quadrupede
     "923": {"idle": 22, "walk": [30, 31, 32], "faces": "right"},    # 6 caldas: quadrupede
     "926": {"faces": "right"},                                      # Kid Fox: so o lado
+
+    # --- o candidato de FRENTE (Sul) automatico era um chute/salto/agachamento
+    #     (revisao visual das folhas _review_<lt>.png): desliga e cai para o
+    #     perfil do Leste, mesmo fallback ja usado quando nao ha candidato nenhum
+    "904": {"front": None},   # Rock Lee: frente=0024 era um chute voador
+    "905": {"front": None},   # Tenten: frente=0192 era um agachamento mirando arma
+    "918": {"front": None},   # Sakura The Last: frente=0381 era um chute voador
+    "906": {"front": None},   # Kakashi: frente=0053/0020 e um alcance/joelho baixo — visto
+                              # no teste in-game (screenshot walk_906_s_2/3.png) como a
+                              # "silhueta baixa e escura" do feedback original
+}
+
+# Cor de CABELO por looktype, quando `char_synth.estimate_colors` (moda dos
+# pixels do topo da cabeca) erra — geralmente porque a faixa/bandana/protetor
+# domina o topo e a cor real do cabelo aparece so numa franja pequena. Achado
+# na revisao visual das folhas `_review_<lt>.png` (feedback: "Naruto Kid loiro,
+# nao marrom; Kakashi prateado; Sakura rosa; Hinata azul-escuro; Killer Bee
+# loiro claro"). Rock Lee (904) e Rock Lee-like ja saiam pretos corretamente,
+# sem necessidade de override.
+HAIR_OVERRIDES = {
+    "900": (255, 205, 60),    # Naruto Kid: loiro (auto dava (131,100,15), marrom-oliva)
+    "906": (195, 198, 206),   # Kakashi: prateado (auto dava (111,112,119), cinza escuro)
+    "902": (235, 120, 170),   # Sakura Kid: rosa (auto dava (102,51,0), marrom)
+    "917": (235, 120, 170),   # Sakura (adulta): rosa (auto dava (128,16,56), vinho)
+    "903": (25, 35, 90),      # Hinata: azul-escuro (auto dava (9,9,9), quase preto)
+    "909": (225, 195, 110),   # Killer Bee: loiro claro (auto dava (2,2,2), preto)
 }
 
 
@@ -316,11 +342,14 @@ def pick_idle(frames, typical):
     return mid, run
 
 
-def _walk_in(frames, idle_i, banned, hi, htol=None):
-    """Melhor janela de 3 quadros consecutivos ate o indice `hi`."""
+def _walk_in(frames, idle_i, banned, hi, htol=None, topn=12):
+    """As `topn` melhores janelas de 3 quadros consecutivos ate o indice `hi`,
+    ordenadas por score decrescente (antes so a melhor era devolvida; agora a
+    validacao do ciclo — regras a-e — pode precisar tentar a 2a, 3a... janela
+    quando a melhor cai numa pose de golpe/agachamento)."""
     h0 = frames[idle_i].h
     htol = H_TOL if htol is None else htol
-    best = None
+    cand = []
     for i in range(min(hi, len(frames) - 2)):
         win = [i, i + 1, i + 2]
         if any(k in banned for k in win):
@@ -345,19 +374,20 @@ def _walk_in(frames, idle_i, banned, hi, htol=None):
             continue
         shape = 1.0 if spans[1] == min(spans) else 0.0
         score = min(rng, 14) + 5.0 * shape + 60.0 * min(mv, 0.20) - 0.05 * i
-        if best is None or score > best[0]:
-            best = (score, win)
-    return best[1] if best else None
+        cand.append((score, win))
+    cand.sort(key=lambda t: -t[0])
+    return [w for _, w in cand[:topn]]
 
 
-def _walk4_in(frames, idle_i, banned, hi, htol=None):
-    """Melhor janela de 4 quadros CONSECUTIVOS: contato-passagem-contato-
-    passagem (2 alternancias do vao entre os pes), mesmos criterios do `_walk_in`
-    mas exigindo um ciclo mais completo — e o que da as 4 fases REAIS quando o
-    rip tem material suficiente (mission item 3: >=4 fases por direcao)."""
+def _walk4_in(frames, idle_i, banned, hi, htol=None, topn=12):
+    """As `topn` melhores janelas de 4 quadros CONSECUTIVOS: contato-passagem-
+    contato-passagem (2 alternancias do vao entre os pes), mesmos criterios do
+    `_walk_in` mas exigindo um ciclo mais completo — e o que da as 4 fases REAIS
+    quando o rip tem material suficiente (mission item 3: >=4 fases por
+    direcao). Ordenadas por score decrescente (ver docstring de `_walk_in`)."""
     h0 = frames[idle_i].h
     htol = H_TOL if htol is None else htol
-    best = None
+    cand = []
     for i in range(min(hi, len(frames) - 3)):
         win = [i, i + 1, i + 2, i + 3]
         if any(k in banned for k in win):
@@ -383,9 +413,132 @@ def _walk4_in(frames, idle_i, banned, hi, htol=None):
         turns = sum(1 for j in range(1, 3)
                     if (spans[j] - spans[j - 1]) * (spans[j + 1] - spans[j]) < 0)
         score = min(rng, 14) + 8.0 * turns + 60.0 * min(min(mvs), 0.20) - 0.03 * i
-        if best is None or score > best[0]:
-            best = (score, win)
-    return best[1] if best else None
+        cand.append((score, win))
+    cand.sort(key=lambda t: -t[0])
+    return [w for _, w in cand[:topn]]
+
+
+# ----------------------------------------------------------- validacao do ciclo
+def _validate_window(frames, idle_i, win):
+    """Roda char_synth.validate_cycle sobre os quadros da janela `win` (indices
+    em `frames`). Devolve lista paralela [(ok, motivos)]."""
+    idle_img = frames[idle_i].img
+    walk_imgs = [frames[k].img for k in win]
+    return CS.validate_cycle(walk_imgs, idle_img)
+
+
+def repair_window(frames, idle_i, win, rejected_log, label):
+    """Recebe a MELHOR janela encontrada (mesmo que reprove a validacao) e
+    conserta em DUAS passadas (para nao encadear sinteses em cima de sinteses,
+    o que acumularia distorcao):
+
+    1. Quadro a quadro que reprove as regras a-d (contra o idle, independente
+       de posicao): procura o vizinho REAL mais proximo no rip que passe
+       nessas 4 regras ('quadro valido adjacente') e troca.
+    2. So DEPOIS de todas as trocas reais possiveis, valida a CONTINUIDADE do
+       ciclo (regra e, que depende dos vizinhos) — o que ainda reprovar e
+       sintetizado a partir do vizinho REAL mais proximo do ciclo (nunca de
+       outra sintese) via `char_synth.synth_walk_offset`; se nenhum vizinho do
+       ciclo for real, sintetiza a partir do proprio idle.
+
+    Devolve (lista_de_imagens_final, lista_de_rotulos) — rotulo e o numero do
+    arquivo de origem (int) ou a string 'synth:<origem>'."""
+    win = list(win)
+    n = len(win)
+    imgs = [frames[k].img for k in win]
+    labels = [frames[k].no for k in win]
+
+    idle_img = frames[idle_i].img
+    idle_bbox = idle_img.getbbox() or (0, 0, idle_img.width, idle_img.height)
+    idle_offset = CS.head_foot_offset(idle_img)
+    palette = CS.extract_palette([idle_img], k=12)
+    scale = CS.validation_scale(idle_bbox)
+
+    # ---- passada 1: troca por vizinho REAL que passe nas regras a-d E
+    # mantenha a continuidade (regra e) com quem JA esta nas posicoes vizinhas
+    # neste momento (a original, se o vizinho ainda nao foi mexido, ou a ja
+    # trocada) — sem isso a passada 2 recebia substitutos escolhidos so pelo
+    # tamanho, sem relacao de movimento com o resto do ciclo, e cascateava
+    # TUDO pra sintese (visto na pratica: Hinata/Killer Bee/Sakura The Last
+    # perdiam o ciclo inteiro por causa de 1-2 quadros ruins).
+    banned = set(win)
+    for pos in range(n):
+        ok, reasons = CS.validate_frame(imgs[pos], idle_img, idle_bbox, idle_offset, palette, scale)
+        if ok:
+            continue
+        orig_no = labels[pos]
+        order = sorted(range(len(frames)), key=lambda k: abs(k - win[pos]))
+        for k in order:
+            if k in banned:
+                continue
+            f = frames[k]
+            ok2, _ = CS.validate_frame(f.img, idle_img, idle_bbox, idle_offset, palette, scale)
+            if not ok2:
+                continue
+            good = True
+            if pos > 0:
+                good = good and CS.MOTION_LO <= CS.mask_diff(imgs[pos - 1], f.img) <= CS.MOTION_HI
+            if pos + 1 < n:
+                good = good and CS.MOTION_LO <= CS.mask_diff(f.img, imgs[pos + 1]) <= CS.MOTION_HI
+            if not good:
+                continue
+            rejected_log.append({
+                "ciclo": label, "posicao": pos, "quadro_rejeitado": orig_no,
+                "motivos": reasons, "substituido_por": f.no,
+            })
+            win[pos] = k
+            banned.add(k)
+            imgs[pos] = f.img
+            labels[pos] = f.no
+            break
+
+    # ---- passada 2: valida a continuidade (regra e) do ciclo ja com as
+    # trocas da passada 1; o que ainda reprovar (a-d de novo, incluso, ja que
+    # a passada 1 pode nao ter achado substituto) vira sintese a partir do
+    # vizinho REAL mais proximo NO CICLO (fecha o loop), nunca de outra
+    # sintese — evita encadear deslocamentos e distorcer o quadro.
+    results = CS.validate_cycle(imgs, idle_img)
+    for pos, (ok, reasons) in enumerate(results):
+        if ok:
+            continue
+        orig_label = labels[pos]
+        real_neighbors = [p for p in (pos - 1, (pos + 1) % n) if isinstance(labels[p], int)]
+        if real_neighbors:
+            src_pos = real_neighbors[0]
+            base_img, base_label = imgs[src_pos], labels[src_pos]
+        else:
+            base_img = idle_img
+            base_label = "idle(%d)" % frames[idle_i].no
+        dx = 2 if pos % 2 == 0 else -2
+        synth_img = CS.synth_walk_offset(base_img, leg_dx=dx, body_dy=1 if dx > 0 else -1,
+                                          shear=dx // 2)
+        rejected_log.append({
+            "ciclo": label, "posicao": pos, "quadro_rejeitado": str(orig_label),
+            "motivos": reasons,
+            "substituido_por": "synth (deslocamento de pernas sobre %s)" % base_label,
+        })
+        imgs[pos] = synth_img
+        labels[pos] = "synth:%s" % base_label
+    return imgs, labels
+
+
+def _try_passes(frames, idle_i, fn, passes):
+    """Tenta as janelas candidatas de cada passada (mais exigente -> mais
+    tolerante) EM ORDEM DE SCORE, aceitando a primeira que passa integralmente
+    na validacao (char_synth.validate_cycle — regras a-e). Se nenhuma candidata
+    de nenhuma passada validar limpo, devolve a melhor (primeira) candidata da
+    primeira passada com resultado — quem chama (`_finalize_walk`) conserta os
+    quadros que reprovarem. Devolve (janela, limpa: bool) ou (None, False)."""
+    first_fallback = None
+    for hi, htol in passes:
+        cands = fn(frames, idle_i, hi) if htol is None else fn(frames, idle_i, hi, htol)
+        for win in cands:
+            results = _validate_window(frames, idle_i, win)
+            if all(ok for ok, _ in results):
+                return win, True
+        if cands and first_fallback is None:
+            first_fallback = cands[0]
+    return first_fallback, False
 
 
 def pick_walk(frames, idle_i, idle_run, want4=True):
@@ -393,22 +546,38 @@ def pick_walk(frames, idle_i, idle_run, want4=True):
     para a mais tolerante); se nao houver material, cai para 3 fases (o
     criterio antigo, ainda o mais confiavel para o material MUGEN) — e quem
     chama completa a 4a fase por sintese (`char_synth.synth_walk_offset`).
+    Ja tenta preferir candidatas que passem na validacao do ciclo (ver
+    `_try_passes`); a limpeza final (troca/sintese de quadro reprovado) fica a
+    cargo de `_finalize_walk`, chamado por `analyse()`.
 
     Devolve (lista_de_indices, "real4"|"real3"|None)."""
     banned = set(idle_run or [])
     if want4:
-        w4 = (_walk4_in(frames, idle_i, banned, SCAN_NEAR)
-              or _walk4_in(frames, idle_i, banned, SCAN_NEAR, 2 * H_TOL)
-              or _walk4_in(frames, idle_i, banned, SCAN_WALK, 2 * H_TOL)
-              or _walk4_in(frames, idle_i, banned, len(frames), 2 * H_TOL))
-        if w4:
-            return w4, "real4"
-    w3 = (_walk_in(frames, idle_i, banned, SCAN_NEAR)
-          or _walk_in(frames, idle_i, banned, SCAN_NEAR, 2 * H_TOL)
-          or _walk_in(frames, idle_i, banned, SCAN_WALK, 2 * H_TOL))
-    if w3:
-        return w3, "real3"
+        fn = lambda fr, ii, hi, htol=None: _walk4_in(fr, ii, banned, hi, htol) if htol is not None \
+            else _walk4_in(fr, ii, banned, hi)
+        passes4 = [(SCAN_NEAR, None), (SCAN_NEAR, 2 * H_TOL),
+                   (SCAN_WALK, 2 * H_TOL), (len(frames), 2 * H_TOL)]
+        win, _ = _try_passes(frames, idle_i, fn, passes4)
+        if win:
+            return win, "real4"
+
+    fn = lambda fr, ii, hi, htol=None: _walk_in(fr, ii, banned, hi, htol) if htol is not None \
+        else _walk_in(fr, ii, banned, hi)
+    passes3 = [(SCAN_NEAR, None), (SCAN_NEAR, 2 * H_TOL), (SCAN_WALK, 2 * H_TOL)]
+    win, _ = _try_passes(frames, idle_i, fn, passes3)
+    if win:
+        return win, "real3"
     return None, None
+
+
+def _finalize_walk(frames, idle_i, win, label, rejected_log):
+    """Valida a janela escolhida (auto OU override) e conserta o que reprovar
+    (`repair_window`). Devolve (lista_de_imagens, lista_de_rotulos) — rotulo e
+    o numero do arquivo (int) ou 'synth:<origem>'."""
+    results = _validate_window(frames, idle_i, win)
+    if all(ok for ok, _ in results):
+        return [frames[k].img for k in win], [frames[k].no for k in win]
+    return repair_window(frames, idle_i, win, rejected_log, label)
 
 
 def faces_right(frames, idx):
@@ -433,13 +602,23 @@ def pick_front(frames, idle_i, banned=()):
     nesse caso o Sul cai para o mesmo perfil do Leste (como antes)."""
     base = frames[idle_i]
     banned = set(banned)
+    idle_bbox = base.img.getbbox() or (0, 0, base.img.width, base.img.height)
+    scale = CS.validation_scale(idle_bbox)
+    # Tolerancia de altura um pouco mais generosa que o andar (virar de frente
+    # muda a postura de verdade), mas ainda escalada pela resolucao do rip —
+    # NAO um valor fixo em px de rip (o bug da v1: 2*H_TOL em px cru deixava
+    # passar chutes/golpes em personagens grandes). Largura mais apertada que
+    # antes (1.6x -> 1.35x): chute/golpe lateral estica a caixa muito mais que
+    # uma pose de frente parada de braços cruzados/na cintura.
+    h_tol = 1.5 * H_TOL / scale
+    palette = CS.extract_palette([base.img], k=12)
     best = None
     for i, f in enumerate(frames):
         if i in banned:
             continue                          # mesma corrida do parado: nao e "outra" pose
-        if abs(f.h - base.h) > 2 * H_TOL:
+        if abs(f.h - base.h) > h_tol:
             continue
-        if f.w > base.w * 1.6:
+        if f.w > base.w * 1.35:
             continue
         orient = classify_orientation(f)
         if orient not in ("frente", "3/4"):
@@ -450,6 +629,9 @@ def pick_front(frames, idle_i, banned=()):
         mv = motion(f, base)
         if mv < 0.05:
             continue                          # quase identico ao parado: nao ajuda
+        ef = CS.effect_pixel_fraction(f.img, palette)
+        if ef > CS.EFFECT_FRAC_MAX * 2:        # golpe especial com brilho/chakra
+            continue
         score = (2.0 if orient == "frente" else 1.0) + cl - 0.6 * mv
         if best is None or score > best[0]:
             best = (score, i, orient)
@@ -474,6 +656,7 @@ def analyse(folder, lt):
         return None, "sem pose parada"
 
     notes = []
+    rejected = []
     walk_kind = "auto4"
     if "walk" in ov and all(n in by_no for n in ov["walk"]):
         walk = [by_no[n] for n in ov["walk"]]
@@ -490,6 +673,18 @@ def analyse(folder, lt):
     elif len(walk) == 3:
         notes.append("so 3 fases reais de andar: 4a fase SINTETIZADA (deslocamento de pernas)")
 
+    # ---- filtro obrigatorio (regras a-e): valida o ciclo escolhido (auto OU
+    # override) e conserta quadro a quadro (vizinho valido ou sintese) o que
+    # reprovar — golpe/agachamento/pulo que vazou pro ciclo de andar.
+    if walk_kind == "none":
+        walk_imgs = [frames[idle_i].img] * 3
+        walk_labels = [frames[idle_i].no] * 3
+    else:
+        walk_imgs, walk_labels = _finalize_walk(frames, idle_i, walk, walk_kind, rejected)
+    for r in rejected:
+        notes.append("REJEITADO quadro %s (%s): %s -> %s" % (
+            r["quadro_rejeitado"], r["ciclo"], "; ".join(r["motivos"]), r["substituido_por"]))
+
     if "faces" in ov:
         right, conf = ov["faces"] == "right", 1.0
         src_face = "override"
@@ -500,35 +695,43 @@ def analyse(folder, lt):
             notes.append("lado ambiguo (conf %.2f): assumido %s"
                          % (conf, "direita" if right else "esquerda"))
 
-    if "front" in ov and ov["front"] in by_no:
+    if "front" in ov and ov["front"] is None:
+        front_i, front_orient = None, "override"     # desligado a mao: ver OVERRIDES
+        notes.append("frente DESLIGADA a mao (override): pose de golpe/chute/pulo "
+                     "na revisao visual; Sul repete o perfil (Leste)")
+    elif "front" in ov and ov["front"] in by_no:
         front_i, front_orient = by_no[ov["front"]], "override"
     else:
         banned_front = set(idle_run or []) | set(walk) | {idle_i}
         front_i, front_orient = pick_front(frames, idle_i, banned_front)
     if front_i is None:
-        notes.append("sem quadro de frente/3-4 no rip: Sul repete o perfil (Leste)")
+        if "front" not in ov:
+            notes.append("sem quadro de frente/3-4 no rip: Sul repete o perfil (Leste)")
     else:
         notes.append("Sul = quadro %s (arquivo %04d, classificado '%s')"
                      % ("de frente" if front_orient == "frente" else "3/4 virado",
                         frames[front_i].no, front_orient))
 
-    skin_rgb, hair_rgb = CS.estimate_colors(
-        [frames[idle_i].img] + [frames[k].img for k in walk[:3]])
+    skin_rgb, hair_rgb = CS.estimate_colors([frames[idle_i].img] + walk_imgs[:3])
+    if str(lt) in HAIR_OVERRIDES:
+        hair_rgb = HAIR_OVERRIDES[str(lt)]
+        notes.append("cor de cabelo AJUSTADA A MAO (override): %s" % (hair_rgb,))
     notes.append("sintese de costas: pele~%s cabelo~%s" % (skin_rgb, hair_rgb))
 
     return {
         "frames": frames, "idle": idle_i, "walk": walk, "walk_kind": walk_kind,
+        "walk_imgs": walk_imgs, "walk_labels": walk_labels, "rejected": rejected,
         "front": front_i, "faces_right": right, "conf": conf, "notes": notes,
         "src": (src_idle, src_walk, src_face), "skin_rgb": skin_rgb, "hair_rgb": hair_rgb,
     }, None
 
 
 def _walk4_images(sel):
-    """4 imagens (PIL) da fase de andar, na ORDEM certa, completando por
+    """4 imagens (PIL) da fase de andar, na ORDEM certa (ja passadas pela
+    validacao/conserto do ciclo — ver `_finalize_walk`), completando por
     sintese quando o real so deu 3 (ou 0) fases."""
-    frames, walk = sel["frames"], sel["walk"]
-    imgs = [frames[k].img for k in walk]
-    if sel["walk_kind"] in ("real4",):
+    imgs = sel["walk_imgs"]
+    if sel["walk_kind"] == "real4":
         return imgs[:4]
     if sel["walk_kind"] == "real3":
         # contato-L, passagem, contato-R + passagem-2 sintetica (deslocamento
@@ -536,13 +739,24 @@ def _walk4_images(sel):
         extra = CS.synth_walk_offset(imgs[1], leg_dx=-2, body_dy=1, shear=-1)
         return imgs[:3] + [extra]
     # "none"/fallback: idle vira as 4 fases via pequenos deslocamentos
-    idle_img = frames[sel["idle"]].img
+    idle_img = sel["frames"][sel["idle"]].img
     return [
         idle_img,
         CS.synth_walk_offset(idle_img, leg_dx=2, body_dy=-1, shear=1),
         CS.synth_walk_offset(idle_img, leg_dx=0, body_dy=-2, shear=0),
         CS.synth_walk_offset(idle_img, leg_dx=-2, body_dy=-1, shear=-1),
     ]
+
+
+def _walk_labels4(sel):
+    """Rotulo (numero do arquivo de origem, ou 'synth:X') de cada uma das 4
+    fases de andar FINAIS (as mesmas que `_walk4_images` devolve) — usado na
+    gravacao dos nomes de arquivo e na folha de revisao `_cycle_<lt>.png`."""
+    if sel["walk_kind"] == "real4":
+        return list(sel["walk_labels"][:4])
+    if sel["walk_kind"] == "real3":
+        return list(sel["walk_labels"][:3]) + ["synth:%s" % sel["walk_labels"][1]]
+    return ["synth"] * 4
 
 
 def write_frames(sel, out_dir, lt):
@@ -557,12 +771,9 @@ def write_frames(sel, out_dir, lt):
     names["idle"] = "idle_%04d.png" % frames[sel["idle"]].no
 
     walk_imgs = _walk4_images(sel)
-    n_real = {"real4": 4, "real3": 3, None: 0}.get(sel["walk_kind"], 0)
-    for i, im in enumerate(walk_imgs):
-        if i < n_real:
-            name = "walk%d_%04d.png" % (i, frames[sel["walk"][i]].no)
-        else:
-            name = "walk%d_synth.png" % i
+    labels4 = _walk_labels4(sel)
+    for i, (im, label) in enumerate(zip(walk_imgs, labels4)):
+        name = "walk%d_%04d.png" % (i, label) if isinstance(label, int) else "walk%d_synth.png" % i
         im.save(os.path.join(out_dir, name))
         names["walk%d" % i] = name
 
@@ -615,17 +826,24 @@ def entry_json(lt, info, names, sel):
         south_idle = idle
 
     f = sel["frames"]
-    walk_desc = "/".join("%04d" % f[k].no for k in sel["walk"][:3])
+
+    def _lbl(x):
+        return "%04d" % x if isinstance(x, int) else str(x)
+
+    walk_desc = "/".join(_lbl(x) for x in sel["walk_labels"][:3])
+    rej_desc = ("; REJEITADOS: " + "; ".join(
+        "%s#%d %s->%s" % (r["ciclo"], r["posicao"], r["quadro_rejeitado"], r["substituido_por"])
+        for r in sel["rejected"])) if sel["rejected"] else ""
     return {
         "id": lt,
         "name": "mugen_%d_%s" % (lt, re.sub(r"[^a-z0-9]+", "_", info["name"].lower()).strip("_")),
         "tiles": 1,
         "duration": 200,
         "_personagem": info["name"],
-        "_quadros": "parado %04d; andar %s (%s); olha para %s%s" % (
+        "_quadros": "parado %04d; andar %s (%s); olha para %s%s%s" % (
             f[sel["idle"]].no, walk_desc, sel["walk_kind"],
             "a direita" if sel["faces_right"] else "a esquerda (tudo espelhado)",
-            ("; " + "; ".join(sel["notes"])) if sel["notes"] else ""),
+            ("; " + "; ".join(sel["notes"])) if sel["notes"] else "", rej_desc),
         "directions": {
             "0": {"_dir": "norte — vista de COSTAS SINTETIZADA (mirror + repintura "
                           "da regiao do rosto na cor do cabelo + escurecimento; ver "
@@ -646,24 +864,41 @@ def frames_doc_entry(lt, info, sel):
     return {
         "looktype": lt, "nome": info["name"],
         "idle_frame": f[sel["idle"]].no,
-        "walk_frames": [f[k].no for k in sel["walk"]],
+        "walk_frames": [str(x) for x in sel["walk_labels"]],
         "walk_kind": sel["walk_kind"],
         "faces_right": sel["faces_right"], "face_conf": round(sel["conf"], 2),
         "front_frame": f[sel["front"]].no if sel["front"] is not None else None,
         "skin_rgb": list(sel["skin_rgb"]), "hair_rgb": list(sel["hair_rgb"]),
         "notas": sel["notes"],
+        "quadros_rejeitados": sel["rejected"],
     }
 
 
 # ------------------------------------------------------------------ revisao
 def review_sheet(lt, info, sel, names):
-    """idle + 4 fases de andar nas 4 direcoes (agora com costas sintetizada e,
-    quando existe, frente real), ampliado 3x."""
+    """idle + 4 fases de andar nas 4 direcoes (costas sintetizada e, quando
+    existe, frente real), ampliado 3x — cada celula rotulada com o NUMERO do
+    quadro de origem, ou 'S' quando e sintetica (norte inteiro; qualquer fase
+    de andar completada por `synth_walk_offset`). Salva em `_review_<lt>.png`
+    (nome historico) e `_cycle_<lt>.png` (nome pedido na revisao de golpes/
+    agachamentos vazando pro ciclo — mesmo conteudo, so o rotulo por celula
+    e novo)."""
     import imports as I
     box, zoom = 32, 3
     walk_imgs = _walk4_images(sel)
+    labels4 = _walk_labels4(sel)
     idle_img = sel["frames"][sel["idle"]].img
     mir = not sel["faces_right"]
+
+    def lbl(x):
+        return str(x) if isinstance(x, int) else "S"
+
+    east_labels = [str(sel["frames"][sel["idle"]].no)] + [lbl(x) for x in labels4]
+    north_labels = ["S"] * 5
+    south_idle_label = (str(sel["frames"][sel["front"]].no)
+                         if sel["front"] is not None else east_labels[0])
+    south_labels = [south_idle_label] + east_labels[1:]
+    west_labels = list(east_labels)
 
     # recarrega as imagens ja gravadas (evita duplicar a logica de sintese)
     out_dir = names["_out_dir"]
@@ -672,12 +907,13 @@ def review_sheet(lt, info, sel, names):
     south_idle = Image.open(os.path.join(out_dir, names["front"])) if "front" in names else idle_img
 
     cols = [
-        ("N", [(back_idle, False)] + [(im, False) for im in back_walks]),
-        ("L", [(idle_img, mir)] + [(im, mir) for im in walk_imgs]),
-        ("S", [(south_idle, False if "front" in names else mir)] + [(im, mir) for im in walk_imgs]),
-        ("O", [(idle_img, not mir)] + [(im, not mir) for im in walk_imgs]),
+        ("N", [(back_idle, False)] + [(im, False) for im in back_walks], north_labels),
+        ("L", [(idle_img, mir)] + [(im, mir) for im in walk_imgs], east_labels),
+        ("S", [(south_idle, False if "front" in names else mir)] + [(im, mir) for im in walk_imgs],
+         south_labels),
+        ("O", [(idle_img, not mir)] + [(im, not mir) for im in walk_imgs], west_labels),
     ]
-    allimgs = [im for _, col in cols for im, _ in col]
+    allimgs = [im for _, col, _ in cols for im, _ in col]
     scale = min(box / float(max(i.width for i in allimgs)),
                 box / float(max(i.height for i in allimgs)), 1.0)
     pad, head = 4, 16
@@ -688,14 +924,21 @@ def review_sheet(lt, info, sel, names):
     d.text((pad, 3), "%d %s  parado+4 andar  %s  %s" % (
         lt, info["name"], "->" if sel["faces_right"] else "<- (espelhado)",
         sel["walk_kind"]), fill=(255, 235, 120, 255))
-    for c, (lab, col) in enumerate(cols):
+    for c, (lab, col, cell_labels) in enumerate(cols):
         x = pad + c * (box * zoom + pad)
         for r, (im, m) in enumerate(col):
             y = head + r * (box * zoom + pad)
             cell = I.fit_uniform(im, box, scale, m)
             bg = Image.new("RGBA", (box, box), (70, 70, 78, 255))
             bg.alpha_composite(cell)
-            sh.paste(bg.resize((box * zoom, box * zoom), Image.NEAREST), (x, y))
+            cellz = bg.resize((box * zoom, box * zoom), Image.NEAREST)
+            sh.paste(cellz, (x, y))
+            cl = cell_labels[r]
+            color = (255, 140, 60, 255) if cl == "S" else (140, 230, 140, 255)
+            dd = ImageDraw.Draw(sh)
+            dd.rectangle((x, y, x + 20 if cl != "S" else x + 12, y + 11),
+                         fill=(20, 20, 24, 220))
+            dd.text((x + 2, y + 1), cl, fill=color)
         d.text((x + 2, H - 12), lab, fill=(190, 190, 200, 255))
     return sh
 
@@ -767,8 +1010,9 @@ def main():
         names["_out_dir"] = out_dir
         creatures.append(entry_json(lt, info, names, sel))
         if not args.no_review:
-            review_sheet(lt, info, sel, names).save(
-                os.path.join(ROOT, OUT_ROOT, "_review_%d.png" % lt))
+            sheet = review_sheet(lt, info, sel, names)
+            sheet.save(os.path.join(ROOT, OUT_ROOT, "_review_%d.png" % lt))
+            sheet.save(os.path.join(ROOT, OUT_ROOT, "_cycle_%d.png" % lt))
 
     for w in warn:
         print("AVISO:", w)
