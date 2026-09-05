@@ -131,7 +131,8 @@ def main():
         for it in otb_items:
             if it["client_id"] and it["client_id"] not in by_cid:
                 by_cid[it["client_id"]] = it
-        div = {"stackable": 0, "fluid": 0, "splash": 0, "animation": 0, "sem_thing": 0}
+        div = {"stackable": 0, "fluid": 0, "splash": 0, "animation": 0, "ordem_pilha": 0, "sem_thing": 0}
+        FLAG_ALWAYSONTOP = 1 << 13
         for cid, it in by_cid.items():
             th = tables[S.CATEGORY_ITEM].get(cid)
             if th is None:
@@ -154,13 +155,26 @@ def main():
                 if quer[k] != tem[k]:
                     div[k] += 1
                     problemas.append("item %d: %s otb=%s dat=%s" % (cid, k, quer[k], tem[k]))
+            # Ordem de pilha: o servidor usa FLAG_ALWAYSONTOP + topOrder (1 borda, 2 bottom, 3 top);
+            # o cliente usa GroundBorder/OnBottom/OnTop. Divergir = stackpos diferente entre os
+            # dois -> "parseCreatureMove: no creature found", andar travando.
+            otb_top = bool(it["flags"] & FLAG_ALWAYSONTOP)
+            otb_order = it.get("top_order", 0) if otb_top else 0
+            dat_order = 1 if S.A_GROUND_BORDER in attrs else 2 if S.A_ON_BOTTOM in attrs else 3 if S.A_ON_TOP in attrs else 0
+            otb_ground = it["group_name"] == "ground"
+            dat_ground = S.A_GROUND in attrs
+            if otb_order != dat_order or otb_ground != dat_ground:
+                div["ordem_pilha"] += 1
+                problemas.append("item %d: ordem_pilha otb=(ground=%s, top=%s/%d) dat=(ground=%s, ordem=%d)"
+                                 % (cid, otb_ground, otb_top, it.get("top_order", 0), dat_ground, dat_order))
         print("\nconferencia contra %s (%d clientIds):" % (os.path.relpath(otb_path, ROOT), len(by_cid)))
-        for k in ("stackable", "fluid", "splash", "animation"):
+        for k in ("stackable", "fluid", "splash", "animation", "ordem_pilha"):
             n = sum(1 for it in by_cid.values()
                     if (bool(it["flags"] & FLAG_STACKABLE) if k == "stackable" else
                         it["group_name"] == "fluid" if k == "fluid" else
                         it["group_name"] == "splash" if k == "splash" else
-                        bool(it["flags"] & FLAG_ANIMATION)))
+                        bool(it["flags"] & FLAG_ANIMATION) if k == "animation" else
+                        bool(it["flags"] & FLAG_ALWAYSONTOP)))
             print("   %-10s otb=%-6d divergencias=%d" % (k, n, div[k]))
         if div["sem_thing"]:
             print("   !! %d clientIds do OTB sem thing no .dat" % div["sem_thing"])

@@ -372,6 +372,13 @@ def new_item(server_id, client_id, group_name="none", flags=0, speed=0,
     """Cria o dict de um item NOVO (sem raw_props, entao sera serializado)."""
     if group_name not in ITEM_GROUP_IDS:
         raise KeyError("grupo desconhecido: %r" % (group_name,))
+    # O TFS so' empilha o item na camada de borda/bottom/top (Items::alwaysOnTop) se o flag
+    # FLAG_ALWAYSONTOP estiver ligado; o topOrder sozinho e' ignorado. Sem o flag, o servidor
+    # tratava as 128 bordas geradas como "down items" (acima das criaturas) enquanto o .dat as
+    # coloca abaixo -> stackpos divergente -> "parseCreatureMove: no creature found", nome do
+    # personagem sumindo e andar travando (bug reportado pelo usuario em 2026-09-05).
+    if top_order:
+        flags |= FLAG_ALWAYSONTOP
     return {
         "group": ITEM_GROUP_IDS[group_name],
         "group_name": group_name,
