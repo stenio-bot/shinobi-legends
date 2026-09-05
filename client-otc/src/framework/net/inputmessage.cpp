@@ -121,8 +121,11 @@ std::string InputMessage::getString()
         }
     }
 
-    if (hasHighByte && stdext::is_valid_utf8(raw))
-        return stdext::utf8_to_cp1252(raw);
+    // Lenient per-sequence conversion: the TFS sometimes concatenates cp1252 (Lua) and
+    // UTF-8 (xml names) inside ONE string (e.g. loot messages), so validate sequence by
+    // sequence instead of the whole buffer.
+    if (hasHighByte)
+        return stdext::utf8_to_cp1252_lenient(raw);
 
     return std::string(raw);
 }

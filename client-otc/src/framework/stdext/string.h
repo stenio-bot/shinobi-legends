@@ -56,6 +56,7 @@ namespace stdext
 
     [[nodiscard]] bool is_valid_utf8(std::string_view src);
     [[nodiscard]] std::string utf8_to_latin1(std::string_view src);
+    [[nodiscard]] std::string utf8_to_cp1252_lenient(std::string_view src);
     [[nodiscard]] std::string latin1_to_utf8(std::string_view src);
     /// Like utf8_to_latin1, but codepoints outside latin1 (0x00A0-0x00FF) that have a
     /// cp1252 slot in the 0x80-0x9F range (curly quotes, en/em dash, ellipsis, etc.) are
