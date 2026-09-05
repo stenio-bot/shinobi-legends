@@ -6,7 +6,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 20 + level * 0.8 + maglevel * 1.0
+	local base = 18.0 + level * 0.72 + maglevel * 0.9
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

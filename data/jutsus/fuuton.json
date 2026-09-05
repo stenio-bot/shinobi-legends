@@ -1,103 +1,103 @@
 [
-  {
-    "id": "fuuton_lamina_vento",
-    "name": "Fuuton: Lâmina de Vento",
-    "description": "Uma lâmina de ar comprimido cortando em linha reta até o alvo.",
-    "element": "fuuton",
-    "type": "projectile",
-    "range": 6,
-    "chakra_cost": 13,
-    "cooldown_s": 1.7,
-    "base_damage": 23,
-    "level_scale": 1.1,
-    "skill_scale": 0.85,
-    "skill": "ninjutsu",
-    "required_level": 1,
-    "villages": [],
-    "tier": 1,
-    "animation": "fx_wind_blade",
-    "sfx": "sfx_wind_cut"
-  },
-  {
-    "id": "fuuton_rajada_cortante",
-    "name": "Fuuton: Rajada Cortante",
-    "description": "Uma rajada em leque que retalha tudo à frente e desequilibra os atingidos.",
-    "element": "fuuton",
-    "type": "area",
-    "shape": "cone_3",
-    "range": 3,
-    "chakra_cost": 34,
-    "cooldown_s": 4.5,
-    "base_damage": 30,
-    "level_scale": 1.3,
-    "skill_scale": 0.9,
-    "skill": "ninjutsu",
-    "required_level": 16,
-    "villages": [],
-    "tier": 2,
-    "effects": [
-      {
-        "type": "slow",
-        "chance": 0.5,
-        "duration_s": 3,
-        "value": 0.35
-      }
-    ],
-    "animation": "fx_wind_cone",
-    "sfx": "sfx_wind_burst"
-  },
-  {
-    "id": "fuuton_tornado_cortante",
-    "name": "Fuuton: Tornado Cortante",
-    "description": "Uma coluna de vento afiado que avança em linha reta, despedaçando tudo no caminho.",
-    "element": "fuuton",
-    "type": "beam",
-    "shape": "line_6",
-    "range": 6,
-    "chakra_cost": 62,
-    "cooldown_s": 8.0,
-    "base_damage": 75,
-    "level_scale": 2.0,
-    "skill_scale": 1.2,
-    "skill": "ninjutsu",
-    "required_level": 36,
-    "villages": [],
-    "tier": 3,
-    "effects": [
-      {
-        "type": "slow",
-        "chance": 0.6,
-        "duration_s": 4,
-        "value": 0.4
-      }
-    ],
-    "animation": "fx_wind_tornado",
-    "sfx": "sfx_wind_roar"
-  },
-  {
-    "id": "fuuton_redemoinho_prisao",
-    "name": "Fuuton: Redemoinho Prisão",
-    "description": "Um redemoinho de vento prende o alvo no ar, impedindo qualquer movimento.",
-    "element": "fuuton",
-    "type": "target",
-    "range": 4,
-    "chakra_cost": 38,
-    "cooldown_s": 9.0,
-    "base_damage": 20,
-    "level_scale": 0.8,
-    "skill_scale": 1.0,
-    "skill": "genjutsu",
-    "required_level": 23,
-    "villages": [],
-    "tier": 2,
-    "effects": [
-      {
-        "type": "paralyze",
-        "chance": 0.75,
-        "duration_s": 3.0
-      }
-    ],
-    "animation": "fx_wind_prison",
-    "sfx": "sfx_wind_trap"
-  }
+ {
+  "id": "fuuton_lamina_vento",
+  "name": "Fuuton: Lâmina de Vento",
+  "description": "Uma lâmina de ar comprimido cortando em linha reta até o alvo.",
+  "element": "fuuton",
+  "type": "projectile",
+  "range": 6,
+  "chakra_cost": 13,
+  "cooldown_s": 2.0,
+  "base_damage": 8.05,
+  "level_scale": 0.385,
+  "skill_scale": 0.297,
+  "skill": "ninjutsu",
+  "required_level": 1,
+  "villages": [],
+  "tier": 1,
+  "animation": "fx_wind_blade",
+  "sfx": "sfx_wind_cut"
+ },
+ {
+  "id": "fuuton_rajada_cortante",
+  "name": "Fuuton: Rajada Cortante",
+  "description": "Uma rajada em leque que retalha tudo à frente e desequilibra os atingidos.",
+  "element": "fuuton",
+  "type": "area",
+  "shape": "cone_3",
+  "range": 3,
+  "chakra_cost": 34,
+  "cooldown_s": 4.5,
+  "base_damage": 27.0,
+  "level_scale": 1.17,
+  "skill_scale": 0.81,
+  "skill": "ninjutsu",
+  "required_level": 16,
+  "villages": [],
+  "tier": 2,
+  "effects": [
+   {
+    "type": "slow",
+    "chance": 0.5,
+    "duration_s": 3,
+    "value": 0.35
+   }
+  ],
+  "animation": "fx_wind_cone",
+  "sfx": "sfx_wind_burst"
+ },
+ {
+  "id": "fuuton_tornado_cortante",
+  "name": "Fuuton: Tornado Cortante",
+  "description": "Uma coluna de vento afiado que avança em linha reta, despedaçando tudo no caminho.",
+  "element": "fuuton",
+  "type": "beam",
+  "shape": "line_6",
+  "range": 6,
+  "chakra_cost": 62,
+  "cooldown_s": 8.0,
+  "base_damage": 67.5,
+  "level_scale": 1.8,
+  "skill_scale": 1.08,
+  "skill": "ninjutsu",
+  "required_level": 36,
+  "villages": [],
+  "tier": 3,
+  "effects": [
+   {
+    "type": "slow",
+    "chance": 0.6,
+    "duration_s": 4,
+    "value": 0.4
+   }
+  ],
+  "animation": "fx_wind_tornado",
+  "sfx": "sfx_wind_roar"
+ },
+ {
+  "id": "fuuton_redemoinho_prisao",
+  "name": "Fuuton: Redemoinho Prisão",
+  "description": "Um redemoinho de vento prende o alvo no ar, impedindo qualquer movimento.",
+  "element": "fuuton",
+  "type": "target",
+  "range": 4,
+  "chakra_cost": 38,
+  "cooldown_s": 9.0,
+  "base_damage": 18.0,
+  "level_scale": 0.72,
+  "skill_scale": 0.9,
+  "skill": "genjutsu",
+  "required_level": 23,
+  "villages": [],
+  "tier": 2,
+  "effects": [
+   {
+    "type": "paralyze",
+    "chance": 0.75,
+    "duration_s": 3.0
+   }
+  ],
+  "animation": "fx_wind_prison",
+  "sfx": "sfx_wind_trap"
+ }
 ]

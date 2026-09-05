@@ -7,7 +7,7 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_STONES)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_EARTH)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 23 + level * 1.1 + maglevel * 0.85
+	local base = 8.05 + level * 0.385 + maglevel * 0.297
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

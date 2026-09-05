@@ -452,7 +452,12 @@ def items_xml():
         for k, v in it.get("bonuses", {}).items():
             key = {"hp": "maxhitpoints", "chakra": "maxmanapoints", "speed": "speed",
                    "skill_taijutsu": "skillSword", "skill_shuriken": "skillDist", "skill_ninjutsu": "magiclevelpoints",
-                   "skill_genjutsu": "skillClub", "skill_defense": "skillShield"}.get(k)
+                   "skill_genjutsu": "skillClub", "skill_defense": "skillShield",
+                   # FIX (rodada 2 do balanceamento, item 10 da rodada 1): "attack"/"defense" de
+                   # bonuses de acessório eram silenciosamente descartados aqui (ring_stone_will,
+                   # strings_of_the_puppeteer) — items.cpp:22/25 registram "armor"/"attack" como
+                   # atributos genéricos válidos em QUALQUER item, não só weapon/armor.
+                   "attack": "attack", "defense": "armor"}.get(k)
             if key:
                 val = int(v * 100) if k == "speed" else int(v)
                 attrs.append(f'<attribute key="{key}" value="{val}"/>')
@@ -1896,6 +1901,13 @@ local gate = MoveEvent()
 gate:type("stepin")
 
 function gate.onStepIn(player, item, position, fromPosition)
+	-- ACHADO (missão de mapa v3, 1a vez que um actionid de gate foi colocado
+	-- num tile de verdade): monstros perseguindo o jogador podem pisar no
+	-- mesmo tile do gate (ele é walkable, só o jogador é barrado) — sem essa
+	-- checagem, `player:getStorageValue` explode com "attempt to call method
+	-- 'getStorageValue' (a nil value)" porque Creature/Monster não tem esse
+	-- método (só Player tem). Gate nunca deve barrar monstro.
+	if not player:isPlayer() then return true end
 	local need = item:getActionId() - 45000
 	if need < 1 or need > 5 then return true end
 	if not NarutoRanks or NarutoRanks.get(player).index >= need then return true end

@@ -6,7 +6,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 36 + level * 1.35 + maglevel * 1.0
+	local base = 15.8 + level * 0.887 + maglevel * 0.547
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

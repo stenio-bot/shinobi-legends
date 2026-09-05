@@ -1,0 +1,142 @@
+[
+  {
+    "id": "katon_goukakyuu",
+    "name": "Katon: Grande Bola de Fogo",
+    "description": "Dispara uma bola de fogo que explode no impacto.",
+    "element": "katon",
+    "type": "projectile",
+    "shape": "circle_r1",
+    "range": 5,
+    "chakra_cost": 15,
+    "cooldown_s": 2.0,
+    "base_damage": 25,
+    "level_scale": 1.2,
+    "skill_scale": 0.8,
+    "skill": "ninjutsu",
+    "required_level": 1,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.3,
+        "duration_s": 4,
+        "value": 3
+      }
+    ],
+    "animation": "fx_fireball",
+    "sfx": "sfx_fire_whoosh"
+  },
+  {
+    "id": "katon_housenka",
+    "name": "Katon: Flores de Fênix",
+    "description": "Vários projéteis de fogo em cone à frente.",
+    "element": "katon",
+    "type": "area",
+    "shape": "cone_3",
+    "range": 3,
+    "chakra_cost": 30,
+    "cooldown_s": 4.0,
+    "base_damage": 18,
+    "level_scale": 1.0,
+    "skill_scale": 0.7,
+    "skill": "ninjutsu",
+    "required_level": 12,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.5,
+        "duration_s": 5,
+        "value": 4
+      }
+    ],
+    "animation": "fx_fire_cone",
+    "sfx": "sfx_fire_burst"
+  },
+  {
+    "id": "katon_karyuu_endan",
+    "name": "Katon: Dragão de Fogo",
+    "description": "Um dragão de chamas em linha reta, atravessa inimigos.",
+    "element": "katon",
+    "type": "beam",
+    "shape": "line_6",
+    "range": 6,
+    "chakra_cost": 60,
+    "cooldown_s": 8.0,
+    "base_damage": 70,
+    "level_scale": 2.0,
+    "skill_scale": 1.2,
+    "skill": "ninjutsu",
+    "required_level": 35,
+    "villages": [],
+    "tier": 3,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.8,
+        "duration_s": 6,
+        "value": 8
+      }
+    ],
+    "animation": "fx_fire_dragon",
+    "sfx": "sfx_dragon_roar"
+  },
+  {
+    "id": "katon_sopro_brasas",
+    "name": "Katon: Sopro de Brasas",
+    "description": "Um sopro curto de brasas que cobre os tiles imediatamente à frente.",
+    "element": "katon",
+    "type": "area",
+    "shape": "cone_2",
+    "range": 2,
+    "chakra_cost": 18,
+    "cooldown_s": 3.0,
+    "base_damage": 16,
+    "level_scale": 0.9,
+    "skill_scale": 0.6,
+    "skill": "ninjutsu",
+    "required_level": 6,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.35,
+        "duration_s": 4,
+        "value": 3
+      }
+    ],
+    "animation": "fx_ember_cone",
+    "sfx": "sfx_fire_puff"
+  },
+  {
+    "id": "katon_anel_chamas",
+    "name": "Katon: Anel de Chamas",
+    "description": "Um anel de fogo explode ao redor do conjurador, queimando tudo em volta.",
+    "element": "katon",
+    "type": "area",
+    "shape": "circle_r2",
+    "range": 0,
+    "chakra_cost": 42,
+    "cooldown_s": 6.0,
+    "base_damage": 40,
+    "level_scale": 1.4,
+    "skill_scale": 1.0,
+    "skill": "ninjutsu",
+    "required_level": 20,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.6,
+        "duration_s": 5,
+        "value": 6
+      }
+    ],
+    "animation": "fx_fire_ring",
+    "sfx": "sfx_fire_burst"
+  }
+]

@@ -6,7 +6,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 34 + level * 1.3 + maglevel * 1.0
+	local base = 30.6 + level * 1.17 + maglevel * 0.9
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

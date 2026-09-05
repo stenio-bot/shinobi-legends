@@ -7,6 +7,13 @@ local gate = MoveEvent()
 gate:type("stepin")
 
 function gate.onStepIn(player, item, position, fromPosition)
+	-- ACHADO (missão de mapa v3, 1a vez que um actionid de gate foi colocado
+	-- num tile de verdade): monstros perseguindo o jogador podem pisar no
+	-- mesmo tile do gate (ele é walkable, só o jogador é barrado) — sem essa
+	-- checagem, `player:getStorageValue` explode com "attempt to call method
+	-- 'getStorageValue' (a nil value)" porque Creature/Monster não tem esse
+	-- método (só Player tem). Gate nunca deve barrar monstro.
+	if not player:isPlayer() then return true end
 	local need = item:getActionId() - 45000
 	if need < 1 or need > 5 then return true end
 	if not NarutoRanks or NarutoRanks.get(player).index >= need then return true end

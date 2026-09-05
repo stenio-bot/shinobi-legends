@@ -165,23 +165,37 @@ o ryo direto é os outros 60%.
 ```
 dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 ```
+
+> **Atualizado na rodada 2 de balanceamento** (`docs/sistemas/balanceamento-relatorio-v2.md`):
+> o simulador (`tools/balance/sim.py`) mostrou que os valores originais desta tabela deixavam
+> ninjutsu 56-76% mais rápido que taijutsu contra boss de nível 12-19 (jutsu ignora armadura +
+> reserva de chakra inicial grande o bastante pra durar quase a luta inteira nesses níveis) —
+> quebrando a meta "taijutsu ≥ ninjutsu em 1×1 longo por margem ≤15%". A tabela abaixo já reflete
+> o fix: **tier 1 ofensivo (projétil e área) × 0,35** e **tier 2/3 × 0,9** sobre `base_damage`/
+> `level_scale`/`skill_scale`, aplicados uniformemente aos 5 elementos a partir do baseline
+> original. Ver o relatório v2 pro raciocínio completo (por que o lever do 1×1 é sempre tier 1,
+> por que tier 2/3 só importa pra grupo, e os 2 pontos que ficaram fora da meta mesmo assim).
+
 Escala por tier (com `required_level` de referência e ninjutsu ≈ level+10):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil | 20–25 | 1.1 | 0.8–0.9 | 12–16 | 1,5–2,0 s |
-| 1 área/self | 14–18 | 0.9 | 0.6–0.7 | 16–28 | 2,5–3,0 s |
-| 2 | 30–44 | 1.3–1.5 | 0.9–1.1 | 34–42 | 4,5–6,0 s |
-| 3 | 70–90 | 2.0–2.2 | 1.2–1.3 | 60–72 | 7,0–9,0 s |
+| 1 projétil | 7–9 | 0,385–0,42 | 0,28–0,315 | 12–16 | 2,0 s |
+| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 16–28 | 2,5–3,0 s |
+| 2 | 16–39,6 | 0,72–1,35 | 0,63–0,99 | 34–45 | 4,5–9,0 s |
+| 3 | 63–81 | 1,8–1,98 | 1,08–1,17 | 50–72 | 7,0–9,0 s |
 
 Regras que mantêm o tier 3 sendo o "show" sem virar obrigatório:
-- **dano por chakra** cai de tier 1 (~1,7 dano/chakra) para tier 3 (~1,2), mas o
-  **dano por cooldown** sobe — tier 3 é burst, tier 1 é sustentado.
+- **dano por chakra** cai de tier 1 pra tier 3, mas o **dano por cooldown** sobe — tier 3 é
+  burst, tier 1 é sustentado.
 - Formas de área custam ~30% mais chakra que um projétil de dano equivalente.
 - Jutsus `self` não causam dano; o custo compra sobrevivência (`heal_over_time`).
 - Multiplicador elemental (×1.5 / ×0.75) é aplicado **depois**, então uma vantagem
   elemental vale mais que subir um tier — isso é intencional e é o que faz o jogador
   trocar de jutsu por área em vez de spammar o mais caro.
+- Em grupo (pull de N monstros), a rotação escolhe o jutsu de maior `(dano×hits)/cooldown` —
+  é aí que tier 2/3 (área/beam) compensam o dano/cooldown menor que tier 1: cada hit extra
+  (até `min(N, area_capacity(shape))` alvos) multiplica o valor do cast inteiro.
 
 ### Jutsus novos criados (Personagem + Elemento: 4 + 4)
 
@@ -192,14 +206,21 @@ Fechando os `element_sets.json` (doton tinha só 3 jutsus, fuuton só 2) e as 36
 
 | id | Tier | Tipo | chakra | cooldown_s | base_damage | level_scale | skill_scale | Efeito |
 |---|---|---|---|---|---|---|---|---|
-| `doton_bala_lama` | 1 | projectile | 14 | 1.8 | 23 | 1.1 | 0.85 | slow 30% / 3s |
-| `fuuton_tornado_cortante` | 3 | beam (line_6) | 62 | 8.0 | 75 | 2.0 | 1.2 | slow 60% / 4s |
-| `fuuton_redemoinho_prisao` | 2 | target (controle) | 38 | 9.0 | 20 | 0.8 | 1.0 | paralyze 75% / 3s |
+| `doton_bala_lama` | 1 | projectile | 14 | 2,0 | 8,05 | 0,385 | 0,297 | slow 30% / 3s |
+| `fuuton_tornado_cortante` | 3 | beam (line_6) | 62 | 8,0 | 67,5 | 1,8 | 1,08 | slow 60% / 4s |
+| `fuuton_redemoinho_prisao` | 2 | target (controle) | 38 | 9,0 | 18,0 | 0,72 | 0,9 | paralyze 75% / 3s |
+
+(valores pós-rodada-2 — ver nota acima da tabela de escala por tier)
 
 `doton_bala_lama` fecha a categoria "projétil básico" que faltava no elemento (os outros 3
 jutsus de doton já existiam: muralha de pedra self, estacas de terra área, colapso do terreno
 área forte). `fuuton_tornado_cortante` e `fuuton_redemoinho_prisao` fecham "beam/linha forte"
 e "utilitário/controle" que faltavam em fuuton (só existiam projétil e área).
+
+> **Atualizado na rodada 2**: `base_damage`/`level_scale`/`skill_scale` de 11 desses jutsus
+> mudaram pra equilibrar o "valor total dos 4 jutsus pessoais" entre os 9 personagens (meta
+> ±15%, ver `balanceamento-relatorio-v2.md` §7 — a tabela abaixo mantém os valores originais de
+> quando cada jutsu foi criado; `data/jutsus/personal.json` é sempre a fonte da verdade).
 
 **Pessoais (`data/jutsus/personal.json`, 20 jutsus — 16 restantes das 36 vagas reusam jutsus
 já existentes, ver `docs/sistemas/vilas-e-clas.md`):**

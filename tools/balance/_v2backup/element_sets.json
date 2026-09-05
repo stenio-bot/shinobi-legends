@@ -1,0 +1,27 @@
+[
+  {
+    "id": "katon",
+    "name": "Fogo",
+    "jutsus": ["katon_goukakyuu", "katon_housenka", "katon_karyuu_endan", "katon_anel_chamas"]
+  },
+  {
+    "id": "suiton",
+    "name": "Água",
+    "jutsus": ["suiton_mizudan", "suiton_nevoa_cortante", "suiton_suiryuudan", "suiton_prisao_agua"]
+  },
+  {
+    "id": "raiton",
+    "name": "Raio",
+    "jutsus": ["raiton_hari", "raiton_corrente_estatica", "raiton_lanca_relampago", "raiton_armadura_eletrica"]
+  },
+  {
+    "id": "doton",
+    "name": "Terra",
+    "jutsus": ["doton_bala_lama", "doton_estacas_terra", "doton_colapso_terreno", "doton_muralha_pedra"]
+  },
+  {
+    "id": "fuuton",
+    "name": "Vento",
+    "jutsus": ["fuuton_lamina_vento", "fuuton_rajada_cortante", "fuuton_tornado_cortante", "fuuton_redemoinho_prisao"]
+  }
+]
