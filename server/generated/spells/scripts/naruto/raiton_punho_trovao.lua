@@ -3,7 +3,7 @@
 -- Raiton: Punho do Trovão: Concentra o raio na palma da mão e desfere um golpe devastador no alvo adjacente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
+combat:setParameter(COMBAT_PARAM_EFFECT, 208)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 62.37 + level * 9.1476 + maglevel * 0.1802

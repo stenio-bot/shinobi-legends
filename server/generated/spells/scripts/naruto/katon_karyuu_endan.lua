@@ -3,7 +3,7 @@
 -- Katon: Dragão de Fogo: Um dragão de chamas em linha reta, atravessa inimigos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 203)
 local area = {
 	{1},
 	{1},

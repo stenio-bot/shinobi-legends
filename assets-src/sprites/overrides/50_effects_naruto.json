@@ -1,0 +1,536 @@
+{
+ "_doc": "GERADO por tools/spr/gen_effects.py -- NAO EDITE A MAO. Mesmo esquema de assets-src/sprites/imports.json (root/build_dir/effects/missiles); tools/spr/build_assets.py aplica todo *.json de assets-src/sprites/overrides/ automaticamente.",
+ "root": "assets-src/sprites/effects_src",
+ "build_dir": "assets-src/sprites/effects_src/_sheets",
+ "effects": [
+  {
+   "id": 200,
+   "name": "fx_fire_burst",
+   "frames": [
+    "fx_fire_burst/f0.png",
+    "fx_fire_burst/f1.png",
+    "fx_fire_burst/f2.png",
+    "fx_fire_burst/f3.png",
+    "fx_fire_burst/f4.png",
+    "fx_fire_burst/f5.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 201,
+   "name": "fx_fire_ring",
+   "frames": [
+    "fx_fire_ring/f0.png",
+    "fx_fire_ring/f1.png",
+    "fx_fire_ring/f2.png",
+    "fx_fire_ring/f3.png",
+    "fx_fire_ring/f4.png",
+    "fx_fire_ring/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 202,
+   "name": "fx_fire_cone",
+   "frames": [
+    "fx_fire_cone/f0.png",
+    "fx_fire_cone/f1.png",
+    "fx_fire_cone/f2.png",
+    "fx_fire_cone/f3.png",
+    "fx_fire_cone/f4.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 203,
+   "name": "fx_fire_dragon",
+   "frames": [
+    "fx_fire_dragon/f0.png",
+    "fx_fire_dragon/f1.png",
+    "fx_fire_dragon/f2.png",
+    "fx_fire_dragon/f3.png",
+    "fx_fire_dragon/f4.png",
+    "fx_fire_dragon/f5.png",
+    "fx_fire_dragon/f6.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 204,
+   "name": "fx_water_splash",
+   "frames": [
+    "fx_water_splash/f0.png",
+    "fx_water_splash/f1.png",
+    "fx_water_splash/f2.png",
+    "fx_water_splash/f3.png",
+    "fx_water_splash/f4.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 205,
+   "name": "fx_water_dragon",
+   "frames": [
+    "fx_water_dragon/f0.png",
+    "fx_water_dragon/f1.png",
+    "fx_water_dragon/f2.png",
+    "fx_water_dragon/f3.png",
+    "fx_water_dragon/f4.png",
+    "fx_water_dragon/f5.png",
+    "fx_water_dragon/f6.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 206,
+   "name": "fx_water_mist",
+   "frames": [
+    "fx_water_mist/f0.png",
+    "fx_water_mist/f1.png",
+    "fx_water_mist/f2.png",
+    "fx_water_mist/f3.png",
+    "fx_water_mist/f4.png",
+    "fx_water_mist/f5.png"
+   ],
+   "duration": 110
+  },
+  {
+   "id": 207,
+   "name": "fx_water_vortex",
+   "frames": [
+    "fx_water_vortex/f0.png",
+    "fx_water_vortex/f1.png",
+    "fx_water_vortex/f2.png",
+    "fx_water_vortex/f3.png",
+    "fx_water_vortex/f4.png",
+    "fx_water_vortex/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 208,
+   "name": "fx_lightning_strike",
+   "frames": [
+    "fx_lightning_strike/f0.png",
+    "fx_lightning_strike/f1.png",
+    "fx_lightning_strike/f2.png",
+    "fx_lightning_strike/f3.png",
+    "fx_lightning_strike/f4.png"
+   ],
+   "duration": 60
+  },
+  {
+   "id": 209,
+   "name": "fx_static_field",
+   "frames": [
+    "fx_static_field/f0.png",
+    "fx_static_field/f1.png",
+    "fx_static_field/f2.png",
+    "fx_static_field/f3.png",
+    "fx_static_field/f4.png",
+    "fx_static_field/f5.png"
+   ],
+   "duration": 80
+  },
+  {
+   "id": 210,
+   "name": "fx_lightning_lance",
+   "frames": [
+    "fx_lightning_lance/f0.png",
+    "fx_lightning_lance/f1.png",
+    "fx_lightning_lance/f2.png",
+    "fx_lightning_lance/f3.png",
+    "fx_lightning_lance/f4.png"
+   ],
+   "duration": 60
+  },
+  {
+   "id": 211,
+   "name": "fx_lightning_armor",
+   "frames": [
+    "fx_lightning_armor/f0.png",
+    "fx_lightning_armor/f1.png",
+    "fx_lightning_armor/f2.png",
+    "fx_lightning_armor/f3.png",
+    "fx_lightning_armor/f4.png",
+    "fx_lightning_armor/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 212,
+   "name": "fx_earth_spikes",
+   "frames": [
+    "fx_earth_spikes/f0.png",
+    "fx_earth_spikes/f1.png",
+    "fx_earth_spikes/f2.png",
+    "fx_earth_spikes/f3.png",
+    "fx_earth_spikes/f4.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 213,
+   "name": "fx_earth_collapse",
+   "frames": [
+    "fx_earth_collapse/f0.png",
+    "fx_earth_collapse/f1.png",
+    "fx_earth_collapse/f2.png",
+    "fx_earth_collapse/f3.png",
+    "fx_earth_collapse/f4.png",
+    "fx_earth_collapse/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 214,
+   "name": "fx_stone_shell",
+   "frames": [
+    "fx_stone_shell/f0.png",
+    "fx_stone_shell/f1.png",
+    "fx_stone_shell/f2.png",
+    "fx_stone_shell/f3.png",
+    "fx_stone_shell/f4.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 215,
+   "name": "fx_mud_splash",
+   "frames": [
+    "fx_mud_splash/f0.png",
+    "fx_mud_splash/f1.png",
+    "fx_mud_splash/f2.png",
+    "fx_mud_splash/f3.png",
+    "fx_mud_splash/f4.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 216,
+   "name": "fx_wind_slash",
+   "frames": [
+    "fx_wind_slash/f0.png",
+    "fx_wind_slash/f1.png",
+    "fx_wind_slash/f2.png",
+    "fx_wind_slash/f3.png",
+    "fx_wind_slash/f4.png"
+   ],
+   "duration": 80
+  },
+  {
+   "id": 217,
+   "name": "fx_wind_tornado",
+   "frames": [
+    "fx_wind_tornado/f0.png",
+    "fx_wind_tornado/f1.png",
+    "fx_wind_tornado/f2.png",
+    "fx_wind_tornado/f3.png",
+    "fx_wind_tornado/f4.png",
+    "fx_wind_tornado/f5.png",
+    "fx_wind_tornado/f6.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 218,
+   "name": "fx_wind_prison",
+   "frames": [
+    "fx_wind_prison/f0.png",
+    "fx_wind_prison/f1.png",
+    "fx_wind_prison/f2.png",
+    "fx_wind_prison/f3.png",
+    "fx_wind_prison/f4.png",
+    "fx_wind_prison/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 219,
+   "name": "fx_chakra_focus",
+   "frames": [
+    "fx_chakra_focus/f0.png",
+    "fx_chakra_focus/f1.png",
+    "fx_chakra_focus/f2.png",
+    "fx_chakra_focus/f3.png",
+    "fx_chakra_focus/f4.png",
+    "fx_chakra_focus/f5.png"
+   ],
+   "duration": 120
+  },
+  {
+   "id": 220,
+   "name": "fx_heal_green",
+   "frames": [
+    "fx_heal_green/f0.png",
+    "fx_heal_green/f1.png",
+    "fx_heal_green/f2.png",
+    "fx_heal_green/f3.png",
+    "fx_heal_green/f4.png",
+    "fx_heal_green/f5.png"
+   ],
+   "duration": 120
+  },
+  {
+   "id": 221,
+   "name": "fx_smoke_poof",
+   "frames": [
+    "fx_smoke_poof/f0.png",
+    "fx_smoke_poof/f1.png",
+    "fx_smoke_poof/f2.png",
+    "fx_smoke_poof/f3.png",
+    "fx_smoke_poof/f4.png",
+    "fx_smoke_poof/f5.png"
+   ],
+   "duration": 110
+  },
+  {
+   "id": 222,
+   "name": "fx_seal_glow",
+   "frames": [
+    "fx_seal_glow/f0.png",
+    "fx_seal_glow/f1.png",
+    "fx_seal_glow/f2.png",
+    "fx_seal_glow/f3.png",
+    "fx_seal_glow/f4.png",
+    "fx_seal_glow/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 223,
+   "name": "fx_shadow_clone",
+   "frames": [
+    "fx_shadow_clone/f0.png",
+    "fx_shadow_clone/f1.png",
+    "fx_shadow_clone/f2.png",
+    "fx_shadow_clone/f3.png",
+    "fx_shadow_clone/f4.png",
+    "fx_shadow_clone/f5.png"
+   ],
+   "duration": 110
+  },
+  {
+   "id": 224,
+   "name": "fx_melee_hit",
+   "frames": [
+    "fx_melee_hit/f0.png",
+    "fx_melee_hit/f1.png",
+    "fx_melee_hit/f2.png",
+    "fx_melee_hit/f3.png",
+    "fx_melee_hit/f4.png"
+   ],
+   "duration": 70
+  },
+  {
+   "id": 225,
+   "name": "fx_poison_mist",
+   "frames": [
+    "fx_poison_mist/f0.png",
+    "fx_poison_mist/f1.png",
+    "fx_poison_mist/f2.png",
+    "fx_poison_mist/f3.png",
+    "fx_poison_mist/f4.png",
+    "fx_poison_mist/f5.png"
+   ],
+   "duration": 120
+  },
+  {
+   "id": 226,
+   "name": "fx_chakra_blade",
+   "frames": [
+    "fx_chakra_blade/f0.png",
+    "fx_chakra_blade/f1.png",
+    "fx_chakra_blade/f2.png",
+    "fx_chakra_blade/f3.png",
+    "fx_chakra_blade/f4.png"
+   ],
+   "duration": 70
+  },
+  {
+   "id": 7,
+   "name": "fx_fire_ring_slot",
+   "frames": [
+    "fx_fire_ring/f0.png",
+    "fx_fire_ring/f1.png",
+    "fx_fire_ring/f2.png",
+    "fx_fire_ring/f3.png",
+    "fx_fire_ring/f4.png",
+    "fx_fire_ring/f5.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 44,
+   "name": "fx_water_splash_slot",
+   "frames": [
+    "fx_water_splash/f0.png",
+    "fx_water_splash/f1.png",
+    "fx_water_splash/f2.png",
+    "fx_water_splash/f3.png",
+    "fx_water_splash/f4.png"
+   ],
+   "duration": 90
+  },
+  {
+   "id": 12,
+   "name": "fx_lightning_strike_slot",
+   "frames": [
+    "fx_lightning_strike/f0.png",
+    "fx_lightning_strike/f1.png",
+    "fx_lightning_strike/f2.png",
+    "fx_lightning_strike/f3.png",
+    "fx_lightning_strike/f4.png"
+   ],
+   "duration": 60
+  },
+  {
+   "id": 45,
+   "name": "fx_earth_spikes_slot",
+   "frames": [
+    "fx_earth_spikes/f0.png",
+    "fx_earth_spikes/f1.png",
+    "fx_earth_spikes/f2.png",
+    "fx_earth_spikes/f3.png",
+    "fx_earth_spikes/f4.png"
+   ],
+   "duration": 100
+  },
+  {
+   "id": 50,
+   "name": "fx_wind_slash_slot",
+   "frames": [
+    "fx_wind_slash/f0.png",
+    "fx_wind_slash/f1.png",
+    "fx_wind_slash/f2.png",
+    "fx_wind_slash/f3.png",
+    "fx_wind_slash/f4.png"
+   ],
+   "duration": 80
+  },
+  {
+   "id": 10,
+   "name": "fx_melee_hit_slot",
+   "frames": [
+    "fx_melee_hit/f0.png",
+    "fx_melee_hit/f1.png",
+    "fx_melee_hit/f2.png",
+    "fx_melee_hit/f3.png",
+    "fx_melee_hit/f4.png"
+   ],
+   "duration": 70
+  },
+  {
+   "id": 3,
+   "name": "fx_smoke_poof_slot",
+   "frames": [
+    "fx_smoke_poof/f0.png",
+    "fx_smoke_poof/f1.png",
+    "fx_smoke_poof/f2.png",
+    "fx_smoke_poof/f3.png",
+    "fx_smoke_poof/f4.png",
+    "fx_smoke_poof/f5.png"
+   ],
+   "duration": 110
+  },
+  {
+   "id": 15,
+   "name": "fx_heal_green_slot",
+   "frames": [
+    "fx_heal_green/f0.png",
+    "fx_heal_green/f1.png",
+    "fx_heal_green/f2.png",
+    "fx_heal_green/f3.png",
+    "fx_heal_green/f4.png",
+    "fx_heal_green/f5.png"
+   ],
+   "duration": 120
+  }
+ ],
+ "missiles": [
+  {
+   "id": 60,
+   "name": "ms_fireball",
+   "src": "ms_fireball/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 61,
+   "name": "ms_water_bullet",
+   "src": "ms_water_bullet/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 62,
+   "name": "ms_lightning_needle",
+   "src": "ms_lightning_needle/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 63,
+   "name": "ms_mud_bullet",
+   "src": "ms_mud_bullet/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 64,
+   "name": "ms_wind_blade",
+   "src": "ms_wind_blade/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 65,
+   "name": "ms_kunai",
+   "src": "ms_kunai/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 66,
+   "name": "ms_shuriken",
+   "src": "ms_shuriken/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 67,
+   "name": "ms_senbon",
+   "src": "ms_senbon/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 4,
+   "name": "ms_fireball_slot",
+   "src": "ms_fireball/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 29,
+   "name": "ms_water_bullet_slot",
+   "src": "ms_water_bullet/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 5,
+   "name": "ms_lightning_needle_slot",
+   "src": "ms_lightning_needle/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 30,
+   "name": "ms_mud_bullet_slot",
+   "src": "ms_mud_bullet/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 31,
+   "name": "ms_wind_blade_slot",
+   "src": "ms_wind_blade/f0.png",
+   "rotate": 0
+  },
+  {
+   "id": 8,
+   "name": "ms_shuriken_slot",
+   "src": "ms_shuriken/f0.png",
+   "rotate": 0
+  }
+ ]
+}

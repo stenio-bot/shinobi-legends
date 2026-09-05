@@ -87,18 +87,18 @@ if NpcHandler == nil then
 			[MESSAGE_MISSINGMONEY] = "You don't have enough money.",
 			[MESSAGE_NEEDMONEY] = "You don't have enough money.",
 			[MESSAGE_MISSINGITEM] = "You don't have so many.",
-			[MESSAGE_NEEDITEM] = "You do not have this object.",
-			[MESSAGE_NEEDSPACE] = "You do not have enough capacity.",
-			[MESSAGE_NEEDMORESPACE] = "You do not have enough capacity for all items.",
-			[MESSAGE_IDLETIMEOUT] = "Good bye.",
-			[MESSAGE_WALKAWAY] = "Good bye.",
-			[MESSAGE_DECLINE] = "Then not.",
-			[MESSAGE_SENDTRADE] = "Of course, just browse through my wares.",
-			[MESSAGE_NOSHOP] = "Sorry, I'm not offering anything.",
-			[MESSAGE_ONCLOSESHOP] = "Thank you, come back whenever you're in need of something else.",
-			[MESSAGE_ALREADYFOCUSED] = "|PLAYERNAME|, I am already talking to you.",
-			[MESSAGE_WALKAWAY_MALE] = "Good bye.",
-			[MESSAGE_WALKAWAY_FEMALE] = "Good bye."
+			[MESSAGE_NEEDITEM] = "Você não tem esse item.",
+			[MESSAGE_NEEDSPACE] = "Você não tem capacidade suficiente.",
+			[MESSAGE_NEEDMORESPACE] = "Você não tem capacidade para todos os itens.",
+			[MESSAGE_IDLETIMEOUT] = "Até logo.",
+			[MESSAGE_WALKAWAY] = "Até logo.",
+			[MESSAGE_DECLINE] = "Então não.",
+			[MESSAGE_SENDTRADE] = "Claro, dê uma olhada nas minhas mercadorias.",
+			[MESSAGE_NOSHOP] = "Desculpe, não tenho nada para oferecer.",
+			[MESSAGE_ONCLOSESHOP] = "Obrigado, volte quando precisar de algo mais.",
+			[MESSAGE_ALREADYFOCUSED] = "|PLAYERNAME|, eu já estou falando com você.",
+			[MESSAGE_WALKAWAY_MALE] = "Até logo.",
+			[MESSAGE_WALKAWAY_FEMALE] = "Até logo."
 		}
 	}
 

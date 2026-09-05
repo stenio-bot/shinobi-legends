@@ -3,8 +3,8 @@
 -- Suiton: Projétil de Água: Bala de água comprimida.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ICE)
+combat:setParameter(COMBAT_PARAM_EFFECT, 204)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 61)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 7.7 + level * 0.385 + maglevel * 0.28

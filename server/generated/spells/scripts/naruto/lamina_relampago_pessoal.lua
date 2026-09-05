@@ -3,7 +3,7 @@
 -- Lâmina Relâmpago: Um corte de lâmina eletrificada, rápido o bastante para atordoar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
+combat:setParameter(COMBAT_PARAM_EFFECT, 208)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 20.4 + level * 0.864 + maglevel * 0.707

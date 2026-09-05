@@ -1,0 +1,453 @@
+{
+ "_doc": "Catalogo de efeitos/misseis proprios (ADR-002, arte por codigo). Gerado por tools/spr/gen_effects.py -- NAO EDITE A MAO os PNGs em assets-src/sprites/effects_src/; edite o script e rode de novo. IDs sao PERMANENTES (protocolo 10.98, effect/missile = u8): nunca renumere uma key ja publicada, so adicione novas no fim de EFFECT_ORDER/MISSILE_ORDER. `aliases` mapeia o campo `animation` de data/jutsus/*.json para uma key deste catalogo; `element_defaults` e o fallback (impacto de projetil, elemento sem alias especifico). `vanilla_slots` documenta os ids CONST_ME_*/CONST_ANI_* que o servidor referencia por NOME (data/tfs_mapping.json, monstros) e que tambem foram redesenhados (mesma arte de uma key nova, so replicada no id antigo) porque Monsters::deserializeSpell so aceita nome fixo, nunca numero cru (server/tfs/src/monsters.cpp + tools.cpp).",
+ "effect_id_base": 200,
+ "missile_id_base": 60,
+ "entries": [
+  {
+   "key": "fx_fire_burst",
+   "kind": "effect",
+   "id": 200,
+   "element": "katon",
+   "frames": 6,
+   "duration_ms": 90
+  },
+  {
+   "key": "fx_fire_ring",
+   "kind": "effect",
+   "id": 201,
+   "element": "katon",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_fire_cone",
+   "kind": "effect",
+   "id": 202,
+   "element": "katon",
+   "frames": 5,
+   "duration_ms": 90
+  },
+  {
+   "key": "fx_fire_dragon",
+   "kind": "effect",
+   "id": 203,
+   "element": "katon",
+   "frames": 7,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_water_splash",
+   "kind": "effect",
+   "id": 204,
+   "element": "suiton",
+   "frames": 5,
+   "duration_ms": 90
+  },
+  {
+   "key": "fx_water_dragon",
+   "kind": "effect",
+   "id": 205,
+   "element": "suiton",
+   "frames": 7,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_water_mist",
+   "kind": "effect",
+   "id": 206,
+   "element": "suiton",
+   "frames": 6,
+   "duration_ms": 110
+  },
+  {
+   "key": "fx_water_vortex",
+   "kind": "effect",
+   "id": 207,
+   "element": "suiton",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_lightning_strike",
+   "kind": "effect",
+   "id": 208,
+   "element": "raiton",
+   "frames": 5,
+   "duration_ms": 60
+  },
+  {
+   "key": "fx_static_field",
+   "kind": "effect",
+   "id": 209,
+   "element": "raiton",
+   "frames": 6,
+   "duration_ms": 80
+  },
+  {
+   "key": "fx_lightning_lance",
+   "kind": "effect",
+   "id": 210,
+   "element": "raiton",
+   "frames": 5,
+   "duration_ms": 60
+  },
+  {
+   "key": "fx_lightning_armor",
+   "kind": "effect",
+   "id": 211,
+   "element": "raiton",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_earth_spikes",
+   "kind": "effect",
+   "id": 212,
+   "element": "doton",
+   "frames": 5,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_earth_collapse",
+   "kind": "effect",
+   "id": 213,
+   "element": "doton",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_stone_shell",
+   "kind": "effect",
+   "id": 214,
+   "element": "doton",
+   "frames": 5,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_mud_splash",
+   "kind": "effect",
+   "id": 215,
+   "element": "doton",
+   "frames": 5,
+   "duration_ms": 90
+  },
+  {
+   "key": "fx_wind_slash",
+   "kind": "effect",
+   "id": 216,
+   "element": "fuuton",
+   "frames": 5,
+   "duration_ms": 80
+  },
+  {
+   "key": "fx_wind_tornado",
+   "kind": "effect",
+   "id": 217,
+   "element": "fuuton",
+   "frames": 7,
+   "duration_ms": 90
+  },
+  {
+   "key": "fx_wind_prison",
+   "kind": "effect",
+   "id": 218,
+   "element": "fuuton",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_chakra_focus",
+   "kind": "effect",
+   "id": 219,
+   "element": "suiton",
+   "frames": 6,
+   "duration_ms": 120
+  },
+  {
+   "key": "fx_heal_green",
+   "kind": "effect",
+   "id": 220,
+   "element": "heal",
+   "frames": 6,
+   "duration_ms": 120
+  },
+  {
+   "key": "fx_smoke_poof",
+   "kind": "effect",
+   "id": 221,
+   "element": "none",
+   "frames": 6,
+   "duration_ms": 110
+  },
+  {
+   "key": "fx_seal_glow",
+   "kind": "effect",
+   "id": 222,
+   "element": "seal",
+   "frames": 6,
+   "duration_ms": 100
+  },
+  {
+   "key": "fx_shadow_clone",
+   "kind": "effect",
+   "id": 223,
+   "element": "shadow",
+   "frames": 6,
+   "duration_ms": 110
+  },
+  {
+   "key": "fx_melee_hit",
+   "kind": "effect",
+   "id": 224,
+   "element": "none",
+   "frames": 5,
+   "duration_ms": 70
+  },
+  {
+   "key": "fx_poison_mist",
+   "kind": "effect",
+   "id": 225,
+   "element": "poison",
+   "frames": 6,
+   "duration_ms": 120
+  },
+  {
+   "key": "fx_chakra_blade",
+   "kind": "effect",
+   "id": 226,
+   "element": "none",
+   "frames": 5,
+   "duration_ms": 70
+  },
+  {
+   "key": "ms_fireball",
+   "kind": "missile",
+   "id": 60,
+   "element": "katon",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_water_bullet",
+   "kind": "missile",
+   "id": 61,
+   "element": "suiton",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_lightning_needle",
+   "kind": "missile",
+   "id": 62,
+   "element": "raiton",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_mud_bullet",
+   "kind": "missile",
+   "id": 63,
+   "element": "doton",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_wind_blade",
+   "kind": "missile",
+   "id": 64,
+   "element": "fuuton",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_kunai",
+   "kind": "missile",
+   "id": 65,
+   "element": "none",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_shuriken",
+   "kind": "missile",
+   "id": 66,
+   "element": "none",
+   "frames": 1,
+   "duration_ms": null
+  },
+  {
+   "key": "ms_senbon",
+   "kind": "missile",
+   "id": 67,
+   "element": "none",
+   "frames": 1,
+   "duration_ms": null
+  }
+ ],
+ "vanilla_slots": [
+  {
+   "const": "CONST_ME_FIREAREA",
+   "id": 7,
+   "kind": "effect",
+   "reuses": "fx_fire_ring"
+  },
+  {
+   "const": "CONST_ME_ICEATTACK",
+   "id": 44,
+   "kind": "effect",
+   "reuses": "fx_water_splash"
+  },
+  {
+   "const": "CONST_ME_ENERGYHIT",
+   "id": 12,
+   "kind": "effect",
+   "reuses": "fx_lightning_strike"
+  },
+  {
+   "const": "CONST_ME_STONES",
+   "id": 45,
+   "kind": "effect",
+   "reuses": "fx_earth_spikes"
+  },
+  {
+   "const": "CONST_ME_HOLYAREA",
+   "id": 50,
+   "kind": "effect",
+   "reuses": "fx_wind_slash"
+  },
+  {
+   "const": "CONST_ME_HITAREA",
+   "id": 10,
+   "kind": "effect",
+   "reuses": "fx_melee_hit"
+  },
+  {
+   "const": "CONST_ME_POFF",
+   "id": 3,
+   "kind": "effect",
+   "reuses": "fx_smoke_poof"
+  },
+  {
+   "const": "CONST_ME_MAGIC_GREEN",
+   "id": 15,
+   "kind": "effect",
+   "reuses": "fx_heal_green"
+  },
+  {
+   "const": "CONST_ANI_FIRE",
+   "id": 4,
+   "kind": "missile",
+   "reuses": "ms_fireball"
+  },
+  {
+   "const": "CONST_ANI_ICE",
+   "id": 29,
+   "kind": "missile",
+   "reuses": "ms_water_bullet"
+  },
+  {
+   "const": "CONST_ANI_ENERGY",
+   "id": 5,
+   "kind": "missile",
+   "reuses": "ms_lightning_needle"
+  },
+  {
+   "const": "CONST_ANI_EARTH",
+   "id": 30,
+   "kind": "missile",
+   "reuses": "ms_mud_bullet"
+  },
+  {
+   "const": "CONST_ANI_HOLY",
+   "id": 31,
+   "kind": "missile",
+   "reuses": "ms_wind_blade"
+  },
+  {
+   "const": "CONST_ANI_THROWINGSTAR",
+   "id": 8,
+   "kind": "missile",
+   "reuses": "ms_shuriken"
+  }
+ ],
+ "element_defaults": {
+  "katon": {
+   "effect": "fx_fire_burst",
+   "missile": "ms_fireball"
+  },
+  "suiton": {
+   "effect": "fx_water_splash",
+   "missile": "ms_water_bullet"
+  },
+  "raiton": {
+   "effect": "fx_lightning_strike",
+   "missile": "ms_lightning_needle"
+  },
+  "doton": {
+   "effect": "fx_mud_splash",
+   "missile": "ms_mud_bullet"
+  },
+  "fuuton": {
+   "effect": "fx_wind_slash",
+   "missile": "ms_wind_blade"
+  },
+  "none": {
+   "effect": "fx_melee_hit",
+   "missile": "ms_senbon"
+  }
+ },
+ "aliases": {
+  "fx_mud_bullet": "ms_mud_bullet",
+  "fx_stone_shell": "fx_stone_shell",
+  "fx_earth_spikes": "fx_earth_spikes",
+  "fx_earth_collapse": "fx_earth_collapse",
+  "fx_wind_blade": "ms_wind_blade",
+  "fx_wind_cone": "fx_wind_slash",
+  "fx_wind_tornado": "fx_wind_tornado",
+  "fx_wind_prison": "fx_wind_prison",
+  "fx_fireball": "ms_fireball",
+  "fx_fire_cone": "fx_fire_cone",
+  "fx_fire_dragon": "fx_fire_dragon",
+  "fx_ember_cone": "fx_fire_cone",
+  "fx_fire_ring": "fx_fire_ring",
+  "fx_log_poof": "fx_smoke_poof",
+  "fx_clone_poof": "fx_shadow_clone",
+  "fx_heal_glow": "fx_heal_green",
+  "fx_seal_paper": "fx_seal_glow",
+  "fx_poison_mist": "fx_poison_mist",
+  "fx_smoke_puff": "fx_smoke_poof",
+  "fx_taijutsu_hit": "fx_melee_hit",
+  "fx_taijutsu_spin": "fx_melee_hit",
+  "fx_needles": "ms_senbon",
+  "fx_chakra_blade": "fx_chakra_blade",
+  "fx_lightning_bolt": "ms_lightning_needle",
+  "fx_wind_sweep": "fx_wind_slash",
+  "fx_aura_orange": "fx_chakra_focus",
+  "fx_eye_glow": "fx_chakra_focus",
+  "fx_burning_needles": "ms_senbon",
+  "fx_counter_strike": "fx_melee_hit",
+  "fx_ground_crack": "fx_earth_collapse",
+  "fx_palm_strike": "fx_melee_hit",
+  "fx_eye_veins": "fx_chakra_focus",
+  "fx_double_palm": "fx_melee_hit",
+  "fx_heavy_punch": "fx_melee_hit",
+  "fx_rising_kick": "fx_melee_hit",
+  "fx_sword_spark": "fx_lightning_strike",
+  "fx_double_slash": "fx_melee_hit",
+  "fx_lightning_armor": "fx_lightning_armor",
+  "fx_marked_kunai": "ms_kunai",
+  "fx_flash_teleport": "fx_smoke_poof",
+  "fx_seal_explosion": "fx_seal_glow",
+  "fx_barrier_glow": "fx_chakra_focus",
+  "fx_seal_circle": "fx_seal_glow",
+  "fx_lightning_needle": "ms_lightning_needle",
+  "fx_thunder_fist": "fx_lightning_strike",
+  "fx_static_cross": "fx_static_field",
+  "fx_lightning_lance": "fx_lightning_lance",
+  "fx_water_bullet": "ms_water_bullet",
+  "fx_water_dragon": "fx_water_dragon",
+  "fx_mist_cone": "fx_water_mist",
+  "fx_water_prison": "fx_water_vortex",
+  "fx_water_vortex": "fx_water_vortex"
+ }
+}

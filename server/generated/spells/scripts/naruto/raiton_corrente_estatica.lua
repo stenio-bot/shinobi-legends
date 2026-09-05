@@ -3,7 +3,7 @@
 -- Raiton: Corrente Estática: A eletricidade salta em cruz pelo chão a partir do conjurador, prendendo quem tocar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
+combat:setParameter(COMBAT_PARAM_EFFECT, 209)
 local area = {
 	{0, 0, 1, 0, 0},
 	{0, 0, 1, 0, 0},

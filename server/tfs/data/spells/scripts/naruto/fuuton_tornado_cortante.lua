@@ -3,7 +3,7 @@
 -- Fuuton: Tornado Cortante: Uma coluna de vento afiado que avança em linha reta, despedaçando tudo no caminho.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 217)
 local area = {
 	{1},
 	{1},

@@ -3,8 +3,8 @@
 -- Agulhas Incendiárias: Agulhas finas envoltas em chamas, lançadas com precisão cirúrgica.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_FIRE)
+combat:setParameter(COMBAT_PARAM_EFFECT, 200)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 67)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 25.2 + level * 1.324 + maglevel * 1.125

@@ -3,8 +3,8 @@
 -- Doton: Bala de Lama: Uma bala de lama endurecida disparada em alta velocidade.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_STONES)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_EARTH)
+combat:setParameter(COMBAT_PARAM_EFFECT, 215)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 63)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 8.05 + level * 0.385 + maglevel * 0.297

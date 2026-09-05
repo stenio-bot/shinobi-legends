@@ -3,7 +3,7 @@
 -- Palma Dupla: Uma sequência dupla de palmas que atinge tudo à frente em rajada.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 224)
 local area = {
 	{1, 1, 1},
 	{0, 1, 0},

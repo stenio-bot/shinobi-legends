@@ -3,7 +3,7 @@
 -- Fuuton: Rajada Cortante: Uma rajada em leque que retalha tudo à frente e desequilibra os atingidos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 216)
 local area = {
 	{1, 1, 1, 1, 1},
 	{0, 1, 1, 1, 0},

@@ -19,7 +19,9 @@ def load(p):
 def load_folder(folder):
     out = {}
     for p in sorted(glob.glob(os.path.join(DATA, folder, "*.json"))):
+        region = os.path.splitext(os.path.basename(p))[0]
         for o in load(p):
+            o.setdefault("_region", region)  # arquivo de origem = regiao (usado p/ escopo de lojas)
             out[o["id"]] = o
     return out
 
@@ -30,6 +32,40 @@ def write(rel, text):
         f.write(text)
 
 M = load(os.path.join(DATA, "tfs_mapping.json"))
+
+# ---------------------------------------------------- catalogo de efeitos/misseis
+# assets-src/sprites/effects.json (gerado por tools/spr/gen_effects.py): ids
+# numericos (u8, protocolo 10.98) dos efeitos/misseis proprios por jutsu, mais o
+# alias `animation` (data/jutsus/*.json) -> chave do catalogo e o fallback por
+# elemento. Ver docs/sistemas/combate-e-jutsus.md, secao "Efeitos e misseis".
+_effects_cat = load(os.path.join(DATA, "..", "assets-src", "sprites", "effects.json"))
+EFFECT_CATALOG = {e["key"]: e for e in _effects_cat["entries"]}
+EFFECT_ALIASES = _effects_cat["aliases"]
+EFFECT_ELEMENT_DEFAULTS = _effects_cat["element_defaults"]
+
+def _catalog_id(key, kind):
+    e = EFFECT_CATALOG.get(key)
+    return e["id"] if e and e["kind"] == kind else None
+
+def jutsu_effect_id(j):
+    """Id numerico (CONST_ME_*) para COMBAT_PARAM_EFFECT deste jutsu.
+    Projetil: efeito de IMPACTO generico do elemento (o `animation` do jutsu
+    descreve o misseis em voo, nao o impacto). Demais tipos: o efeito
+    especifico do jutsu via alias de `animation`, com fallback pro elemento."""
+    el = j["element"] if j["element"] in EFFECT_ELEMENT_DEFAULTS else "none"
+    if j["type"] == "projectile":
+        return _catalog_id(EFFECT_ELEMENT_DEFAULTS[el]["effect"], "effect")
+    key = EFFECT_ALIASES.get(j.get("animation"))
+    eid = _catalog_id(key, "effect") if key else None
+    return eid if eid is not None else _catalog_id(EFFECT_ELEMENT_DEFAULTS[el]["effect"], "effect")
+
+def jutsu_missile_id(j):
+    """Id numerico (CONST_ANI_*) para COMBAT_PARAM_DISTANCEEFFECT (so type=projectile)."""
+    el = j["element"] if j["element"] in EFFECT_ELEMENT_DEFAULTS else "none"
+    key = EFFECT_ALIASES.get(j.get("animation"))
+    mid = _catalog_id(key, "missile") if key else None
+    return mid if mid is not None else _catalog_id(EFFECT_ELEMENT_DEFAULTS[el]["missile"], "missile")
+
 jutsus = load_folder("jutsus")
 items = load_folder("items")
 monsters = load_folder("monsters")
@@ -129,6 +165,9 @@ def load_element_sets():
     return out
 
 element_sets = load_element_sets()
+
+# teto de level por regiao (arquivo data/npcs/<regiao>.json) para o que cada mercador compra de volta
+SHOP_LEVEL_CAP = {"leaf": 15, "coastal_tides": 25, "swamp": 30, "ruins": 55, "mountain": 85, "akatsuki_lair": 100}
 
 def item_id(our_id):
     return int(M["items"].get(our_id, 0))
@@ -334,7 +373,8 @@ for spell_idx, j in enumerate(jutsus.values(), start=1):
     lua = [HEADER_LUA, f"-- {j['name']}: {j.get('description','')}"]
     if j["type"] == "self":
         if j["id"] == "kawarimi":
-            lua.append("""function onCastSpell(creature, variant)
+            poof_id = jutsu_effect_id(j)  # fx_smoke_poof (catalogo em assets-src/sprites/effects.json)
+            lua.append(f"""function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
 	local dir = creature:getDirection()
 	local back = Position(pos)
@@ -343,23 +383,24 @@ for spell_idx, j in enumerate(jutsus.values(), start=1):
 	end
 	local tile = Tile(back)
 	if tile and tile:isWalkable() and not tile:hasFlag(TILESTATE_BLOCKSOLID) then
-		pos:sendMagicEffect(CONST_ME_POFF)
+		pos:sendMagicEffect({poof_id})
 		creature:teleportTo(back)
-		back:sendMagicEffect(CONST_ME_POFF)
+		back:sendMagicEffect({poof_id})
 		local cond = Condition(CONDITION_INVISIBLE)
 		cond:setParameter(CONDITION_PARAM_TICKS, 1000)
 		creature:addCondition(cond)
 		return true
 	end
 	creature:sendCancelMessage("Não há espaço para a substituição.")
-	pos:sendMagicEffect(CONST_ME_POFF)
+	pos:sendMagicEffect({poof_id})
 	return false
 end""")
         elif j["id"] == "bunshin":
-            lua.append("""-- TODO: criar monstro 'Clone' (cópia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
+            clone_id = jutsu_effect_id(j)  # fx_shadow_clone (distinto do poof do kawarimi)
+            lua.append(f"""-- TODO: criar monstro 'Clone' (cópia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
 function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
-	pos:sendMagicEffect(CONST_ME_POFF)
+	pos:sendMagicEffect({clone_id})
 	for _, spec in ipairs(Game.getSpectators(pos, false, false, 8, 8, 8, 8)) do
 		if spec:isMonster() and spec:getTarget() == creature then
 			spec:setTarget(nil)  -- distrai por um instante; o monstro reavalia alvo depois
@@ -370,6 +411,7 @@ end""")
         else:
             hot = next((e for e in j.get("effects", []) if e["type"] == "heal_over_time"), None)
             v, d = (int(hot["value"]), int(hot["duration_s"])) if hot else (8, 5)
+            buff_id = jutsu_effect_id(j)  # por jutsu via alias de `animation` (heal, aura, selo, armadura...)
             lua.append(f"""local condition = Condition(CONDITION_REGENERATION)
 condition:setParameter(CONDITION_PARAM_SUBID, 1)
 condition:setParameter(CONDITION_PARAM_TICKS, {d*1000})
@@ -378,15 +420,15 @@ condition:setParameter(CONDITION_PARAM_HEALTHTICKS, 1000)
 
 function onCastSpell(creature, variant)
 	creature:addCondition(condition)
-	creature:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+	creature:getPosition():sendMagicEffect({buff_id})
 	return true
 end""")
     else:
         lua.append(f"""local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, {el["combat"]})
-combat:setParameter(COMBAT_PARAM_EFFECT, {el["area_effect"]})""")
+combat:setParameter(COMBAT_PARAM_EFFECT, {jutsu_effect_id(j)})""")
         if j["type"] == "projectile":
-            lua.append(f"combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, {el['shoot']})")
+            lua.append(f"combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, {jutsu_missile_id(j)})")
         if j["type"] in ("area", "beam"):
             lua.append(f"local area = {area_lua(j.get('shape', 'circle_r1'))}\ncombat:setArea(createCombatArea(area))")
         # fórmula: base + level*ls + maglevel*ss, variação ±10%, elemento tratado pelo servidor
@@ -1232,6 +1274,9 @@ function opcodeEvent.onExtendedOpcode(player, opcode, buffer)
 end
 opcodeEvent:register()
 
+-- kit inicial por vocacao (gerado de data/villages.json + tfs_mapping.items)
+local STARTING_KIT = {STARTING_KIT_LUA}
+
 -- ------------------------------------------------------------------ login
 local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
@@ -1243,6 +1288,15 @@ function login.onLogin(player)
 	if firstTime and player:getMaxMana() < 60 then
 		player:setMaxMana(60)
 		player:addMana(60)
+	end
+	-- Kit inicial da vila (data/villages.json starting_items): o AAC/TFS criam o jogador so' com
+	-- o kit vanilla (bag/jacket). Sem arma o Genin novo morre pros 3 lobos da trilha (playtest
+	-- 2026-09-05). addItem com slot WHEREEVER equipa automaticamente o que couber no slot.
+	if firstTime then
+		local kit = STARTING_KIT[player:getVocation():getId()]
+		if kit then
+			for _, itemId in ipairs(kit) do player:addItem(itemId, 1) end
+		end
 	end
 	NarutoCharacters.apply(player, nil, nil, {silent = true, force = true, noState = true})
 	local pid = player:getId()
@@ -1324,6 +1378,19 @@ end
 talkElement:separator(" ")
 talkElement:register()
 """
+# kit inicial por vocacao: data/villages.json starting_items -> ids TFS (tfs_mapping.items); ids sem
+# mapeamento sao pulados com aviso (nao pode quebrar o login).
+_kit_rows = []
+for _vid, _v in villages.items():
+    _voc = M["villages"][_vid]["vocation_id"]
+    _ids = []
+    for _iid in _v.get("starting_items", []):
+        if item_id(_iid):
+            _ids.append(str(item_id(_iid)))
+        else:
+            print(f"AVISO: starting_item '{_iid}' da vila {_vid} sem id em tfs_mapping.json (pulado)")
+    _kit_rows.append(f"[{_voc}] = {{{', '.join(_ids)}}}")
+character_switch_script = character_switch_script.replace("{STARTING_KIT_LUA}", "{" + ", ".join(_kit_rows) + "}")
 write("scripts/naruto/character_switch.lua", character_switch_script)
 
 # ---------------------------------------------------------------- NPCs
@@ -1352,8 +1419,13 @@ def npc_files(n):
         for iid in n.get("sells", []):
             it = items[iid]
             lua.append(f"shopModule:addBuyableItem({{'{it['name'].lower()}'}}, {item_id(iid)}, {it['buy_price']}, 1, '{it['name'].lower()}')")
+        # Escopo do que o mercador compra de volta: só itens ate' o teto de level da regiao do NPC
+        # (playtest 2026-09-05: o mercador da Folha comprava troféus de boss final e sets Anbu —
+        # ~130 entradas — e a lista com buy=-1 estourava o range check do openShopWindow).
+        cap = SHOP_LEVEL_CAP.get(n.get("_region"), 100)
         for it in items.values():
-            if it["type"] in n.get("buys_types", []) and it["sell_price"] > 0 and item_id(it["id"]):
+            if it["type"] in n.get("buys_types", []) and it["sell_price"] > 0 and item_id(it["id"]) \
+                    and it.get("required_level", 0) <= cap and not it["id"].startswith("trophy_"):
                 lua.append(f"shopModule:addSellableItem({{'{it['name'].lower()}'}}, {item_id(it['id'])}, {it['sell_price']}, '{it['name'].lower()}')")
         lua.append(f'npcHandler:setMessage(MESSAGE_GREET, "Olá, |PLAYERNAME|. Diga {{trade}} para ver o que tenho.")')
     elif n["type"] == "quest":

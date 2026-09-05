@@ -3,7 +3,7 @@
 -- Corte Duplo: Dois cortes sucessivos de lâmina em um golpe só, cobrindo um arco à frente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 224)
 local area = {
 	{1, 1, 1},
 	{0, 1, 0},

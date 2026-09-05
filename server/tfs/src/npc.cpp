@@ -2,6 +2,7 @@
 // Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
+#include <algorithm>
 
 #include "npc.h"
 #include "game.h"
@@ -831,8 +832,8 @@ int NpcScriptInterface::luaOpenShopWindow(lua_State* L)
 			lua_pop(L, 1);
 		}
 
-		item.buyPrice = getField<uint32_t>(L, tableIndex, "buy");
-		item.sellPrice = getField<uint32_t>(L, tableIndex, "sell");
+		item.buyPrice = static_cast<uint32_t>(std::max<int32_t>(0, getField<int32_t>(L, tableIndex, "buy")));
+		item.sellPrice = static_cast<uint32_t>(std::max<int32_t>(0, getField<int32_t>(L, tableIndex, "sell")));
 		item.realName = getFieldString(L, tableIndex, "name");
 
 		items.push_back(item);
@@ -1051,8 +1052,8 @@ int NpcScriptInterface::luaNpcOpenShopWindow(lua_State* L)
 			lua_pop(L, 1);
 		}
 
-		item.buyPrice = getField<uint32_t>(L, tableIndex, "buy");
-		item.sellPrice = getField<uint32_t>(L, tableIndex, "sell");
+		item.buyPrice = static_cast<uint32_t>(std::max<int32_t>(0, getField<int32_t>(L, tableIndex, "buy")));
+		item.sellPrice = static_cast<uint32_t>(std::max<int32_t>(0, getField<int32_t>(L, tableIndex, "sell")));
 		item.realName = getFieldString(L, tableIndex, "name");
 
 		items.push_back(item);

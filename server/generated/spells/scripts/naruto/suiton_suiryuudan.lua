@@ -3,7 +3,7 @@
 -- Suiton: Dragão de Água: Onda em linha que empurra e desacelera.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
+combat:setParameter(COMBAT_PARAM_EFFECT, 205)
 local area = {
 	{1},
 	{1},

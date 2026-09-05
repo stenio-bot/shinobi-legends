@@ -9,6 +9,6 @@ condition:setParameter(CONDITION_PARAM_HEALTHTICKS, 1000)
 
 function onCastSpell(creature, variant)
 	creature:addCondition(condition)
-	creature:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+	creature:getPosition():sendMagicEffect(214)
 	return true
 end

@@ -10,15 +10,15 @@ function onCastSpell(creature, variant)
 	end
 	local tile = Tile(back)
 	if tile and tile:isWalkable() and not tile:hasFlag(TILESTATE_BLOCKSOLID) then
-		pos:sendMagicEffect(CONST_ME_POFF)
+		pos:sendMagicEffect(221)
 		creature:teleportTo(back)
-		back:sendMagicEffect(CONST_ME_POFF)
+		back:sendMagicEffect(221)
 		local cond = Condition(CONDITION_INVISIBLE)
 		cond:setParameter(CONDITION_PARAM_TICKS, 1000)
 		creature:addCondition(cond)
 		return true
 	end
 	creature:sendCancelMessage("Não há espaço para a substituição.")
-	pos:sendMagicEffect(CONST_ME_POFF)
+	pos:sendMagicEffect(221)
 	return false
 end

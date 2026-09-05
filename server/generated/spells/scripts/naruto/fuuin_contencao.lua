@@ -3,7 +3,7 @@
 -- Fuuin: Selo de Contenção: Selo de papel que trava os músculos do alvo por alguns segundos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 222)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 20 + level * 1.2 + maglevel * 1.75

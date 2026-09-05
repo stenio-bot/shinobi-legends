@@ -3,7 +3,7 @@
 -- Círculo de Selos: Um círculo de selos surge no chão, prendendo todos que estiverem dentro.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 222)
 local area = {
 	{1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1},

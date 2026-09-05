@@ -602,3 +602,20 @@ senha em SHA1) e logados de verdade com `tools/autotest_client.sh <conta>
 "Genin Laranja" e o Menu Shinobi abriu sozinho (screenshots
 `screenshots/aac_01_spawn_templo.png` e `screenshots/aac_02_hud.png`). Conta
 de teste apagada do banco ao final.
+
+
+## Notas de QA (2026-09-05, playtest L1–20)
+
+- **Kit inicial**: o AAC/TFS criam o jogador só com o kit vanilla; o kit da vila
+  (`data/villages.json.starting_items`) é entregue no **primeiro login** por
+  `character_switch.lua` (gerado), junto com o piso de 60 de chakra.
+- **Loja (`{trade}`)**: o `ShopModule` vanilla usa `buy=-1`/`sell=-1` como sentinela e o
+  `getField<uint32_t>` do TFS 1.4.2 loga `Argument -1 has out-of-range value` a cada abertura de
+  loja. Patch em `server/tfs/src/npc.cpp` (`luaOpenShopWindow`/`luaNpcOpenShopWindow`): lê como
+  `int32_t` e trunca em 0. Exige recompilar o servidor (`cmake --build --preset macos-release`).
+  Além disso o exportador limita o que cada mercador compra de volta ao teto de level da região
+  (`SHOP_LEVEL_CAP` em `tools/export_tfs.py`) e nunca compra troféus.
+- **macOS**: matar o OTClient com `kill -9` repetidamente faz o próximo lançamento parar num
+  diálogo nativo "reabrir janelas?". Contorno aplicado na máquina de dev:
+  `defaults write com.otclient ApplePersistenceIgnoreState -bool YES` (ajuste o bundle id se o
+  app usar outro; o valor global `-g` também funciona).

@@ -3,8 +3,8 @@
 -- Raiton: Agulha de Raio: Agulha elétrica rápida, pode paralisar.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ENERGY)
+combat:setParameter(COMBAT_PARAM_EFFECT, 208)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 62)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 7.0 + level * 0.385 + maglevel * 0.315

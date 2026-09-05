@@ -3,7 +3,7 @@
 -- Fuuton: Redemoinho Prisão: Um redemoinho de vento prende o alvo no ar, impedindo qualquer movimento.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 218)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 18.0 + level * 0.72 + maglevel * 0.9

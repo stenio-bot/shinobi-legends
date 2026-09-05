@@ -3,7 +3,7 @@
 -- Soco da Juventude: Um soco carregado de puro vigor físico, sem chakra nenhum envolvido.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 224)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 15.8 + level * 0.887 + maglevel * 0.547

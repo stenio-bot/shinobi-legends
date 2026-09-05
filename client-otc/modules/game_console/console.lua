@@ -1825,7 +1825,10 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
                 if plainText:sub(1,1) == string.char(1) then
                     plainText = plainText:sub(2)
                 end
-                processedText = processedText:gsub("{" .. textContent .. "}", plainText)
+                -- Shinobi Legends: textContent vem da fala do NPC e pode conter "()" etc.
+                -- (ex.: "Tarefa: Lobo (Iniciante)") — escapar como padrao e substituir literal.
+                local escaped = textContent:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0")
+                processedText = processedText:gsub("{" .. escaped .. "}", function() return plainText end)
             end
             processedText = processedText:gsub("{([^}]+)}", "%1")
             staticMessage = processedText

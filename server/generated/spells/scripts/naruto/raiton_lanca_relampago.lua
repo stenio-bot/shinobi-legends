@@ -3,7 +3,7 @@
 -- Raiton: Lança do Relâmpago: Um raio contínuo perfura em linha reta e atravessa vários inimigos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
+combat:setParameter(COMBAT_PARAM_EFFECT, 210)
 local area = {
 	{1},
 	{1},

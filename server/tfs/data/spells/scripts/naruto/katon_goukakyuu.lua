@@ -3,8 +3,8 @@
 -- Katon: Grande Bola de Fogo: Dispara uma bola de fogo que explode no impacto.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_FIRE)
+combat:setParameter(COMBAT_PARAM_EFFECT, 200)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 60)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 8.75 + level * 0.42 + maglevel * 0.28

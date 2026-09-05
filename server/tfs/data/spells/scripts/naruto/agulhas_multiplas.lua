@@ -3,8 +3,8 @@
 -- Agulhas Multiplas: Uma saraivada de agulhas de metal lancadas contra o alvo.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
-combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_THROWINGSTAR)
+combat:setParameter(COMBAT_PARAM_EFFECT, 224)
+combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 67)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 16 + level * 0.9 + maglevel * 0.9

@@ -3,7 +3,7 @@
 -- Soco Monstruoso: Um soco de força monstruosa que racha o chão ao redor do impacto.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 213)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 27.9 + level * 1.599 + maglevel * 1.025

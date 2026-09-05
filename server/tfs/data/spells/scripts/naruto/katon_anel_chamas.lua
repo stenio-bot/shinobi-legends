@@ -3,7 +3,7 @@
 -- Katon: Anel de Chamas: Um anel de fogo explode ao redor do conjurador, queimando tudo em volta.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 201)
 local area = {
 	{1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1},

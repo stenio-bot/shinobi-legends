@@ -3,7 +3,7 @@
 -- Selo de Exorcismo: Um selo cerimonial que perfura o chakra do alvo, travando seus movimentos.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 222)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 109.2 + level * 6.552 + maglevel * 3.25

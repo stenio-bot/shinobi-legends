@@ -481,6 +481,7 @@ ShinobiCommandsTab < ShinobiTabPanel
 // janela
 // ---------------------------------------------------------------------------
 MainWindow
+  !text: tr('Menu Shinobi')
   id: shinobiMenuWindow
   size: 680 520
   @onEscape: modules.naruto_menu.hide()

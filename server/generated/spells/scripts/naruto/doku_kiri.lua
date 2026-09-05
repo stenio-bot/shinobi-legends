@@ -3,7 +3,7 @@
 -- Doku: Névoa Venenosa: Exala uma névoa roxa ao redor do conjurador; quem respira sai envenenado.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 225)
 local area = {
 	{1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1},

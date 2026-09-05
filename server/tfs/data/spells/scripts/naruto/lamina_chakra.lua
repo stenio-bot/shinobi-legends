@@ -3,7 +3,7 @@
 -- Lamina de Chakra: Uma lamina invisivel de chakra que atravessa varios inimigos em linha reta.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 226)
 local area = {
 	{1},
 	{1},

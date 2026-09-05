@@ -3,7 +3,7 @@
 -- Suiton: Prisão de Água: Uma esfera de água prende o alvo no lugar e o sufoca lentamente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
+combat:setParameter(COMBAT_PARAM_EFFECT, 207)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 30.6 + level * 1.17 + maglevel * 0.9

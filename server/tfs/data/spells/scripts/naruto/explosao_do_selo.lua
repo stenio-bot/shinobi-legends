@@ -3,7 +3,7 @@
 -- Explosão do Selo: Detona o selo de uma kunai marcada à distância, sem precisar estar perto.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 222)
 local area = {
 	{1, 1, 1},
 	{1, 2, 1},

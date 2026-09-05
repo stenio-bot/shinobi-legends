@@ -338,6 +338,9 @@ function opcodeEvent.onExtendedOpcode(player, opcode, buffer)
 end
 opcodeEvent:register()
 
+-- kit inicial por vocacao (gerado de data/villages.json + tfs_mapping.items)
+local STARTING_KIT = {[1] = {2404, 2467, 2649, 2643, 2480}, [2] = {2404, 2467, 2649, 2643, 2480}, [3] = {7378, 2404, 2467, 2649, 2643, 2480}, [4] = {2404, 2467, 2649, 2643, 2480}}
+
 -- ------------------------------------------------------------------ login
 local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
@@ -349,6 +352,15 @@ function login.onLogin(player)
 	if firstTime and player:getMaxMana() < 60 then
 		player:setMaxMana(60)
 		player:addMana(60)
+	end
+	-- Kit inicial da vila (data/villages.json starting_items): o AAC/TFS criam o jogador so' com
+	-- o kit vanilla (bag/jacket). Sem arma o Genin novo morre pros 3 lobos da trilha (playtest
+	-- 2026-09-05). addItem com slot WHEREEVER equipa automaticamente o que couber no slot.
+	if firstTime then
+		local kit = STARTING_KIT[player:getVocation():getId()]
+		if kit then
+			for _, itemId in ipairs(kit) do player:addItem(itemId, 1) end
+		end
 	end
 	NarutoCharacters.apply(player, nil, nil, {silent = true, force = true, noState = true})
 	local pid = player:getId()

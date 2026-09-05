@@ -3,7 +3,7 @@
 -- Suiton: Vórtice Devorador: Um redemoinho colossal engole a área e arrasta tudo para o centro.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
+combat:setParameter(COMBAT_PARAM_EFFECT, 207)
 local area = {
 	{1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1},

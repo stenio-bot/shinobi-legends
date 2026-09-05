@@ -3,7 +3,7 @@
 -- Contra-Ataque Calculado: Um golpe rápido que pune a brecha aberta pelo inimigo após prever seu ataque.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HITAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 224)
 
 function onGetFormulaValues(player, level, maglevel)
 	local base = 28 + level * 1.65 + maglevel * 1.125

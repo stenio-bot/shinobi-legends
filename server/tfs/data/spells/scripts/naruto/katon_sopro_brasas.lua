@@ -3,7 +3,7 @@
 -- Katon: Sopro de Brasas: Um sopro curto de brasas que cobre os tiles imediatamente à frente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 202)
 local area = {
 	{1, 1, 1},
 	{0, 1, 0},

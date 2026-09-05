@@ -3,7 +3,7 @@
 -- Katon: Flores de Fênix: Vários projéteis de fogo em cone à frente.
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
+combat:setParameter(COMBAT_PARAM_EFFECT, 202)
 local area = {
 	{1, 1, 1, 1, 1},
 	{0, 1, 1, 1, 0},
