@@ -1,8 +1,8 @@
 {
   "format": 1,
   "_doc": "Alocacao PERMANENTE de ids para os tiles de assets-src/sprites/tiles.json. Nunca edite nem apague uma entrada: o id ficaria orfao em mapas e saves ja gravados. Gerado por tools/spr/build_assets.py.",
-  "next_server_id": 30328,
-  "next_client_id": 24054,
+  "next_server_id": 30344,
+  "next_client_id": 24070,
   "by_key": {
     "tatami_floor": {
       "server_id": 30000,
@@ -1315,6 +1315,70 @@
     "stepping_stone_2": {
       "server_id": 30327,
       "client_id": 24053
+    },
+    "border_grass_dirt_n2": {
+      "server_id": 30328,
+      "client_id": 24054
+    },
+    "border_grass_dirt_s2": {
+      "server_id": 30329,
+      "client_id": 24055
+    },
+    "border_grass_dirt_e2": {
+      "server_id": 30330,
+      "client_id": 24056
+    },
+    "border_grass_dirt_w2": {
+      "server_id": 30331,
+      "client_id": 24057
+    },
+    "border_grass_water_n2": {
+      "server_id": 30332,
+      "client_id": 24058
+    },
+    "border_grass_water_s2": {
+      "server_id": 30333,
+      "client_id": 24059
+    },
+    "border_grass_water_e2": {
+      "server_id": 30334,
+      "client_id": 24060
+    },
+    "border_grass_water_w2": {
+      "server_id": 30335,
+      "client_id": 24061
+    },
+    "border_grass_mud_n2": {
+      "server_id": 30336,
+      "client_id": 24062
+    },
+    "border_grass_mud_s2": {
+      "server_id": 30337,
+      "client_id": 24063
+    },
+    "border_grass_mud_e2": {
+      "server_id": 30338,
+      "client_id": 24064
+    },
+    "border_grass_mud_w2": {
+      "server_id": 30339,
+      "client_id": 24065
+    },
+    "border_cobble_dirt_n2": {
+      "server_id": 30340,
+      "client_id": 24066
+    },
+    "border_cobble_dirt_s2": {
+      "server_id": 30341,
+      "client_id": 24067
+    },
+    "border_cobble_dirt_e2": {
+      "server_id": 30342,
+      "client_id": 24068
+    },
+    "border_cobble_dirt_w2": {
+      "server_id": 30343,
+      "client_id": 24069
     }
   }
 }

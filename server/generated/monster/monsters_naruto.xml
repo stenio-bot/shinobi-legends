@@ -5,6 +5,7 @@
 <monster name="Cobra da Floresta" file="naruto/forest_snake.xml"/>
 <monster name="Bandido Arqueiro" file="naruto/bandit_archer.xml"/>
 <monster name="Chefe dos Bandidos" file="naruto/boss_bandit_chief.xml"/>
+<monster name="Cervo" file="naruto/forest_deer.xml"/>
 <monster name="Águia do Trovão" file="naruto/thunder_eagle.xml"/>
 <monster name="Oni da Geleira" file="naruto/glacier_oni.xml"/>
 <monster name="Monge da Tempestade" file="naruto/storm_monk.xml"/>

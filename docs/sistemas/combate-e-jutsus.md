@@ -84,3 +84,19 @@ chegam nela por `client-otc/modules/naruto_theme/naruto_jutsus.lua`:
 - Automático ao atingir level (jutsus básicos da vila).
 - Comprar pergaminho de NPC (custo em ryo).
 - Drop raro de boss (jutsus lendários).
+
+## Jutsus por PERSONAGEM (servidor TFS)
+No servidor (ver `docs/sistemas/vilas-e-clas.md` → "Personagens e jutsus"), o jogador escolhe
+VILA (vocação) e, dentro dela, um PERSONAGEM (`data/characters.json`, outfit 900–909) com um
+kit fixo de 5–8 jutsus. Isso é aplicado via `spells.xml`: todo jutsu tem `needlearn="1"`
+(exceto `kawarimi`, universal) e o servidor só sabe quais jutsus o jogador conhece através de
+`player:learnSpell`/`forgetSpell` — chamados por `NarutoCharacters.apply` (`server/generated/
+scripts/naruto/character_switch.lua`) sempre que o personagem troca (`!personagem <nome>` para
+jogadores, `/personagem <id|nome>` para GM). Tentar usar um jutsu que não está no kit do
+personagem atual é recusado pelo servidor com "You must learn this spell first.", mesmo que o
+jogador conheça as palavras do jutsu de um personagem anterior.
+
+No cliente, `client-otc/modules/naruto_theme/naruto_jutsus.lua` reage à troca de personagem
+(evento `onOutfitChange` do `LocalPlayer`) preenchendo a barra de ação (slot 1) com os jutsus
+do personagem atual (`NarutoCharacterJutsus[looktype]`, gerado em `jutsus_data.lua`). A janela
+"Lista de Jutsus" continua filtrando por vila (vocação), não por personagem.

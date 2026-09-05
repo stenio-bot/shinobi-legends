@@ -669,7 +669,7 @@ de como `build_valley.py` decide onde colocar cada peça:
 Resumo do pipeline:
 
 ```bash
-.venv/bin/python tools/spr/gen_borders.py        # 48 PNGs em terrain/borders/
+.venv/bin/python tools/spr/gen_borders.py        # 64 PNGs em terrain/borders/
 # declarar border_<par>_<peca> em assets-src/sprites/tiles.json (feito)
 .venv/bin/python tools/spr/allocate_ids.py        # ids permanentes
 .venv/bin/python tools/map/build_valley.py        # autoborder no mapa (apply_borders)
@@ -677,9 +677,34 @@ Resumo do pipeline:
 .venv/bin/python tools/spr/build_assets.py        # só entao grava items.otb/.dat/.spr
 ```
 
-Reusa as paletas de `gen_terrain.py` (import direto do módulo, sem duplicar
-`P_GRASS`/`P_DIRT`/`P_WATER`/`P_MUD`/`P_COBBLE`) para a borda casar
-exatamente com o chão que ela cobre.
+Reusa as paletas E as funções de desenho de `gen_terrain.py` (import direto
+do módulo): a textura do material invasor não é um ruído próprio, é a MESMA
+função que pinta o chão de verdade (`GT.grass(1)`, `GT.cobble(1)`) — é o que
+faz a borda casar pixel a pixel (paralelepípedo de verdade no canto de
+cobblestone, não uma mancha cinza lisa).
+
+### v2 — bordas fluidas (curva-base única + 2 variantes por peça reta)
+
+A v1 desenhava cada uma das 12 peças (retas, cantos externos, cantos
+internos) com uma fórmula própria, e a transição virava uma faixa serrilhada
+uniforme com emenda visível nos cantos (feedback do usuário: "a conexão
+entre as texturas está ruim"). A v2 deriva as 12 peças de **uma única curva
+de profundidade de invasão por direção** (periódica, amplitude 3–6px,
+suavizada antes do jitter): retas usam a curva direto, cantos externos são a
+mesma curva das duas retas do canto encolhendo perto do canto (`_taper`), e
+cantos internos são "tile cheio menos o bolsão de canto externo oposto" —
+nenhuma peça inventa uma forma independente, todas reaproveitam a mesma
+fonte, o que garante que a curva não "quebra" onde uma peça reta encontra um
+canto. Mais detalhes, incluindo o bug de textura encontrado e corrigido na
+2ª rodada de preview (canto interno de cobble saindo cinza liso em vez de
+paralelepípedo) e os 3 recortes de validação:
+**`docs/sistemas/mapas.md#autoborder`**.
+
+Também ganhou **2 variantes por peça reta** (`border_<par>_<edge>2`, 16
+itens novos, server ids 30328–30343/client 24054–24069) — o autoborder em
+`build_valley.py` escolhe entre a base e a variante por um hash
+determinístico (CRC32) da posição do tile, pra uma trilha comprida não
+repetir sempre a mesma peça "carimbada".
 
 ## Decoração de cenário (`gen_decor.py` + `tiles_decor.json`)
 
@@ -876,9 +901,11 @@ confira com `tools/map/otbm.py`, `OtbmMap.read(...).item_count_by_id()`).
   o `addons: 3` do `rogue_ninja` simplesmente não aparece.
 - Itens não têm variação de padrão: chão não tem as 4×4 variações da Tibia e
   pilhas não mudam de sprite conforme a quantidade.
-- O terreno procedural não tem **bordas de transição** (grama→terra, terra→água):
-  cada material termina no limite do tile. Falta um conjunto de itens de borda no
-  mapa (`GROUND_BORDER`) para o encontro ficar suave.
+- ~~O terreno procedural não tem bordas de transição~~ resolvido por
+  `gen_borders.py` + `apply_borders` (ver seção "Bordas de terreno /
+  autoborder" acima) — grama/terra, grama/água, grama/lama e cobble/terra
+  têm faixa ondulada própria (v2: curva-base única + 2 variantes por peça
+  reta, sem emenda visível entre reta e canto).
 - Árvores de 2×2 desenham para oeste/norte mas **bloqueiam uma casa só** — em
   floresta densa a copa de uma cobre o tronco da vizinha; é o comportamento da
   Tibia, mas exige que o mapa não empilhe árvores em casas adjacentes.

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "genin_laranja",
+    "name": "Genin Laranja",
+    "looktype": 900,
+    "village": "leaf",
+    "jutsus": ["fuuton_lamina_vento", "kawarimi", "bunshin", "clone_sombrio", "fuuton_rajada_cortante"]
+  },
+  {
+    "id": "genin_uchiha",
+    "name": "Genin Uchiha",
+    "looktype": 901,
+    "village": "leaf",
+    "jutsus": ["katon_goukakyuu", "raiton_hari", "katon_sopro_brasas", "raiton_corrente_estatica", "katon_housenka", "katon_karyuu_endan"]
+  },
+  {
+    "id": "kunoichi_rosa",
+    "name": "Kunoichi Rosa",
+    "looktype": 902,
+    "village": "leaf",
+    "jutsus": ["punho_suave", "kawarimi", "bunshin", "shousen", "chute_giratorio"]
+  },
+  {
+    "id": "herdeira_hyuga",
+    "name": "Herdeira Hyuga",
+    "looktype": 903,
+    "village": "mist",
+    "jutsus": ["suiton_mizudan", "suiton_nevoa_cortante", "suiton_prisao_agua", "suiton_suiryuudan", "suiton_vortice_devorador", "fuuin_contencao"]
+  },
+  {
+    "id": "kunoichi_armas",
+    "name": "Kunoichi das Armas",
+    "looktype": 905,
+    "village": "mist",
+    "jutsus": ["agulhas_multiplas", "kawarimi", "suiton_nevoa_cortante", "lamina_chakra", "doku_kiri"]
+  },
+  {
+    "id": "ninja_verde",
+    "name": "Ninja Verde",
+    "looktype": 904,
+    "village": "cloud",
+    "jutsus": ["punho_suave", "kawarimi", "bunshin", "doton_muralha_pedra", "chute_giratorio"]
+  },
+  {
+    "id": "ninja_abelha",
+    "name": "Ninja Abelha",
+    "looktype": 909,
+    "village": "cloud",
+    "jutsus": ["raiton_hari", "raiton_corrente_estatica", "raiton_lanca_relampago", "raiton_armadura_eletrica", "raiton_punho_trovao"]
+  },
+  {
+    "id": "sabio_loiro",
+    "name": "Sabio Loiro",
+    "looktype": 907,
+    "village": "sand",
+    "jutsus": ["fuuton_lamina_vento", "raio_selado", "kawarimi", "fuuton_rajada_cortante", "doton_estacas_terra"]
+  },
+  {
+    "id": "sabio_cerimonial",
+    "name": "Sabio Cerimonial",
+    "looktype": 908,
+    "village": "sand",
+    "jutsus": ["fuuton_lamina_vento", "doton_muralha_pedra", "fuuton_rajada_cortante", "doton_estacas_terra", "doton_colapso_terreno"]
+  }
+]

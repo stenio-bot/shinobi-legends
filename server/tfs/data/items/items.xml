@@ -38275,6 +38275,18 @@
 <item id="30261" name="borda grama/terra (icse)">  
 	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudeste)."/>
 </item>
+<item id="30328" name="borda grama/terra (n, variante 2)">  
+	<attribute key="description" value="Borda de grama/terra avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30329" name="borda grama/terra (s, variante 2)">  
+	<attribute key="description" value="Borda de grama/terra avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30330" name="borda grama/terra (e, variante 2)">  
+	<attribute key="description" value="Borda de grama/terra avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30331" name="borda grama/terra (w, variante 2)">  
+	<attribute key="description" value="Borda de grama/terra avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
 <item id="30262" name="borda grama/agua (n)">  
 	<attribute key="description" value="Borda de grama avancando sobre agua (norte)."/>
 </item>
@@ -38310,6 +38322,18 @@
 </item>
 <item id="30273" name="borda grama/agua (icse)">  
 	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudeste)."/>
+</item>
+<item id="30332" name="borda grama/agua (n, variante 2)">  
+	<attribute key="description" value="Borda de grama/agua avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30333" name="borda grama/agua (s, variante 2)">  
+	<attribute key="description" value="Borda de grama/agua avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30334" name="borda grama/agua (e, variante 2)">  
+	<attribute key="description" value="Borda de grama/agua avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30335" name="borda grama/agua (w, variante 2)">  
+	<attribute key="description" value="Borda de grama/agua avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
 </item>
 <item id="30274" name="borda grama/lama (n)">  
 	<attribute key="description" value="Borda de grama avancando sobre lama (norte)."/>
@@ -38347,6 +38371,18 @@
 <item id="30285" name="borda grama/lama (icse)">  
 	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudeste)."/>
 </item>
+<item id="30336" name="borda grama/lama (n, variante 2)">  
+	<attribute key="description" value="Borda de grama/lama avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30337" name="borda grama/lama (s, variante 2)">  
+	<attribute key="description" value="Borda de grama/lama avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30338" name="borda grama/lama (e, variante 2)">  
+	<attribute key="description" value="Borda de grama/lama avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30339" name="borda grama/lama (w, variante 2)">  
+	<attribute key="description" value="Borda de grama/lama avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
 <item id="30286" name="borda cobblestone/terra (n)">  
 	<attribute key="description" value="Borda de cobblestone avancando sobre terra (norte)."/>
 </item>
@@ -38382,6 +38418,18 @@
 </item>
 <item id="30297" name="borda cobblestone/terra (icse)">  
 	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30340" name="borda cobblestone/terra (n, variante 2)">  
+	<attribute key="description" value="Borda de cobblestone/terra avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30341" name="borda cobblestone/terra (s, variante 2)">  
+	<attribute key="description" value="Borda de cobblestone/terra avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30342" name="borda cobblestone/terra (e, variante 2)">  
+	<attribute key="description" value="Borda de cobblestone/terra avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30343" name="borda cobblestone/terra (w, variante 2)">  
+	<attribute key="description" value="Borda de cobblestone/terra avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
 </item>
 <item id="30298" name="tábua da ponte">  
 	<attribute key="description" value="Tábuas firmes de uma ponte de madeira."/>

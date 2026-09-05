@@ -50,28 +50,41 @@
     "leaf": {
       "vocation_id": 1,
       "town_id": 1,
-      "outfits": [900, 901, 902],
+      "outfits": [
+        900,
+        901,
+        902
+      ],
       "default_outfit": 900,
       "_note": "looktypes escolhíveis na criação (visual dos personagens importados, sem nomes do anime): 900 Traje Genin Laranja, 901 Traje Genin Azul, 902 Traje Genin Rosa"
     },
     "mist": {
       "vocation_id": 2,
       "town_id": 2,
-      "outfits": [903, 905],
+      "outfits": [
+        903,
+        905
+      ],
       "default_outfit": 903,
       "_note": "903 Traje Kunoichi Branco, 905 Traje Marrom de Viajante"
     },
     "cloud": {
       "vocation_id": 3,
       "town_id": 3,
-      "outfits": [909, 904],
+      "outfits": [
+        909,
+        904
+      ],
       "default_outfit": 909,
       "_note": "909 Traje Listrado da Nuvem, 904 Traje Verde de Treino"
     },
     "sand": {
       "vocation_id": 4,
       "town_id": 4,
-      "outfits": [907, 908],
+      "outfits": [
+        907,
+        908
+      ],
       "default_outfit": 907,
       "_note": "907 Traje Amarelo do Sábio, 908 Traje Branco Cerimonial"
     }
@@ -279,6 +292,16 @@
       "body": 0,
       "legs": 0,
       "feet": 0
+    },
+    "forest_deer": {
+      "looktype": 21,
+      "corpse": 5968,
+      "race": "blood",
+      "head": 40,
+      "body": 62,
+      "legs": 80,
+      "feet": 20,
+      "_note": "reaproveita o sprite do Lobo (looktype 21, mon_wolf) só recolorido — ADR-002 (visual apenas, sem sprite novo). Serve para testar a categoria 'passivo' (foge/anda, não ataca) contra a 'agressivo' do Lobo."
     }
   },
   "items": {

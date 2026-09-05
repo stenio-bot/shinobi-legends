@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Character",
+  "type": "object",
+  "required": ["id", "name", "looktype", "village", "jutsus"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "name": {"type": "string", "description": "Nome próprio do personagem (ADR-002): nunca nome do anime."},
+    "looktype": {"type": "integer", "minimum": 900, "maximum": 909},
+    "village": {"type": "string", "description": "Vila (vocação) a que este personagem pertence."},
+    "jutsus": {
+      "type": "array",
+      "description": "Lista ORDENADA de ids de jutsu (data/jutsus/*.json) que o personagem aprende ao ser escolhido.",
+      "minItems": 5,
+      "maxItems": 8,
+      "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}
+    }
+  }
+}

@@ -96,6 +96,71 @@ local function hotkeySetName(player)
     return v and v.setName or 'Shinobi'
 end
 
+-- ==========================================================================
+-- Jutsus por PERSONAGEM (looktype 900-909): ao entrar no jogo e sempre que o
+-- outfit do jogador local muda, a barra inferior 1 e preenchida com os jutsus
+-- do NarutoCharacterJutsus[looktype] (jutsus_data.lua, gerado a partir de
+-- data/characters.json), substituindo o conjunto do personagem anterior.
+-- ==========================================================================
+local lastCharacterLooktype = nil
+
+--- Preenche a barra inferior 1 com os jutsus do personagem (looktype), sempre substituindo
+--- o conjunto anterior. force=true reaplica mesmo se o looktype nao mudou (ex.: onGameStart).
+function fillActionBarForCharacter(looktype, force)
+    local ab = modules.game_actionbar
+    if not ab or not ab.ApiJson or not ab.selectHotkeySet then
+        return false
+    end
+    if not NarutoCharacterJutsus then
+        g_logger.error('naruto_jutsus: jutsus_data.lua nao tem NarutoCharacterJutsus (rode tools/export_tfs.py)')
+        return false
+    end
+    local char = NarutoCharacterJutsus[looktype]
+    if not char then
+        log('nenhum personagem conhecido para looktype ' .. tostring(looktype))
+        return false
+    end
+    if looktype == lastCharacterLooktype and not force then
+        return false
+    end
+
+    local api = ab.ApiJson
+    local setName = char.id -- ja ascii/snake_case (id do personagem)
+    if ab.createHotkeySet then
+        ab.createHotkeySet(setName) -- devolve false se ja existir; tudo bem
+    end
+    ab.selectHotkeySet(setName)
+
+    for i = 1, MAX_SLOTS do
+        local words = char.words[i]
+        if words then
+            api.createOrUpdateText(BOTTOM_BAR, i, words, true)
+            if api.updateActionBarHotkey then
+                api.updateActionBarHotkey('TriggerActionButton_' .. BOTTOM_BAR .. '.' .. i, 'F' .. i)
+            end
+        elseif api.removeAction then
+            api.removeAction(BOTTOM_BAR, i) -- limpa slot que sobrou de um personagem com mais jutsus
+        end
+    end
+    api.saveData()
+    ab.selectHotkeySet(setName) -- recria os botoes da barra a partir do JSON
+    lastCharacterLooktype = looktype
+    log('barra ' .. BOTTOM_BAR .. ' preenchida para o personagem "' .. char.name .. '" (' .. #char.words .. ' jutsus)')
+    return true
+end
+
+--- Dispara quando QUALQUER creature muda de outfit; filtra para o jogador local.
+local function onCreatureOutfitChange(creature, outfit, oldOutfit)
+    local player = g_game.getLocalPlayer()
+    if not player or creature ~= player then
+        return
+    end
+    local ok, err = pcall(fillActionBarForCharacter, outfit.lookType, false)
+    if not ok then
+        g_logger.error('naruto_jutsus: fillActionBarForCharacter (onOutfitChange) falhou: ' .. tostring(err))
+    end
+end
+
 --- Preenche a barra inferior 1 com os jutsus padrao, se ela ainda estiver vazia.
 function setupDefaultActionBar()
     local ab = modules.game_actionbar
@@ -157,9 +222,22 @@ local function onGameStart()
             return
         end
         applySpelllistProfile()
-        local ok, err = pcall(setupDefaultActionBar)
-        if not ok then
-            g_logger.error('naruto_jutsus: setupDefaultActionBar falhou: ' .. tostring(err))
+        local player = g_game.getLocalPlayer()
+        local filledByCharacter = false
+        if player then
+            local ok, err = pcall(fillActionBarForCharacter, player:getOutfit().lookType, true)
+            filledByCharacter = ok and err ~= false
+            if not ok then
+                g_logger.error('naruto_jutsus: fillActionBarForCharacter (onGameStart) falhou: ' .. tostring(err))
+            end
+        end
+        if not filledByCharacter then
+            -- sem personagem conhecido para esse looktype (ex.: GM com outfit fora de 900-909):
+            -- volta para o comportamento antigo, por level+vocacao.
+            local ok, err = pcall(setupDefaultActionBar)
+            if not ok then
+                g_logger.error('naruto_jutsus: setupDefaultActionBar falhou: ' .. tostring(err))
+            end
         end
     end, SETUP_DELAY)
 end
@@ -167,6 +245,7 @@ end
 function initJutsus()
     registerJutsus()
     connect(g_game, { onGameStart = onGameStart })
+    connect(Creature, { onOutfitChange = onCreatureOutfitChange })
     if g_game.isOnline() then
         onGameStart()
     end
@@ -174,4 +253,5 @@ end
 
 function terminateJutsus()
     disconnect(g_game, { onGameStart = onGameStart })
+    disconnect(Creature, { onOutfitChange = onCreatureOutfitChange })
 end

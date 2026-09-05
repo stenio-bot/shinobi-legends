@@ -387,6 +387,16 @@
       "monster_id": "boss_ancestral_oni",
       "x": 196,
       "y": 36
+    },
+    {
+      "monster_id": "forest_deer",
+      "x": 14,
+      "y": 22
+    },
+    {
+      "monster_id": "forest_deer",
+      "x": 18,
+      "y": 20
     }
   ]
 }

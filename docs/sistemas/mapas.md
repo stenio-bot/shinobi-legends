@@ -201,13 +201,46 @@ DECORAÇÃO, desenhado por cima do chão, com uma faixa irregular do material
 tem um passe final, `apply_borders(b, sid)`, chamado depois de
 `carve_clearings`/`connect_clearings` e antes de `build_spawns`/`validate`.
 
-### Arte (`tools/spr/gen_borders.py`)
+### Arte (`tools/spr/gen_borders.py`) — v2, "fluida"
 
-Gera 4 pares × 12 peças = 48 PNGs 32×32 RGBA (alpha binário, igual ao resto do
-projeto) em `assets-src/sprites/terrain/borders/`, reusando as MESMAS paletas
-e funções de ruído de `tools/spr/gen_terrain.py` (`P_GRASS`, `P_DIRT`,
-`P_WATER`, `P_MUD`, `P_COBBLE`, `shared_field`, `quantize`, `Rnd`) — a borda
-precisa casar pixel a pixel com o chão que ela cobre.
+A v1 desenhava cada uma das 12 peças com uma fórmula própria (reta = uma
+onda; canto externo/interno = uma elipse radial independente). O resultado
+tinha o material certo mas a "caligrafia" da curva mudava de uma peça pra
+outra — na trilha isso lia como uma faixa serrilhada uniforme, com emenda
+visível bem onde uma peça reta encontrava um canto. A v2 resolve isso na
+raiz: **uma única curva-base por direção** (`_depth_profile`, periódica,
+amplitude 3–6px, suavizada por média móvel antes de receber o jitter — sem
+isso o "ruído independente por pixel" da v1 é o que lia como serrilhado) e
+as 12 peças são **derivadas** dela, nunca reinventadas:
+
+- retas (`n/s/e/w`): a curva direto, `y < profundidade(x)` (e rotações).
+- cantos EXTERNOS (`cnw/cne/csw/cse`): união de 2 "línguas curtas" — a MESMA
+  curva das duas retas que formam o canto, encolhenda por `_taper` (uma
+  smoothstep) conforme se afasta do canto (alcance `REACH = 12px`, por isso
+  a língua não vira uma reta disfarçada). Como reusam literalmente
+  `profile["n"]`/`profile["w"]` etc., a amplitude e o "sotaque" da onda no
+  canto são garantidos iguais aos da peça reta correspondente — é a
+  continuidade C0 pedida na missão, por construção, não por coincidência.
+- cantos INTERNOS (`icnw/icne/icsw/icse`) = tile cheio **menos** o bolsão no
+  canto OPOSTO, e esse bolsão é literalmente a máscara de canto externo
+  oposto (`icnw` = NOT `cse`-shape usando as curvas sul/leste) — de novo,
+  nenhuma fórmula nova, só reaproveitar.
+
+Cima disso: **dithering leve** na linha de contato (`_dither_edge`, troca
+alguns pixels da beira seguindo a matriz de Bayer — o mesmo dither ordenado
+do `gen_terrain`, não ruído aleatório puro), **brilho de 1px do lado do
+invasor** (anel interno) e **contorno de 1px do lado do material invadido**:
+sombra escura de contato para os pares terrosos, e uma linha fina de
+**espuma/areia clara** (`FOAM`) para `grass_water` — margem de rio, não uma
+sombra. A textura do material invasor não é mais um ruído genérico
+(`shared_field` + paleta, v1) e sim a **função de verdade** do chão
+(`GT.grass(1)`/`GT.cobble(1)`) — sem isso o canto interno de cobblestone
+lia como uma mancha cinza lisa em vez de paralelepípedo de verdade (bug visto
+e corrigido na 2ª rodada de preview, ver "Como validar" abaixo).
+
+Gera 4 pares × 16 peças (12 base + 4 variantes `n2/s2/e2/w2`, ver abaixo) =
+**64 PNGs** 32×32 RGBA (alpha binário, igual ao resto do projeto) em
+`assets-src/sprites/terrain/borders/`.
 
 Convenção de nome do par: **`<alto>_<baixo>`** — o material ALTO manda a
 faixa ondulada por cima do tile do material BAIXO, seguindo a hierarquia
@@ -218,11 +251,16 @@ alto de todos, o par foi implementado como `cobble_dirt` — cobblestone
 invadindo terra —, e não o contrário, para não contradizer a própria
 hierarquia que define o algoritmo.)
 
-As 12 peças por par: `n, s, e, w` (bordas retas — o vizinho nessa direção é o
-material alto), `cnw, cne, csw, cse` (cantos EXTERNOS: o alto só toca a
-diagonal, uma língua curta) e `icnw, icne, icsw, icse` (cantos INTERNOS: o
-alto cerca as duas laterais que formam aquele canto, sobra só um bolsão do
-baixo na diagonal oposta).
+As 12 peças base por par: `n, s, e, w` (bordas retas), `cnw, cne, csw, cse`
+(cantos EXTERNOS: o alto só toca a diagonal, uma língua curta) e `icnw,
+icne, icsw, icse` (cantos INTERNOS: o alto cerca as duas laterais que formam
+aquele canto, sobra só um bolsão do baixo na diagonal oposta) — mais **2
+variantes por peça reta** (`n2, s2, e2, w2`, semente irmã da mesma família
+de curva): o autoborder escolhe entre a base e a variante por um hash
+determinístico da posição (`_border_variant` em `build_valley.py`, CRC32 —
+não o `hash()` embutido do Python, que é salgado por processo e daria uma
+escolha diferente a cada execução), pra uma trilha comprida não repetir
+sempre a mesma peça "carimbada".
 
 ```bash
 .venv/bin/python tools/spr/gen_borders.py          # PNGs + folha de revisão
@@ -230,20 +268,22 @@ baixo na diagonal oposta).
 ```
 
 A folha de revisão fica em `assets-src/sprites/terrain/borders/_sheet.png`
-(uma linha por par, uma coluna por peça, fundo = material baixo).
+(uma linha por par, uma coluna por peça — 16 colunas agora —, fundo =
+material baixo).
 
 ### Declaração de item (`assets-src/sprites/tiles.json`)
 
-As 48 peças viram itens novos `border_<par>_<peça>` (chaves permanentes,
+As 64 peças viram itens novos `border_<par>_<peça>` (chaves permanentes,
 grupo `decoration`, `walkable: true`, `blocks_pathfind: false`, sem
 `blocks_projectile`). Como toda borda, usam `on_top: true` + `top_order: 1`
 — no `.dat`/OTB isso é a flag `FLAG_ALWAYSONTOP` com `topOrder=1`, que na
 Tibia é exatamente a categoria "ground border": desenha por cima do chão e
 por baixo de criaturas, itens soltos e efeitos (ver `tools/spr/tiles.py`,
 `FLAG_ALIAS["on_top"] = "alwaysOnTop"` e `otb.new_item(..., top_order=...)`).
-IDs alocados com `.venv/bin/python tools/spr/allocate_ids.py` (server ids
-30250–30297 na primeira geração) — append-only, igual a todo o resto do
-`tiles.json`.
+IDs alocados com `.venv/bin/python tools/spr/allocate_ids.py`: as 48 peças
+base ficaram em server ids 30250–30297 (primeira geração); as 16 variantes
+`n2/s2/e2/w2` novas entraram DEPOIS, append-only, em **30328–30343** (client
+ids 24054–24069) — não reaproveitam nem renumeram nada já alocado.
 
 ### Algoritmo (`apply_borders` em `build_valley.py`)
 
@@ -258,11 +298,16 @@ vila, clareiras, ponte, pântano):
    `None` e é ignorado.
 2. Só materiais que aparecem como "baixo" em algum par têm vizinhos
    testados: `dirt` (pode ser invadido por `grass` OU `cobble`), `water` e
-   `mud` (só por `grass`) — tabela `BORDER_INVADERS`.
+   `mud` (só por `grass`) — tabela `BORDER_INVADERS`, agora percorrida em
+   ORDEM DE HIERARQUIA (`_MATERIAL_RANK`) pra garantir que, quando os dois
+   invasores se aplicam ao mesmo tile de `dirt`, o `cobble` (mais alto) fique
+   empilhado por cima do `grass` — antes disso já saía assim por acaso
+   (ordem do dict/tupla), agora é explícito e não depende de detalhe de
+   implementação do Python.
 3. Para cada tile-baixo e cada material-alto candidato, olha os 8 vizinhos
    (N, S, L, O, e as 4 diagonais) e decide as peças:
    - vizinho ortogonal (N/S/L/O) é o material alto → peça reta
-     correspondente;
+     correspondente (com a variante escolhida por `_border_variant`);
    - vizinho diagonal é o material alto **e nenhum** dos dois ortogonais
      adjacentes é → canto EXTERNO (contato isolado pela diagonal);
    - os dois ortogonais adjacentes a uma diagonal são o material alto **e**
@@ -272,11 +317,28 @@ vila, clareiras, ponte, pântano):
    (`walkable_map`) continua enxergando o tile como caminhável: os itens de
    borda são `walkable`/não bloqueiam.
 
+Nota sobre os "casos faltando" que a missão original apontou (diagonal
+isolada, dois cantos internos opostos, tile com 3 lados): como os passos 3–4
+avaliam os 4 lados e as 4 diagonais **independentemente** e empilham quantas
+peças forem necessárias no mesmo tile (uma peça reta por lado + até 4 peças
+de canto, todas no mesmo `b.put` em sequência), esses casos já eram cobertos
+por composição — uma diagonal isolada vira só a peça de canto externo
+correspondente; dois cantos internos opostos (ex.: N+O+NO hi e S+L+SE hi ao
+mesmo tempo) empilham `n+s+e+w+icnw+icse` no mesmo tile; um tile com 3 lados
+hi empilha as 3 peças retas mais os cantos internos onde a diagonal também
+bate. Não foi preciso montar a tabela de 47 combinações fixas do blob
+tileset clássico porque aquela tabela existe pra evitar montar arte NOVA
+para cada combinação (arte pintada à mão não compõe); aqui a arte É
+procedural e compõe naturalmente. O que estava realmente quebrado era a
+CONTINUIDADE VISUAL entre peças (resolvido na v2 do `gen_borders.py`
+acima), não a cobertura de casos.
+
 Na primeira geração do Vale da Folha isso colocou **1779 peças de borda** no
 mapa inteiro (ver a linha `bordas (autoborder) N pecas` na saída de
 `build_valley.py`) — principalmente grama/terra nas trilhas da floresta,
 grama/lama na fronteira com a Floresta da Morte e cobblestone/terra nas ruas
-e no portão da Vila da Folha.
+e no portão da Vila da Folha. A v2 do algoritmo não muda ONDE as peças vão
+(mesma lógica de bitmask), só qual arte é usada — o total continua 1779.
 
 ### Visualizar sem o cliente (`tools/map/render_preview.py`)
 
@@ -295,6 +357,35 @@ de `tiles.json` (bordas, prédios importados, mobiliário). Servidor id sem PNG
 conhecido é desenhado em magenta — sinal de que falta mapear alguma peça. É
 assim que a arte das bordas foi ajustada e conferida (`Read` no PNG gerado)
 sem precisar compilar assets nem abrir o OTClient.
+
+#### Como a v2 foi validada (3 rodadas de preview)
+
+`screenshots/preview_borders_v2.png` (mesma área do `preview_borders.png`
+antigo, 1000,1020–1120,1080) e `screenshots/preview_borders_v2_zoom.png` (dois
+recortes 4×, lado a lado: vila+trilha em 1024,1058–1057,1078, e
+rio+ponte+hub do pântano em 1118,1050–1145,1070) documentam o resultado
+final. O processo até chegar lá:
+
+1. **1ª rodada** — reescrita completa do `gen_borders.py` com curva-base
+   única + derivação das 12 peças (ver acima). Olhando a folha de revisão
+   (`_sheet.png`), as retas já saíam onduladas e suaves em vez de
+   serrilhadas, e os cantos mostravam a língua/bolsão coerente com a peça
+   reta vizinha.
+2. **2ª rodada** — build + preview do mapa inteiro revelou um bug que a
+   folha de revisão sozinha não mostrava: o canto interno de `cobble_dirt`
+   (`icnw`/`icne`/...) aparecia no jogo como uma **mancha cinza lisa**, sem
+   nenhuma textura de paralelepípedo — porque `_texture_hi` usava um ruído
+   genérico (`shared_field` + paleta) em vez da função de verdade do chão.
+   Corrigido trocando para `GT.cobble(1)`/`GT.grass(1)` (a MESMA função que
+   desenha o chão normal), o que também deixou a textura da invasão idêntica
+   pixel a pixel ao material que ela devia imitar.
+3. **3ª rodada** — novo build + preview (main + zoom) depois da correção:
+   cantos internos de cobblestone agora mostram pedras de verdade, o rio
+   mostra a linha de espuma clara contínua, e as trilhas da floresta ficaram
+   com uma faixa larga e suave, sem quinas duras nem emenda visível entre
+   peça reta e canto. Comparado ao `preview_borders.png` da v1 (faixa
+   serrilhada uniforme, cantos com corte reto), a diferença é imediatamente
+   visível lado a lado.
 
 ## Decoração e ponte
 
@@ -408,3 +499,94 @@ NPCs não aparecem (o TFS os descarta em silêncio). Duas coisas precisam existi
 com symlinks para `data/` e `build/`, um `config.lua` próprio com `mapName = "valley"`
 e portas diferentes (7271/7272), e rode `./build/tfs` de dentro dela — o TFS lê o
 `config.lua` do diretório atual.
+
+## Auditoria de caminhabilidade
+
+Feedback recorrente de usuário: "tem vários lugares do mapa que eu vou caminhando e
+ele trava". `tools/map/walk_audit.py` audita isso de forma ESTÁTICA e
+`client-otc/tests/walk_audit_rc.lua` de forma DINÂMICA (cliente real).
+
+### Auditoria estática (`tools/map/walk_audit.py`)
+
+```bash
+.venv/bin/python tools/map/walk_audit.py [valley.otbm] [items.otb]
+```
+
+Para cada um dos 24.000 tiles do mapa, reproduz a regra REAL do TFS
+(`Tile::queryAdd` em `server/tfs/src/tile.cpp`) usando as flags REAIS lidas do
+`items.otb` — não as declaradas em `tiles.json` — e compara com a intenção
+visual (chão comum + só decoração "walkable"/porta por cima). Diverge =
+travamento fantasma (ou passagem indevida). Também compara, para cada id
+novo (>= 30000), as flags reais do OTB com as declaradas em
+`tiles.json`/`tiles_decor.json` — divergência aqui é bug de conversão em
+`tools/spr/tiles.py`.
+
+Regra confirmada lendo `Tile::queryAdd`: o que bloqueia o PASSO MANUAL de um
+jogador é só `TILESTATE_BLOCKSOLID` (ativado se QUALQUER item da pilha —
+chão ou empilhado — tiver a flag `blockSolid`, `item.cpp: hasProperty`).
+`hasHeight`/elevação **não bloqueia o passo** — só entra em jogo em
+`queryAdd` do ramo "empilhar item em cima de outro item", pra decidir se dá
+pra empilhar mais um item ali (mito comum de dev OT). Já `blockPathfind` não
+bloqueia passo nenhum: só faz o **autoWalk/clique-para-andar** do OTClient
+recusar a rota (`game.cpp:750`, `TILESTATE_BLOCKPATH`, usado pelo A* do
+servidor e pelo `Map::findPath` do próprio cliente) — por isso um item com
+`blocks_pathfind` sem `blockSolid` faz o jogador "clicar e não acontecer
+nada" sem nunca travar o passo manual (WASD).
+
+Rodagem em 2026-09-04 (após regenerar items.otb/valley.otbm com as bordas
+mais novas): **0 bugs de flag reais** — as únicas 2 "divergências" batidas
+pelo script são as portas de pedra fechadas do templo (1029,1046,7) e da
+torre da Floresta da Morte (1163,1060,7), que bloqueiam até serem abertas —
+comportamento correto do Tibia, não travamento. Nenhum id >= 30000 diverge
+entre `tiles.json`/`tiles_decor.json` e o OTB real (344 ids conferidos).
+
+### Auditoria dinâmica (`client-otc/tests/walk_audit_rc.lua`)
+
+Cliente OTClient real, logado como a conta `teste`/`teste` (personagem
+Naruto, jogador comum — **não** o GM, que atravessa tudo). Percorre a rota
+templo → praça → portão sul → trilha → clareiras → mata → acampamento →
+ponte → hub do pântano → torre, em saltos curtos (autoWalk só encontra rota
+dentro do que o cliente já "viu" — mandar autoWalk direto pra um alvo fora
+da tela SEMPRE falha com `NoWay`, mesmo sem bug nenhum de mapa; por isso o
+script avança aos poucos, como um jogador clicando na tela). Portas
+fechadas no caminho são abertas com `g_game.use()` antes de cada trecho, e
+cada travada registra a posição e os ids dos itens do tile (`Tile:getItems()`
+— **atenção: retorna client id, não server id**; o script já faz a
+conversão nos logs). Copie o `.lua` para `client-otc/shinobirc.lua`,suba o
+cliente (`./OTClient.app/Contents/MacOS/OTClient`), e remova o arquivo ao
+final — nunca fica commitado.
+
+Resultado em 2026-09-04: nenhuma trava real encontrada. Toda ocorrência de
+"TRAVA" nos logs caiu em uma de três categorias, nenhuma bug de mapa: (a)
+porta fechada (mecânica normal, resolvida abrindo); (b) o script desistiu
+de um salto por timeout (6s) enquanto o personagem ainda estava andando
+normalmente em segundo plano — impaciência do script de teste, não do jogo;
+(c) o próprio waypoint do script caiu em cima de uma árvore/moita de
+propósito bloqueante. Detalhe completo em `screenshots/walk_audit.txt`.
+
+**Achado do processo (não do mapa):** a primeira rodada reportou 100% de
+travamento porque o **servidor local estava rodando com um `valley.otbm`/
+`items.otb` desatualizados** (outro processo tinha acabado de editar
+`tiles.json`/bordas sem reinstalar e reiniciar). Sempre que for investigar
+travamento "no jogo", confirme que o servidor rodando é o build MAIS
+recente: `.venv/bin/python tools/spr/build_assets.py &&
+.venv/bin/python tools/map/build_valley.py && tools/install_generated.sh
+&& cp server/generated/world/valley* server/tfs/data/world/ && pkill -x tfs`
+(subir de novo em seguida).
+
+### Pendências
+
+- 406 bolsões pequenos de tiles caminháveis (789 tiles, 4,5% do total
+  caminhável) ficam fora do alcance por BFS a partir do templo — reentrâncias
+  dentro de aglomerados de árvores/água, sem spawn nem NPC. Comportamento
+  esperado numa mata densa "de verdade"; não é tratado como bug.
+- Árvores/decoração 2x2: o sprite ocupa 2x2 tiles na tela, mas a colisão real
+  do TFS é sempre POR TILE (cada tile bloqueia só se o item que ocupa
+  aquele tile específico tiver `blockSolid`); não há bloqueio "fantasma"
+  além do tile em si nesta base de itens.
+- O `OTClient.app` encerrou sozinho (stack trace de rede/asio) perto do fim
+  de uma rodada de teste dinâmico longa (~2 min), antes de alcançar a
+  ponte/hub/torre — não há indício de que seja causado pelo mapa (o
+  personagem estava andando normalmente no momento do crash); parece
+  instabilidade do cliente em sessões automatizadas longas, fora do escopo
+  desta auditoria.

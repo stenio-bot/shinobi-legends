@@ -265,5 +265,42 @@
     "respawn_s": 7200,
     "sprite": "mon_bandit_chief",
     "article": "o"
+  },
+  {
+    "id": "forest_deer",
+    "name": "Cervo",
+    "description": "Não ataca (behavior passivo). Monstro de teste de PvM: só briga se você atacar primeiro.",
+    "level": 2,
+    "hp": 30,
+    "attack": 3,
+    "defense": 0,
+    "speed": 5,
+    "element": "none",
+    "xp": 5,
+    "behavior": "passive",
+    "aggro_range": 0,
+    "attack_range": 1,
+    "attacks": [
+      {
+        "name": "Coice",
+        "damage_min": 1,
+        "damage_max": 3,
+        "cooldown_s": 2.0,
+        "type": "melee"
+      }
+    ],
+    "loot": [
+      {
+        "item_id": "onigiri",
+        "chance": 0.2,
+        "min": 1,
+        "max": 1
+      }
+    ],
+    "ryo_min": 1,
+    "ryo_max": 3,
+    "respawn_s": 30,
+    "sprite": "mon_wolf",
+    "article": "um"
   }
 ]

@@ -800,6 +800,18 @@
 <item id="30261" name="borda grama/terra (icse)">  <!-- border_grass_dirt_icse (decoration, clientId 23987) -->
 	<attribute key="description" value="Borda de grama avancando sobre terra (canto interno sudeste)."/>
 </item>
+<item id="30328" name="borda grama/terra (n, variante 2)">  <!-- border_grass_dirt_n2 (decoration, clientId 24054) -->
+	<attribute key="description" value="Borda de grama/terra avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30329" name="borda grama/terra (s, variante 2)">  <!-- border_grass_dirt_s2 (decoration, clientId 24055) -->
+	<attribute key="description" value="Borda de grama/terra avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30330" name="borda grama/terra (e, variante 2)">  <!-- border_grass_dirt_e2 (decoration, clientId 24056) -->
+	<attribute key="description" value="Borda de grama/terra avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30331" name="borda grama/terra (w, variante 2)">  <!-- border_grass_dirt_w2 (decoration, clientId 24057) -->
+	<attribute key="description" value="Borda de grama/terra avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
 <item id="30262" name="borda grama/agua (n)">  <!-- border_grass_water_n (decoration, clientId 23988) -->
 	<attribute key="description" value="Borda de grama avancando sobre agua (norte)."/>
 </item>
@@ -835,6 +847,18 @@
 </item>
 <item id="30273" name="borda grama/agua (icse)">  <!-- border_grass_water_icse (decoration, clientId 23999) -->
 	<attribute key="description" value="Borda de grama avancando sobre agua (canto interno sudeste)."/>
+</item>
+<item id="30332" name="borda grama/agua (n, variante 2)">  <!-- border_grass_water_n2 (decoration, clientId 24058) -->
+	<attribute key="description" value="Borda de grama/agua avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30333" name="borda grama/agua (s, variante 2)">  <!-- border_grass_water_s2 (decoration, clientId 24059) -->
+	<attribute key="description" value="Borda de grama/agua avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30334" name="borda grama/agua (e, variante 2)">  <!-- border_grass_water_e2 (decoration, clientId 24060) -->
+	<attribute key="description" value="Borda de grama/agua avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30335" name="borda grama/agua (w, variante 2)">  <!-- border_grass_water_w2 (decoration, clientId 24061) -->
+	<attribute key="description" value="Borda de grama/agua avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
 </item>
 <item id="30274" name="borda grama/lama (n)">  <!-- border_grass_mud_n (decoration, clientId 24000) -->
 	<attribute key="description" value="Borda de grama avancando sobre lama (norte)."/>
@@ -872,6 +896,18 @@
 <item id="30285" name="borda grama/lama (icse)">  <!-- border_grass_mud_icse (decoration, clientId 24011) -->
 	<attribute key="description" value="Borda de grama avancando sobre lama (canto interno sudeste)."/>
 </item>
+<item id="30336" name="borda grama/lama (n, variante 2)">  <!-- border_grass_mud_n2 (decoration, clientId 24062) -->
+	<attribute key="description" value="Borda de grama/lama avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30337" name="borda grama/lama (s, variante 2)">  <!-- border_grass_mud_s2 (decoration, clientId 24063) -->
+	<attribute key="description" value="Borda de grama/lama avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30338" name="borda grama/lama (e, variante 2)">  <!-- border_grass_mud_e2 (decoration, clientId 24064) -->
+	<attribute key="description" value="Borda de grama/lama avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30339" name="borda grama/lama (w, variante 2)">  <!-- border_grass_mud_w2 (decoration, clientId 24065) -->
+	<attribute key="description" value="Borda de grama/lama avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
 <item id="30286" name="borda cobblestone/terra (n)">  <!-- border_cobble_dirt_n (decoration, clientId 24012) -->
 	<attribute key="description" value="Borda de cobblestone avancando sobre terra (norte)."/>
 </item>
@@ -907,6 +943,18 @@
 </item>
 <item id="30297" name="borda cobblestone/terra (icse)">  <!-- border_cobble_dirt_icse (decoration, clientId 24023) -->
 	<attribute key="description" value="Borda de cobblestone avancando sobre terra (canto interno sudeste)."/>
+</item>
+<item id="30340" name="borda cobblestone/terra (n, variante 2)">  <!-- border_cobble_dirt_n2 (decoration, clientId 24066) -->
+	<attribute key="description" value="Borda de cobblestone/terra avancando (norte, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30341" name="borda cobblestone/terra (s, variante 2)">  <!-- border_cobble_dirt_s2 (decoration, clientId 24067) -->
+	<attribute key="description" value="Borda de cobblestone/terra avancando (sul, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30342" name="borda cobblestone/terra (e, variante 2)">  <!-- border_cobble_dirt_e2 (decoration, clientId 24068) -->
+	<attribute key="description" value="Borda de cobblestone/terra avancando (leste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
+</item>
+<item id="30343" name="borda cobblestone/terra (w, variante 2)">  <!-- border_cobble_dirt_w2 (decoration, clientId 24069) -->
+	<attribute key="description" value="Borda de cobblestone/terra avancando (oeste, variante 2 — evita repeticao carimbada em trilhas longas)."/>
 </item>
 <item id="30298" name="tábua da ponte">  <!-- bridge_wood_center (ground, clientId 24024) -->
 	<attribute key="description" value="Tábuas firmes de uma ponte de madeira."/>

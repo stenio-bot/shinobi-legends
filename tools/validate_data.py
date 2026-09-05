@@ -36,6 +36,16 @@ monsters, monster_ids = validate_folder("monsters", "monster.schema.json")
 villages = load(os.path.join(ROOT, "villages.json"))
 village_ids = {v["id"] for v in villages}
 
+characters = load(os.path.join(ROOT, "characters.json"))
+char_ids = set()
+char_schema = load(os.path.join(ROOT, "schemas", "character.schema.json"))
+for c in characters:
+    if V:
+        for e in V(char_schema).iter_errors(c):
+            errors.append(f"data/characters.json [{c.get('id','?')}]: {e.message}")
+    if c["id"] in char_ids: errors.append(f"characters.json: id duplicado '{c['id']}'")
+    char_ids.add(c["id"])
+
 for j in jutsus:
     for v in j["villages"]:
         if v not in village_ids: errors.append(f"jutsu {j['id']}: vila desconhecida '{v}'")
@@ -53,6 +63,18 @@ for m in monsters:
         for s in ph.get("summons", []):
             if s["monster_id"] not in monster_ids: errors.append(f"monstro {m['id']}: summon desconhecido '{s['monster_id']}'")
     if m["ryo_min"] > m["ryo_max"]: errors.append(f"monstro {m['id']}: ryo_min > ryo_max")
+jutsu_by_id = {j["id"]: j for j in jutsus}
+for c in characters:
+    if c["village"] not in village_ids:
+        errors.append(f"personagem {c['id']}: vila desconhecida '{c['village']}'")
+    for jid in c["jutsus"]:
+        if jid not in jutsu_ids:
+            errors.append(f"personagem {c['id']}: jutsu desconhecido '{jid}'")
+            continue
+        jv = jutsu_by_id[jid]["villages"]
+        if jv and c["village"] not in jv:
+            errors.append(f"personagem {c['id']}: jutsu '{jid}' nao pertence a vila '{c['village']}' (villages={jv})")
+
 for v in villages:
     for j in v["starting_jutsus"]:
         if j not in jutsu_ids: errors.append(f"vila {v['id']}: jutsu desconhecido '{j}'")
@@ -77,7 +99,7 @@ for path in glob.glob(os.path.join(ROOT, "npcs", "*.json")):
             for i in q["reward"].get("items", []):
                 if i not in item_ids: errors.append(f"quest {q['id']}: item de recompensa desconhecido '{i}'")
 
-print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas")
+print(f"{len(jutsus)} jutsus, {len(items)} itens, {len(monsters)} monstros, {len(villages)} vilas, {len(characters)} personagens")
 if errors:
     print("\n".join("ERRO " + e for e in errors)); sys.exit(1)
 print("OK — tudo válido")

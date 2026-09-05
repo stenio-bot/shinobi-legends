@@ -197,4 +197,10 @@
 	<spawn centerx="1196" centery="1036" centerz="7" radius="3">
 		<monster name="Oni Ancestral" x="0" y="0" z="7" spawntime="10800"/>
 	</spawn>
+	<spawn centerx="1014" centery="1022" centerz="7" radius="3">
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
+	<spawn centerx="1018" centery="1020" centerz="7" radius="3">
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="30"/>
+	</spawn>
 </spawns>

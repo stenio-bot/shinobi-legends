@@ -12,9 +12,10 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `XML/vocations.xml` | `data/XML/vocations.xml` | substituir o arquivo |
 | `XML/outfits.xml` | `data/XML/outfits.xml` | substituir o arquivo (PENDENTE no install_generated.sh, ver relatório) |
 | `lib/naruto_villages.lua` | `data/lib/` + `dofile` em `lib.lua` | PENDENTE no install_generated.sh, ver relatório |
+| `lib/naruto_characters.lua` | `data/lib/` + `dofile` em `lib.lua` (depois de naruto_villages.lua) | PENDENTE no install_generated.sh, ver relatório |
 | `npc/naruto/*` | `data/npc/naruto/` | copiar a pasta |
 | `lib/naruto_quests.lua` | `data/lib/` + `dofile` em `lib.lua` | ver cabeçalho |
 | `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |
 | `world/*-spawn.xml` | referência para o Remere's Map Editor | manual |
 
-Totais: 21 monstros, 25 jutsus, 80 itens, 9 NPCs, 15 missões, 4 vocações.
+Totais: 22 monstros, 31 jutsus, 80 itens, 9 NPCs, 15 missões, 4 vocações.

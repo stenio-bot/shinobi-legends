@@ -381,7 +381,29 @@ Remere's Map Editor (RME) para criar `data/world/forgotten.otbm`. `server/genera
 tem as posições relativas do protótipo como referência.
 
 ## Comandos de GM próprios (data/scripts/naruto/gm_tools.lua)
-`/sl` lista. `/god` = level 100, skills no teto prático (fist/shield 100, sword 90, club/axe/dist ~70 por causa dos multiplicadores das vocações), Ninjutsu ~30, todos os jutsus, 1.000.000 ryo no banco, mochila com todos os itens e melhor equipamento vestido. `/arena`, `/tp x,y,z`, `/lvl N`, `/jutsus`, `/full`, `/vila folha|nevoa|nuvem|areia`. Vanilla: `/m nome`, `/i id`, `/goto`, `/c`, `/ghost`, `/reload`.
+`/sl` lista. `/god` = level 100, skills no teto prático (fist/shield 100, sword 90, club/axe/dist ~70 por causa dos multiplicadores das vocações), Ninjutsu ~30, jutsus do PERSONAGEM atual (ver `/personagem`), 1.000.000 ryo no banco, mochila com todos os itens e melhor equipamento vestido. `/arena`, `/tp x,y,z`, `/lvl N`, `/jutsus` (idem, só do personagem atual), `/full`, `/vila folha|nevoa|nuvem|areia`, `/personagem <id|nome>` (troca de personagem — jutsus por personagem, ver `docs/sistemas/vilas-e-clas.md`; GM ignora a vila), `/pvm` (liga/desliga ser atacado por monstros — ver seção "GM: /pvm" abaixo). Para jogadores normais, dentro da própria vila: `!personagem` (lista) e `!personagem <nome>` (troca). Vanilla: `/m nome`, `/i id`, `/goto`, `/c`, `/ghost`, `/reload`.
+
+### GM: /pvm (por que os monstros não atacavam o GM)
+O grupo `god` (id 6, `server/tfs/data/XML/groups.xml`) tem as flags `ignoredbymonsters="1"` e
+`cannotbeattacked="1"`. `ignoredbymonsters` vira `PlayerFlag_IgnoredByMonsters`, que
+`Monster::isOpponent` (`server/tfs/src/monster.cpp`) checa explicitamente para nunca considerar
+o jogador como alvo — **por design do TFS, e não um bug do nosso conteúdo**: é assim que GMs
+normais ficam "invisíveis" para monstros. `cannotbeattacked` bloqueia o dano em
+`Player::isAttackable`/`Player::canBeAttacked` mesmo que algo tente acertá-lo. Ambas as flags
+juntas explicam 100% do sintoma "os bonecos não me atacam de volta" quando testado com a conta
+`god`. **A categoria agressivo/passivo já existe** (campo `behavior` em `data/monsters/*.json`,
+ver `docs/sistemas/monstros-e-pvm.md`) — o problema nunca foi o monstro, foi a conta de teste.
+
+`/pvm` alterna o GM entre o grupo `god` (id 6, normal) e um novo grupo `god vulneravel` (id 7,
+mesmas flags do `god` **menos** `ignoredbymonsters` e `cannotbeattacked`) via
+`player:setGroup(Group(7))`. O `accountType` da conta continua 6 (ACCOUNT_TYPE_GOD) então todos
+os outros comandos de GM (`/arena`, `/god`, etc., que checam `getAccountType() >= ACCOUNT_TYPE_GOD`)
+continuam funcionando normalmente com `/pvm` ligado; o grupo 7 mantém `access="1"` para isso.
+
+**Armadilha:** o TFS só reavalia a lista de alvos de um monstro (`Monster::updateTargetList`) em
+`onCreatureAppear`/`onCreatureMove` — ligar `/pvm` parado, sem andar, não faz o monstro que já
+estava por perto notar a mudança até o próximo passo do jogador (ou dele). Ande um passo depois
+de `/pvm` (ou re-invoque o monstro) para ver o ataque de imediato.
 
 ## Avisos esperados no boot
 - `Unknown loot item "meat"` etc. (≈70): são monstros **vanilla** do TFS (que ainda povoam o mapa `forgotten.otbm`)
@@ -407,9 +429,15 @@ Comandos próprios (`server/tfs/data/scripts/naruto/gm_tools.lua`):
 | `/arena` | teleporta para o tile livre mais próximo fora de zona de proteção (3x3 livre) |
 | `/tp x,y,z` | teleporta |
 | `/lvl N` | vai para o level N (vida/chakra cheios) |
-| `/jutsus` | aprende todos os jutsus |
+| `/jutsus` | aprende os jutsus do PERSONAGEM atual (não todos — ver `/personagem`) |
 | `/full` | vida e chakra cheios |
 | `/vila folha\|nevoa\|nuvem\|areia` | troca de vila (vocação) |
+| `/personagem <id\|nome>` | troca de personagem (jutsus por personagem; GM troca de qualquer vila) |
+| `/pvm` | liga/desliga ser atacado por monstros (grupo God ↔ God Vulnerável, id 7) — ver "GM: /pvm" acima |
+
+Jogadores normais (não-GM) trocam de personagem DENTRO da própria vila com a talkaction
+`!personagem` (lista os disponíveis) e `!personagem <nome>` (troca) — ver
+`docs/sistemas/vilas-e-clas.md` → "Personagens e jutsus".
 
 Padrão TFS que importa: `/m Nome` (invoca monstro; patch: procura tile livre em volta), `/i nome do item`, `/goto Jogador`,
 `/c Jogador` (puxa), `/ghost`, `/reload talkactions|spells|monsters`, `/pos`. Nomes dos monstros: os do JSON ("Lobo",

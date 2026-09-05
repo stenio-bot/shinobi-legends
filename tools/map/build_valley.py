@@ -32,6 +32,7 @@ from __future__ import annotations
 import os
 import random
 import sys
+import zlib
 from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -92,6 +93,24 @@ BORDER_PAIR_KEY = {
 }
 BORDER_PIECES = ("n", "s", "e", "w", "cnw", "cne", "csw", "cse",
                  "icnw", "icne", "icsw", "icse")
+#: hierarquia agua < lama < terra < grama < cobble, para empilhar o material
+#: mais alto por cima quando mais de um invasor se aplica ao mesmo tile baixo
+#: (hoje só acontece em "dirt", invadido por grass E cobble).
+_MATERIAL_RANK = {"water": 0, "mud": 1, "dirt": 2, "grass": 3, "cobble": 4}
+#: pecas retas (n/s/e/w) tem uma 2a variante (border_<par>_<peca>2) so pra a
+#: faixa nao ficar "carimbada" repetindo sempre a mesma peca numa trilha
+#: comprida; a escolha e por hash da POSICAO (deterministica, sem RNG externo,
+#: dois builds do mesmo mapa dao o mesmo resultado).
+_STRAIGHT_PIECES = ("n", "s", "e", "w")
+
+
+def _border_variant(x, y, pk, piece):
+    # zlib.crc32, NAO hash() built-in: hash() de str e' salgado por processo
+    # (PYTHONHASHSEED), o que tornaria a escolha de variante diferente a cada
+    # execucao — crc32 e' deterministico, o mesmo mapa sempre escolhe as
+    # mesmas variantes.
+    h = zlib.crc32(("%d,%d,%s,%s" % (x, y, pk, piece)).encode("ascii"))
+    return "2" if (h & 1) else ""
 
 
 def classify_ground(gid):
@@ -131,7 +150,9 @@ def apply_borders(b, sid):
         invaders = BORDER_INVADERS.get(lo)
         if not invaders:
             continue
-        for hi in invaders:
+        # material mais alto (rank maior) por cima: cobble depois de grass
+        # quando os dois se aplicam ao mesmo tile de dirt.
+        for hi in sorted(invaders, key=lambda m: _MATERIAL_RANK[m]):
             n = mat_at(x, y - 1) == hi
             s = mat_at(x, y + 1) == hi
             e = mat_at(x + 1, y) == hi
@@ -169,7 +190,13 @@ def apply_borders(b, sid):
                 pieces.append("icse")
             pk = BORDER_PAIR_KEY[(hi, lo)]
             for piece in pieces:
-                sidv = sid.get("border_%s_%s" % (pk, piece))
+                variant = _border_variant(x, y, pk, piece) if piece in _STRAIGHT_PIECES else ""
+                key = "border_%s_%s%s" % (pk, piece, variant)
+                sidv = sid.get(key)
+                if sidv is None and variant:
+                    # variante nao alocada ainda (ex.: allocate_ids.py nao
+                    # rodou depois de novas pecas) — cai pra peca base.
+                    sidv = sid.get("border_%s_%s" % (pk, piece))
                 if sidv is None:
                     continue
                 b.put(x, y, sidv)

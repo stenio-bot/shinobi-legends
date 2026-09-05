@@ -14,7 +14,8 @@
     "skill": "ninjutsu",
     "required_level": 1,
     "villages": [
-      "cloud"
+      "cloud",
+      "leaf"
     ],
     "tier": 1,
     "effects": [
@@ -71,7 +72,8 @@
     "skill": "ninjutsu",
     "required_level": 6,
     "villages": [
-      "cloud"
+      "cloud",
+      "leaf"
     ],
     "tier": 1,
     "effects": [
@@ -141,5 +143,26 @@
     ],
     "animation": "fx_lightning_armor",
     "sfx": "sfx_zap_loop"
+  },
+  {
+    "id": "raio_selado",
+    "name": "Raio Selado",
+    "description": "Um raio fino disparado com precisao cirurgica.",
+    "element": "raiton",
+    "type": "projectile",
+    "range": 5,
+    "chakra_cost": 15,
+    "cooldown_s": 2.0,
+    "base_damage": 22,
+    "level_scale": 1.1,
+    "skill_scale": 0.8,
+    "skill": "ninjutsu",
+    "required_level": 1,
+    "villages": [
+      "sand"
+    ],
+    "tier": 1,
+    "animation": "fx_lightning_bolt",
+    "sfx": "sfx_zap"
   }
 ]

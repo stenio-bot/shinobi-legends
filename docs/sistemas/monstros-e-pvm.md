@@ -22,6 +22,31 @@ IDLE ──(jogador em aggro_range)──► CHASE ──(em attack_range)──
 COWARDLY: se hp < 20% → FLEE por 5s, depois volta a CHASE
 ```
 
+## Categoria agressivo × passivo (behavior)
+`tools/export_tfs.py` (`monster_xml`) traduz `behavior` para o XML do TFS:
+- `aggressive`, `cowardly`, `ranged` → `<flag hostile="1">` (o monstro persegue e ataca sozinho).
+- `passive` → `<flag hostile="0">` (só briga se você atacar primeiro; nunca inicia).
+- `ranged` também define `targetdistance` = `attack_range` (mantém distância do alvo).
+- `cowardly` define `runonhealth` = 20% do HP máximo (foge abaixo desse valor).
+- Todos ganham `staticattack="90"` (perseguem o alvo com afinco em vez de vagar) e
+  `targetchange interval="4000" chance="10"` (10% de chance a cada 4s de trocar de alvo).
+
+| Monstro | `behavior` | Observação |
+|---|---|---|
+| Lobo (`wolf`) | aggressive | ataca ao entrar em `aggro_range` |
+| Bandido (`bandit`) | aggressive | melee |
+| Cobra da Floresta (`forest_snake`) | cowardly | foge com HP baixo |
+| Bandido Arqueiro (`bandit_archer`) | ranged | mantém distância, atira |
+| Chefe dos Bandidos (boss) | aggressive | invoca Bandidos na fase de 50% |
+| Sanguessuga, Sapo Gigante, Ninja Renegado, Serpente Menor, bosses da Floresta da Morte | aggressive/ranged conforme JSON | ver `data/monsters/swamp.json` |
+| Marionete de Combate, Sentinela de Pedra, Guerreiro Espectral, Xamã da Maldição, bosses das Ruínas | aggressive/ranged | ver `data/monsters/ruins.json` |
+| Águia do Trovão, Oni da Geleira, Monge da Tempestade, Serpente de Magma, bosses da Montanha | aggressive/ranged | ver `data/monsters/mountain.json` |
+| **Cervo (`forest_deer`)** | **passive** | **novo (2026-09-04): monstro de teste da categoria "passivo".** Nível 2, 30 HP, não inicia combate, spawn em `data/maps/forest_valley.json` perto do templo (Floresta da Vila). Reaproveita o sprite do Lobo (`looktype 21`, `mon_wolf`) recolorido — ver nota em `data/tfs_mapping.json` — para não depender de arte nova. |
+
+Nenhum outro monstro do jogo era passivo antes disso — daí o sintoma "não existe categoria
+agressivo/não agressivo" reportado: a categoria sempre existiu no schema/exportador, só não havia
+nenhum monstro passivo *no jogo* para o jogador comparar.
+
 ## Spawns
 Cada mapa tem `spawns.json`: `{monster_id, x, y, radius, count, respawn_s}`.
 Monstros voltam no spawn, não onde morreram.
@@ -92,6 +117,14 @@ do monstro no jogo continua o nosso, só o `looktype` em `data/tfs_mapping.json`
 
 A forma de serpente 2×2 da Serpente Branca (fase 60%, looktype 890) continua sendo aplicada em
 runtime por `boss_phases.lua`, sem relação com a faixa 900–926.
+
+## Testando PvM como GM
+A conta GM (grupo `god`, id 6) tem as flags `ignoredbymonsters`/`cannotbeattacked`
+(`server/tfs/data/XML/groups.xml`) — por design do TFS, nenhum monstro ataca ou consegue
+acertar um GM normal. Para testar combate como GM, use `/pvm` (`gm_tools.lua`): ele alterna para
+o grupo `god vulneravel` (id 7, mesmas flags menos essas duas), permitindo levar dano. Veja
+"GM: /pvm" em `docs/04-setup-ot.md` para detalhes e a armadilha do `updateTargetList` (é preciso
+andar um passo depois de ligar `/pvm` para o monstro perceber a mudança).
 
 ## Loot
 - Rolagem independente por item: `chance` em 0–1.

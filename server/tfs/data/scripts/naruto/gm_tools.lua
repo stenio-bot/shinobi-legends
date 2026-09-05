@@ -2,13 +2,30 @@
 -- /arena          teleporta para o tile livre mais próximo fora de zona de proteção
 -- /tp x,y,z       teleporta para a posição
 -- /lvl N          sobe/desce para o level N
--- /jutsus         aprende todos os jutsus
+-- /jutsus         aprende os jutsus do PERSONAGEM atual (ver /personagem)
+-- /personagem nome  troca de personagem (qualquer um, ignora vila; ver !personagem para jogadores)
 -- /full           vida e chakra cheios
 -- /vila nome      troca de vila (vocação): folha, nevoa, nuvem, areia
 -- /god            level 100, skills 100, todos os jutsus, 1 milhão de ryo, mochila com todos os itens, melhor equipamento vestido
+-- /pvm            alterna entre o grupo God (ignorado por monstros) e God Vulnerável (id 7, pode ser atacado) — para testar PvM como GM
 -- /sl             lista estes comandos
+local GROUP_GOD = 6
+local GROUP_GOD_PVM = 7
+
 local function isGod(player)
 	return player:getGroup():getAccess() and player:getAccountType() >= ACCOUNT_TYPE_GOD
+end
+
+-- Personagem atual do jogador (storage 60001, ver character_switch.lua); se não escolheu
+-- nenhum ainda, cai no primeiro personagem da vila (vocação) dele.
+local function currentCharacter(player)
+	if not NarutoCharacters then return nil end
+	local look = player:getStorageValue(60001)
+	if look and look > 0 and NarutoCharacters.byLook[look] then
+		return NarutoCharacters.byLook[look]
+	end
+	local list = NarutoCharacters.byVillage and NarutoCharacters.byVillage[player:getVocation():getId()]
+	return list and list[1] or nil
 end
 
 local function findArena(from)
@@ -69,8 +86,15 @@ local function godMode(player)
 		guard = guard + 1
 	end
 	player:setGroup(group)
-	-- jutsus
-	if NarutoJutsus then for _, name in ipairs(NarutoJutsus) do player:learnSpell(name) end end
+	-- jutsus: apenas os do personagem atual (use /personagem para trocar de personagem antes)
+	local char = currentCharacter(player)
+	local jutsuCount = 0
+	if char then
+		for _, name in ipairs(char.jutsus) do player:learnSpell(name) jutsuCount = jutsuCount + 1 end
+	elseif NarutoJutsus then
+		for _, name in ipairs(NarutoJutsus) do player:learnSpell(name) end
+		jutsuCount = #NarutoJutsus
+	end
 	-- ryo
 	player:addItem(NarutoQuests and NarutoQuests.RYO_ID or 2148, 100)  -- 1 pilha visível
 	player:setBankBalance(player:getBankBalance() + 1000000)
@@ -111,18 +135,48 @@ local function godMode(player)
 	player:addHealth(player:getMaxHealth())
 	player:addMana(player:getMaxMana())
 	player:getPosition():sendMagicEffect(CONST_ME_FIREWORK_YELLOW)
-	player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("Modo deus: level %d, skills 100, ninjutsu %d, %d jutsus, 1.000.000 ryo no banco, mochila cheia.",
-		player:getLevel(), player:getBaseMagicLevel(), NarutoJutsus and #NarutoJutsus or 0))
+	player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("Modo deus: level %d, skills 100, ninjutsu %d, %d jutsus (personagem: %s), 1.000.000 ryo no banco, mochila cheia.",
+		player:getLevel(), player:getBaseMagicLevel(), jutsuCount, char and char.name or "nenhum"))
 end
 
 local VILAS = { folha = 1, nevoa = 2, ["névoa"] = 2, nuvem = 3, areia = 4 }
 
-local t = TalkAction("/arena", "/tp", "/lvl", "/jutsus", "/full", "/vila", "/sl", "/god")
+local t = TalkAction("/arena", "/tp", "/lvl", "/jutsus", "/full", "/vila", "/sl", "/god", "/pvm", "/personagem")
 function t.onSay(player, words, param)
 	if not isGod(player) then return true end
 	param = param and param:trim() or ""
 	if words == "/sl" then
-		player:sendTextMessage(MESSAGE_INFO_DESCR, "GM: /god (tudo no máximo), /arena, /tp x,y,z, /lvl N, /jutsus, /full, /vila folha|nevoa|nuvem|areia. Padrão TFS: /m nome, /i item, /goto jogador, /c jogador, /ghost, /reload.")
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "GM: /god (tudo no máximo), /arena, /tp x,y,z, /lvl N, /jutsus (do personagem atual), /full, /vila folha|nevoa|nuvem|areia, /personagem id|nome (troca de personagem, qualquer vila), /pvm (liga/desliga ser atacado por monstros). Padrão TFS: /m nome, /i item, /goto jogador, /c jogador, /ghost, /reload.")
+	elseif words == "/personagem" then
+		if not NarutoCharacters or not NarutoCharacters.apply then
+			player:sendCancelMessage("Personagens não carregados (rode tools/export_tfs.py e reinstale).")
+			return false
+		end
+		if param == "" then
+			local names = {}
+			for _, c in ipairs(NarutoCharacters.list) do table.insert(names, c.name .. " (" .. c.id .. ")") end
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "Personagens: " .. table.concat(names, ", ") .. ". Uso: /personagem <id|nome>")
+			return false
+		end
+		local q, target = param:lower(), nil
+		for _, c in ipairs(NarutoCharacters.list) do
+			if c.id:lower() == q or c.name:lower() == q then target = c break end
+		end
+		if not target then
+			player:sendCancelMessage("Personagem não encontrado. Use /personagem para ver a lista.")
+			return false
+		end
+		local ok, err = NarutoCharacters.apply(player, target.looktype, {force = true})
+		if not ok then player:sendCancelMessage(err) end
+	elseif words == "/pvm" then
+		local currentId = player:getGroup():getId()
+		if currentId == GROUP_GOD_PVM then
+			player:setGroup(Group(GROUP_GOD))
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "PvM desligado: monstros não vão te atacar (grupo God normal).")
+		else
+			player:setGroup(Group(GROUP_GOD_PVM))
+			player:sendTextMessage(MESSAGE_INFO_DESCR, "PvM ligado: monstros vão te atacar (grupo God Vulnerável).")
+		end
 	elseif words == "/arena" then
 		local pos = findArena(player:getPosition())
 		if pos then
@@ -148,14 +202,21 @@ function t.onSay(player, words, param)
 		player:addMana(player:getMaxMana())
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "Level " .. player:getLevel() .. ".")
 	elseif words == "/jutsus" then
+		local char = currentCharacter(player)
 		local n = 0
-		if NarutoJutsus then
+		if char then
+			for _, name in ipairs(char.jutsus) do
+				player:learnSpell(name)
+				n = n + 1
+			end
+			player:sendTextMessage(MESSAGE_INFO_DESCR, n .. " jutsus aprendidos (personagem: " .. char.name .. ").")
+		elseif NarutoJutsus then
 			for _, name in ipairs(NarutoJutsus) do
 				player:learnSpell(name)
 				n = n + 1
 			end
+			player:sendTextMessage(MESSAGE_INFO_DESCR, n .. " jutsus aprendidos (todos, sem personagem definido).")
 		end
-		player:sendTextMessage(MESSAGE_INFO_DESCR, n .. " jutsus aprendidos.")
 	elseif words == "/god" then
 		godMode(player)
 	elseif words == "/full" then

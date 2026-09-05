@@ -38,6 +38,11 @@ villages = {v["id"]: v for v in load(os.path.join(DATA, "villages.json"))}
 elements = load(os.path.join(DATA, "elements.json"))
 prog = load(os.path.join(DATA, "progression.json"))
 maps = {m["id"]: m for m in (load(p) for p in glob.glob(os.path.join(DATA, "maps", "*.json")))}
+characters = load(os.path.join(DATA, "characters.json"))
+
+# Jutsus universais (needlearn="0"): conhecidos por qualquer personagem, sem precisar estar no
+# kit do personagem atual. Todo o resto exige learnSpell (ver naruto_characters.lua/character_switch.lua).
+UNIVERSAL_JUTSU_IDS = {"kawarimi"}
 
 def item_id(our_id):
     return int(M["items"].get(our_id, 0))
@@ -204,16 +209,20 @@ def spell_words(j):
     return j["id"].replace("_", " ")
 
 spells_xml = [HEADER_XML, "<!-- Cole dentro de <spells> em data/spells/spells.xml -->"]
-for j in jutsus.values():
+for spell_idx, j in enumerate(jutsus.values(), start=1):
     el = M["elements"][j["element"]]
     need_target = 1 if j["type"] in ("projectile", "target") else 0
     group = "healing" if j["type"] == "self" else "attack"
     vocs = j["villages"] or list(villages.keys())
     voc_xml = "".join(f'\n\t<vocation name="{escape(voc_name(v))}"/>' for v in vocs)
     spells_xml.append(
+        # spellid PRECISA ser único: sem ele, TFS 1.4.2 usa 0 para TODOS os instants
+        # (spells.h: uint8_t spellId = 0) e o cooldown "cooldown_s" de QUALQUER jutsu
+        # passa a bloquear TODOS os outros (mesmo de grupo/elemento diferente).
         f'<instant group="{group}" name="{escape(j["name"])}" words="{spell_words(j)}" lvl="{j["required_level"]}" '
         f'mana="{j["chakra_cost"]}" prem="0" range="{max(1, j["range"])}" needtarget="{need_target}" blockwalls="1" '
-        f'cooldown="{int(j["cooldown_s"]*1000)}" groupcooldown="1000" needlearn="{0 if int(j.get("tier",1)) == 1 else 1}" '
+        f'aggressive="{0 if group == "healing" else 1}" spellid="{spell_idx}" '
+        f'cooldown="{int(j["cooldown_s"]*1000)}" groupcooldown="1000" needlearn="{0 if j["id"] in UNIVERSAL_JUTSU_IDS else 1}" '
         f'script="naruto/{j["id"]}.lua">{voc_xml}\n</instant>')
 
     lua = [HEADER_LUA, f"-- {j['name']}: {j.get('description','')}"]
@@ -427,9 +436,50 @@ for voc_id in sorted(VOC_OUTFITS):
 villages_lua.append("}")
 write("lib/naruto_villages.lua", "\n".join(villages_lua) + "\n")
 
+# ---------------------------------------------------------------- personagens jogáveis
+# (jutsus por PERSONAGEM, não só por vila/vocação — ver docs/sistemas/vilas-e-clas.md
+# "Personagens e jutsus"). Fonte: data/characters.json.
+def lua_esc(s):
+    return str(s).replace("\\", "\\\\").replace("'", "\\'")
+
+CHAR_BY_LOOK = {int(c["looktype"]): c for c in characters}
+CHAR_VOC_ID = {c["id"]: M["villages"][c["village"]]["vocation_id"] for c in characters}
+CHAR_VILLAGE_ORDER = {}  # vocation_id -> [looktype, ...] na ordem de characters.json
+for c in characters:
+    CHAR_VILLAGE_ORDER.setdefault(CHAR_VOC_ID[c["id"]], []).append(int(c["looktype"]))
+
+chars_lua = [HEADER_LUA,
+             "-- Personagens jogaveis: cada looktype tem seu proprio conjunto de jutsus.",
+             "-- Gerado a partir de data/characters.json. Ver server/generated/scripts/naruto/character_switch.lua",
+             "-- para a logica de troca (NarutoCharacters.apply), definida ali por cima desta tabela.",
+             "NarutoCharacters = { list = {}, byLook = {}, byId = {}, byVillage = {}, allJutsuNames = {} }"]
+for c in characters:
+    jutsu_names = [jutsus[jid]["name"] for jid in c["jutsus"]]
+    names_lua = ", ".join(f"'{lua_esc(n)}'" for n in jutsu_names)
+    voc_id = CHAR_VOC_ID[c["id"]]
+    chars_lua.append(
+        f"table.insert(NarutoCharacters.list, {{id = '{lua_esc(c['id'])}', name = '{lua_esc(c['name'])}', "
+        f"looktype = {int(c['looktype'])}, village_vocation = {voc_id}, jutsus = {{{names_lua}}}}})")
+chars_lua.append("""
+for _, c in ipairs(NarutoCharacters.list) do
+	NarutoCharacters.byLook[c.looktype] = c
+	NarutoCharacters.byId[c.id] = c
+	NarutoCharacters.byVillage[c.village_vocation] = NarutoCharacters.byVillage[c.village_vocation] or {}
+	table.insert(NarutoCharacters.byVillage[c.village_vocation], c)
+	for _, jname in ipairs(c.jutsus) do
+		NarutoCharacters.allJutsuNames[jname] = true
+	end
+end""")
+for uj in UNIVERSAL_JUTSU_IDS:
+    if uj in jutsus:
+        chars_lua.append(f"NarutoCharacters.allJutsuNames['{lua_esc(jutsus[uj]['name'])}'] = nil  -- universal, nunca esquecido")
+write("lib/naruto_characters.lua", "\n".join(chars_lua) + "\n")
+
 village_outfit_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/village_outfit.lua (revscriptsys carrega sozinho).
--- Na 1ª vez que o jogador loga, aplica o outfit padrão da vila (vocação) e libera os
--- outfits escolhíveis daquela vila (NarutoVillages, definido em data/lib/naruto_villages.lua).
+-- Na 1ª vez que o jogador loga: libera os outfits escolhíveis da vila (NarutoVillages) e
+-- aplica o PERSONAGEM padrão da vila (o primeiro de data/characters.json daquela vila),
+-- via NarutoCharacters.apply (definida em scripts/naruto/character_switch.lua), que também
+-- aprende os jutsus daquele personagem.
 local STORAGE_VILLAGE_OUTFIT = 60000
 
 local ev = CreatureEvent("NarutoVillageOutfit")
@@ -437,9 +487,15 @@ function ev.onLogin(player)
 	if player:getStorageValue(STORAGE_VILLAGE_OUTFIT) < 1 then
 		local village = NarutoVillages[player:getVocation():getId()]
 		if village then
-			player:setOutfit({lookType = village.default_outfit})
 			for _, look in ipairs(village.outfits) do
 				player:addOutfit(look)
+			end
+			local defaultChar = NarutoCharacters.byVillage[player:getVocation():getId()]
+			defaultChar = defaultChar and defaultChar[1]
+			if defaultChar and NarutoCharacters.apply then
+				NarutoCharacters.apply(player, defaultChar.looktype, {silent = true, force = true})
+			else
+				player:setOutfit({lookType = village.default_outfit})
 			end
 		end
 		player:setStorageValue(STORAGE_VILLAGE_OUTFIT, 1)
@@ -449,6 +505,101 @@ end
 ev:register()
 """
 write("scripts/naruto/village_outfit.lua", village_outfit_script)
+
+# ---------------------------------------------------------------- troca de personagem
+character_switch_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/character_switch.lua (revscriptsys carrega sozinho).
+-- Depende de NarutoCharacters (data/lib/naruto_characters.lua, copiado junto com
+-- naruto_villages.lua -- ver README.md deste pacote se faltar no seu data/lib/).
+--
+-- NarutoCharacters.apply(player, looktype, opts): troca de PERSONAGEM (não de vila/vocação).
+--   Valida que o looktype pertence à vila (vocação) do jogador, a menos que opts.force (GM)
+--   ou o jogador seja GM (ACCOUNT_TYPE_GOD). Esquece os jutsus de TODOS os personagens
+--   (exceto os universais, ex. kawarimi) e aprende só os do personagem escolhido.
+local STORAGE_CHARACTER = 60001
+
+local function isGodPlayer(player)
+	return player:getGroup():getAccess() and player:getAccountType() >= ACCOUNT_TYPE_GOD
+end
+
+function NarutoCharacters.apply(player, looktype, opts)
+	opts = opts or {}
+	local char = NarutoCharacters.byLook[looktype]
+	if not char then
+		return false, "Personagem desconhecido."
+	end
+	if not opts.force and not isGodPlayer(player) and char.village_vocation ~= player:getVocation():getId() then
+		return false, "Esse personagem não é da sua vila."
+	end
+	for jname, _ in pairs(NarutoCharacters.allJutsuNames) do
+		player:forgetSpell(jname)
+	end
+	for _, jname in ipairs(char.jutsus) do
+		player:learnSpell(jname)
+	end
+	local outfit = player:getOutfit()
+	outfit.lookType = char.looktype
+	player:setOutfit(outfit)
+	player:setStorageValue(STORAGE_CHARACTER, char.looktype)
+	if not opts.silent then
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Personagem: " .. char.name .. ". Jutsus: " .. table.concat(char.jutsus, ", ") .. ".")
+		player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+	end
+	return true
+end
+
+--- Reaplica o personagem salvo (storage) no login; se vazio, deixa o village_outfit.lua
+--- (que roda no mesmo evento onLogin, tipo "login" é global) aplicar o padrão da vila.
+local ev = CreatureEvent("NarutoCharacterLogin")
+function ev.onLogin(player)
+	local look = player:getStorageValue(STORAGE_CHARACTER)
+	if look and look > 0 and NarutoCharacters.byLook[look] then
+		NarutoCharacters.apply(player, look, {silent = true, force = true})
+	end
+	return true
+end
+ev:register()
+
+--- Normaliza para comparar nomes/ids sem acento e sem espaço (!personagem "genin uchiha").
+local function normalize(s)
+	s = s:lower():gsub("%s+", "_")
+	local map = { ['á']='a', ['à']='a', ['ã']='a', ['â']='a', ['é']='e', ['ê']='e', ['í']='i',
+		['ó']='o', ['õ']='o', ['ô']='o', ['ú']='u', ['ç']='c' }
+	for accented, plain in pairs(map) do s = s:gsub(accented, plain) end
+	return s
+end
+
+local function findCharacterByQuery(candidates, query)
+	local q = normalize(query)
+	for _, c in ipairs(candidates) do
+		if normalize(c.id) == q or normalize(c.name) == q then return c end
+	end
+	return nil
+end
+
+--- !personagem [nome|id]: jogadores trocam entre os personagens DA PRÓPRIA vila.
+local talk = TalkAction("!personagem")
+function talk.onSay(player, words, param)
+	local list = NarutoCharacters.byVillage[player:getVocation():getId()] or {}
+	param = param and param:trim() or ""
+	if param == "" then
+		local names = {}
+		for _, c in ipairs(list) do table.insert(names, c.name .. " (" .. c.id .. ")") end
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Personagens da sua vila: " .. table.concat(names, ", ") .. ". Use !personagem <nome>.")
+		return false
+	end
+	local char = findCharacterByQuery(list, param)
+	if not char then
+		player:sendCancelMessage("Personagem não encontrado na sua vila. Use !personagem para ver a lista.")
+		return false
+	end
+	local ok, err = NarutoCharacters.apply(player, char.looktype)
+	if not ok then player:sendCancelMessage(err) end
+	return false
+end
+talk:separator(" ")
+talk:register()
+"""
+write("scripts/naruto/character_switch.lua", character_switch_script)
 
 # ---------------------------------------------------------------- NPCs
 def npc_files(n):
@@ -674,6 +825,7 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `XML/vocations.xml` | `data/XML/vocations.xml` | substituir o arquivo |
 | `XML/outfits.xml` | `data/XML/outfits.xml` | substituir o arquivo (PENDENTE no install_generated.sh, ver relatório) |
 | `lib/naruto_villages.lua` | `data/lib/` + `dofile` em `lib.lua` | PENDENTE no install_generated.sh, ver relatório |
+| `lib/naruto_characters.lua` | `data/lib/` + `dofile` em `lib.lua` (depois de naruto_villages.lua) | PENDENTE no install_generated.sh, ver relatório |
 | `npc/naruto/*` | `data/npc/naruto/` | copiar a pasta |
 | `lib/naruto_quests.lua` | `data/lib/` + `dofile` em `lib.lua` | ver cabeçalho |
 | `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho |
@@ -804,6 +956,16 @@ cl.append("-- Ordem sugerida da barra de acao: por level exigido, depois nome.")
 cl.append("NarutoJutsuOrder = {")
 for j in sorted(ordered_jutsus, key=lambda x: (int(x["required_level"]), x["name"])):
     cl.append("    %s," % lua_str(j["name"]))
+cl.append("}")
+cl.append("")
+cl.append("-- Jutsus por PERSONAGEM (looktype 900-909): ver data/characters.json. Preenche a barra")
+cl.append("-- de acao quando o jogador troca de personagem (naruto_jutsus.lua, onOutfitChange).")
+cl.append("NarutoCharacterJutsus = {")
+for c in characters:
+    char_jutsus = [jutsus[jid] for jid in c["jutsus"]]
+    words_lua = ", ".join(lua_str(spell_words(j)) for j in char_jutsus)
+    cl.append("    [%d] = { id = %s, name = %s, village = %s, words = { %s } }," % (
+        int(c["looktype"]), lua_str(c["id"]), lua_str(c["name"]), lua_str(c["village"]), words_lua))
 cl.append("}")
 os.makedirs(CLIENT_MODULE, exist_ok=True)
 with open(os.path.join(CLIENT_MODULE, "jutsus_data.lua"), "w", encoding="ascii") as f:
