@@ -350,33 +350,65 @@ opcodeEvent:register()
 -- kit inicial por vocacao (gerado de data/villages.json + tfs_mapping.items)
 local STARTING_KIT = {[1] = {2404, 2467, 2649, 2643, 2480}, [2] = {2404, 2467, 2649, 2643, 2480}, [3] = {7378, 2404, 2467, 2649, 2643, 2480}, [4] = {2404, 2467, 2649, 2643, 2480}}
 
+-- ------------------------------------------------------------------ regen (rodada 5)
+-- Regen de HP/chakra escalando com o level (rodada 5, item 1a da missao de balanceamento —
+-- docs/sistemas/balanceamento-relatorio-v5.md par. 1): a rodada 4 usava os valores FIXOS da
+-- vocacao (vocations.xml gainhp/gainmana, gerados por tools/export_tfs.py ~linha 571 -- 0,4
+-- HP/s e 0,6 chakra/s pra QUALQUER level) -- contra um pool de chakra que cresce (100+level*10),
+-- 0,6/s virava irrelevante ja em L15 (achado da rodada 4 secao 5: 93-98% do tempo de uma hunt de
+-- 30min sem chakra pro tier 1 em L5/L15). NarutoRegen.apply reaplica a condicao (mesmo subId
+-- 9020 -- server/tfs/src/creature.cpp Creature::addCondition substitui condicao de mesmo
+-- tipo+subId) com o valor calculado pro level ATUAL -- chamada no login e a cada level-up
+-- (CreatureEvent NarutoRegenAdvance abaixo, mesmo padrao onAdvance(player,skill,old,new) que
+-- NarutoAchievementAdvance ja usa pra SKILL_LEVEL). Formulas (replicadas em
+-- tools/balance/sim.py chakra_regen_amount_per_tick/hp_regen_amount_per_tick, tunadas por
+-- simulacao -- ver relatorio v5): chakra +[3+floor(level/4)] a cada 2s (era +3 a cada 5s pra
+-- TODO level); HP +[2+floor(level/10)] a cada 5s (em L1-9 e EXATAMENTE o valor antigo, so
+-- acelera a partir de L10 -- pool de HP tambem cresce e o valor fixo ficaria imperceptivel
+-- tarde no jogo pelo mesmo motivo do chakra).
+local NarutoRegen = {}
+function NarutoRegen.apply(player)
+	local level = player:getLevel()
+	local regen = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
+	regen:setParameter(CONDITION_PARAM_SUBID, 9020)
+	regen:setParameter(CONDITION_PARAM_TICKS, -1)
+	regen:setParameter(CONDITION_PARAM_HEALTHGAIN, 2 + math.floor(level / 10))
+	regen:setParameter(CONDITION_PARAM_HEALTHTICKS, 5000)
+	regen:setParameter(CONDITION_PARAM_MANAGAIN, 3 + math.floor(level / 4))
+	regen:setParameter(CONDITION_PARAM_MANATICKS, 2000)
+	player:addCondition(regen)
+end
+
+local regenAdvance = CreatureEvent("NarutoRegenAdvance")
+function regenAdvance.onAdvance(player, skill, oldLevel, newLevel)
+	if skill == SKILL_LEVEL then
+		NarutoRegen.apply(player)
+	end
+	return true
+end
+regenAdvance:register()
+
 -- ------------------------------------------------------------------ login
 local login = CreatureEvent("NarutoCharacterLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoOpcode")
+	player:registerEvent("NarutoRegenAdvance")
 	local firstTime = player:getStorageValue(STORAGE_ONBOARDED) < 1
 	-- Reserva de chakra inicial: o TFS cria o jogador com 0 de mana e as vocacoes dao +10/level,
-	-- mas os jutsus tier 1 custam 12-15 — sem isso um Genin novo nao consegue lancar NADA
-	-- ate o level 3. Piso de 60 de chakra (equivale a ~4 jutsus tier 1), aplicado uma vez.
-	if firstTime and player:getMaxMana() < 60 then
-		player:setMaxMana(60)
-		player:addMana(60)
+	-- mas os jutsus tier 1 custam 2,5-3,0% do pool (chakra_cost_percent, rodada 5) -- sem isso
+	-- um Genin novo nao consegue lancar NADA ate o level 3. Piso de 110 de chakra (rodada 5, era
+	-- 60 -- combinado com o gainmana=10/level da vocacao (inalterado) reproduz exatamente a
+	-- curva 100+level*10 de data/progression.json em qualquer level, nao so' no L1). 110*0,03=
+	-- ~3 de custo por cast, 36+ casts do pool inicial -- folga generosa sobre o minimo de 4
+	-- pedido pela missao — ver relatorio v5 §1.
+	if firstTime and player:getMaxMana() < 110 then
+		player:setMaxMana(110)
+		player:addMana(110)
 	end
 	-- Regeneracao natural de HP/chakra (playtest r3, 2026-09-05): no TFS a regeneracao so' roda
 	-- enquanto o jogador tem comida (Player.feed em lib/core/player.lua). Num jogo de ninja o
-	-- chakra volta sozinho: condicao permanente (ticks -1, subId 9020) com os valores da vocacao
-	-- (vocations.xml gainhp/gainmana); comida continua somando por cima como bonus.
-	do
-		local voc = player:getVocation()
-		local regen = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
-		regen:setParameter(CONDITION_PARAM_SUBID, 9020)
-		regen:setParameter(CONDITION_PARAM_TICKS, -1)
-		regen:setParameter(CONDITION_PARAM_HEALTHGAIN, voc:getHealthGainAmount())
-		regen:setParameter(CONDITION_PARAM_HEALTHTICKS, voc:getHealthGainTicks() * 1000)
-		regen:setParameter(CONDITION_PARAM_MANAGAIN, voc:getManaGainAmount())
-		regen:setParameter(CONDITION_PARAM_MANATICKS, voc:getManaGainTicks() * 1000)
-		player:addCondition(regen)
-	end
+	-- chakra volta sozinho -- ver NarutoRegen.apply acima (rodada 5: agora escala com level).
+	NarutoRegen.apply(player)
 	-- Kit inicial da vila (data/villages.json starting_items): o AAC/TFS criam o jogador so' com
 	-- o kit vanilla (bag/jacket). Sem arma o Genin novo morre pros 3 lobos da trilha (playtest
 	-- 2026-09-05). addItem com slot WHEREEVER equipa automaticamente o que couber no slot.

@@ -4,7 +4,7 @@
   "death_xp_loss_percent": 10,
   "death_item_drop_chance": 0.3,
   "hp_formula": "100 + level*15",
-  "chakra_formula": "50 + level*10",
+  "chakra_formula": "100 + level*10 (rodada 5; era 50 + level*10 — piso de chakra inicial em character_switch.lua subiu de 60 para 110, ver docs/sistemas/balanceamento-relatorio-v5.md §1)",
   "base_speed_tiles_s": 4,
   "capacity_formula": "100 + level*5",
   "ranks": [

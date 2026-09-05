@@ -83,13 +83,33 @@ MANA_MULT = 1.1         # manamultiplier gerado por vocação (sem bônus de vil
                         # (gerador de vocations.xml) pro mesmo fix aplicado no jogo real.
 MANA_BASE = 1600        # vocation.cpp:149 getReqMana: 1600 * mult^(magLevel-1)
 
-# vocations.xml gerado: gainhpticks=5 gainhpamount=2, gainmanaticks=5 gainmanaamount=3, para
-# TODAS as vilas (tools/export_tfs.py ~linha 493). Aplicado via CONDITION_REGENERATION
-# (player.cpp:4602 updateRegeneration) — ticks em segundos * 1000.
-REGEN_HP_PER_TICK = 2
-REGEN_HP_TICK_S = 5
-REGEN_CHAKRA_PER_TICK = 3
-REGEN_CHAKRA_TICK_S = 5
+# RODADA 5 (item 1 da missão, economia de chakra estrutural): a condição de regen aplicada no
+# login (server/tfs/data/scripts/naruto/character_switch.lua, `CreatureEvent NarutoCharacterLogin`,
+# subId 9020) deixou de usar os valores FIXOS de vocations.xml (gainhpamount=2/gainhpticks=5,
+# gainmanaamount=3/gainmanaticks=5 — 0,6 chakra/s pra TODO level, o defeito estrutural medido na
+# rodada 4 §5/§6: um custo de tier 1 proporcionalmente enorme contra o pool de L5-15 nunca
+# recuperava a tempo). Agora a condição é recalculada em Lua puro (não vem mais de
+# getManaGainAmount()/getManaGainTicks() da vocação) e REAPLICADA a cada level-up por um
+# `CreatureEvent onAdvance` novo (`NarutoRegenAdvance`, mesmo padrão de `NarutoAchievementAdvance`
+# que já existe pra achievements — ver tools/export_tfs.py) — mesmo subId 9020 sobrescreve a
+# condição anterior (Creature::addCondition substitui condição de mesmo tipo+subId,
+# `server/tfs/src/creature.cpp` addCondition). Chakra: ticks=2000ms (2s, mais granular que os 5s
+# do HP — precisa disso pra não passar de ~85s a recuperação do pool inteiro em nenhum level, ver
+# tabela do relatório v5 §1), amount = 3 + floor(level/4) (chakra/2s). HP: ticks=5000ms (inalterado
+# — não é o alvo desta missão, só "análogo" citado no enunciado), amount = 2 + floor(level/10)
+# (HP/5s) — em L1-9 isso reproduz EXATAMENTE o valor antigo (2/5s), então não muda a curva de
+# sobrevivência já calibrada nas rodadas 1-4; só acelera regen de HP a partir de L10, quando o
+# pool de HP (100+level*15) já cresceu o bastante pra o antigo valor fixo virar imperceptível
+# também (mesmo raciocínio do achado de chakra da rodada 3/4, aplicado por simetria).
+def chakra_regen_amount_per_tick(level):
+    return 3 + level // 4
+
+CHAKRA_REGEN_TICK_S = 2
+
+def hp_regen_amount_per_tick(level):
+    return 2 + level // 10
+
+HP_REGEN_TICK_S = 5
 
 ATTACK_INTERVAL_S = 2.0   # vocations.xml attackspeed="2000" (nenhum item seta attackSpeed próprio)
 
@@ -154,10 +174,33 @@ def player_hp(level):
     return 100 + level * 15   # progression.json hp_formula
 
 def player_chakra(level):
-    return 50 + level * 10    # progression.json chakra_formula
+    # RODADA 5 (item 1): era 50+level*10. O piso de chakra inicial aplicado uma vez no login
+    # (character_switch.lua, `if firstTime and player:getMaxMana() < 60`) subiu de 60 para 110 —
+    # como a vocação continua dando +10 de chakra por level (vocations.xml gainmana=10, inalterado),
+    # o pool resultante em qualquer level é FLOOR(110) + (level-1)*10 = 100 + level*10. Ver relatório
+    # v5 §1 pro raciocínio completo (por que 100 em vez de outro número: "Genin L1 consegue ≥4 casts
+    # de tier 1" com folga, ver §1 tabela).
+    return 100 + level * 10   # progression.json chakra_formula (atualizado na rodada 5)
 
 def xp_to_next(level):
     return 100 * level + 100  # progression.json xp_formula, derivada (usado por tasks/dailies também)
+
+def jutsu_chakra_cost(jutsu, chakra_max):
+    """RODADA 5 (item 1c): tier 1 elemental agora custa uma PORCENTAGEM do chakra máximo do
+    jogador (`chakra_cost_percent`, novo campo opcional em data/schemas/jutsu.schema.json),
+    exportado como `manapercent` em vez de `mana` no spells.xml gerado (server/tfs/src/spells.cpp:
+    466 `node.attribute("manapercent")`; spells.cpp:804 `Spell::getManaCost` prioriza `mana` se
+    não-zero, senão usa `(maxMana*manaPercent)/100` — replicado aqui com a MESMA divisão inteira
+    truncada, não arredondada, pra bater exatamente com o servidor). Isso resolve o problema
+    estrutural da rodada 4 (§5/§6/§10 pendência 3): um `chakra_cost` FIXO não tem como ser barato
+    o bastante pra sustentar uma hunt de L5-15 (pool pequeno) sem também ficar irrelevantemente
+    barato em L60-100 (pool grande) — custo PROPORCIONAL ao pool escala junto automaticamente.
+    Jutsus sem `chakra_cost_percent` continuam com `chakra_cost` absoluto (tier 2/3, personal),
+    inalterado desta rodada."""
+    pct = jutsu.get("chakra_cost_percent")
+    if pct:
+        return (chakra_max * pct) // 100
+    return jutsu["chakra_cost"]
 
 # ============================================================== skill "jogador médio" no nível L
 def _skill_from_tries(total_tries, mult, base):
@@ -206,7 +249,10 @@ def typical_skills_split(level, taijutsu_frac=1.0, ninjutsu_frac=1.0):
     shuriken_tries = attacks_per_hour * SKILL_POINT_RANGED * RATE_SKILL * hours * taijutsu_frac
     defense_tries = attacks_per_hour * 0.5 * RATE_SKILL * hours * taijutsu_frac
     casts_per_hour = (3600.0 / 1.8) * COMBAT_UPTIME
-    avg_chakra_cost = 14.0
+    # RODADA 5: tier 1 elemental usa chakra_cost_percent (~14-16% do pool, ver jutsu_chakra_cost) em
+    # vez de custo fixo — a proxy de treino usa 0,15 * pool médio do level (era 14.0 fixo, calibrado
+    # pro custo fixo antigo de 12-16; ver docs/sistemas/balanceamento-relatorio-v5.md §1).
+    avg_chakra_cost = 0.15 * player_chakra(level)
     mana_spent = casts_per_hour * avg_chakra_cost * RATE_MAGIC * hours * ninjutsu_frac
     return {
         "taijutsu": _skill_from_tries(taijutsu_tries, SKILL_MULT["taijutsu"], SKILL_BASE["taijutsu"]),
@@ -246,7 +292,8 @@ def typical_skills(level):
     defense_tries = attacks_per_hour * 0.5 * RATE_SKILL * hours   # hit_received, ~metade da cadência
     # ninjutsu: cadência de cast limitada pelo cooldown do jutsu básico (~1.8s) com o mesmo uptime
     casts_per_hour = (3600.0 / 1.8) * COMBAT_UPTIME
-    avg_chakra_cost = 14.0   # média dos projéteis tier 1 (docs/sistemas/balanceamento.md: 12-16)
+    # RODADA 5: ver mesmo comentário em typical_skills_split (custo agora é % do pool, não fixo).
+    avg_chakra_cost = 0.15 * player_chakra(level)
     mana_spent = casts_per_hour * avg_chakra_cost * RATE_MAGIC * hours
     return {
         "taijutsu": _skill_from_tries(taijutsu_tries, SKILL_MULT["taijutsu"], SKILL_BASE["taijutsu"]),
@@ -381,8 +428,12 @@ class SimPlayer:
 
     def regen_tick(self, dt_s):
         # aproximação contínua da condição CONDITION_REGENERATION (discretiza pouco importa p/ média)
-        self.hp = min(self.hp_max, self.hp + REGEN_HP_PER_TICK * dt_s / REGEN_HP_TICK_S)
-        self.chakra = min(self.chakra_max, self.chakra + REGEN_CHAKRA_PER_TICK * dt_s / REGEN_CHAKRA_TICK_S)
+        # RODADA 5: amount por tick agora é função do level (chakra_regen_amount_per_tick /
+        # hp_regen_amount_per_tick), reaplicada de verdade no servidor a cada level-up
+        # (NarutoRegenAdvance, ver tools/export_tfs.py e comentário de CHAKRA_REGEN_TICK_S acima).
+        self.hp = min(self.hp_max, self.hp + hp_regen_amount_per_tick(self.level) * dt_s / HP_REGEN_TICK_S)
+        self.chakra = min(self.chakra_max,
+                           self.chakra + chakra_regen_amount_per_tick(self.level) * dt_s / CHAKRA_REGEN_TICK_S)
 
 # ============================================================== dano de jutsu
 def jutsu_damage(rng, jutsu, level, ninjutsu_skill, elemental_mult):
@@ -585,7 +636,7 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
             ryo_spent_potions += hp_potion["buy_price"]
             next_potion_ok = t + POTION_DRINK_COOLDOWN_S
         if (chakra_potion and jutsu and build in ("ninjutsu", "hybrid")
-                and p.chakra < jutsu["chakra_cost"] and t >= next_chakra_potion_ok):
+                and p.chakra < jutsu_chakra_cost(jutsu, p.chakra_max) and t >= next_chakra_potion_ok):
             p.chakra = min(p.chakra_max, p.chakra + chakra_potion["effect"]["value"])
             chakra_potions_used += 1
             ryo_spent_potions += chakra_potion["buy_price"]
@@ -593,9 +644,9 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
 
         if interleave:
             # jutsu na sua própria cadência (não consome o turno da arma)
-            if jutsu and t >= next_jutsu_action and p.chakra >= jutsu["chakra_cost"]:
-                p.chakra -= jutsu["chakra_cost"]
-                chakra_spent_total += jutsu["chakra_cost"]
+            if jutsu and t >= next_jutsu_action and p.chakra >= jutsu_chakra_cost(jutsu, p.chakra_max):
+                p.chakra -= jutsu_chakra_cost(jutsu, p.chakra_max)
+                chakra_spent_total += jutsu_chakra_cost(jutsu, p.chakra_max)
                 mult = elemental_multiplier(player_element, monster["element"])
                 dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                 monster_hp -= dmg
@@ -615,9 +666,9 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
         else:
             if t >= next_player_action:
                 used_jutsu = False
-                if build in ("ninjutsu", "hybrid") and jutsu and p.chakra >= jutsu["chakra_cost"]:
-                    p.chakra -= jutsu["chakra_cost"]
-                    chakra_spent_total += jutsu["chakra_cost"]
+                if build in ("ninjutsu", "hybrid") and jutsu and p.chakra >= jutsu_chakra_cost(jutsu, p.chakra_max):
+                    p.chakra -= jutsu_chakra_cost(jutsu, p.chakra_max)
+                    chakra_spent_total += jutsu_chakra_cost(jutsu, p.chakra_max)
                     mult = elemental_multiplier(player_element, monster["element"])
                     dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                     monster_hp -= dmg
@@ -844,7 +895,7 @@ def simulate_group_fight(level, monster, build, n_monsters, rng, max_seconds=300
             mult = elemental_multiplier(adv_element, monster["element"]) if adv_element else 1.0
             best_j, best_rate = None, -1.0
             for j in kit:
-                if cooldown_ready[j["id"]] > t or p.chakra < j["chakra_cost"]:
+                if cooldown_ready[j["id"]] > t or p.chakra < jutsu_chakra_cost(j, p.chakra_max):
                     continue
                 hits = hits_for_jutsu(j, n_alive)
                 if hits <= 0:
@@ -854,8 +905,8 @@ def simulate_group_fight(level, monster, build, n_monsters, rng, max_seconds=300
                 if rate > best_rate:
                     best_rate, best_j = rate, j
             if best_j is not None:
-                p.chakra -= best_j["chakra_cost"]
-                chakra_spent_total += best_j["chakra_cost"]
+                p.chakra -= jutsu_chakra_cost(best_j, p.chakra_max)
+                chakra_spent_total += jutsu_chakra_cost(best_j, p.chakra_max)
                 hits = hits_for_jutsu(best_j, n_alive)
                 targets = sorted((i for i, hp in enumerate(hp_list) if hp > 0),
                                   key=lambda i: hp_list[i])[:hits]
@@ -1037,7 +1088,7 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
         eset = ELEMENT_SETS.get(player_element)
         if eset:
             tier1 = JUTSUS[eset["jutsus"][0]]   # índice 0 = sempre o projétil tier 1, ver header
-    tier1_cost = tier1["chakra_cost"] if tier1 else None
+    tier1_cost = jutsu_chakra_cost(tier1, p.chakra_max) if tier1 else None
     interleave = (build == "hybrid")
     hp_potion = best_potion(level, _HP_POTIONS)
     chakra_potion = best_potion(level, _CHAKRA_POTIONS) if use_chakra_pills else None
@@ -1083,9 +1134,9 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
         if in_fight:
             died_this_tick = False
             if interleave:
-                if jutsu and t >= next_jutsu_action and p.chakra >= jutsu["chakra_cost"]:
-                    p.chakra -= jutsu["chakra_cost"]
-                    total_chakra_spent += jutsu["chakra_cost"]
+                if jutsu and t >= next_jutsu_action and p.chakra >= jutsu_chakra_cost(jutsu, p.chakra_max):
+                    p.chakra -= jutsu_chakra_cost(jutsu, p.chakra_max)
+                    total_chakra_spent += jutsu_chakra_cost(jutsu, p.chakra_max)
                     mult = elemental_multiplier(player_element, monster["element"])
                     dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                     monster_hp -= dmg
@@ -1099,9 +1150,9 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
             else:
                 if t >= next_player_action:
                     used_jutsu = False
-                    if build == "ninjutsu" and jutsu and p.chakra >= jutsu["chakra_cost"]:
-                        p.chakra -= jutsu["chakra_cost"]
-                        total_chakra_spent += jutsu["chakra_cost"]
+                    if build == "ninjutsu" and jutsu and p.chakra >= jutsu_chakra_cost(jutsu, p.chakra_max):
+                        p.chakra -= jutsu_chakra_cost(jutsu, p.chakra_max)
+                        total_chakra_spent += jutsu_chakra_cost(jutsu, p.chakra_max)
                         mult = elemental_multiplier(player_element, monster["element"])
                         dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                         monster_hp -= dmg
@@ -1161,7 +1212,11 @@ def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, 
         "tier1_chakra_cost": tier1_cost,
     }
 
-HUNT_LEVELS = [5, 15, 30, 60, 100]
+# RODADA 5: era [5, 15, 30, 60, 100] — a missão pede a meta de sustentabilidade verificada em
+# TODOS os níveis 5..100, não só 5 amostras; de 5 em 5 (20 pontos) ainda roda em <1s (a hunt em
+# si é ~0.05s/simulação) e já pega o único ponto fora da curva suave encontrado nesta rodada
+# (L20-23, monstro `exam_rival_stone` com HP acima da média da faixa — ver relatório v5 §1).
+HUNT_LEVELS = list(range(5, 101, 5))
 
 def run_hunt_matrix(minutes=30, seed=1234):
     """Roda a hunt de 30 min em HUNT_LEVELS, build 'hybrid' (a build que a missão pede medir —

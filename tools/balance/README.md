@@ -30,7 +30,8 @@ python3 tools/balance/sim.py --matrix --trials 100 --json /tmp/matrix.json
 
 # rodada 4: cenário de "hunt de 30 min" (sequência de pulls do monstro comum mais próximo do
 # nível, pausas de 5-15s entre lutas) — mede chakra sustentável de verdade, não numa luta só.
-# Sozinho roda HUNT_LEVELS (5/15/30/60/100) x build hybrid, com e sem pílula de chakra.
+# Sozinho roda HUNT_LEVELS (rodada 5: de 5 em 5, L5-L100, 20 pontos) x build hybrid, com e sem
+# pílula de chakra.
 python3 tools/balance/sim.py --hunt --json /tmp/hunt.json
 
 # hunt pontual (nível/monstro/build escolhidos), com pílula de chakra ligada
@@ -99,8 +100,16 @@ código):**
 - Multiplicador elemental: `tools/export_tfs.py element_percents()` — o elemento anterior no
   ciclo (`data/elements.json`: katon→fuuton→raiton→doton→suiton→katon) causa 150%, o seguinte
   causa 75%.
-- Regen de HP/chakra: `player.cpp:4602 updateRegeneration`, valores de `vocations.xml` gerado
-  (2 HP/5s, 3 chakra/5s, iguais em todas as vilas).
+- Regen de HP/chakra: `player.cpp:4602 updateRegeneration`. Até a rodada 4, valores fixos de
+  `vocations.xml` (2 HP/5s, 3 chakra/5s, iguais em todas as vilas). **Rodada 5**: a condição
+  aplicada no login/level-up (`server/tfs/data/scripts/naruto/character_switch.lua`,
+  `NarutoRegen.apply`, subId 9020) não vem mais da vocação — é recalculada em Lua por level:
+  chakra `3 + floor(level/4)` a cada 2s, HP `2 + floor(level/10)` a cada 5s (replicado em
+  `chakra_regen_amount_per_tick`/`hp_regen_amount_per_tick` deste arquivo). Ver relatório v5 §1.
+- Custo de jutsu como % do chakra máximo (`manapercent`): `spells.cpp:466` (lê o atributo),
+  `spells.cpp:804 Spell::getManaCost` (`mana` tem prioridade se != 0, senão
+  `(maxMana*manaPercent)/100`, divisão inteira). **Novo na rodada 5** — só os 5 projéteis tier 1
+  elementais usam isso (`chakra_cost_percent` no JSON); replicado em `jutsu_chakra_cost()`.
 - Progressão de skill/magic level: `vocation.cpp:141 getReqSkillTries` /
   `vocation.cpp:149 getReqMana`, com `rateSkill`/`rateMagic` de `config.lua` aplicados em
   `data/events/scripts/player.lua:onGainSkillTries`.
@@ -396,3 +405,56 @@ foram endereçados — pílula de chakra agora é simulada (`_CHAKRA_POTIONS`, `
 mesma característica (regen fixo + custo flat de tier 1) é a causa da nova pendência "chakra
 sustentável falha em L5/L15" acima — não foi "resolvido" no sentido de deixar de ser um problema,
 só de deixar de ser uma lacuna de MODELAGEM do simulador.
+
+## Achados da rodada 5 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v5.md`
+
+Ataca de frente a pendência "chakra sustentável falha em L5/L15" da rodada 4, com as 3 mudanças
+estruturais que ela já apontava como possíveis (regen por level, pool maior, custo proporcional
+ao pool) — as três foram implementadas, não só uma.
+
+1. **Pool de chakra**: `chakra_formula` 50+level×10 → **100+level×10** (piso de chakra inicial
+   em `character_switch.lua` subiu de 60 para 110; a vocação continua dando +10/level).
+2. **Regen por level**: condição reaplicada a cada level-up (`NarutoRegenAdvance`, novo
+   `CreatureEvent onAdvance`, mesmo padrão de `NarutoAchievementAdvance`) — ver acima.
+3. **Custo de tier 1 como % do pool** (`manapercent`, não mais `chakra_cost` fixo): 2,5-3,0%
+   conforme o elemento. Substitui os antigos 16-20 fixos. Os demais jutsus (tier 2/3/personal,
+   custo fixo) tiveram o `chakra_cost` **reescalado pela razão pool novo/pool antigo no
+   `required_level` de cada um** — sem isso, o pool maior tornaria TODO jutsu proporcionalmente
+   mais barato sem querer, reabrindo a paridade 1×1 já calibrada nas rodadas 2-4 por um motivo
+   não relacionado à mudança desta rodada.
+4. **Tier 1 recalibrado nas 3 dimensões pedidas pela missão** (não só custo): `cooldown_s`
+   3,5s→**9,0s**, `level_scale` ~3,0→**5,25-5,40** (a única forma de fechar burst ≥1,3× em
+   quase todo L1-100 com uma fórmula LINEAR em level — dano de arma cresce ~136× de L1 a L100
+   por ser um PRODUTO skill×attack, não uma soma; ver relatório v5 §2 pra prova de que nenhum
+   `level_scale` fecha os 3 últimos níveis (78-84, 100) sem violar a paridade em bosses baixos).
+   O cooldown maior (era o lever "livre" que a rodada 4 já tinha usado, agora empurrado mais)
+   é o que permite este `level_scale` maior sem que o DPS SUSTENTADO (se o jutsu fosse
+   spammado) ultrapasse o de arma nos bosses baixos — resolvido empiricamente via
+   `--group-matrix`/`simulate()`, não por fórmula fechada (a mitigação assimétrica —
+   jutsu ignora armadura do monstro, arma não — faz a razão DPS real bem mais extrema que a
+   razão de dano BRUTO, então só simulação real decide isso, não conta de cabeça).
+
+## Pendências honestas da rodada 5 (ver relatório v5 §10 pros números)
+
+- **Burst ≥1,3× falha em ~6-9 dos 100 níveis** (L78-84 e L100, faltando 9-11% do alvo) — prova
+  matemática: dano de arma cresce como produto skill(L)×attack(L) (~quadrático), dano de tier 1
+  só pode crescer como soma level×level_scale + maglevel×skill_scale (linear + côncavo); nenhum
+  `level_scale`/`skill_scale` fecha TODO L1-100 sem estourar a paridade de boss em L12-25 (ver
+  relatório v5 §2). Melhora real sobre a rodada 4 (que falhava ~60 dos 100 níveis, alguns por
+  >80%) — agora só a região L78-100, por <11%.
+- **Híbrido excede o teto de +15% em 5 dos 6 bosses de referência** (mesma pendência da rodada
+  4, magnitude parecida ou um pouco pior em alguns — `HYBRID_TAIJUTSU_FRAC` sweep 0,15-0,4
+  confirma de novo que nenhuma fração fecha "nunca abaixo do melhor" E "nunca acima do teto" ao
+  mesmo tempo). Não é uma regressão desta rodada — é a mesma tensão estrutural do modelo de
+  híbrido intercalado (arma+jutsu aditivos) introduzido na rodada 4, não resolvida.
+- **Grupo 3+ segue não-uniforme** (mesma causa raiz das rodadas 3/4, não tocada nesta rodada —
+  fora do escopo declarado de "economia de chakra + paridade 1×1").
+- **Personagens (±15%) não reverificados nesta rodada** — mesmo risco que a rodada 4 já
+  carregava (a proxy depende da média de dano/chakra de todo jutsu de dano, e os 5 tier 1
+  elementais mudaram de novo); `personal.json`/`neutral.json` só tiveram `chakra_cost`
+  reescalado (item 3 acima), nunca `base_damage`/`level_scale`.
+- **Um monstro específico (`exam_rival_stone`, L20) é o pior caso da meta de hunt** (20,7% sem
+  pílula, dentro do limite de 25% mas o mais próximo dele) — HP acima da média da sua faixa
+  (420 contra ~300-350 de monstros vizinhos) alonga a luta o bastante pra puxar mais casts de
+  tier 1 por ciclo de caça; não é um problema do NÚMERO de tier 1, é a variância entre monstros
+  da mesma faixa de nível (ver relatório v5 §1).

@@ -13,6 +13,8 @@
     "shape": {"type":"string","description":"circle_r1, cross_r2, line_5, cone_3..."},
     "range": {"type":"integer","minimum":0},
     "chakra_cost": {"type":"integer","minimum":0},
+    "chakra_cost_percent": {"type":"number","minimum":0,"maximum":100,
+      "description":"RODADA 5: custo como % do chakra máximo do jogador (spells.xml manapercent, server/tfs/src/spells.cpp:466/810) em vez de chakra_cost fixo. Quando presente, chakra_cost deve ser 0 (mutuamente exclusivos, mesma regra do TFS: mana!=0 tem prioridade)."},
     "cooldown_s": {"type":"number","minimum":0},
     "base_damage": {"type":"number","minimum":0},
     "level_scale": {"type":"number","minimum":0},

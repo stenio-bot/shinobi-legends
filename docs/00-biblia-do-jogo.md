@@ -297,9 +297,17 @@ mais rápido que as demais (`village_bonus_multiplier: 1.2`).
 
 ### Chakra
 
-*Fonte: `data/progression.json`.* `Chakra máximo = 50 + level*10`. Regen passivo fixo (não escala
-com level) de ~0,6 chakra/s em qualquer vila. Pílulas de chakra (pequena/média/grande, ver seção
-5) são o lever real de combate para estender uma rotação de jutsus tier 2/3 numa luta longa.
+*Fonte: `data/progression.json`, atualizado na rodada 5 de balanceamento
+(`docs/sistemas/balanceamento-relatorio-v5.md`).* `Chakra máximo = 100 + level*10` (era
+`50 + level*10` — o piso de chakra inicial do Genin subiu de 60 para 110 no primeiro login).
+Regen passivo **escala com level** desde a rodada 5 (era fixo, 0,6 chakra/s em qualquer nível):
+`3 + level÷4` a cada 2s — um Genin L1 recupera o pool inteiro parado em ~73s; um Kage L100,
+em ~79s. Os 5 jutsus tier 1 elementais (o projétil básico de cada elemento) custam uma
+**porcentagem do chakra máximo** (2,5–3,0%, não mais um número fixo) — escala automaticamente
+com o pool em qualquer nível, resolvendo o problema de custo fixo ficar desproporcional entre
+Genin (pool pequeno) e Kage (pool grande). Pílulas de chakra (pequena/média/grande, ver seção
+5) continuam o lever real de combate para estender uma rotação de jutsus tier 2/3 (custo fixo,
+inalterado) numa luta longa.
 
 ---
 
@@ -386,16 +394,27 @@ Katon (vantagem ×1,5, desvantagem ×0,75, neutro ×1,0).
 mesmo com o HP crescendo mais rápido que a XP necessária.
 
 **Balanceamento entre taijutsu (arma) e ninjutsu (jutsu)**, medido por simulação Monte Carlo
-(`tools/balance/sim.py`) contra 6 bosses de referência (um por região): depois de três rodadas de
-calibração, 5 dos 6 bosses ficam dentro da meta de paridade (±15%/+10%) entre um build de arma pura
-e um de jutsu puro forçado; o único fora da meta (boss L19, Espadachim da Névoa) tem uma causa
-identificada (platô de tier de arma em L15–20) e documentada como pendência, não escondida. Os 5
-elementos ficam entre si dentro de **±2,4%** de dano em L50–100 — bem mais apertado que a meta de
-±10% pedida. Uma tensão real e documentada permanece sem solução fechada: o mesmo número de dano
-que faz um jutsu tier 3 competir contra um boss de milhares de HP também consegue **apagar um pull
-inteiro de monstros de HP baixo** num único cast (ex.: Águia do Trovão em grupo, +442% acima da
-meta de +30–60%) — ver `docs/sistemas/balanceamento-relatorio-v3.md` §6 e §10 para as opções de
-correção consideradas e por que nenhuma foi aplicada sem uma decisão de design explícita.
+(`tools/balance/sim.py`) contra 6 bosses de referência (um por região): depois de cinco rodadas
+de calibração, **os 6 de 6 bosses** ficam dentro da meta de paridade (-15%/+10%) entre um build
+de arma pura e um de jutsu puro (rodada 5 fechou os 2 últimos que faltavam, L12/L19, trocando o
+cooldown do tier 1 de 3,5s para 9,0s — ver `docs/sistemas/balanceamento-relatorio-v5.md` §2/§3).
+O burst do tier 1 (hit ≥1,3× o hit médio de arma do mesmo nível) fecha em 94 dos 100 níveis
+(L1-77, L83-99) — os 6-9 níveis restantes (L78-84, L100) ficam 9-11% abaixo do alvo por um
+limite matemático real: o dano de arma cresce como um PRODUTO skill×attack (super-linear,
+~136× de L1 a L100), o dano de jutsu só pode crescer como uma SOMA level+magic-level (linear +
+côncavo) — nenhum coeficiente fecha as duas pontas do range ao mesmo tempo sem quebrar a
+paridade de boss no meio (prova completa no relatório v5 §2). O build híbrido (arma+jutsu
+juntos) nunca fica abaixo do melhor build puro, mas excede o teto de +15% em 4 dos 6 bosses —
+pendência conhecida desde a rodada 4, não resolvida (nenhuma fração de treino testada fecha os
+dois lados ao mesmo tempo). Os 5 elementos ficam entre si dentro de **±0,3%** de dano em
+L50–100 (números de dano dos jutsus "campeão" de cada elemento não mudaram na rodada 5) — bem
+mais apertado que a meta de ±10% pedida. Uma tensão real e documentada permanece sem solução
+fechada no cenário de GRUPO (3+ monstros): o mesmo número de dano que faz um jutsu tier 3
+competir contra um boss de milhares de HP também consegue **apagar um pull inteiro de monstros
+de HP baixo** num único cast — ver `docs/sistemas/balanceamento-relatorio-v3.md` §6/§10 e
+`-v4.md` §10 para as opções de correção consideradas e por que nenhuma foi aplicada sem uma
+decisão de design explícita (fora do escopo declarado da rodada 5, que focou em economia de
+chakra e paridade 1×1).
 
 ### Jutsus: papéis
 
