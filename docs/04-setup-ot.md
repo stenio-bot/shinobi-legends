@@ -355,6 +355,13 @@ mysql -u tfs -ptfs forgottenserver < schema.sql
 ```
 Em `config.lua`: `mysqlUser = "tfs"`, `mysqlPass = "tfs"`, `mysqlDatabase = "forgottenserver"`.
 
+Também em `config.lua` (não versionado — ao reprovisionar a partir do `.dist`, reaplicar):
+`experienceStages = nil` e `rateExp = 1`. Motivo: `docs/sistemas/balanceamento.md` e
+`progressao-jogador.md` foram calibrados com a XP crua do monstro; o `.dist` traz stages 7×–3×
+que ficam ativas mesmo com `stages.xml` desligado (fallback Lua em `configmanager.cpp`), o que
+encurtava a curva de ~1000h para uma fração (achado do simulador `tools/balance/sim.py`,
+ver `docs/sistemas/balanceamento-relatorio.md`).
+
 ### Instalar o conteúdo gerado
 ```bash
 python3 tools/export_tfs.py

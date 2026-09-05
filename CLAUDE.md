@@ -81,6 +81,7 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - Missão: entrada em `quests` do NPC em `data/npcs/leaf.json` (sequenciais na ordem da lista).
 - Jutsu: `data/jutsus/<elemento>.json`; tier 1 é aprendido automaticamente por level/vila, tier 2+ via pergaminho.
 - Sempre rode `.venv/bin/python tools/validate_data.py` e o smoke test depois.
+- Balanceamento (HP/dano de monstro, dano de jutsu, TTK, XP/h, ryo/h): `python3 tools/balance/sim.py --matrix --json /tmp/matrix.json` roda a matriz nível x monstro x build (~30s, fórmulas reais do TFS) — ver `tools/balance/README.md` e `docs/sistemas/balanceamento-relatorio.md`.
 
 ## Armadilhas já encontradas
 - `var x := dict["k"]` não compila (tipo não inferível). Use `var x: float = dict["k"]`.
