@@ -126,6 +126,7 @@ def load_manifest_flags():
             "key": key,
             "group": spec.get("group"),
             "flags": spec.get("flags") or {},
+            "top_order": spec.get("top_order", 0),
         }
     return by_id
 
@@ -218,6 +219,10 @@ def main():
             id_bugs.append((sid, spec["key"], "AUSENTE no items.otb", None, None))
             continue
         exp = expected_otb_flags(spec["flags"])
+        # FLAG_ALWAYSONTOP e' derivado do top_order pelo tools/spr/otb.py::new_item (fix do andar
+        # travando, 2026-09-05) — bordas/bottom/top esperam o flag ligado.
+        if spec.get("top_order"):
+            exp |= otb_mod.FLAG_ALWAYSONTOP
         # ignora bits que dependem de runtime/paridade de frames (animation);
         # comparamos só os bits relevantes para caminhabilidade + os declarados
         mask = 0
