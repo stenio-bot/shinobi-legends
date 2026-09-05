@@ -64,14 +64,14 @@ por `zones`. Números detalhados por faixa em `balanceamento.md`.
 | Área | Zona (rect) | Level | Monstros (element) | Boss | Status |
 |---|---|---|---|---|---|
 | Floresta da Vila | 0,0,50,40 | 1–10 | lobo (none), cobra (doton), bandido (none), bandido arqueiro (none) | Chefe dos Bandidos (katon, L12) | implementada |
-| Costa das Marés | — | 12–19 | mercenário da ponte, batedor da névoa, guardião da neblina (`data/monsters/coastal_tides.json`) | Espadachim da Névoa + Aprendiz Mascarado (suiton, L19) | dados prontos, sem mapa (pedido em `data/maps/spawns_lore.json`) |
+| Costa das Marés | — | 12–19 | mercenário da ponte, batedor da névoa, guardião da neblina (`data/monsters/coastal_tides.json`) | Espadachim da Névoa + Aprendiz Mascarado (suiton, L19) | no mapa desde v2.1 (x1000-1049/y1120-1169, ver `docs/sistemas/mapas.md`) |
 | Floresta da Morte | 50,0,46,40 | 10–25 | sanguessuga (suiton), sapo gigante (suiton), ninja renegado (none), serpente menor (doton, L18), rivais do exame (`exam_rival_*`, L20) | **Serpente Branca** (doton, L25); Sapo Ancião (suiton, L25) é boss secundário | implementada |
 | Ruínas do Clã Marionetista | 96,0,52,40 | 25–50 | marionete de combate (none, L27), sentinela de pedra (doton, L32), guerreiro espectral (raiton, L38), xamã da maldição (katon, L44), desertor de elite (katon, L46) | Marionetista das Ruínas (fuuton, L50) | implementada |
 | Montanha do Trovão | 148,0,52,40 | 50–80 | águia do trovão (raiton, L54), oni da geleira (suiton, L60), monge da tempestade (fuuton, L68), serpente de magma (katon, L74) | O Sócio Eterno (doton, L70) + Oni Ancestral (raiton, L80) — "Dupla Imortal" | implementada (Sócio Eterno é novo) |
-| Covil da Organização Nuvem Vermelha | — | 80–100 | clone branco, ninja elite da aurora (`data/monsters/akatsuki_lair.json`) | 4 bosses sequenciais: O Vigia Ilusório (L85), O Mascarado das Sombras (L90), O Portador dos Seis Caminhos (L95), O Ancestral da Nuvem Vermelha (L100, final) | dados prontos, sem mapa (era "Fortaleza Akatsu"; pedido em `data/maps/spawns_lore.json`) |
+| Covil da Organização Nuvem Vermelha | — | 80–100 | clone branco, ninja elite da aurora (`data/monsters/akatsuki_lair.json`) | 4 bosses sequenciais: O Vigia Ilusório (L85), O Mascarado das Sombras (L90), O Portador dos Seis Caminhos (L95), O Ancestral da Nuvem Vermelha (L100, final) | no mapa desde v2.1 (x1400-1449/y1000-1049, gate Anbu actionid 45004; era "Fortaleza Akatsu") |
 
 Ver `docs/lore/mundo.md` para a história de cada região, e
-`docs/lore/progressao.md` para como as duas regiões "dados prontos, sem mapa"
+`docs/lore/progressao.md` para como as duas regiões (hoje já no mapa)
 e os bosses novos se encaixam nos exames de rank (Genin→Chunin→Jonin→Anbu→Kage).
 
 Cada área nova tem 1 mercador + 1 quest giver em `data/npcs/<area>.json` com 3–4 missões

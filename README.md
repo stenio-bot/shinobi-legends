@@ -15,6 +15,7 @@ Ver `docs/03-decisoes-tecnicas.md` (ADR-005).
 |---|---|
 | `CLAUDE.md` | Contexto do projeto para o Claude Code (leia primeiro) |
 | `docs/` | Design do jogo (GDD), roadmap, arquitetura, decisões |
+| [`docs/00-biblia-do-jogo.md`](docs/00-biblia-do-jogo.md) | **Documento mãe**: mundo, história, progressão, sistemas, bestiário, grimório e estado atual num só lugar |
 | `docs/sistemas/` | Um documento por sistema: progressão, combate, itens, monstros... |
 | `data/` | Conteúdo do jogo em JSON: jutsus, itens, monstros, tabela de XP |
 | `data/schemas/` | JSON Schema que valida cada tipo de conteúdo |

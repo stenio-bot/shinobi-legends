@@ -7,10 +7,53 @@ esse visual é reservado para NPCs mentores e para os poucos bosses de arco list
 abaixo. Toda região tem: história, inimigos genéricos, boss(es), NPCs e a
 missão/exame que fecha a região.
 
-Seis regiões: quatro já implementadas (mapa `forest_valley`, zonas existentes,
-ver `docs/sistemas/mapas.md`), duas novas e ainda não desenhadas no mapa físico
-(dados prontos em `data/`, pedido formal ao agente de mapa em
-`data/maps/spawns_lore.json`).
+Seis regiões, todas com mapa físico hoje: as 4 originais no mundo aberto de
+`forest_valley` e as 2 mais novas (Costa das Marés, Covil da Organização Nuvem
+Vermelha) desenhadas em `tools/map/build_regions.py` (ver "Mapa v2.1/v3" em
+`docs/sistemas/mapas.md`) — este documento ainda descreve essas duas como "dados
+prontos, sem mapa" porque foi escrito antes desse trabalho; a tag por região
+abaixo está desatualizada nesse ponto específico (ver `docs/00-biblia-do-jogo.md`,
+seção "Inconsistências encontradas").
+
+---
+
+## 0. As origens — cosmologia e a Grande Guerra (novo)
+
+Nenhum documento de lore anterior cobria a criação do mundo nem explicava de onde
+vem a ameaça atual além do nome; esta seção preenche essa lacuna (escrita para
+`docs/00-biblia-do-jogo.md`, seção "História do mundo", e replicada aqui para não
+haver duas versões do mesmo mito).
+
+Antes das vilas, o mundo era só terra crua e mar sem nome — até que a primeira
+faísca de chakra nasceu do encontro entre a vontade viva de um punhado de pessoas
+e a força bruta dos quatro elementos primordiais (fogo, água, terra, vento; o
+raio veio depois, filho do choque entre os quatro, e por isso ainda hoje é tratado
+como o elemento "mais jovem" nas lendas de fundação). Quem primeiro aprendeu a
+dobrar essa força ao próprio corpo virou lenda antes de virar história: os
+"primeiros shinobi", sem vila, sem bandana, sem rank, ensinando uns aos outros por
+necessidade de sobreviver a bestas que hoje só existem enfraquecidas nos arredores
+de cada vila — os ancestrais dos monstros que o jogador caça na Floresta da Vila.
+
+Vilas nasceram quando essas famílias de praticantes pararam de vagar e escolheram
+terra para chamar de sua: a Folha se fixou onde a floresta era mais viva e o Katon
+mais fácil de dominar; a Névoa, onde a água nunca faltava; a Nuvem, no alto onde a
+tempestade quase nunca para; a Areia, na fronteira entre o deserto e a rocha,
+dividida entre Fuuton e Doton (ver `docs/sistemas/vilas-e-clas.md` para a tabela
+completa de vila/elemento/skill). Por gerações as quatro cresceram em paz relativa
+— até a Grande Guerra.
+
+Ninguém vivo hoje viveu a Grande Guerra, mas todo mundo vive com o que ela deixou.
+Foi nela que o sistema de ranks (Genin→Chunin→Jonin→Kage, com o ANBU como corpo de
+elite agindo direto sob o Kage) deixou de ser hierarquia temporária de tempos de
+guerra e virou a estrutura permanente de qualquer vila em paz — nenhuma vila
+desmobiliza um exército que pode precisar de novo. E foi nela, nas cinzas de
+esquadrões inteiros dados como extintos ou desertados, que um punhado de
+sobreviventes — cada um carregando um poder que uma vila inteira temeu enfrentar
+uma segunda vez — se organizou sob bandeira própria: nuvens vermelhas sobre capas
+pretas. Perderam a guerra, ou pareceram perder; passaram uma geração inteira em
+silêncio, recrutando em segredo os desertores que toda vila produz (ver
+`docs/lore/pesquisa-naruto.md`, seção 5). É esse silêncio que está acabando agora
+— no exato momento em que o jogador começa sua própria história como Genin.
 
 ---
 
@@ -48,10 +91,12 @@ Morte, quando pronto para o Exame Chunin.
 
 ---
 
-## 2. Costa das Marés (`costa_das_mares`) — Genin, nível 12–19 [NOVA, dados prontos]
+## 2. Costa das Marés (`costa_das_mares`) — Genin, nível 12–19 [implementada, mapa v2.1]
 
-Inspirada no arco do **País das Ondas** (Zabuza/Haku). Ver pedido de spawn em
-`data/maps/spawns_lore.json` — região ainda sem posição física no mapa.
+Inspirada no arco do **País das Ondas** (Zabuza/Haku). Pedido original em
+`data/maps/spawns_lore.json`; mapa físico construído em
+`tools/map/build_regions.py` (`build_coastal_tides`, x 1000–1049/y 1120–1169) —
+ver `docs/sistemas/mapas.md`, seção "Regiões novas (v2.1)".
 
 **História.** Uma vila de pescadores e a ponte que a liga ao continente vivem
 sob a sombra de uma guilda mercante rival que contratou um espadachim renegado
@@ -208,11 +253,14 @@ covil final.
 
 ---
 
-## 6. Covil da Organização Nuvem Vermelha (`covil_nuvem_vermelha`) — Anbu/Kage, nível 80–100 [NOVA, dados prontos]
+## 6. Covil da Organização Nuvem Vermelha (`covil_nuvem_vermelha`) — Anbu/Kage, nível 80–100 [implementada, mapa v2.1/v3]
 
 Antes chamada "Fortaleza Akatsu" (`docs/sistemas/monstros-e-pvm.md`, linha
-"planejada") — mesmo conceito, agora nomeada e desenhada. Ver pedido de spawn
-em `data/maps/spawns_lore.json`.
+"planejada") — mesmo conceito, agora nomeada e desenhada. Pedido original em
+`data/maps/spawns_lore.json`; mapa físico (masmorra isolada, x 1400–1449/y
+1000–1049, acesso só pelo portal gated no topo da Montanha) em
+`tools/map/build_regions.py` (`build_akatsuki_lair`) — ver
+`docs/sistemas/mapas.md`, seções "Regiões novas (v2.1)" e "Mapa v3".
 
 **História.** No topo da cadeia de poder do mundo shinobi está uma organização
 de renegados de capa preta e nuvens vermelhas, que colecionam portadores de

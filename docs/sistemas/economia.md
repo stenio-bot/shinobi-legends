@@ -14,7 +14,7 @@
 ## Preços de referência
 - Poção de chakra pequena: 30 ryo · Onigiri: 10 ryo
 - Equipamento level 1: 50–200 ryo · level 20: 1.000–5.000 · level 50: 20.000+
-- Pergaminho de jutsu tier 1: 500 · tier 2: 5.000 · tier 3: 50.000
+- Pergaminho de jutsu tier 1: 500 · tier 2: 5.000 · tier 3: ver data/items (conforme `data/items`)
 - Monstro level N dropa em média `N * 3` ryo.
 
 ## Regras anti-inflação (multiplayer)

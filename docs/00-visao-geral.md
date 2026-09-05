@@ -1,5 +1,8 @@
 # 00 — Visão geral (GDD resumido)
 
+> **Documento mãe:** para a visão completa do jogo — mundo, história, progressão, sistemas,
+> bestiário, grimório de jutsus e estado atual — ver [`docs/00-biblia-do-jogo.md`](00-biblia-do-jogo.md).
+
 ## Pitch
 Um MMORPG 2D onde você cria um ninja, escolhe uma vila, e evolui caçando monstros,
 aprendendo jutsus, subindo skills e equipando itens. A sensação alvo é a do

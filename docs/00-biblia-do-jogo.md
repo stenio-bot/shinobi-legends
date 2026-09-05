@@ -1,0 +1,929 @@
+# A Bíblia de Shinobi Legends
+
+*Documento mãe do jogo — mundo, história, progressão, sistemas e estado atual, tudo num só lugar.
+Escrito para ser lido por qualquer pessoa do projeto: o dono, um artista, um dev novo, um jogador
+beta. Cada seção cita o(s) arquivo(s) de onde os números e fatos vêm; onde a lore ainda era fina,
+este documento escreve conteúdo novo — marcado **(novo)** — e o mesmo texto foi replicado em
+`docs/lore/mundo.md` para não existirem duas versões da mesma lenda.*
+
+*Última revisão: 2026-09-05. Fontes principais: `CLAUDE.md`, `README.md`, `docs/00-visao-geral.md`,
+`docs/01-roadmap.md`, `docs/02-arquitetura.md`, `docs/03-decisoes-tecnicas.md`, `docs/04-setup-ot.md`,
+`docs/lore/*.md`, `docs/sistemas/*.md`, `docs/qa/*.md`, `docs/backlog-sprites.md`, e todo `data/*.json`.*
+
+## Índice
+
+1. [Visão](#1-visão)
+2. [História do mundo](#2-história-do-mundo)
+3. [O jogador](#3-o-jogador)
+4. [Jornada do jogador](#4-jornada-do-jogador)
+5. [Sistemas](#5-sistemas)
+6. [Bestiário](#6-bestiário)
+7. [Grimório de jutsus](#7-grimório-de-jutsus)
+8. [Personagens e NPCs](#8-personagens-e-npcs)
+9. [Direção de arte e som](#9-direção-de-arte-e-som)
+10. [Tecnologia](#10-tecnologia)
+11. [Estado atual e roadmap](#11-estado-atual-e-roadmap)
+12. [Glossário](#12-glossário)
+13. [Inconsistências encontradas](#13-inconsistências-encontradas)
+
+---
+
+## 1. Visão
+
+*Fonte: `docs/00-visao-geral.md`, `CLAUDE.md`, `README.md`.*
+
+**Shinobi Legends** é um MMORPG 2D top-down no estilo **Tibia clássico** — grid de 32px, sem
+diagonal livre, sem física — ambientado num mundo shinobi original **inspirado** no universo
+Naruto (nenhum nome, sprite ou termo registrado do anime aparece no jogo; ver ADR-002 na seção
+9). O jogador cria um ninja, escolhe uma vila (que hoje funciona como vocação/cidade natal) e um
+personagem com identidade própria, e evolui **caçando monstros**: cada caçada dá XP, sobe skills
+por uso, dropa itens e ryo, e o jutsu certo na hora certa é o que faz a diferença entre uma matança
+rápida e uma corrida até a poção de vida.
+
+### Pilares de design
+1. **Grind com propósito** — nenhuma caçada é vazia: XP, skill e chance de drop andam sempre
+   juntos, e a curva de horas (seção 4) foi desenhada nível a nível, não por uma fórmula cega.
+2. **Identidade de build** — vila (cidade/skill bônus) + personagem (4 jutsus pessoais fixos) +
+   elemento (4 jutsus de kit, escolha livre) tornam cada ninja mecanicamente diferente sem exigir
+   uma árvore de talentos.
+3. **Jutsus são o show** — cada um dos 54 jutsus tem efeito visual próprio (seção 7); soltar o
+   jutsu certo precisa ser o momento mais gostoso do combate, não um número saindo da tela.
+4. **PvM primeiro** — o jogo inteiro (mapa, missões, tarefas, exames de rank) foi construído para
+   jogador-vs-monstro. PvP, clãs e mercado entre jogadores estão no roadmap (Marco 5), não no MVP.
+
+### Público e plataforma
+O público-alvo é quem já jogou (ou queria ter jogado) **Narutibia/NTO Ultimate** e sente falta da
+mistura "grind satisfatório de Open Tibia + fantasia ninja". É um jogo de **centenas de horas**:
+a tabela da seção 4 mira ~1000 horas de conteúdo do nível 1 ao 100, concentradas de propósito nos
+últimos 20 níveis (o "grind de nível alto" que define a experiência Tibia). Plataforma: cliente
+**OTClient Redemption** (C++20, compila para macOS/Windows/Linux a partir do código-fonte; suporte
+a Android/web existe no upstream mas não foi testado neste projeto) conversando com um servidor
+**The Forgotten Server 1.4.2** — ou seja, multiplayer real desde o primeiro login, mesmo que hoje
+só um jogador de cada vez tenha sido testado de verdade (seção 11).
+
+### O que este jogo NÃO é
+- **Não é** um jogo licenciado da franquia Naruto — é universo próprio, "inspirado em" (ADR-002).
+- **Não é** PvP-first: não há guerra de clã, arena ranqueada nem mercado entre jogadores hoje.
+- **Não é** uma MMO com loja/cash-shop: os módulos de loja, mercado, prey, wheel, forge e imbuing
+  do OTClient/TFS foram todos desativados (seção 9 e `docs/04-setup-ot.md`).
+- **Não é** turn-based nem tático: combate em tempo real, ataque automático no alvo + jutsus
+  ativos via hotbar.
+- **Não tem** (ainda) crafting complexo, casas compráveis, party ou clã — tudo isso é roadmap
+  (Marco 5), não uma omissão silenciosa.
+
+---
+
+## 2. História do mundo
+
+*Fontes: `docs/lore/mundo.md`, `docs/lore/pesquisa-naruto.md`, `docs/lore/progressao.md`. Os
+trechos de cosmologia e da Grande Guerra abaixo são conteúdo novo desta missão — marcados
+**(novo)** — e foram replicados em `docs/lore/mundo.md` (nova seção "0. As origens") para que
+exista uma única versão do mito.*
+
+### As origens **(novo)**
+
+Antes das vilas, o mundo era só terra crua e mar sem nome — até que a primeira faísca de chakra
+nasceu do encontro entre a vontade viva de um punhado de pessoas e a força bruta dos quatro
+elementos primordiais: fogo, água, terra e vento. O raio veio depois, filho do choque entre os
+quatro, e por isso ainda hoje é tratado como o elemento "mais jovem" nas lendas de fundação — a
+única afinidade que nenhuma vila reivindica como a sua desde o princípio. Quem primeiro aprendeu a
+dobrar essa força ao próprio corpo virou lenda antes de virar história: os "primeiros shinobi",
+sem vila, sem bandana, sem rank, ensinando uns aos outros por pura necessidade de sobreviver a
+bestas que hoje só existem enfraquecidas nos arredores de cada vila — os ancestrais dos lobos,
+cobras e sapos que um Genin caça na primeira semana de jogo.
+
+Vilas nasceram quando essas famílias de praticantes pararam de vagar e escolheram terra para
+chamar de sua. A **Vila da Folha** se fixou onde a floresta era mais viva e o Katon mais fácil de
+dominar. A **Vila da Névoa** cresceu onde a água nunca faltava, dona do Suiton. A **Vila da
+Nuvem** se ergueu no alto, onde a tempestade quase nunca para, e reivindicou o Raiton como seu. A
+**Vila da Areia**, na fronteira entre o deserto e a rocha, nunca escolheu um elemento só — dividiu-se
+entre Fuuton (o corte do vento) e Doton (o peso da rocha), e por isso hoje é a única vila cuja
+skill bônus é defensiva, não ofensiva (seção 3). Por gerações as quatro cresceram em paz relativa
+— até a Grande Guerra.
+
+### A Grande Guerra e o silêncio que está acabando **(novo)**
+
+Ninguém vivo hoje viveu a Grande Guerra, mas todo mundo — cada Genin que entra na Academia —
+carrega o que ela deixou. Foi nela que o sistema de ranks (Genin → Chunin → Jonin → Kage, com o
+ANBU agindo como corpo de elite direto sob o Kage, fora da hierarquia numerada normal) deixou de
+ser uma escala temporária de tempos de guerra e virou a estrutura permanente de qualquer vila em
+paz: nenhuma vila desmobiliza um exército que pode precisar de novo. E foi nela, nas cinzas de
+esquadrões inteiros dados como extintos ou que simplesmente desertaram, que um punhado de
+sobreviventes — cada um carregando um poder que uma vila inteira temeu enfrentar uma segunda vez —
+se organizou sob bandeira própria: nuvens vermelhas sobre capas pretas. Perderam a guerra, ou
+pareceram perder; passaram uma geração inteira em silêncio, recrutando aos poucos os desertores
+que toda vila grande acaba produzindo (bandidos de estrada, mercenários, ninjas renegados — o
+"elenco genérico" que povoa as seis regiões do jogo).
+
+É esse silêncio que está acabando agora — no exato momento em que o jogador nasce como Genin. A
+**Organização Nuvem Vermelha** é a ameaça atual: não um exército às portas da vila, mas uma sombra
+que já se infiltrou em quatro lugares diferentes do mapa antes mesmo de o jogador saber que ela
+existe — o Chefe dos Bandidos na própria Floresta da Vila (sem saber, um eco pequeno demais do que
+está por vir), o Espadachim da Névoa contratado por uma guilda rival na Costa das Marés, um gênio
+desertor escondido nas Ruínas a caminho de recrutas maiores, e uma dupla amaldiçoada guardando a
+Montanha do Trovão em nome do mesmo pacto antigo. O covil de verdade só aparece no fim: quatro
+guardiões, cada um um espectro de um poder que uma vila enfrentou uma vez e nunca mais quis
+enfrentar de novo.
+
+### Os seis arcos, na ordem em que o jogador os vive
+
+*(síntese literária de `docs/lore/mundo.md`, que continua sendo a fonte de detalhe — bestiário,
+NPCs e coordenadas de mapa completos nas seções 6 e 8 deste documento.)*
+
+**Floresta da Vila (Genin, nível 1–10).** A floresta que cerca a vila é o primeiro teste de
+qualquer genin recém-formado: perto o bastante para uma equipe Jonin resgatar quem se meter em
+apuros, perigosa o bastante para separar quem está pronto do resto do mundo. Lobos, cobras e uma
+trilha comercial infestada de bandidos comuns dão o primeiro sabor de combate real — nada aqui é
+obra de vilão lendário, só gente e bicho tentando sobreviver perto demais da vila. O Chefe dos
+Bandidos, boss da região, não é ninja renomado nenhum: é só o bandido mais experiente da estrada,
+armado e com squad — mas é o primeiro a cair para o jogador, e por isso importa.
+
+**Costa das Marés (Genin, nível 12–19).** Inspirada no arco do País das Ondas: uma vila de
+pescadores e a ponte que a liga ao continente vivem sob a sombra de uma guilda mercante rival, que
+contratou um espadachim renegado para sabotar a obra. Ele não trabalha sozinho — um aprendiz
+mascarado, ligado a ele por uma dívida mais funda que dinheiro, aparece sempre que o mestre está
+perto de cair, e luta como se a própria vida dependesse disso, porque de fato depende. Antes da
+ponte, mercenários de baixo escalão e batedores da névoa cobram o preço de sempre: gente comum do
+lado errado da lei. Vencer o Espadachim (e por consequência o Aprendiz) é um dos dois requisitos
+do Exame Jonin — mas só conta de verdade quando o jogador já é Chunin e volta aqui como prova.
+
+**Floresta da Morte (Genin→Chunin, nível 10–25).** A mesma floresta abriga o campo de provas mais
+temido da região: gente entra em duplas ou trios e só sai — supostamente — depois de provar que
+sobrevive sem apoio da vila. Sanguessugas e sapos gigantes são só o alarme; ninjas renegados
+fizeram da mata um esconderijo permanente; e no fundo, perto de um santuário abandonado, mora uma
+criatura que já foi humana e decidiu que não precisa mais fingir — a Serpente Branca, o boss mais
+"canônico" do jogo, um ninja renegado de pele pálida que abandona a forma humana quando encurralado.
+É aqui, e só aqui, que roda o Exame Chunin inteiro: prova teórica com a Instrutora Ibuki, os dois
+pergaminhos (Céu e Terra, guardados pelo Sapo Ancião e pela Serpente Branca) e o torneio contra três
+rivais de vilas rivais.
+
+**Ruínas do Clã Marionetista (Chunin, nível 25–50).** Um clã extinto que servia à Vila da Areia
+dominava a arte de lutar através de bonecos de guerra. As ruínas do seu templo continuam de pé, os
+bonecos ainda "vivos" pela última ordem que receberam, guardadas por sentinelas de pedra e por
+espíritos que morreram defendendo o lugar e nunca aceitaram a derrota. Um xamã mantém os selos de
+maldição ativos há gerações; e recentemente um gênio desertor, fugindo da própria vila atrás de
+poder proibido, escolheu estas ruínas como esconderijo antes de seguir adiante — o mesmo enredo, em
+miniatura, da perseguição que toda vila lança atrás dos seus próprios desertores de elite. O
+Marionetista das Ruínas, boss principal, é o segundo requisito do Exame Jonin.
+
+**Montanha do Trovão (Jonin, nível 50–80).** A trilha que sobe a montanha é onde jonins provam que
+aguentam o próprio peso: águias territoriais, onis que descem do gelo, monges que treinam a vida
+toda no penhasco e serpentes que vivem nas fendas de magma. No topo, dois seres amaldiçoados por
+um pacto antigo dividem a montanha entre si — um não sabe morrer, o outro cobra um preço por cada
+vida que consome — a mesma fantasia da dupla imortal que a Organização Nuvem Vermelha já lançou
+contra vilas inteiras durante a Grande Guerra. Ninguém sabe se os dois nasceram assim ou se o
+pacto os transformou; o que se sabe é que só caem juntos — matar um sem enfrentar o outro é perder
+tempo, o sobrevivente simplesmente absorve a fúria do parceiro morto. Derrotar os dois é a metade
+"de campo" do Exame Anbu.
+
+**Covil da Organização Nuvem Vermelha (Anbu/Kage, nível 80–100).** No topo da cadeia de poder do
+mundo shinobi está a organização que a Grande Guerra não conseguiu apagar: renegados de capa preta
+e nuvens vermelhas, colecionando portadores de poder para um plano que nenhum Kage sozinho
+consegue deter. Só quem prova ser Anbu recebe autorização para entrar. Quatro figuras guardam os
+corredores, cada uma um espectro de um poder que a vila enfrentou uma vez e nunca mais quis
+enfrentar de novo: o olho que prende quem olha demais, o mascarado que puxa os fios de todos os
+outros eventos de longe, o portador de olhos em anel que multiplica a própria vontade em vários
+corpos, e o ancestral que fundou a própria ideia da organização. Ninguém que entra aqui como
+Chunin sai vivo — este é o teste final antes do posto de Kage. Derrotar os dois primeiros fecha o
+Exame Anbu; derrotar os dois últimos fecha o Exame Kage e encerra a progressão de rank do jogo
+hoje (o posto político de Kage de verdade fica para o pós-jogo, Marco 5).
+
+### Mentores e figuras principais
+
+Os poucos looktypes de personagem principal (900–926, ver seção 9) que aparecem fora dos 9
+personagens jogáveis são reservados a **mentores** e aos **bosses de arco de verdade** — nunca a
+um monstro comum. Mestre Hayato (mestre de pergaminhos da Vila da Folha), Capitã Rin (dá as
+primeiras missões), Instrutora Ibuki (proctora do Exame Chunin) e Capitã Anbu Suzu (guia a prova
+final no Covil) são as quatro presenças humanas que acompanham o jogador do início ao fim — ver
+tabela completa na seção 8.
+
+---
+
+## 3. O jogador
+
+*Fontes: `data/villages.json`, `data/characters.json`, `data/element_sets.json`, `data/skills.json`,
+`data/ranks.json`, `data/progression.json`, `docs/sistemas/vilas-e-clas.md`,
+`docs/sistemas/combate-e-jutsus.md`, `docs/lore/progressao.md`.*
+
+### Vilas = vocações
+
+A vila é escolhida na criação e define cidade inicial, NPCs, elemento "de referência" e uma skill
+que sobe 20% mais rápido — mas **não filtra mais jutsu** (ver "4+4" abaixo).
+
+| Vila | Elemento de referência | Skill bônus (+20%) | Jutsu inicial (herdado, cosmético) |
+|---|---|---|---|
+| Vila da Folha | Katon | Taijutsu | Katon: Grande Bola de Fogo |
+| Vila da Névoa | Suiton | Ninjutsu | Suiton: Projétil de Água |
+| Vila da Nuvem | Raiton | Shuriken | Raiton: Agulha de Raio |
+| Vila da Areia | Fuuton/Doton | Defesa | Fuuton: Lâmina de Vento |
+
+A Areia é a única vila com bônus defensivo em vez de ofensivo, e a única que cobre dois elementos
+— no ciclo elemental (Katon > Fuuton > Raiton > Doton > Suiton > Katon), ela é forte contra Raiton
+(via Fuuton) e contra Suiton (via Doton), a vila mecanicamente mais flexível.
+
+### Personagens (9) e seus 4 jutsus pessoais
+
+Ao entrar no jogo, o jogador escolhe um **personagem** (identidade fixa, looktype 900–909) e um
+**elemento** (livre, não travado pela vila). Cada personagem tem exatamente 4 jutsus pessoais —
+taijutsu, armas, selos, visão — que não mudam com o elemento escolhido:
+
+| Personagem | Vila | Elemento padrão | Jutsus pessoais |
+|---|---|---|---|
+| Genin Laranja | Folha | Fuuton | Clone Sombrio, Kawarimi no Jutsu, Rasteira de Vento Leve, Vigor Teimoso |
+| Genin Uchiha | Folha | Katon | Foco Ocular, Agulhas Incendiárias, Contra-Ataque Calculado, Kawarimi no Jutsu |
+| Kunoichi Rosa | Folha | Suiton | Shousen: Palma Curativa, Punho Suave, Soco Monstruoso, Kawarimi no Jutsu |
+| Herdeira Hyuga | Névoa | Suiton | Palma Gentil, Fuuin: Selo de Contenção, Visão de Alcance Total, Palma Dupla |
+| Kunoichi das Armas | Névoa | Suiton | Agulhas Múltiplas, Lâmina de Chakra, Doku: Névoa Venenosa, Bunshin no Jutsu |
+| Ninja Verde | Nuvem | Raiton | Punho Suave, Chute Giratório, Soco da Juventude, Chute Ascendente |
+| Ninja Abelha | Nuvem | Raiton | Lâmina Relâmpago, Corte Duplo, Bainha Elétrica, Raio Selado |
+| Sábio Loiro | Areia | Fuuton | Kawarimi no Jutsu, Kunai Marcada, Salto do Selo, Explosão do Selo |
+| Sábio Cerimonial | Areia | Doton | Fuuin: Selo de Contenção, Barreira Protetora, Selo de Exorcismo, Círculo de Selos |
+
+`kawarimi`, `punho_suave` e `fuuin_contencao` aparecem em até 2 personagens cada — movimentos
+genéricos o bastante (substituição, golpe de chakra, selo de papel) para caber em identidades
+diferentes sem quebrar a fantasia de nenhuma delas.
+
+### 5 elementos e seus 4 jutsus (`data/element_sets.json`)
+
+Cada elemento tem um kit fixo de 4 jutsus na mesma ordem estrutural — **projétil básico → área/cone
+→ beam/linha forte → utilitário** — igual para qualquer personagem que o escolha:
+
+| Elemento | Projétil básico | Área/cone (ou controle rápido) | Beam/linha forte | Utilitário |
+|---|---|---|---|---|
+| Katon (Fogo) | Grande Bola de Fogo | Flores de Fênix | Dragão de Fogo | Anel de Chamas |
+| Suiton (Água) | Projétil de Água | Névoa Cortante | Dragão de Água | Prisão de Água |
+| Raiton (Raio) | Agulha de Raio | Corrente Estática | Lança do Relâmpago | Punho do Trovão |
+| Doton (Terra) | Bala de Lama | Estacas de Terra | Colapso do Terreno | Muralha de Pedra |
+| Fuuton (Vento) | Lâmina de Vento | Rajada Cortante | Tornado Cortante | Redemoinho Prisão |
+
+### O modelo 4+4 sem aprendizado
+
+Decisão de design central do jogo (substitui "aprender jutsu por level/vila"): ao escolher
+personagem + elemento, o jogador recebe **imediatamente os 8 jutsus, já no nível máximo** — sem
+cooldown de aprendizado, sem pergaminho, sem grind de desbloqueio. A progressão deixa de ser
+"aprender jutsu novo" e passa a ser **treino físico**: level e as 5 skills sobem a fórmula de dano
+dos mesmos 8 jutsus, nunca desbloqueiam um jutsu adicional. Pergaminhos e drops raros continuam
+existindo para os jutsus que ficaram **fora** do kit automático (ex.: `katon_sopro_brasas`,
+`suiton_vortice_devorador`) — bônus opcional, não parte do combo principal. Troca de elemento está
+fora do MVP (mesma regra de "troca de vila"); troca de personagem existe hoje como comando de GM
+(`!personagem`).
+
+### Ranks: Genin → Chunin → Jonin → Anbu → Kage
+
+*Fonte: `data/ranks.json`, `docs/lore/progressao.md`.* O rank é uma camada narrativa e de exame
+por cima do level — o level continua sendo a progressão numérica de sempre, o rank é o que exige
+que o jogador **prove** competência, não só grinde até o número certo.
+
+| Rank | Nível mínimo | Como se promove | Bônus de status | Áreas liberadas |
+|---|---|---|---|---|
+| Genin | 1 | rank inicial, sem exame | — | Floresta da Vila |
+| Chunin | 20 | Exame Chunin: prova teórica (quiz por palavra-chave) → 2 pergaminhos (matar Sapo Ancião e Serpente Branca) → torneio (3 rivais em sequência) | +30 HP, +15 Chakra | Floresta da Morte, Costa das Marés, Ruínas do Clã |
+| Jonin | 50 | Exame Jonin: vencer o Espadachim da Névoa (Costa) **e** o Marionetista das Ruínas — 2 quests independentes, sem ordem entre si | +80 HP, +40 Chakra, +5 defesa | Montanha do Trovão |
+| Anbu | 80 | Exame Anbu: vencer a Dupla Imortal da Montanha (Sócio Eterno + Oni Ancestral) **e** os 2 primeiros guardiões do Covil (Vigia Ilusório + Mascarado das Sombras) | +150 HP, +70 Chakra, +10 defesa | Covil da Nuvem Vermelha |
+| Kage | 100 | Exame Kage: vencer os 2 últimos guardiões do Covil (Portador dos Seis Caminhos + Ancestral da Nuvem Vermelha) | +300 HP, +70 Chakra, +20 defesa | — (fim da progressão de rank) |
+
+O gate de rank existe fisicamente no mapa (actionids 45001–45005 em tiles de entrada de região,
+ver seção 5) e é checado no servidor (`NarutoRanks.canEnter`) — um jogador sem o rank exigido é
+barrado com mensagem e teleportado de volta, testado in-game (`docs/sistemas/mapas.md`, "Mapa v3").
+
+### Skills (sobem com uso, não com pontos)
+
+*Fonte: `data/skills.json`.* Cinco skills, todas começam em **10** e vão até **150**: Taijutsu
+(dano físico melee), Shuriken (dano físico à distância), Ninjutsu (dano de jutsu), Genjutsu
+(duração/chance de efeitos de status) e Defesa (reduz dano recebido). Cada acerto relevante dá 1
+"tentativa"; pontos necessários para subir seguem `50 * 1.1^(skill - 10)` — a mesma curva usada
+para calibrar o magic level real (ver "Balanceamento" na seção 5). A skill bônus da vila sobe 20%
+mais rápido que as demais (`village_bonus_multiplier: 1.2`).
+
+### Chakra
+
+*Fonte: `data/progression.json`.* `Chakra máximo = 50 + level*10`. Regen passivo fixo (não escala
+com level) de ~0,6 chakra/s em qualquer vila. Pílulas de chakra (pequena/média/grande, ver seção
+5) são o lever real de combate para estender uma rotação de jutsus tier 2/3 numa luta longa.
+
+---
+
+## 4. Jornada do jogador
+
+*Fonte: `docs/sistemas/progressao-jogador.md` (traduz `data/progression.json` e
+`docs/sistemas/balanceamento-relatorio*.md` em guia prático). Curva Tibia-like de propósito: rápida
+no início, cada vez mais lenta perto do fim — a maior parte das ~1000 horas totais fica concentrada
+nos últimos 20 níveis, não distribuída igualmente pelos 100. As horas por bloco vêm de uma curva de
+eficiência de caça que cai com o nível (mais HP de monstro, bosses de cooldown longo, exames que
+exigem preparo) — o XP/h da tabela é resultado, não um valor arbitrado à parte.*
+
+| Nível | Onde caçar | XP/h esperado | Horas do bloco | Horas acumuladas | Missões / tarefas | Equipamento a ter |
+|---|---|---|---|---|---|---|
+| 1–5 | Floresta da Vila: Lobo, Cervo (opcional) | ~536 | 2,8 h | 2,8 h | `q_wolves_1` · `q_forest_snakes` · `task_wolf_1` | Kit de genin: bandana, colete, calça, sandálias, kunai/shuriken de ferro, amuleto da Academia |
+| 6–10 | Floresta da Vila: Bandido, Bandido Arqueiro | ~1290 | 3,1 h | 5,9 h | `q_bandits_1` · `q_bandit_archers` · `q_forest_supplies` · `task_bandit_1/2` | Tanto de aço (8), luvas de taijutsu (10) |
+| 11–15 | Floresta da Morte: Sanguessuga, Sapo Gigante · Costa: Mercenário da Ponte | ~1757 | 3,7 h | 9,6 h | `q_leeches` · `q_coastal_mercenaries` · `q_coastal_supplies` · `task_leech_1` | Set do Batedor completo (capuz, calça, colete, botas, senbon, bracelete) |
+| 16–20 | Costa: Batedor da Névoa, Guardião da Neblina · Floresta da Morte: Ninja Renegado, Serpente Menor | ~1837 | 4,9 h | 14,5 h | `q_coastal_scouts/guardians` · `q_lesser_serpents` · início do **Exame Chunin** | Preparar troca pro set Chunin; poções médias no cinto |
+| 21–25 | Floresta da Morte: rivais do exame, Sapo Ancião, Serpente Branca | ~1716 | 6,7 h | 21,2 h | `q_forest_death_collect` · `q_elder_toad_hunt` · `q_rogues` · `q_white_serpent` · **fecha o Exame Chunin** | Set Chunin completo: colete, bandana, calça, sandália, katana Ronin, fuuma shuriken, anel de chakra |
+| 26–30 | Ruínas: Marionete de Combate | ~1522 | 9,2 h | 30,4 h | `q_ruins_intro` · `q_ruins_puppets` · `task_ruin_puppet_1/2` | Set das Ruínas completo (máscara, robe, greaves, botas, kodachi/chain kunai, amuleto do selo) |
+| 31–35 | Ruínas: Sentinela de Pedra | ~1320 | 12,5 h | 42,9 h | `q_ruins_sentinels` · `task_stone_sentinel_1` | Puppet Blade; anel da Vontade de Pedra |
+| 36–40 | Ruínas: Guerreiro Espectral | ~1145 | 16,6 h | 59,5 h | `q_ruins_curse_lore` (quiz) · `task_spectral_warrior_1` | Começa a droppar o set "Rastreador Sombrio" (L40) |
+| 41–45 | Ruínas: Xamã da Maldição | ~991 | 21,7 h | 81,2 h | `q_ruins_shamans` · `task_curse_shaman_1` | Set Rastreador Sombrio completo |
+| 46–50 | Ruínas: Desertor de Elite, Marionetista das Ruínas — fecha metade do **Exame Jonin** | ~860 | 27,9 h | 109,1 h | `q_ruins_deserter` · `q_ruins_boss` · `task_elite_deserter_1` · `task_boss_puppeteer_1` | Set de Jonin (máscara Anbu, colete, calça, botas, tanto/senbon, bracelete) |
+| 51–55 | Montanha: Águia do Trovão | ~755 | 35,1 h | 144,2 h | `q_mountain_eagles` · `q_mountain_relics` · `task_thunder_eagle_1` | Fechar set de Jonin; guardar ryo pro set stormcaller (L60) |
+| 56–60 | Montanha: Oni da Geleira | ~667 | 43,5 h | 187,7 h | `q_mountain_oni` · `task_glacier_oni_1` | Set stormcaller completo |
+| 61–65 | Montanha: Oni da Geleira (tarefa tier 2), rotação | ~593 | 53,1 h | 240,8 h | `task_glacier_oni_2` | Manter stormcaller; anel ancestral se já caiu |
+| 66–70 | Montanha: Monge da Tempestade, O Sócio Eterno | ~530 | 64,1 h | 304,9 h | `q_mountain_serpents` (início) · `q_mountain_lore` (quiz) · `q_mountain_curse_partner` · `task_storm_monk_1` | Começa a droppar "Caçador de Onis" (L70); kanabo de oni |
+| 71–75 | Montanha: Serpente de Magma | ~478 | 76,4 h | 381,3 h | `q_mountain_serpents` · `task_magma_serpent_1` | Set Caçador de Onis completo |
+| 76–80 | Montanha: Oni Ancestral — fecha metade "de campo" do **Exame Anbu** | ~433 | 90,1 h | 471,4 h | `q_mountain_boss` · `task_boss_ancestral_oni_1` | Oni Fang Blade; começa a droppar "Anbu Negro" (L80) |
+| 81–85 | Covil: Clone Branco, O Vigia Ilusório | ~394 | 105,4 h | 576,8 h | `q_lair_intro` · `q_lair_1_illusive_eye` | Set Anbu Negro completo |
+| 86–90 | Covil: Ninja Elite da Aurora, O Mascarado das Sombras | ~360 | 122,1 h | 698,9 h | `q_lair_guards` · `q_lair_2_masked_puppeteer` | Começa a droppar "Aurora Carmesim" (L90) |
+| 91–95 | Covil: O Portador dos Seis Caminhos | ~331 | 140,5 h | 839,4 h | `q_lair_3_rings_bearer` · `task_boss_rings_bearer_1` | Set Aurora Carmesim completo |
+| 96–100 | Covil: O Ancestral da Nuvem Vermelha — fecha o **Exame Kage** | ~305 | 160,6 h | **1000,0 h** | `q_lair_4_crimson_ancestor` · `task_boss_crimson_ancestor_1/2/3` | Set do Kage (fim de progressão): chapéu, manto, calça, sandálias, lâmina/leque, anel do Kage |
+
+### Leitura da curva
+
+- **Blocos 1–4 (nível 1–20, ~14,5 h acumuladas):** XP/h **sobe** (536 → 1837) — o jogador ganha
+  eficiência de combate (jutsus tier 1, primeiro equipamento) mais rápido do que o custo de XP por
+  nível sobe. É a única parte do jogo em que XP/h cresce; funciona como rampa de aprendizado.
+- **Blocos 5–10 (nível 21–50, +88 h no meio do jogo):** XP/h cai de forma constante (1716 → 860)
+  conforme o HP de monstro cresce mais rápido que o dano do jogador recém-equipado.
+- **Blocos 11–16 (nível 51–80, +327 h):** a Montanha do Trovão é a fase mais longa em horas
+  absolutas — monstros tanque/ranged, bosses de cooldown longo (7200s) e o próprio requisito
+  narrativo do Exame Anbu desaceleram XP/h de 755 para 433.
+- **Blocos 17–20 (nível 81–100, +423 h — 42% do jogo inteiro nos últimos 20 níveis):** o Covil da
+  Nuvem Vermelha é deliberadamente a parede final. Só 2 monstros comuns e 4 bosses de respawn
+  10800s sustentam a região inteira — o análogo direto do "grind de nível 100+" de Tibia.
+
+A fórmula de XP em si (`50*level² + 50*level`) **não foi alterada** para produzir essa curva — o
+ajuste inteiro está nas horas-por-bloco esperadas (eficiência de caça), não no expoente da fórmula.
+
+---
+
+## 5. Sistemas
+
+*Fontes: `docs/sistemas/combate-e-jutsus.md`, `docs/sistemas/balanceamento.md`,
+`docs/sistemas/balanceamento-relatorio-v3.md`, `docs/sistemas/monstros-e-pvm.md`,
+`docs/sistemas/itens-e-equipamentos.md`, `docs/sistemas/economia.md`,
+`docs/sistemas/progressao-servidor.md`, `docs/sistemas/mapas.md`,
+`docs/sistemas/personagem-e-progressao.md`, `docs/sistemas/vilas-e-clas.md`.*
+
+### Combate (fórmulas)
+
+O fluxo de um ataque: o jogador seleciona alvo ou mira um jutsu → o sistema checa alcance, linha de
+visão, cooldown e chakra → calcula e aplica o dano → dispara efeitos de status (queimadura,
+lentidão, etc.). Em prosa, as fórmulas de referência do protótipo (ainda a base conceitual das
+fórmulas reais do TFS) são:
+
+- **Dano físico** = (ataque da arma + metade da skill relevante) × um fator aleatório entre 0,8 e
+  1,0, menos metade da defesa do alvo. Crítico: 5% de chance, 1,5× dano.
+- **Dano de jutsu** = (dano base do jutsu + level × escala de nível + skill de Ninjutsu × escala de
+  skill) × multiplicador elemental × fator aleatório entre 0,9 e 1,1.
+- **Defesa do alvo** = soma da defesa dos itens equipados + skill de Defesa × 0,3.
+- Dano mínimo é sempre 1.
+
+**Elementos** seguem um ciclo circular de vantagem: Katon > Fuuton > Raiton > Doton > Suiton >
+Katon (vantagem ×1,5, desvantagem ×0,75, neutro ×1,0).
+
+**HP e XP de monstro** seguem curvas próprias calibradas contra os monstros que já existiam:
+`hp_base(L) = 20 * L * (1 + (L-20)/100)`, multiplicado por um fator de papel (normal 1,0 · tanque
+1,4 · rápido 0,85–0,9 · ranged 0,75–0,8 · boss 7–8×). O XP usa um `ratio` que **cai** com o nível
+(0,40–0,70 em L1–20 até 0,60 em L66–80, boss sempre 1,2) para manter o alvo de 4–7 kills por nível
+mesmo com o HP crescendo mais rápido que a XP necessária.
+
+**Balanceamento entre taijutsu (arma) e ninjutsu (jutsu)**, medido por simulação Monte Carlo
+(`tools/balance/sim.py`) contra 6 bosses de referência (um por região): depois de três rodadas de
+calibração, 5 dos 6 bosses ficam dentro da meta de paridade (±15%/+10%) entre um build de arma pura
+e um de jutsu puro forçado; o único fora da meta (boss L19, Espadachim da Névoa) tem uma causa
+identificada (platô de tier de arma em L15–20) e documentada como pendência, não escondida. Os 5
+elementos ficam entre si dentro de **±2,4%** de dano em L50–100 — bem mais apertado que a meta de
+±10% pedida. Uma tensão real e documentada permanece sem solução fechada: o mesmo número de dano
+que faz um jutsu tier 3 competir contra um boss de milhares de HP também consegue **apagar um pull
+inteiro de monstros de HP baixo** num único cast (ex.: Águia do Trovão em grupo, +442% acima da
+meta de +30–60%) — ver `docs/sistemas/balanceamento-relatorio-v3.md` §6 e §10 para as opções de
+correção consideradas e por que nenhuma foi aplicada sem uma decisão de design explícita.
+
+### Jutsus: papéis
+
+Cada elemento segue a mesma estrutura de 4 papéis (ver seção 3 e tabela completa na seção 7):
+
+- **Burst à distância** (projétil básico, tier 1) — o pão-com-manteiga de qualquer build.
+- **Área/controle** — cone ou cruz, geralmente carrega um efeito de status (lentidão, paralisia).
+- **Burst forte em linha** (beam, tier 2/3) — o "carro-chefe" de dano do elemento em nível alto.
+- **Utilidade** (defensivo, cura ou controle single-target) — o que sustenta uma luta longa.
+
+### Monstros: comportamento e bosses
+
+Quatro categorias de `behavior`: **agressivo** (persegue e ataca sozinho), **passivo** (só briga se
+atacado — hoje só o Cervo), **covarde** (foge abaixo de 20% HP) e **à distância** (mantém alcance,
+atira). Bosses têm `phases`: gatilhos por % de HP que disparam fala, invocação de reforços ou
+transformação visual (`looktype`). O TFS 1.4.2 não permite mudar o dano dos ataques de um monstro
+em tempo real, então a "fase de fúria" é aproximada por cura percentual + aumento de velocidade
+(mais golpes por minuto), documentado como limitação técnica conhecida, não escondida. Exemplo
+completo: a **Serpente Branca** (L25, 4600 HP) tem 3 fases — forma humana (ataque com veneno),
+transformação em serpente 2×2 a 60% de vida (invoca 3 Cobras da Floresta) e fúria a 25% (invoca 2
+Serpentes Menores, +90% de velocidade efetiva).
+
+### Itens, tiers, loot e economia
+
+*Fonte: `docs/sistemas/itens-e-equipamentos.md`, `docs/sistemas/economia.md`.* 173 itens em
+`data/items/*.json`: armas (melee/ranged), armaduras (head/body/legs/feet), acessórios, consumíveis,
+pergaminhos (ensinam jutsus fora do kit automático), materiais e a moeda **ryo**. Cinco raridades
+(comum/incomum/raro/épico/lendário). Mochila base de 20 slots + peso (`100 + level*5` de
+capacidade). Cada set de armadura é dimensionado por faixa de nível (L1, 10, 20, 30... até 100),
+acompanhando a jornada da seção 4. Economia: ryo cai de monstro (~N×3 em média) e é ganho vendendo
+loot a NPC (que compra por ~40% do preço de venda); pergaminhos custam de ~500 (tier 1) a
+20.000–45.000 (tier 3, variando por elemento/level).
+
+### Tarefas, diárias e conquistas
+
+*Fonte: `docs/sistemas/progressao-servidor.md`, `data/tasks.json`, `data/dailies.json`,
+`data/achievements.json`.* **Tarefas** (`data/tasks.json`, 114 entradas — 3 tiers "Iniciante/
+Veterana/Lendária" por monstro): repetíveis, com cooldown, dadas por um "Mestre de Tarefas" dedicado
+por região; XP de recompensa é expresso como "kills equivalentes" escalados pelo level de quem
+entrega (`NarutoRewards.scaledXp`), não um valor absoluto. **Diárias** (`data/dailies.json`, 60
+entradas, faixas de 5 em 5 níveis): 3 sorteadas por dia por jogador, auto-aceitas, entregues de uma
+vez pelo comando `!diaria`. **Conquistas** (`data/achievements.json`, 55 entradas, 9 categorias:
+kill/boss/quest/exam/exploration/collection/task/daily/level) dão título e ryo — ex.: "Viajante de
+Floresta da Vila" por só visitar a região pela primeira vez.
+
+### NPCs e lojas
+
+21 NPCs em `data/npcs/*.json`, um mercador + um dador de missões por região, mais os NPCs novos de
+tarefa/exame (ver tabela completa na seção 8). Loja funciona por palavra-chave (`{trade}`, o padrão
+do TFS): cada NPC vende uma lista fixa de itens e compra de volta só certos `types` (material/arma/
+armadura), nunca itens raros — regra anti-inflação simples (mercado entre jogadores, com taxa,
+segue no roadmap).
+
+### Mapa: 6 regiões, gates de rank, coordenadas de entrada
+
+*Fonte: `docs/sistemas/mapas.md`.* Um único OTBM (`server/generated/world/valley.otbm`, cabeçalho
+2048×2048, conteúdo real no andar 7) hospeda as 6 regiões — 4 no mundo aberto original (x
+1000–1199/y 1000–1119) e 2 construídas depois em `build_regions.py` (x≥1200 ou y≥1120):
+
+| Região | Nível | Coordenadas (x, y, 7) | Gate de rank (actionid) |
+|---|---|---|---|
+| Floresta da Vila | 1–10 | zona 0,0,50,40 dentro do mundo aberto; templo em 1029,1042 | — (rank inicial) |
+| Floresta da Morte | 10–25 | zona 50,0,46,40 | — (Exame Chunin roda dentro dela; gatear a entrada criaria paradoxo) |
+| Costa das Marés | 12–19 | x 1000–1049, y 1120–1169 | Chunin (45002), em (1028–1030, 1120) |
+| Ruínas do Clã Marionetista | 25–50 | x 1200–1249, y 1000–1049 | Chunin (45002), em (1200, 1020/1021) |
+| Montanha do Trovão | 50–80 | x 1200–1249, y 1060–1109 | Jonin (45003), em (1224–1226, 1060) |
+| Covil da Nuvem Vermelha | 80–100 | x 1400–1449, y 1000–1049 (masmorra isolada) | Anbu (45004), no portal gated no topo da Montanha (1225,1103) |
+
+O gate é um `MoveEvent` genérico (`rank_gate.lua`) que lê o actionid do **tile** (não de um item) e
+barra quem não tem o rank mínimo com mensagem + teleporte de volta — testado in-game com conta sem
+rank (barrada) e conta GM (atravessa livre, por design).
+
+### Morte e penalidades
+
+*Fonte: `data/progression.json`.* Ao morrer: perde 10% da XP do nível atual (nunca cai de nível) e
+dropa cada item não equipado da mochila com 30% de chance independente — os itens ficam no próprio
+corpo por 60 segundos (estilo Tibia clássico), não somem.
+
+### Social (hoje: nada)
+
+Não existe party, clã, chat de clã ou mercado entre jogadores no jogo hoje — tudo isso está
+desenhado (clã a partir de level 30, custo em ryo, até 50 membros, XP bônus 5% em party do mesmo
+clã) mas depende do Marco 4/5 do roadmap (seção 11). O jogo de hoje é **PvM solo**, ainda que
+tecnicamente multiplayer (o servidor TFS aceita várias conexões desde o primeiro dia).
+
+---
+
+## 6. Bestiário
+
+*Fonte: `data/monsters/*.json` (números), `docs/lore/mundo.md` (região/comportamento narrativo),
+`docs/backlog-sprites.md` (status de sprite). 38 monstros no total — 6 regiões, cada uma com
+monstros comuns + 1 ou mais bosses.*
+
+| Nome | Região | Nível | HP | XP | Elemento | Comportamento | Loot notável | Sprite (status) |
+|---|---|---|---|---|---|---|---|---|
+| Lobo (`wolf`) | Floresta da Vila | 2 | 60 | 25 | none | agressivo | Pele de lobo, onigiri, amuleto da Academia | procedural (looktype 940, 4 direções reais) |
+| Bandido (`bandit`) | Floresta da Vila | 5 | 120 | 60 | none | agressivo | Emblema de bandido, kunai de ferro, poção pequena | variante de paleta (looktype 956) |
+| Cobra da Floresta (`forest_snake`) | Floresta da Vila | 4 | 70 | 45 | doton | covarde (foge) | Presa de cobra | procedural (looktype 943, compartilhado c/ máscara de cor) |
+| Bandido Arqueiro (`bandit_archer`) | Floresta da Vila | 7 | 100 | 80 | none | à distância | Emblema de bandido, shuriken de ferro | variante de paleta (looktype 946) |
+| Chefe dos Bandidos (`boss_bandit_chief`) | Floresta da Vila | 12 | 1500 | 1500 | katon | **BOSS** — agressivo | Katana Ronin, pergaminho de Shousen, luvas de taijutsu | variante de paleta (looktype 957, P1: falta pose de boss) |
+| Cervo (`forest_deer`) | Floresta da Vila | 2 | 30 | 5 | none | passivo | Onigiri | procedural (looktype 941, 4 direções reais) |
+| Sanguessuga Gigante (`leech`) | Floresta da Morte | 10 | 180 | 120 | suiton | agressivo | Glândula de sanguessuga, antídoto | procedural (looktype 945, 4 direções reais) |
+| Sapo Gigante (`giant_toad`) | Floresta da Morte | 13 | 260 | 180 | suiton | agressivo | Pele de sapo, óleo de sapo, pílula de chakra média | procedural (looktype 944, 4 direções reais) |
+| Ninja Renegado (`rogue_ninja`) | Floresta da Morte | 18 | 340 | 300 | none | à distância | Bandana de renegado, katana Ronin, set Chuunin | variante de paleta (looktype 950) |
+| Serpente Menor (`lesser_serpent`) | Floresta da Morte | 18 | 340 | 260 | doton | agressivo | Presa de cobra, antídoto | procedural (looktype 943, compartilhado c/ máscara de cor) |
+| Sapo Ancião (`boss_elder_toad`) | Floresta da Morte | 25 | 4000 | 5000 | suiton | **BOSS** — agressivo | Anel de chakra, fuuma shuriken, pergaminho Céu, Suiryuudan | importado lateral (looktype 60, 2×2, P1: falta pose de boss) |
+| Serpente Branca (`boss_white_serpent`) | Floresta da Morte | 25 | 4600 | 5600 | doton | **BOSS** — agressivo | Presa da Serpente Branca (100%), pergaminho de Doku Kiri, pergaminho Terra | **MUGEN (looktype 916, Sasuke Rinnegan)** — uso intencional (boss de arco), mas viola ADR-002 |
+| Rival do Exame — Pedra (`exam_rival_stone`) | Floresta da Morte | 20 | 420 | 260 | doton | agressivo | Poção pequena | importado lateral (looktype 128, P2) |
+| Rival do Exame — Som (`exam_rival_sound`) | Floresta da Morte | 20 | 360 | 260 | raiton | à distância | Poção pequena | importado lateral (looktype 129, P2) |
+| Rival do Exame — Névoa (`exam_rival_mist`) | Floresta da Morte | 20 | 380 | 260 | suiton | agressivo | Poção pequena | importado lateral (looktype 130, P2) |
+| Mercenário da Ponte (`mercenary_bridge`) | Costa das Marés | 12 | 230 | 140 | none | agressivo | Emblema de bandido, poção pequena, bracelete do viajante | variante de paleta (looktype 947) |
+| Batedor da Névoa (`mist_scout`) | Costa das Marés | 14 | 260 | 170 | suiton | à distância | Shuriken de ferro, senbon de ferro | variante de paleta (looktype 949) |
+| Guardião da Neblina (`mist_guardian`) | Costa das Marés | 16 | 420 | 230 | suiton | agressivo | Poção pequena, capuz do batedor | variante de paleta (looktype 951) |
+| Aprendiz Mascarado (`masked_apprentice`) | Costa das Marés | 17 | 650 | 380 | suiton | à distância | Máscara de aprendiz, calça do batedor | importado lateral (looktype 130, P0: falta pose própria) |
+| Espadachim da Névoa (`boss_mist_swordsman`) | Costa das Marés | 19 | 1700 | 1700 | suiton | **BOSS** — agressivo | Presa do espadachim, katana Ronin, set Chuunin | importado lateral (looktype 132, P0) |
+| Marionete de Combate (`ruin_puppet`) | Ruínas do Clã Marionetista | 27 | 580 | 490 | none | agressivo | Junta de marionete, poção média, chain kunai | variante de paleta (looktype 948, tom madeira) |
+| Sentinela de Pedra (`stone_sentinel`) | Ruínas do Clã Marionetista | 32 | 1000 | 850 | doton | agressivo | Núcleo de granito, greaves/botas do Clã Ruínas | importado lateral (looktype 61 "stone_golem", P1) |
+| Guerreiro Espectral (`spectral_warrior`) | Ruínas do Clã Marionetista | 38 | 900 | 720 | raiton | agressivo | Cinza espectral, máscara do Clã Ruínas, kodachi | variante de paleta (looktype 953) |
+| Xamã da Maldição (`curse_shaman`) | Ruínas do Clã Marionetista | 44 | 870 | 700 | katon | à distância | Talismã amaldiçoado, amuleto do Clã, pergaminho de Estacas de Terra | importado lateral (looktype 138, P1) |
+| Desertor de Elite (`elite_deserter`) | Ruínas do Clã Marionetista | 46 | 2600 | 2200 | katon | **BOSS** — agressivo | Selo do desertor, pergaminho de Karyuu Endan | **MUGEN (looktype 915, Sasuke Akatsuki)** — viola ADR-002 |
+| Marionetista das Ruínas (`boss_puppeteer`) | Ruínas do Clã Marionetista | 50 | 9100 | 11000 | fuuton | **BOSS** — agressivo | Fios do Marionetista, Puppet Blade, robe do Clã, anel da Vontade de Pedra | importado lateral (looktype 131, idêntico ao Chefe dos Bandidos, P0) |
+| Águia do Trovão (`thunder_eagle`) | Montanha do Trovão | 54 | 1160 | 810 | raiton | à distância | Pena do trovão, poção grande, botas stormcaller | procedural (looktype 942, sempre em voo) |
+| Oni da Geleira (`glacier_oni`) | Montanha do Trovão | 60 | 2350 | 1650 | suiton | agressivo | Fragmento de gelo, chifre de oni, greaves stormcaller | variante de paleta (looktype 955) |
+| Monge da Tempestade (`storm_monk`) | Montanha do Trovão | 68 | 1800 | 1080 | fuuton | agressivo | Pena do trovão, chifre de oni, elmo stormcaller, windblade shuriken | importado lateral (looktype 137, P1) |
+| Serpente de Magma (`magma_serpent`) | Montanha do Trovão | 74 | 2280 | 1370 | katon | agressivo | Escama de magma, chifre de oni, Thunder Katana | procedural (looktype 943, compartilhado c/ máscara de cor) |
+| O Sócio Eterno (`boss_curse_partner`) | Montanha do Trovão | 70 | 6200 | 7200 | doton | **BOSS** — agressivo | Coração amaldiçoado, pergaminho de Colapso do Terreno | variante de paleta (looktype 954, P1: faltam fases visuais) |
+| Oni Ancestral (`boss_ancestral_oni`) | Montanha do Trovão | 80 | 20500 | 24600 | raiton | **BOSS** — agressivo | Oni Fang Blade, mail stormcaller, colar Storm Fang, anel ancestral | **MUGEN (looktype 913, Madara)** — viola ADR-002 |
+| Clone Branco (`white_clone`) | Covil da Nuvem Vermelha | 82 | 2700 | 1900 | doton | agressivo | Emblema da Nuvem, set Anbu Negro | importado lateral (looktype 130, P1) |
+| Ninja Elite da Aurora (`elite_cloud_guard`) | Covil da Nuvem Vermelha | 88 | 4100 | 2500 | raiton | agressivo | Emblema da Nuvem, poção grande, set Anbu Negro | importado lateral (looktype 129 cru, sem recolor, P1) |
+| O Vigia Ilusório (`boss_illusive_eye`) | Covil da Nuvem Vermelha | 85 | 21000 | 25200 | katon | **BOSS** — agressivo | Fragmento de anel carmesim, poção grande, pílula de soldado, set Aurora Carmesim | **MUGEN (looktype 910, Itachi)** — viola ADR-002 |
+| O Mascarado das Sombras (`boss_masked_puppeteer`) | Covil da Nuvem Vermelha | 90 | 23500 | 28200 | fuuton | **BOSS** — agressivo | Fragmento de anel carmesim, set Aurora Carmesim, katana | **MUGEN (looktype 912, Obito)** — viola ADR-002 |
+| O Portador dos Seis Caminhos (`boss_rings_bearer`) | Covil da Nuvem Vermelha | 95 | 26000 | 31200 | doton | **BOSS** — agressivo | Fragmento de anel carmesim, shuriken Aurora Carmesim, chapéu do Kage | **MUGEN (looktype 911, Pain)** — viola ADR-002 |
+| O Ancestral da Nuvem Vermelha (`boss_crimson_ancestor`) | Covil da Nuvem Vermelha | 100 | 29000 | 34800 | raiton | **BOSS** — agressivo | Fragmento de anel carmesim, set completo do Kage (lâmina, leque, anel) | **MUGEN (looktype 913, Madara, reaproveitado)** — viola ADR-002, prioridade máxima |
+
+---
+
+## 7. Grimório de jutsus
+
+*Fonte: `data/jutsus/*.json` (54 jutsus: 5 Katon, 5 Suiton, 5 Raiton, 4 Doton, 4 Fuuton, 10
+universais/genéricos, 21 pessoais exclusivos — `data/element_sets.json` decide os 4 "de kit" por
+elemento, `data/characters.json` decide os 4 pessoais por personagem, ver seção 3), efeito visual
+em `docs/sistemas/combate-e-jutsus.md` (tabela de animação/missile).*
+
+### Katon (Fogo) (5)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Katon: Grande Bola de Fogo | projectile | 15 | 2.0s | 1 | burst à distância (projétil básico, kit) + queimadura | impacto fx_fire_burst + missile ms_fireball |
+| Katon: Sopro de Brasas | area | 18 | 3.0s | 6 | área (reserva, fora do kit) + queimadura | fx_fire_cone (brasas) |
+| Katon: Flores de Fênix | area | 105 | 4.0s | 12 | área/cone (kit) + queimadura | fx_fire_cone |
+| Katon: Anel de Chamas | area | 147 | 6.0s | 20 | utilitário/área (kit) + queimadura | fx_fire_ring |
+| Katon: Dragão de Fogo | beam | 210 | 8.0s | 35 | burst forte em linha (kit) + queimadura | fx_fire_dragon |
+
+### Suiton (Água) (5)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Suiton: Projétil de Água | projectile | 12 | 2.0s | 1 | burst à distância (projétil básico, kit) + lentidão | impacto fx_water_splash + missile ms_water_bullet |
+| Suiton: Névoa Cortante | area | 15 | 1.6s | 6 | controle de área rápido (kit) + lentidão | fx_water_mist (cone) |
+| Suiton: Prisão de Água | target | 38 | 7.0s | 22 | controle/utilitário (kit) + paralisia | fx_water_vortex |
+| Suiton: Dragão de Água | beam | 158 | 6.0s | 25 | burst forte em linha (kit, teto do elemento) + lentidão | fx_water_dragon |
+| Suiton: Vórtice Devorador | area | 72 | 9.0s | 45 | área (reserva, fora do kit) + lentidão | fx_water_vortex |
+
+### Raiton (Raio) (5)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Raiton: Agulha de Raio | projectile | 14 | 2.0s | 1 | burst à distância (projétil básico, kit) + paralisia | impacto fx_lightning_strike + missile ms_lightning_needle |
+| Raiton: Corrente Estática | area | 14 | 1.3s | 6 | controle de área rápido (kit) + paralisia | fx_static_field (cruz) |
+| Raiton: Lança do Relâmpago | beam | 140 | 5.5s | 18 | burst forte em linha (kit, teto do elemento) + paralisia | fx_lightning_lance |
+| Raiton: Armadura Elétrica | self | 36 | 16.0s | 24 | utilitário/buff (reserva, fora do kit) + cura contínua | fx_lightning_armor |
+| Raiton: Punho do Trovão | target | 175 | 7.0s | 30 | burst forte single-target (kit) + stun | fx_lightning_strike |
+
+### Doton (Terra) (4)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Doton: Bala de Lama | projectile | 14 | 2.0s | 1 | burst à distância (projétil básico, kit) + lentidão | impacto fx_mud_splash + missile ms_mud_bullet |
+| Doton: Muralha de Pedra | self | 28 | 14.0s | 8 | utilitário/defensivo (kit) + cura contínua | casca de pedra fx_stone_shell |
+| Doton: Estacas de Terra | area | 140 | 6.0s | 22 | área/controle (kit) + paralisia | fx_earth_spikes |
+| Doton: Colapso do Terreno | area | 245 | 9.0s | 48 | área forte + stun (kit) + stun | fx_earth_collapse |
+
+### Fuuton (Vento) (4)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Fuuton: Lâmina de Vento | projectile | 13 | 2.0s | 1 | burst à distância (projétil básico, kit) | impacto fx_wind_slash + missile ms_wind_blade |
+| Fuuton: Rajada Cortante | area | 119 | 4.5s | 16 | área/cone (kit) + lentidão | fx_wind_slash (cone) |
+| Fuuton: Redemoinho Prisão | target | 38 | 9.0s | 23 | controle/utilitário (kit) + paralisia | fx_wind_prison |
+| Fuuton: Tornado Cortante | beam | 217 | 8.0s | 36 | burst forte em linha (kit) + lentidão | fx_wind_tornado |
+
+### Universais/genéricos (multi-personagem) (10)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Agulhas Multiplas | projectile | 14 | 2.0s | 1 | burst à distância | impacto fx_melee_hit + missile ms_senbon |
+| Punho Suave | target | 12 | 2.0s | 3 | single-target/controle + lentidão | fx_melee_hit |
+| Kawarimi no Jutsu | self | 20 | 12.0s | 5 | utilitário (substituição, universal) | fumaça branca fx_smoke_poof |
+| Bunshin no Jutsu | self | 25 | 15.0s | 8 | utilitário (invocação de clone) | fumaça roxa fx_shadow_clone |
+| Clone Sombrio | self | 35 | 20.0s | 10 | utilitário/buff | fx_smoke_poof |
+| Shousen: Palma Curativa | self | 35 | 10.0s | 10 | cura (heal_over_time) + cura contínua | brilho verde fx_heal_green |
+| Chute Giratorio | area | 22 | 4.0s | 14 | área/controle | fx_melee_hit (giro) |
+| Lamina de Chakra | beam | 28 | 5.0s | 20 | burst forte em linha | lâmina ciano fx_chakra_blade |
+| Doku: Névoa Venenosa | area | 46 | 6.0s | 25 | área/veneno (dano ao longo do tempo) + veneno | névoa fx_poison_mist |
+| Fuuin: Selo de Contenção | target | 45 | 12.0s | 40 | controle (selo) + paralisia | fx_seal_glow |
+
+### Pessoais (exclusivos de 1 personagem) (21)
+
+| Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual |
+|---|---|---|---|---|---|---|
+| Raio Selado | projectile | 15 | 2.0s | 1 | burst à distância | impacto fx_lightning_strike + missile ms_lightning_needle |
+| Chute Ascendente | target | 16 | 2.5s | 2 | single-target/controle + lentidão | fx_melee_hit (ascendente) |
+| Kunai Marcada | projectile | 14 | 2.0s | 3 | burst à distância | impacto fx_melee_hit + missile ms_kunai |
+| Rasteira de Vento Leve | area | 14 | 3.0s | 4 | área/controle + lentidão | fx_wind_slash (rasteira) |
+| Agulhas Incendiárias | projectile | 14 | 2.0s | 5 | burst à distância + queimadura | impacto fx_fire_burst + missile ms_senbon |
+| Palma Gentil | target | 16 | 2.0s | 5 | single-target/controle + lentidão | fx_melee_hit |
+| Foco Ocular | self | 26 | 14.0s | 7 | utilitário/buff + cura contínua | fx_chakra_focus (olhos) |
+| Vigor Teimoso | self | 30 | 18.0s | 9 | utilitário/buff + cura contínua | aura fx_chakra_focus |
+| Visão de Alcance Total | self | 22 | 16.0s | 9 | utilitário/buff + cura contínua | fx_chakra_focus (veias) |
+| Lâmina Relâmpago | target | 22 | 2.2s | 10 | single-target/controle + paralisia | fx_lightning_strike (faísca na espada) |
+| Salto do Selo | self | 28 | 10.0s | 12 | utilitário/buff | teleporte fx_smoke_poof |
+| Barreira Protetora | self | 38 | 18.0s | 14 | utilitário/buff + cura contínua | fx_chakra_focus (barreira) |
+| Contra-Ataque Calculado | target | 20 | 6.0s | 15 | single-target/controle + stun | fx_melee_hit |
+| Soco Monstruoso | target | 24 | 4.0s | 16 | single-target/controle + stun | fx_earth_collapse (rachadura) |
+| Soco da Juventude | target | 26 | 4.5s | 18 | single-target/controle + stun | fx_melee_hit (pesado) |
+| Selo de Exorcismo | target | 34 | 6.0s | 19 | single-target/controle + paralisia | fx_seal_glow |
+| Corte Duplo | area | 32 | 4.5s | 20 | área/controle | fx_melee_hit (corte duplo) |
+| Palma Dupla | area | 36 | 5.0s | 24 | área/controle + paralisia | fx_melee_hit (duplo) |
+| Bainha Elétrica | self | 34 | 16.0s | 26 | utilitário/buff + cura contínua | fx_lightning_armor |
+| Círculo de Selos | area | 44 | 8.0s | 27 | área/controle + paralisia | fx_seal_glow (círculo) |
+| Explosão do Selo | area | 46 | 7.0s | 28 | área/controle + stun | fx_seal_glow (explosão) |
+
+---
+
+## 8. Personagens e NPCs
+
+*Fontes: `data/npcs/*.json` (identidade, loja, texto de missão), `docs/lore/mundo.md` (papel
+narrativo), `docs/sistemas/mapas.md` "Mapa v3" (posições finais no `.otbm`), `docs/lore/progressao.md`
+(exames).*
+
+### Mentores e figuras de rank (looktypes de personagem principal — uso reservado)
+
+| Nome no jogo | Papel | Onde fica | Fala-chave |
+|---|---|---|---|
+| Mestre Hayato | Mestre de pergaminhos, Vila da Folha (`scroll_master_leaf`) | Vila da Folha | Vende os pergaminhos de jutsu fora do kit automático (tier 1 a 3) |
+| Capitã Rin | Dá as primeiras missões da vila (`quest_giver_leaf`) | Vila da Folha | *"Os lobos estão atacando viajantes. Mate 5."* |
+| Instrutora Ibuki | Proctora do Exame Chunin (`exam_proctor_forest`) | Academia, Floresta da Vila (1018, 1048) | *"Antes de qualquer coisa, prove que prestou atenção no que a vila te ensinou..."* — as 5 perguntas do quiz cobrem chakra, elementos, mestre, ninjutsu e hokage |
+| Capitã Anbu Suzu | Guia as 4 missões do Exame Anbu/Kage (`quest_giver_akatsuki_lair`) | Hall de entrada do Covil (1406, 1010) | *"Antes de encarar os quatro guardiões, prove que aguenta os clones brancos que patrulham os corredores. Mate 10."* |
+
+### Mercadores e dadores de missão (uma dupla por região)
+
+| NPC | Papel | Região | Posição (x, y, 7) |
+|---|---|---|---|
+| Ichiro, o Mercador | loja (kunai, colete, poções, mochila) | Floresta da Vila | 22, 18 (mapa lógico da vila) |
+| Velha Sumi | loja | Floresta da Morte | — (mapa abstrato/Godot, não portado ao OTBM ainda) |
+| Rastreador Goro | missões — *"Sanguessugas infestam a margem. Mate 8."* | Floresta da Morte | — |
+| Mercador Itsuki | loja | Costa das Marés | 1026, 1145 |
+| Ancião Tazu | missões — *"Mercenários contratados por uma guilda rival atacam quem trabalha na ponte. Afaste-os. Mate 8."* | Costa das Marés | 1032, 1145 |
+| Tsubaki, a Escavadora | loja | Ruínas do Clã Marionetista | — |
+| Ancião Kaito | missões — *"Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete."* | Ruínas do Clã Marionetista | — |
+| Ferreiro Genzo | loja | Montanha do Trovão | — |
+| Mestra Yuki | missões — *"As águias do trovão não deixam ninguém subir a trilha. Abata 15."* | Montanha do Trovão | — |
+| Fornecedor Enji | loja | Covil da Nuvem Vermelha | 1406, 1012 |
+
+### Mestres de Tarefas (um por região, sistema novo)
+
+| NPC | Região | Posição (x, y, 7) |
+|---|---|---|
+| Mestre de Tarefas Jiro | Floresta da Vila (Portão Sul) | 1030, 1067 |
+| Mestre de Tarefas Ren | Hub do Pântano (antes da Floresta da Morte) | 1137, 1057 |
+| Mestre de Tarefas Umi | Costa das Marés | 1029, 1147 |
+| Mestre de Tarefas Dokan | Ruínas do Clã Marionetista | 1202, 1020 |
+| Mestre de Tarefas Kaji | Montanha do Trovão | 1228, 1062 |
+| Mestre de Tarefas Kuro | Covil da Nuvem Vermelha | 1406, 1014 |
+| Quadro de Missões (diárias) | Praça da Vila da Folha | 1035, 1040 |
+
+### Bosses como personagens (motivação)
+
+Detalhados na seção 2 (narrativa) e na seção 6 (números). Resumo de motivação por boss:
+
+| Boss | Motivação |
+|---|---|
+| Chefe dos Bandidos | Sobreviver na estrada liderando a gangue mais experiente da Floresta da Vila — sem ligação alguma com a organização maior. |
+| Espadachim da Névoa + Aprendiz Mascarado | Contratado por uma guilda rival para sabotar a ponte; o aprendiz luta por dívida de vida, não por dinheiro. |
+| Serpente Branca | Ninja renegado que abandona a própria forma humana quando encurralado — o boss de arco mais "canônico" do jogo. |
+| Sapo Ancião | Guardião independente do Pergaminho do Céu, boss secundário opcional da Floresta da Morte. |
+| Desertor de Elite | Gênio que abandonou a própria vila atrás de poder proibido, a caminho de recrutar para a organização maior. |
+| Marionetista das Ruínas | Última vontade do clã extinto, ainda "vivo" através dos bonecos que comanda. |
+| O Sócio Eterno + Oni Ancestral | Dupla amaldiçoada por um pacto antigo — um não sabe morrer, o outro cobra um preço por cada vida; só caem juntos. |
+| Os 4 guardiões do Covil | Cada um espectro de um poder que uma vila enfrentou uma vez e nunca mais quis enfrentar — o clímax de progressão do jogo. |
+
+---
+
+## 9. Direção de arte e som
+
+*Fonte: `docs/sistemas/arte-e-sprites.md`, `docs/backlog-sprites.md`, `docs/03-decisoes-tecnicas.md`
+(ADR-002).*
+
+### Regra de ouro: "se não parece Tibia, não faz"
+
+O jogo reproduz deliberadamente a estética "Open Tibia clássico": grid 32×32, chão na linha y=30,
+alpha binário (sem transparência suave), sem UI moderna — só os estilos `.otui` existentes. Nenhuma
+decisão de arte deve fugir dessa referência.
+
+### Pipeline procedural
+
+Como nenhum sprite da Tibia original ou de NTO pode ser redistribuído (ADR-002) e não há
+ObjectBuilder funcional no Mac, o projeto tem seu **próprio compilador de assets**: `tools/spr/`.
+`assets-src/sprites/` (PNGs + `manifest.json`/`tiles.json`) é a fonte da verdade; `build_assets.py`
+gera `Tibia.spr`/`Tibia.dat` (cliente) e `items.otb`/`items_tiles_naruto.xml` (servidor) — nunca
+editados à mão. Hoje cobrem: 23.626 things de item (estilo procedural, ícone próprio para os 78
+itens do jogo), looktypes de criatura 1–897 com arte temática básica, 27 efeitos + 8 misseis
+próprios para os 54 jutsus (`gen_effects.py`), tiles de cenário criados do zero (tatame, torii,
+lanterna, cerca de bambu) e terreno com autoborder (grama↔água↔areia↔lama↔terra↔cobble).
+
+### O que é placeholder
+
+A maior parte da arte de criatura/NPC ainda é **placeholder**: sprites genéricos do Tibia vanilla
+recoloridos (procedural) ou recortes de planilhas de terceiros (`assets-src/import/`, "importado
+lateral"). Only 6 monstros (Lobo, Cervo, Águia, Sanguessuga, Sapo Gigante, e as 3 serpentes
+compartilhando um looktype com máscara de cor) têm arte procedural dedicada com 4 direções reais;
+os outros ~30 são silhueta importada com, no máximo, uma cor própria — nenhum ganhou direção ou
+ciclo de andar de verdade ainda.
+
+### ADR-002: material de terceiros só para teste privado, nunca versionado
+
+**Achado real e sério, não hipotético:** `assets-src/sprites/mugen_looktypes.json` mapeia os
+looktypes **900–926** para sprites extraídos de um jogo de luta MUGEN com personagens do anime
+Naruto **de verdade** (pastas literalmente chamadas `Naruto/`, `Sasuke/Sasuke Rinnegan`, `Kakashi`,
+`Itachi`, `Pain`, `Obito`, `Madara`...). Isso é **exatamente** o que a ADR-002 proíbe ("nada de
+sprites copiados de NTO ou do anime") — e hoje esses looktypes estão em uso de produção em **13
+lugares**: os 3 NPCs mentores, a Capitã Anbu Suzu, e 6 bosses de arco (Serpente Branca, Desertor de
+Elite, e os 4 guardiões finais do Covil). O `docs/backlog-sprites.md` marca isso como **P0** — risco
+legal real, acima até da prioridade dos monstros comuns — e recomenda encomendar arte própria para
+substituir os 13 looktypes antes de qualquer lançamento público. A pasta `assets-src/import/mugen/`
+em si já está fora do controle de versão (git), como a regra exige; o problema é que os looktypes
+gerados a partir dela **já foram exportados para o jogo jogável**.
+
+### Backlog de arte resumido
+
+*Fonte: `docs/backlog-sprites.md`.* Total estimado para zerar o backlog inteiro: **~900 horas de
+pixel artist** — 38 monstros (~340h), 21 NPCs (~135h), 9 personagens jogáveis (~126h), jutsus
+(~87h, já quase todo resolvido via procedural), itens (~117h, destaque para os 44 quadros de
+armadura com variação visual no boneco — hoje nenhum set "veste" diferente do outro), tiles das 2
+regiões novas (~55h) e UI (~43h). Prioridade nº 1 recomendada: os 5 personagens jogáveis P0 + os 8
+NPCs/bosses em looktype MUGEN (risco legal + maior visibilidade simultânea).
+
+### Som: pendente
+
+Não existe trilha sonora nem efeito sonoro implementado no jogo hoje. É item de roadmap, sem data.
+
+---
+
+## 10. Tecnologia
+
+*Fonte: `CLAUDE.md`, `docs/02-arquitetura.md`, `docs/03-decisoes-tecnicas.md` (ADR-005),
+`docs/04-setup-ot.md`.*
+
+### Stack em 1 página
+
+```
+[OTClient Redemption]  ──TCP 7171/7172──►  [TFS 1.4.2]  ──►  [MariaDB]
+   client-otc/                                server/tfs/
+```
+
+- **Cliente:** OTClient Redemption (fork mehah/opentibiabr, C++20 + Lua/OTUI, MIT). Customização
+  via módulos Lua próprios em `client-otc/modules/naruto_*`, sem tocar no C++.
+- **Servidor:** The Forgotten Server 1.4.2, protocolo 10.98, scripting em Lua (revscriptsys para
+  scripts novos, sistema clássico para `creaturescripts` legadas como `login.lua`).
+- **Conteúdo:** `data/*.json` continua sendo a **fonte da verdade** — jutsus, itens, monstros,
+  NPCs, ranks, tarefas, diárias, conquistas, curva de XP. `tools/export_tfs.py` gera tudo que o TFS
+  precisa (`server/generated/`); nunca editar os XML/Lua gerados à mão.
+- **Sprites:** `.spr`/`.dat` versão 1098, compilados por `tools/spr/build_assets.py` a partir de
+  `assets-src/sprites/` (pipeline procedural próprio, seção 9).
+- **Mapa:** um único OTBM (`tools/map/build_valley.py` + `build_regions.py`), editável no Remere's
+  Map Editor, nunca escrito à mão.
+- **`client-godot/`** é o protótipo antigo (Marcos 1–3, Godot 4/GDScript) — provou o loop de jogo e
+  o balanceamento inicial antes do pivô (ADR-005), congelado como referência de regras, não recebe
+  mais features.
+
+### Como rodar
+
+```bash
+python3 tools/validate_data.py        # valida todo data/*.json contra os schemas
+python3 tools/export_tfs.py            # gera server/generated/ a partir de data/
+# compilar cliente e servidor: ver docs/04-setup-ot.md (CMake + vcpkg + Ninja, 30-60min na 1ª vez)
+tools/play.sh                          # sobe servidor + AAC + abre o cliente
+```
+
+Contas de teste conhecidas: `god`/`god` (GM, grupo 6), `teste`/`teste` (jogador comum). Uma
+segunda conta GM (`slqa`) foi criada durante QA e não removida — útil para testes paralelos sem
+colidir com `god`.
+
+### Ferramentas principais
+
+- **Simulador de balanceamento** (`tools/balance/sim.py`) — Monte Carlo de TTK/DPS por
+  nível×monstro×build, usado para calibrar todas as fórmulas da seção 5.
+- **Pipeline de sprites** (`tools/spr/`) — compilador de assets próprio (seção 9).
+- **Pipeline de mapa** (`tools/map/`) — leitor/gravador OTBM, gerador do mapa, auditoria de
+  caminhabilidade (`walk_audit.py`), preview sem abrir o cliente (`render_preview.py`).
+- **AAC** (`tools/aac/`) — site de registro de conta, porta 8080, sobe junto com `play.sh`.
+
+### O que é gerado vs. fonte
+
+Fonte (editar aqui): `data/*.json`, `docs/`, `assets-src/`, `client-otc/modules/naruto_*`,
+`tools/*.py`. Gerado (nunca editar à mão, sempre regenerar): `server/generated/`,
+`server/tfs/data/monster|spells|npc/naruto/*`, `client-otc/data/things/1098/*`,
+`client-otc/modules/naruto_theme/jutsus_data.lua`, `server/generated/world/*.otbm`.
+
+---
+
+## 11. Estado atual e roadmap
+
+*Fonte: `CLAUDE.md` ("Estado atual"), `docs/01-roadmap.md`, `docs/qa/*.md`.*
+
+### O que está pronto (2026-09-05)
+
+O jogo roda ponta a ponta: OTClient compilado, TFS 1.4.2 com todo o conteúdo Naruto instalado,
+mapa próprio `valley` com as 6 regiões fisicamente construídas, sprites placeholder/procedurais
+próprios, ferramentas de GM (`/sl`). Números atuais: **173 itens, 54 jutsus, 38 monstros, 21 NPCs**,
+sistemas de rank/exame/tarefas/diárias/conquistas rodando no servidor, walk-cycle do outfit do
+jogador validado por filtro geométrico automático. Balanceamento passou por 3 rodadas completas de
+calibração via simulação (seção 5). Locale pt-BR cobre a UI, os nomes de sistema (Mana→Chakra) e a
+maior parte das mensagens de sistema do TFS (traduzidas no cliente, já que o núcleo C++ do TFS fala
+inglês). Menu Shinobi (Ctrl+J) com abas Personagem/Elemento/Jutsus/Missões/Comandos (GM) funcionando
+in-game, rank visível na janela de Atributos.
+
+### Em andamento
+
+Balanceamento rodada 4 (decidir após playtest real): a tensão burst-vs-paridade-sustentada do tier
+1 (seção 5) segue sem decisão de design fechada; polimento de bordas de mapa (neve↔rocha, gelo↔rocha
+ainda retas em vários trechos); criaturas procedurais humanoides (10 monstros já ganharam cor
+própria via hue-shift, nenhum ganhou direção/andar reais ainda).
+
+### Próximos passos (ordem de valor, conforme `01-roadmap.md`)
+
+1. Playtest rodada 3: chegar de fato aos primeiros monstros e medir XP/h + chakra real em combate
+   (bloqueado nas rodadas 1–2 por bugs de onboarding, já corrigidos, e por disco cheio na rodada 2).
+2. Vista de costas real para o personagem padrão (hoje sintetizada por código, não desenhada).
+3. Templos/vilas 2–4 no mapa físico (hoje só a Vila da Folha existe fisicamente; Névoa/Nuvem/Areia
+   só existem como vocação/dados, sem cidade própria no OTBM).
+4. Substituir os 13 looktypes MUGEN (P0 de arte, seção 9) antes de qualquer lançamento público.
+5. Party com XP compartilhada, clãs, PvP em arena (Marco 5 — pós-lançamento).
+
+### Riscos e limitações honestas
+
+- **Os looktypes 900–926 (personagens MUGEN) violam a ADR-002 na prática** — não é dívida técnica
+  comum, é risco legal de takedown se o jogo for distribuído assim (seção 9).
+- **Sprites de monstro/NPC são majoritariamente placeholder** — sem direção nem ciclo de andar
+  reais; "o jogo parece incompleto" é o feedback mais provável de um jogador novo hoje.
+- **Vista de costas do personagem é sintetizada por código**, não desenhada — aproximação, não arte
+  final.
+- **Sem som** — nenhuma trilha ou efeito sonoro implementado.
+- **Playtests ainda sem dados de combate reais**: as duas rodadas realizadas (`docs/qa/
+  playtest-l1-20*.md`) encontraram e corrigiram bugs de onboarding (kit inicial ausente, loja
+  quebrando, saudação só em inglês) mas nenhuma chegou a produzir uma curva de XP/h medida de
+  verdade contra a tabela da seção 4 — a comparação "tabela vs. realidade" ainda não foi feita.
+- **Só a Vila da Folha existe fisicamente no mapa** — as outras 3 vilas são vocação/dados sem
+  cidade própria construída no OTBM ainda.
+- **Sem party, clã, mercado ou PvP** — social é 100% roadmap, não uma omissão silenciosa (Marco 5).
+
+---
+
+## 12. Glossário
+
+*Fonte: `CLAUDE.md`, todos os documentos de sistema.*
+
+| Termo | Significado |
+|---|---|
+| **Ryo** | Moeda do jogo (equivalente a "gold coin" da Tibia). |
+| **Chakra** | Recurso gasto por jutsus (equivalente a "mana"). |
+| **Jutsu** | Habilidade ativa (equivalente a "spell"). 54 no jogo, 8 por combinação personagem+elemento. |
+| **Elemento** | Afinidade ofensiva: Katon (fogo), Suiton (água), Doton (terra), Fuuton (vento), Raiton (raio). Ciclo circular de vantagem/desvantagem. |
+| **Vila** | Facção/vocação inicial do jogador (Folha, Névoa, Nuvem, Areia). Define cidade, NPCs e skill bônus — não mais o jutsu. |
+| **Personagem** | Identidade jogável fixa (9 no jogo), dona de 4 jutsus pessoais que não mudam com o elemento. |
+| **Skill** | Proficiência que sobe com uso: Taijutsu, Shuriken, Ninjutsu, Genjutsu, Defesa. |
+| **Rank** | Genin → Chunin → Jonin → Anbu → Kage — camada narrativa/de exame sobre o level. |
+| **Gate de rank** | Tile de entrada de região com actionid 45001–45005 que barra quem não tem o rank mínimo. |
+| **Tier** | Nível de força de um jutsu/item dentro do seu grupo (1, 2 ou 3 para jutsu; L1/10/20.../100 para equipamento). |
+| **Task Master (Mestre de Tarefas)** | NPC regional que dá tarefas repetíveis com cooldown, um por região. |
+| **Diária** | Missão repetível sorteada por dia, 3 por jogador, auto-aceita. |
+| **Kawarimi** | Jutsu universal de substituição (esquiva mágica), compartilhado por vários personagens. |
+| **PvM** | Player vs. Monster — o pilar central do jogo (caça de monstros). |
+| **Boss** | Monstro especial com `phases` (mudança de comportamento por % de HP), respawn de horas, loot exclusivo. |
+| **OTBM** | Formato de mapa do Open Tibia, lido/gravado por `tools/map/otbm.py`, editável no Remere's Map Editor. |
+| **ADR** | Architecture/Design Decision Record — formato de decisão documentada em `docs/03-decisoes-tecnicas.md`. |
+
+---
+
+## 13. Inconsistências encontradas
+
+*Lista curta para o dono do projeto corrigir — todo número deste documento veio de `data/`; onde
+dois documentos discordavam, usei `data/` como fonte e anoto a divergência aqui.*
+
+1. **Status de mapa das regiões novas.** `docs/lore/mundo.md` (seções 2 e 6, antes desta missão) e
+   `docs/sistemas/monstros-e-pvm.md` (tabela "Faixas de área", linhas de Costa das Marés e Covil da
+   Nuvem Vermelha) descreviam essas duas regiões como "dados prontos, sem mapa físico ainda", mas
+   `docs/sistemas/mapas.md` (seções "Regiões novas (v2.1)" e "Mapa v3") mostra as duas já
+   construídas fisicamente e validadas in-game desde 2026-09-04/05. **Corrigi os cabeçalhos e o
+   texto em `docs/lore/mundo.md` durante esta missão** (seções 2 e 6, mais a nota de abertura);
+   `docs/sistemas/monstros-e-pvm.md`, colunas "Zona (rect)" e "Status" das mesmas duas linhas,
+   continua com o texto antigo — sugiro trocar por "x 1000–1049, y 1120–1169" / "x 1400–1449, y
+   1000–1049" e "implementada (mapa v2.1)".
+2. **`data/villages.json` tem campos órfãos do protótipo Godot.** `starting_jutsus` (um jutsu por
+   vila) e `start_map`/`start_x`/`start_y` (mapas separados `leaf_village`/`mist_village`/
+   `cloud_village`/`sand_village`) contradizem o modelo atual descrito em
+   `docs/sistemas/combate-e-jutsus.md` ("vila não filtra mais jutsu", jutsu vem de Personagem +
+   Elemento) e o mapa único `valley` do TFS (`docs/sistemas/mapas.md`). Não editei `data/` (fora do
+   escopo desta missão) — sinalizo para quem decidir se esses campos ainda são lidos por algum
+   script legado ou podem ser removidos/atualizados.
+3. **`docs/sistemas/personagem-e-progressao.md` é anterior ao pivô ADR-005.** Descreve save em
+   `user://save_slot_N.json` (formato do protótipo Godot) — a persistência real hoje é MariaDB via
+   TFS. Usei desse documento só as fórmulas de HP/Chakra (que batem exatamente com
+   `data/progression.json`); o restante (seção "Save", menção a "vilas... definem jutsus
+   iniciais") deveria ser marcado como histórico ou atualizado.
+4. **Preço de referência de pergaminho tier 3.** `docs/sistemas/economia.md` diz "pergaminho de
+   jutsu... tier 3: 50.000" como número de referência; os pergaminhos tier 3 reais em
+   `data/items/*.json` variam de 20.000 (Punho do Trovão, L30) a 45.000 (Colapso do Terreno, L48) —
+   nenhum chega a 50.000. Mesma ordem de grandeza, mas o número de referência do documento é
+   levemente otimista; os demais preços de `economia.md` (poção de chakra 30 ryo, onigiri 10 ryo)
+   batem exatamente com `data/items/consumables.json`.
+
+### O que ficou faltando (não coberto por esta bíblia)
+
+- Falas-chave completas de NPCs de loja (não existe campo de diálogo/saudação em
+  `data/npcs/*.json` além do texto de missão — a seção 8 usa o texto de missão disponível).
+- Posições físicas no mapa de Velha Sumi, Rastreador Goro, Tsubaki, Ancião Kaito, Ferreiro Genzo e
+  Mestra Yuki (mapa abstrato do protótipo Godot, ainda não portado ao OTBM — ver
+  `docs/sistemas/progressao-servidor.md`, pendência "posição física dos NPCs novos").
+- Dados de combate reais (XP/h medido, TTK, chakra até secar) — os playtests realizados não
+  chegaram a produzir essa medição (seção 11).
