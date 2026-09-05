@@ -130,7 +130,13 @@ Próximos (ordem de valor):
 - [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [x] Playtest L1–20 rodada 1 (`docs/qa/playtest-l1-20.md`): achou 2 P0 (sem kit inicial; loja com erro Lua) — corrigidos em `1e4f280`
 - [x] Playtest rodada 2 (`docs/qa/playtest-l1-20-r2.md`): achou kit pela metade (firstitems.lua vanilla) e saudação só em inglês — corrigidos em `92166a7`; sem dados de combate (disco cheio interrompeu)
-- [ ] Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
+- [x] Conquistas: 55 implementadas no servidor + seção na aba Missões (`e02aa0b`); validação in-game pendente
+- [x] Regeneração natural de HP/chakra e spawns iniciais reduzidos (`77def75`, `c62e75e`)
+- [x] Documento mãe do jogo `docs/00-biblia-do-jogo.md` (`2a0a261`)
+- [ ] Som procedural (em andamento): `tools/audio/gen_sfx.py` + módulo `naruto_sounds`
+- [ ] Playtest rodada 4: L1–10 com regen e spawns novos; medir XP/h e chakra
+- [x] Playtest rodada 3 (`docs/qa/playtest-l1-20-r3.md`): combate real no L1; achou chakra sem regen e 4 lobos por spawn — corrigidos
+- [ ] (antigo) Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
 - [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`); sons ficam para depois
 - [ ] Criaturas procedurais (parcial, bloqueado por disco cheio — `gen_animals.py` e folhas 940–945 prontas; faltam variantes humanoides, mapping e validação in-game): lobo/cervo/águia/serpente/sapo/sanguessuga com 4 direções reais + variantes de paleta para humanoides que hoje compartilham looktype
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
