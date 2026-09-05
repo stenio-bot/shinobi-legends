@@ -17,5 +17,6 @@ condition:setFormula(-0.9, 0, -0.9, 0)
 combat:addCondition(condition)  -- stun, chance 0.5
 
 function onCastSpell(creature, variant)
+	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_thunder_hit")
 	return combat:execute(creature, variant)
 end

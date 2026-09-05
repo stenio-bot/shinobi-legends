@@ -13,5 +13,6 @@ end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onCastSpell(creature, variant)
+	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_metal_throw")
 	return combat:execute(creature, variant)
 end

@@ -3,6 +3,7 @@
 -- Kawarimi no Jutsu: Substituição: fica invulnerável por 1s e teleporta 2 tiles para trás.
 function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
+	NarutoJson.broadcastSfx(pos, "sfx_poof")
 	local dir = creature:getDirection()
 	local back = Position(pos)
 	for _ = 1, 2 do

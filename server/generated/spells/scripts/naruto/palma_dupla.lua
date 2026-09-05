@@ -23,5 +23,6 @@ condition:setFormula(-0.9, 0, -0.9, 0)
 combat:addCondition(condition)  -- paralyze, chance 0.4
 
 function onCastSpell(creature, variant)
+	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_double_hit")
 	return combat:execute(creature, variant)
 end

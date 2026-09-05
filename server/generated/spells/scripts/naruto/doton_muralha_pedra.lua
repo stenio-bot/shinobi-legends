@@ -9,6 +9,8 @@ condition:setParameter(CONDITION_PARAM_HEALTHTICKS, 1000)
 
 function onCastSpell(creature, variant)
 	creature:addCondition(condition)
-	creature:getPosition():sendMagicEffect(214)
+	local pos = creature:getPosition()
+	NarutoJson.broadcastSfx(pos, "sfx_rock_rumble")
+	pos:sendMagicEffect(214)
 	return true
 end

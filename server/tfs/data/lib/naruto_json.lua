@@ -244,3 +244,27 @@ function NarutoJson.sendExtended(player, opcode, str)
 	msg:delete()
 	return true
 end
+
+-- ------------------------------------------------------------------ SFX (opcode 210, acao "sfx")
+-- Gancho de audio do cliente (docs/sistemas/audio.md): o OTClient Redemment nao tem
+-- callback Lua para "efeito magico visto na tela" (parseMagicEffect e' so C++, nao chama
+-- callLuaField nenhum - conferido em src/client/protocolgameparse.cpp), entao o som de
+-- jutsu e' avisado pelo SERVIDOR via opcode 210 para o conjurador + quem esta por perto.
+-- modules/naruto_menu.lua (dono do opcode 210 no cliente) despacha type == 'sfx' para
+-- modules/naruto_sounds.lua.
+local SFX_OPCODE = 210
+
+--- Manda {"type":"sfx","id":sfxId} para o conjurador e criaturas/jogadores num raio de
+--- `radius` tiles (padrao 7, igual ao alcance de visao normal da tela) ao redor de `pos`.
+--- So chega a clientes OTClient (sendExtended ja filtra isUsingOtClient); nao quebra nada
+--- se sfxId vier nil (spell sem campo `sfx` no JSON).
+function NarutoJson.broadcastSfx(pos, sfxId, radius)
+	if not sfxId then return end
+	radius = radius or 7
+	local payload = NarutoJson.encode({type = 'sfx', id = sfxId})
+	for _, spec in ipairs(Game.getSpectators(pos, false, false, radius, radius, radius, radius)) do
+		if spec:isPlayer() then
+			NarutoJson.sendExtended(spec, SFX_OPCODE, payload)
+		end
+	end
+end
