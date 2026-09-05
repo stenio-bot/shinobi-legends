@@ -32,7 +32,7 @@ _(preencher ao final)_
 
 | Nível | Tempo real gasto | Kills | Mortes | XP ganho | XP/h | Observação |
 |---|---|---|---|---|---|---|
-| 1 | | | | | | |
+| 1 | (em andamento) | 0 | 1 (ver P1-5, morta pelo Bandido Arqueiro da Clareira Central em rota, sem engajar) | 0 | N/D | Navegação Vila→Bosque Norte consumiu a maior parte do tempo desta sub-sessão (ver P2-9/P2-10); combate real ainda não medido. |
 | 2 | | | | | | |
 | 3 | | | | | | |
 | 4 | | | | | | |
@@ -82,9 +82,75 @@ _(preencher)_
 
 ### P0
 
+Nenhum até agora (kit completo confirmado, spawn/regen funcionando).
+
 ### P1
 
+**P1-5 (novo, confirmado ao vivo, morte real). Um Genin L1 pode morrer só de PASSAR perto do
+spawn de Bandido Arqueiro da Clareira Central (1070,1040, raio 4, 2 arqueiros), sem nunca ter
+engajado o combate.**
+
+- **Repro**: sair da Vila da Folha pelo Portão Leste (1049,1055) e seguir para o norte por fora
+  da muralha com x≈1063-1065 (a ~5-7 tiles do centro do spawn 1070,1040) — não é preciso se
+  aproximar do centro do spawn nem atacar nada.
+- **Medido**: HP caiu de 150/150 para 0 em ~15 segundos reais (14:29:30 a 14:29:45), levando
+  hits de "um bandido arqueiro" de 5 a 12 de dano cada, a cada ~3s, sem nenhuma chance real de
+  reagir a tempo com um Genin L1 (150 HP, sem jutsu de cura pronto). Log completo:
+  `HB hp=150→119→81→43→28→23→14→9→2→0` entre 14:29:00 e 14:29:45, terminando em
+  `MSG: You are dead.`
+- **Causa provável**: o alcance de agressão/tiro do Bandido Arqueiro (monstro L6-10) parece ir
+  bem além do raio de 4 tiles do próprio spawn — um personagem que nunca entrou no raio do
+  spawn, só passou a ~5-7 tiles de distância em rota para outra área, foi alvejado e morto sem
+  aviso. Isso é especialmente grave porque a rota mais curta e natural da Vila da Folha (Portão
+  Leste) para a Trilha dos Lobos/Bosque Norte (destino de L1-5) passa exatamente por essa faixa
+  de coordenadas.
+- **Efeito**: um jogador novo de L1 que ande a pé do Portão Leste até a Trilha dos Lobos (rota
+  natural, sem conhecer o mapa) tem chance real de morrer para um monstro de uma faixa de nível
+  muito mais alta antes mesmo de chegar à área que deveria caçar — isso é o tipo de coisa que
+  faz um jogador desistir no primeiro dia (ver seção correspondente).
+- **Sugestão**: (a) reduzir o alcance de agressão a distância do `bandit_archer` para não
+  ultrapassar muito o raio do próprio spawn, ou (b) aumentar a distância entre a Clareira
+  Central e a rota mais óbvia entre a Vila da Folha e a Trilha dos Lobos/Bosque Norte, ou (c)
+  no mínimo documentar em `docs/sistemas/mapas.md` que a faixa x=1060-1075,y=1030-1050 fora da
+  muralha é perigosa para personagens abaixo de L6 e não deveria ficar no caminho direto entre
+  a vila e a área de L1-5. Fora do escopo de edição autorizado nesta rodada (monstros/mapas).
+
+**P1-6 (novo, achado de navegação/mapa, não confirmado como bug de jogador humano).** Pelo menos
+uma posição junto ao Portão Sul, por fora da muralha (**1028,1070**, 1 tile a sudoeste do arco
+torii em 1030,1070), rejeitou **toda tentativa de movimento** (`autoWalk` e `g_game.walk` manual
+nas 8 direções) com `RETURNVALUE_NOTENOUGHROOM` ("There is not enough room.") por >3 minutos
+seguidos, incluindo uma tentativa de `autoWalk` de volta ao templo (rota que deveria ser trivial).
+Só foi possível escapar dali numa sessão seguinte, chegando por um ângulo ligeiramente diferente
+(via 1021,1070/1025,1070 em vez de descer reto pelo portão). Não confirmei se um jogador humano
+clicando normalmente ficaria preso do mesmo jeito (o clique humano manda uma única localização-
+alvo por vez, igual ao nosso `autoWalk`, então o risco é real, mas não testei com mouse de
+verdade). Registrado para quem for revisar a malha de colisão fora do Portão Sul —
+possivelmente um item decorativo (tocha, placa ou o próprio arco torii) com hitbox maior que o
+esperado, ou uma célula não conectada ao resto do exterior por engano.
+
 ### P2
+
+**P2-9 (novo, metodologia de navegação).** `LocalPlayer:autoWalk` para um alvo distante (>15-20
+tiles, fora do que o cliente já "conhece") não retorna erro de forma síncrona nem gera nenhuma
+mensagem — o personagem simplesmente não anda, ficando preso ("dist" nunca diminui). Confirmado
+2x: (1) alvo "Trilha dos Lobos" logo depois do login, quando o cliente só conhecia a vizinhança
+do spawn; (2) rota inicial tentando pular direto da praça pro Bosque Norte. **Aprendizado para a
+próxima rodada**: nunca mirar um `autoWalk` a mais de ~10 tiles de distância da posição atual;
+sempre recalcular um hop intermediário a cada ciclo (não uma lista fixa de waypoints distantes)
+e monitorar a posição real para confirmar progresso, não só disparar o comando e assumir que
+funcionou.
+
+**P2-10 (novo, metodologia/mapa).** A fileira de lojas da Rua dos Mercadores (fachadas do
+Ichiro/Hayato, x≈1037-1045,y≈1049-1053) tem pelo menos um ponto (**1041,1053**, entre as
+fachadas do Ichiro e do Hayato) onde o personagem ficou fisicamente preso por several ciclos,
+sem conseguir andar em NENHUMA das 8 direções (`There is not enough room.` em todas). Andar
+"por acidente" para dentro do teleporte de entrada da loja do Hayato (1044,1053 → interior
+1310-1317,1000-1005) também aconteceu 1x ao tentar cortar caminho por essa fileira — o
+personagem só voltou pro lado de fora por sorte, quando um hop calculado por engano bateu no
+pad de saída do interior. **Sugestão de rota**: quem for escrever o próximo script de QA deve
+evitar cortar caminho rente às fachadas de loja (y=1049-1053 entre x=1037-1048) — ou contornar
+por y≥1058 (rua aberta) ou sair pelo Portão Leste com uma folga de pelo menos 5-6 tiles das
+fachadas antes de virar para o norte/sul.
 
 ## Comparação com `progressao-jogador.md`
 

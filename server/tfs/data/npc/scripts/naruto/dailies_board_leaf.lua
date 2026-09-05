@@ -8,6 +8,37 @@ function onCreatureAppear(cid) npcHandler:onCreatureAppear(cid) end
 function onCreatureDisappear(cid) npcHandler:onCreatureDisappear(cid) end
 function onThink() npcHandler:onThink() end
 
+local TALK_TO_QUESTS = {}
+if NarutoQuests then
+	for _, q in ipairs(NarutoQuests.list) do
+		if q.kind == 'talk_to' and q.targetNpc == 'dailies_board_leaf' then
+			TALK_TO_QUESTS[#TALK_TO_QUESTS + 1] = q
+		end
+	end
+end
+if #TALK_TO_QUESTS > 0 then
+	local function narutoTalkToCallback(cid, message, keywords, parameters, node)
+		if not npcHandler:isFocused(cid) then return false end
+		local player = Player(cid)
+		if not player then return false end
+		for _, q in ipairs(TALK_TO_QUESTS) do
+			local msg = NarutoQuests.completeTalkTo(player, q)
+			if msg then
+				npcHandler:say(msg, cid)
+				return true
+			end
+		end
+		return false
+	end
+	local narutoTalkToSeen = {}
+	for _, q in ipairs(TALK_TO_QUESTS) do
+		local kw = q.keyword or 'missao'
+		if not narutoTalkToSeen[kw] then
+			narutoTalkToSeen[kw] = true
+			keywordHandler:addKeyword({kw}, narutoTalkToCallback, {})
+		end
+	end
+end
 
 local function dailyLines(player)
 	NarutoDailies.rollIfNeeded(player)

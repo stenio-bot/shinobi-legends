@@ -14,8 +14,8 @@ NarutoRanks = {}
 NarutoRanks.STORAGE = 60010
 NarutoRanks.BONUS_SUBID = 9010
 NarutoRanks.list = {
-	{rank = 'genin', index = 1, minLevel = 1, title = 'Genin da vila', areas = {'floresta_da_vila'}, jutsuTier = 1, statusBonus = {maxHp = 0, maxChakra = 0, defense = 0}},
-	{rank = 'chunin', index = 2, minLevel = 20, title = 'Chunin — aprovado no Exame Chunin', areas = {'floresta_da_morte', 'costa_das_mares', 'ruinas_do_cla_marionetista'}, jutsuTier = 2, statusBonus = {maxHp = 30, maxChakra = 15, defense = 0}},
+	{rank = 'genin', index = 1, minLevel = 1, title = 'Genin da vila', areas = {'floresta_da_vila', 'costa_das_mares'}, jutsuTier = 1, statusBonus = {maxHp = 0, maxChakra = 0, defense = 0}},
+	{rank = 'chunin', index = 2, minLevel = 20, title = 'Chunin — aprovado no Exame Chunin', areas = {'floresta_da_morte', 'ruinas_do_cla_marionetista'}, jutsuTier = 2, statusBonus = {maxHp = 30, maxChakra = 15, defense = 0}},
 	{rank = 'jonin', index = 3, minLevel = 50, title = 'Jonin — venceu o Espadachim da Névoa e o Marionetista das Ruínas', areas = {'montanha_do_trovao'}, jutsuTier = 3, statusBonus = {maxHp = 80, maxChakra = 40, defense = 5}},
 	{rank = 'anbu', index = 4, minLevel = 80, title = 'Anbu — venceu a Dupla Imortal e a guarda externa do Covil', areas = {'covil_nuvem_vermelha'}, jutsuTier = 3, statusBonus = {maxHp = 150, maxChakra = 70, defense = 10}},
 	{rank = 'kage', index = 5, minLevel = 100, title = 'Kage — derrotou os líderes da Organização Nuvem Vermelha', areas = {}, jutsuTier = 3, statusBonus = {maxHp = 300, maxChakra = 150, defense = 20}},
@@ -30,8 +30,8 @@ NarutoRanks.FIRST = NarutoRanks.byIndex[1]
 -- área (docs/lore/mundo.md) -> índice mínimo de rank para entrar (de ranks.json unlocks.areas)
 NarutoRanks.zoneMinIndex = {
 	['floresta_da_vila'] = 1,
+	['costa_das_mares'] = 1,
 	['floresta_da_morte'] = 2,
-	['costa_das_mares'] = 2,
 	['ruinas_do_cla_marionetista'] = 2,
 	['montanha_do_trovao'] = 3,
 	['covil_nuvem_vermelha'] = 4,

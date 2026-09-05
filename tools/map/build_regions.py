@@ -86,7 +86,26 @@ def in_rect(x, y, r):
 # dentro) — gatear a entrada por Chunin criaria um paradoxo (precisa entrar
 # pra virar Chunin, mas so Chunin entra). As outras 3 regioes sao destino
 # de PROVA, nao de exame-em-andamento, entao o gate de zoneMinIndex vale.
-RANK_GATE_ACTIONID = {"chunin": 45002, "jonin": 45003, "anbu": 45004, "kage": 45005}
+#
+# ACHADO #1 da auditoria de historia (docs/design/auditoria-historia.md, item
+# A1, Lote M): a Costa das Mares (nivel 12-19, pensada pra Genin recem-saido
+# da Floresta da Vila) estava com o MESMO gate de rank Chunin das Ruinas —
+# um Genin L12-19 (sem ainda ter feito o Exame Chunin, que so acontece DEPOIS
+# na Floresta da Morte) era barrado na entrada e nunca conseguia caçar la.
+# O item de mapa (`gate_marker`, actionid) e o unico ponto de imposicao real
+# (rank_gate.lua confere so o actionid do item, NAO consulta
+# NarutoRanks.zoneMinIndex/data/ranks.json — ver server/generated/scripts/
+# naruto/rank_gate.lua) — por isso ajustar aqui basta pra desbloquear o
+# jogo, mesmo com data/ranks.json ainda listando costa_das_mares em
+# unlocks.areas do Chunin (inconsistencia de dados fora do escopo desta
+# missao de mapa; NAO editado aqui). Corrigido: a Costa usa actionid do gate
+# "genin" (45001) — todo jogador ja nasce rank Genin (NarutoRanks.get()
+# retorna indice 1 por padrao), entao o gate fica fisicamente presente
+# (paridade visual com Ruinas/Montanha) mas NUNCA barra ninguem — equivalente
+# a nao ter gate, sem precisar remover o item.
+RANK_GATE_ACTIONID = {
+    "genin": 45001, "chunin": 45002, "jonin": 45003, "anbu": 45004, "kage": 45005,
+}
 
 
 def place_rank_gate(b, sid, positions, rank, text=None, sign_pos=None):
@@ -445,12 +464,15 @@ def build_coastal_tides(b, sid, tpls, rng):
     sign(b, COAST_PATH_X - 4, 1091,
          "<- Vila da Folha  |  Costa das Mares ->")
 
-    # gate de rank (Missão A.2, ranks.json: costa_das_mares exige Chunin) — na
-    # fronteira da regiao (COAST_Y0), cobrindo a largura inteira da trilha
-    # (width=3) pra nao dar pra contornar.
+    # gate de rank (Achado #1 / item A1 da auditoria de historia, Lote M): a
+    # Costa e a PRIMEIRA regiao pos-tutorial (nivel 12-19, Genin) — nao pode
+    # exigir Chunin (so obtido no Exame Chunin, que roda DEPOIS na Floresta
+    # da Morte). Gate trocado de "chunin" pra "genin" (todo jogador ja tem):
+    # o item fisico continua la (mesma largura width=3, mesma posicao), so
+    # nao barra mais ninguem — ver comentario longo em RANK_GATE_ACTIONID.
     n_gate_costa = place_rank_gate(
         b, sid, [(COAST_PATH_X - 1, y0), (COAST_PATH_X, y0), (COAST_PATH_X + 1, y0)],
-        "chunin", text="Alem daqui: nivel Chunin ou superior.",
+        "genin", text="Costa das Mares - nivel recomendado 12+.",
         sign_pos=(COAST_PATH_X - 2, y0))
 
     # vila de pescadores: 4 cabanas (blue_house) em volta de um patio de areia
@@ -556,8 +578,9 @@ def build_coastal_tides(b, sid, tpls, rng):
                  "autoborder proprio (border_grass_sand_*/border_sand_water_*, "
                  "tools/spr/gen_borders.py) — aplicado pelo passe apply_borders() "
                  "do build_valley.py, nao aqui")
-    notes.append("costa das mares: gate de rank Chunin (actionid %d), %d marcadores "
-                 "em (%d,%d)" % (RANK_GATE_ACTIONID["chunin"], n_gate_costa, COAST_PATH_X, y0))
+    notes.append("costa das mares: gate de rank Genin (actionid %d, nunca barra "
+                 "ninguem — Achado #1/A1, era Chunin) — %d marcadores em (%d,%d)"
+                 % (RANK_GATE_ACTIONID["genin"], n_gate_costa, COAST_PATH_X, y0))
 
     # -- spawns ---------------------------------------------------------
     spec = SpawnSpec()
@@ -574,6 +597,25 @@ def build_coastal_tides(b, sid, tpls, rng):
     for i in range(3):
         dx, dy = off[i % len(off)]
         g3.add_monster("Guardião da Neblina", dx, dy, spawntime=60)
+
+    # Item A2 da auditoria de historia (Lote M): Aprendiz Mascarado (masked_
+    # apprentice) nao tinha NENHUM spawn solto na Costa — so aparecia como
+    # reforco invocado na fase 60% HP do Espadachim (data/monsters/
+    # coastal_tides.json), o que tornava `q_coastal_apprentice` (matar 6)
+    # praticamente impossivel sem repetir a luta do boss 6x. 3 unidades numa
+    # praia aberta ENTRE o grupo do Guardiao da Neblina (y=1139, acima) e a
+    # arena do boss (boss_pos, y~1166, abaixo) — areia caminhavel (y<1155),
+    # longe das 4 cabanas (x 1021-1023/1035-1037) e dos postes de amarracao
+    # (x=1027/1031, y=1149/1160) pra nao empilhar em cima de item bloqueante.
+    _apprentice_pts = [(-4, -1), (3, 0), (1, 1)]  # -> (1025,1152)/(1032,1153)/(1030,1154)
+    g4 = spec.group(COAST_PATH_X, 1153, radius=5)
+    for (dx, dy) in _apprentice_pts:
+        b.clear_items(COAST_PATH_X + dx, 1153 + dy)
+        g4.add_monster("Aprendiz Mascarado", dx, dy, spawntime=90)
+    notes.append("costa das mares: Aprendiz Mascarado agora tem spawn solto (%d unidades, "
+                 "respawn 90s) entre o Guardiao da Neblina e a arena do boss — Achado/A2"
+                 % len(_apprentice_pts))
+
     spec.group(*boss_pos, radius=2).add_monster("Espadachim da Névoa", 0, 0, spawntime=7200)
 
     # NPCs vao SO' na lista `npcs` devolvida (build_valley.build_spawns ja os
@@ -654,6 +696,20 @@ def build_ruins(b, sid, tpls, rng):
     # segura logo apos o gate, antes do patio.
     dokan_pos = (x0 + 2, RUINS_GATE_Y[0])
     b.clear_items(*dokan_pos)
+
+    # Item B1 da auditoria de historia (Lote M): Ancião Kaito (quest_giver_
+    # ruins) e Tsubaki, a Escavadora (merchant_ruins) NUNCA tinham sido
+    # posicionados no mapa (so existiam em data/npcs/ruins.json, sem spawn) —
+    # bloqueava as 7 missoes das Ruinas e metade do Exame Jonin. Mesmo padrao
+    # do Dokan (perto do gate/entrada), 2 tiles a mais no eixo x e y=+2 pra
+    # sair do corredor estreito (largura 2, so' cobre y=1019-1020) e cair no
+    # chao aberto do patio (ruins_floor, sem parede por perto — room_a comeca
+    # em y0+4=1004, bem ao norte) — tile livre, alcancavel, nao bloqueia a
+    # passagem (o corredor em si continua livre em y=1019-1020).
+    kaito_pos = (x0 + 5, RUINS_GATE_Y[0] + 2)
+    tsubaki_pos = (x0 + 7, RUINS_GATE_Y[0] + 2)
+    b.clear_items(*kaito_pos)
+    b.clear_items(*tsubaki_pos)
 
     sign(b, x0 + 9, RUINS_GATE_Y[0] - 1, "Ruinas do Cla Marionetista (nivel 25-50)")
 
@@ -755,7 +811,11 @@ def build_ruins(b, sid, tpls, rng):
         .add_monster("Desertor de Elite", 0, 0, spawntime=1800)
     spec.group(*boss_pos, radius=3).add_monster("Marionetista das Ruínas", 0, 0, spawntime=7200)
 
-    npcs = [("Mestre de Tarefas Dokan", dokan_pos)]
+    npcs = [
+        ("Mestre de Tarefas Dokan", dokan_pos),
+        ("Ancião Kaito", kaito_pos),
+        ("Tsubaki, a Escavadora", tsubaki_pos),
+    ]
     return npcs, spec, notes
 
 
@@ -813,6 +873,30 @@ def build_mountain(b, sid, tpls, rng):
     b.path(MOUNT_TRAIL_X, RUINS_Y1, MOUNT_TRAIL_X, y0, BV.DIRT, width=3)
     sign(b, MOUNT_TRAIL_X - 3, RUINS_Y1 + 1,
          "<- Ruinas do Cla Marionetista  |  Montanha do Trovao ->")
+
+    # Item C1 da auditoria de historia (Lote M): Mestra Yuki (quest_giver_
+    # mountain) e Ferreiro Genzo (merchant_mountain) NUNCA tinham sido
+    # posicionados — bloqueava as 7 missoes da Montanha e as 2 metades do
+    # Exame Anbu. AO CONTRARIO do Mestre de Tarefas Kaji (colocado DEPOIS do
+    # gate, ja dentro da zona Jonin — ok pra ele, so' um quadro de tarefas
+    # repetiveis), o dador de missao/mercador precisa ficar acessivel a quem
+    # ainda NAO tem rank Jonin: e a missao de Yuki que guia o jogador ate o
+    # Exame Anbu, entao ela nao pode depender do proprio gate que a missao
+    # dela ajuda a superar (mesmo paradoxo que a Floresta da Morte evita com
+    # Chunin). Alarga um pequeno patamar (7 tiles, largura da trilha 3 vezes
+    # o normal) 3 tiles ANTES do gate (fora da zona gateada, lado Ruinas) so'
+    # pra caber os 2 NPCs lado a lado sem bloquear a passagem central.
+    PRE_GATE_Y0, PRE_GATE_Y1 = y0 - 3, y0 - 1
+    b.fill(MOUNT_TRAIL_X - 3, PRE_GATE_Y0, MOUNT_TRAIL_X + 3, PRE_GATE_Y1, BV.DIRT)
+    for _yy in range(PRE_GATE_Y0, PRE_GATE_Y1 + 1):
+        for _xx in range(MOUNT_TRAIL_X - 3, MOUNT_TRAIL_X + 4):
+            b.clear_items(_xx, _yy)
+    yuki_pos = (MOUNT_TRAIL_X - 3, y0 - 2)
+    genzo_pos = (MOUNT_TRAIL_X + 3, y0 - 2)
+    b.clear_items(*yuki_pos)
+    b.clear_items(*genzo_pos)
+    sign(b, MOUNT_TRAIL_X - 1, PRE_GATE_Y0, "Posto avancado da Montanha do Trovao")
+
     # gate de rank (ranks.json: montanha_do_trovao exige Jonin) — na entrada,
     # cobrindo a largura do corredor (width=3).
     n_gate_mount = place_rank_gate(
@@ -997,6 +1081,10 @@ def build_mountain(b, sid, tpls, rng):
                  "+ neve mountain_snow_0/border_snow_rock_* (era stone_floor generico)")
     notes.append("montanha: gate de rank Jonin (actionid %d), %d marcadores em y=%d"
                  % (RANK_GATE_ACTIONID["jonin"], n_gate_mount, y0))
+    notes.append("montanha: Mestra Yuki %r e Ferreiro Genzo %r posicionados ANTES do "
+                 "gate (posto avancado, y=%d-%d) — acessiveis sem precisar ja ser Jonin, "
+                 "ao contrario do Kaji que fica depois — Achado/C1" % (yuki_pos, genzo_pos,
+                 PRE_GATE_Y0, PRE_GATE_Y1))
 
     # linhas-perigo (patamar OU lago) + 1 de margem — nenhum centro/offset de
     # spawn pode cair nelas (achado do build/BFS: varios grupos cravavam
@@ -1025,7 +1113,11 @@ def build_mountain(b, sid, tpls, rng):
     spec.group(*partner_pos, radius=2).add_monster("O Sócio Eterno", 0, 0, spawntime=7200)
     spec.group(*oni_pos, radius=2).add_monster("Oni Ancestral", 0, 0, spawntime=7200)
 
-    npcs = [("Mestre de Tarefas Kaji", kaji_pos)]
+    npcs = [
+        ("Mestre de Tarefas Kaji", kaji_pos),
+        ("Mestra Yuki", yuki_pos),
+        ("Ferreiro Genzo", genzo_pos),
+    ]
     return npcs, spec, notes, gate_pos
 
 

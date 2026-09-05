@@ -416,6 +416,16 @@ migração do protótipo Godot (`forest_valley.json`) para o gerador de mapa do 
    *"Chunin. Agora sim pode seguir — a Costa das Marés precisa de gente como você, e as Ruínas do
    Clã Marionetista não vão esperar."*
 
+**Também feito nesta passada (Lote B), fora da tabela original:** `data/monsters/swamp.json` —
+`lesser_serpent` teve o XP ajustado de 260 para 290 (estava ~13% abaixo de `rogue_ninja`, mesmo
+nível/HP/ataque, sem justificativa clara — agora coerente para L15-20 agora que a Serpente Menor
+vai ter spawn solto, ver item 1 acima/B2) e `boss_white_serpent` ganhou, na fase de 25% HP, uma
+fala velada citando "a organização" que o expulsou — semente nº 1,5 do enredo principal (o
+Serpente Branca como desertor rejeitado pela Nuvem Vermelha), sem nomeá-la diretamente. O conserto
+do spawn (item 1) e o gancho de saída (item 3) continuam pendentes — pertencem a `tools/map/
+build_valley.py` (Lote M) e a `data/npcs/leaf.json` (outro agente), fora do escopo de arquivos
+deste agente.
+
 ### Esforço e dependências
 
 Esforço: **M** — o conserto do spawn é mecânico (mapa já desenhado, só falta portar), a redundância
@@ -501,6 +511,16 @@ nunca chegar ao jogador:
    `grants_rank_progress: "jonin"`, poderia dizer *"Metade do caminho. Se o Espadachim da Névoa
    também caiu, a Montanha do Trovão está esperando por você."* — referencia explicitamente a
    outra metade do exame (Costa), reforçando que as duas quests não têm ordem entre si.
+   **feito (Lote B)** — implementado como `done_text` de `q_ruins_boss` em `data/npcs/ruins.json`
+   (texto idêntico ao proposto acima). Continua bloqueado na prática até o item 1 (posicionar
+   Kaito no mapa) ser resolvido por outro lote.
+
+**Também feito nesta passada (Lote B), além do que a auditoria original listava:** a cadeia
+inteira de Ancião Kaito foi revisada como história com começo/meio/fim (chegada do Chunin recém-
+promovido → explicação do clã que virou marionetes → coleta de peças → rastros de quem ainda
+comanda marionetes/sentinelas → xamãs → desertor → boss), e a fase de 15% HP de `boss_puppeteer`
+(`data/monsters/ruins.json`) ganhou fala explícita revelando que ele trabalha para a Nuvem
+Vermelha — semente nº 2 do enredo principal.
 
 ### Esforço e dependências
 
@@ -572,19 +592,29 @@ Mesmo um jogador GM/nível 80 que chegasse até os bosses por conta própria nã
 1. **Posicionar Mestra Yuki e Ferreiro Genzo (M, mapa).** Mesmo conserto do Arco 4, no
    `build_mountain()` de `tools/map/build_regions.py` — prioridade igual ou maior que o Arco 4,
    porque bloqueia 2 ranks em vez de 1.
-2. **Dar ao jogador a resposta antes do quiz (P).** A própria Mestra Yuki, na *fala de introdução*
-   (antes do quiz aceitar respostas), pode contar a história que a pergunta cobra — ex.: *"Vocês
-   vão enfrentar uma dupla que a Nuvem Vermelha já usou contra vilas inteiras, há uma geração.
-   Prove que prestou atenção."* — aí a pergunta testa se o jogador **leu o que ela acabou de
-   dizer**, não conhecimento externo. Resolve o quiz e começa a puxar o fio da organização para
-   dentro do jogo de verdade.
-3. **Gancho de saída (P)**, ao conceder o 2º `grants_rank_progress: "anbu"`: *"Isso é só metade do
-   que te espera no Covil da Nuvem Vermelha — e agora vocês já sabem o nome de quem enfrentam."*
+2. **feito (Lote C) — Dar ao jogador a resposta antes do quiz (P).** A própria Mestra Yuki, na *fala
+   de introdução* (antes do quiz aceitar respostas), pode contar a história que a pergunta cobra —
+   ex.: *"Vocês vão enfrentar uma dupla que a Nuvem Vermelha já usou contra vilas inteiras, há uma
+   geração. Prove que prestou atenção."* — aí a pergunta testa se o jogador **leu o que ela acabou
+   de dizer**, não conhecimento externo. Resolve o quiz e começa a puxar o fio da organização para
+   dentro do jogo de verdade. *Implementado em `data/npcs/mountain.json` (`q_mountain_lore.text`) —
+   também recebeu uma 2ª camada de reforço narrativo em `q_mountain_eagles.text` (fala de chegada de
+   Yuki, plantando "pacto antigo de guerra" antes mesmo do quiz).*
+3. **feito (Lote C) — Gancho de saída (P)**, ao conceder o 2º `grants_rank_progress: "anbu"`:
+   *"Isso é só metade do que te espera no Covil da Nuvem Vermelha — e agora vocês já sabem o nome
+   de quem enfrentam."* *Implementado como `done_text` de `q_mountain_boss` em
+   `data/npcs/mountain.json`.*
+4. **feito (Lote C) — Sócio Eterno sem summon.** `boss_curse_partner` não invocava ninguém em
+   nenhuma fase (auditoria original não listava isso como item numerado, mas o pedido de execução
+   do Lote C pediu 1 fase de summon para fechar o arco como história completa). Fase de 50% HP
+   agora invoca 2 `magma_serpent` (`data/monsters/mountain.json`), reaproveitando um monstro comum
+   já existente na própria região — sem sprite novo.
 
 ### Esforço e dependências
 
-Esforço: **P** para o conserto crítico do mapa (idêntico ao Arco 4). **P** para as 2 falas novas.
-Nenhuma dependência de sistema novo — é o mesmo padrão de correção do Arco 4, só em outro arquivo.
+Esforço: **P** para o conserto crítico do mapa (idêntico ao Arco 4, **pendente** — Lote M). **P**
+para as falas novas e o summon do Sócio Eterno, todos **feitos (Lote C)**. Nenhuma dependência de
+sistema novo — é o mesmo padrão de correção do Arco 4, só em outro arquivo.
 
 ## Arco 6 — Covil da Nuvem Vermelha (nível 80–100, Anbu→Kage)
 
@@ -648,24 +678,33 @@ Este é o arco mais "fechado" tecnicamente (única região onde os dois NPCs-cha
 bestiário já estão no mapa) — o trabalho aqui é de **polimento de clímax**, não de correção de
 bug:
 
-1. **Dar ao `boss_crimson_ancestor` pelo menos 1 summon ou transformação (M).** Ex.: na fase de
-   25% HP, invocar 1 `elite_cloud_guard` **com o próprio `looktype` do boss reduzido** (mesmo
-   truque que a Serpente Branca já usa) — ou, mais simples, uma fala + efeito visual (`fx_seal_glow`
-   já existe no sistema de conquistas) marcando a transição para "modo final".
-2. **Trocar o summon de `boss_rings_bearer` por uma cópia dele mesmo (P/M)**, reaproveitando o
-   próprio monstro em HP reduzido em vez de `elite_cloud_guard` — reforça a fantasia de "multiplica
-   a própria vontade" sem precisar de sprite novo (mesmo looktype, só um segundo spawn).
-3. **1 quest de coleta ou quiz no meio da cadeia (P/M, opcional)** — ex. um `keyword_quiz` da
-   própria Capitã Suzu perguntando sobre os 3 bosses já derrotados no jogo (Serpente Branca,
-   Marionetista, Sócio Eterno/Oni Ancestral) antes de liberar o guardião final — fecharia o círculo
-   narrativo citando os próprios arcos anteriores, e resolveria a "falta de variedade" apontada
-   acima.
+1. **feito (Lote C) — Dar ao `boss_crimson_ancestor` pelo menos 1 summon ou transformação (M).**
+   Implementado como summon (não transformação): fase de 25% HP agora invoca 1 `crimson_echo`,
+   monstro novo em `data/monsters/akatsuki_lair.json` pensado para usar o MESMO `looktype` do boss
+   (913) em HP reduzido — "eco" dele mesmo. A mensagem da fase também foi reescrita para revelar a
+   motivação do Ancestral (a Grande Guerra que "as vilas fingiram vencer"), fechando o arco da
+   Nuvem Vermelha. **Pendência real**: `crimson_echo` é um id de monstro novo, então precisa de uma
+   entrada nova em `data/tfs_mapping.json` (`looktype: 913`, igual ao boss) — arquivo compartilhado,
+   não editado por este lote (ver relatório final da missão); sem essa entrada, o exportador usa o
+   fallback padrão (looktype 128) em vez do visual pretendido.
+2. **feito (Lote C) — Trocar o summon de `boss_rings_bearer` por uma cópia dele mesmo (P/M)**.
+   Fase de 60% HP agora invoca 2 `invoked_path` (monstro novo, mesmo padrão de `crimson_echo`,
+   pensado para o looktype 911 do boss) em vez de `elite_cloud_guard`. **Mesma pendência de
+   `tfs_mapping.json` acima.**
+3. **feito (Lote C) — 1 quiz no meio da cadeia.** Nova quest `q_lair_lore_quiz`
+   (`keyword_quiz`, 3 perguntas — Serpente Branca/Marionetista/Sócio Eterno-Oni Ancestral) inserida
+   em `data/npcs/akatsuki_lair.json` entre `q_lair_2_masked_puppeteer` e `q_lair_3_rings_bearer`,
+   resolvendo também a "falta de variedade de objetivo" apontada acima (o arco final já não é mais
+   só `kind: kill`).
 
 ### Esforço e dependências
 
-Esforço: **M** — mudanças de dados em `data/monsters/akatsuki_lair.json` (phases) e
-`data/npcs/akatsuki_lair.json` (quiz novo), sem sistema novo. Nenhuma dependência de mapa/sprite
-adicional (o `looktype` reduzido do próprio boss já existe).
+Esforço: **M** — mudanças de dados em `data/monsters/akatsuki_lair.json` (phases + 2 monstros
+novos) e `data/npcs/akatsuki_lair.json` (quiz novo + `done_text` nas 4 quests de boss), sem sistema
+novo — **todos feitos (Lote C)**. Pendência real (não bloqueante para validação, mas visual):
+`crimson_echo`/`invoked_path` precisam de entrada em `data/tfs_mapping.json` (looktype do boss
+correspondente) para não cair no looktype de fallback — registrado no relatório final em vez de
+editado (arquivo compartilhado).
 
 ---
 
@@ -768,12 +807,12 @@ dentro dela).
 
 | # | Ação | Arquivo | Item afetado | Objetivo/mudança | Pré-requisito | Critério de aceite |
 |---|---|---|---|---|---|---|
-| A1 | **Crítico** — remover/rebaixar o gate de rank da Costa | `tools/map/build_regions.py:452-455` | `place_rank_gate(..., "chunin", ...)` | Trocar para sem gate (igual à Floresta da Morte) ou `"genin"` | nenhum | Um personagem Genin nível 12 (sem rank Chunin) consegue atravessar o marcador de entrada da Costa das Marés sem ser barrado/teleportado de volta |
-| A2 | **Alto** — dar spawn solto ao Aprendiz Mascarado | `tools/map/build_regions.py` (`build_coastal_tides`, bloco de spawns) | `masked_apprentice` | Adicionar grupo de spawn próprio, 2-3 unidades, nível 17, entre `mist_guardian` e a arena do boss | A1 (senão ninguém no nível certo consegue caçar lá) | `grep -o 'name="Aprendiz Mascarado"' valley-spawn.xml` retorna ≥2; matar 6 conta para `q_coastal_apprentice` sem depender do boss |
-| A3 | Semente da Nuvem Vermelha | `data/monsters/forest.json` | `boss_bandit_chief.phases[0]` (50% HP) | Trocar/complementar `message` para citar "nuvem vermelha" de forma sutil | nenhum | Fala aparece no chat de combate ao boss cruzar 50% HP (checar em log de combate/playtest) |
-| A4 | Gancho de saída — Floresta da Vila | `data/npcs/leaf.json` (`quest_giver_leaf`) | nova entrada de diálogo/quest final | Ver texto proposto no Arco 1 (aponta Costa + Floresta da Morte) | nenhum | Falar com Capitã Rin depois de `q_bandit_chief` concluída mostra a nova fala |
-| A5 | (Opcional) Missão do Cervo | `data/npcs/leaf.json` (`quest_giver_leaf`) | `q_forest_deer_1` | `collect_item`: 3 `onigiri` | nenhum | Missão aceitável, completável, entrega recompensa |
-| A6 | Gancho de saída — Costa | `data/npcs/coastal_tides.json` (`quest_giver_coastal`) | fala pós-`q_coastal_swordsman` | Ver texto proposto no Arco 2 (aponta Floresta da Morte) | A1, A2 | Falar com Ancião Tazu depois do Espadachim morto mostra a nova fala |
+| A1 | **Crítico** — remover/rebaixar o gate de rank da Costa | `tools/map/build_regions.py:452-455` | `place_rank_gate(..., "chunin", ...)` | Trocar para sem gate (igual à Floresta da Morte) ou `"genin"` | nenhum | Um personagem Genin nível 12 (sem rank Chunin) consegue atravessar o marcador de entrada da Costa das Marés sem ser barrado/teleportado de volta — **feito (Lote M)**: gate trocado pra `"genin"` (actionid 45001, novo em `RANK_GATE_ACTIONID`), nunca barra ninguém; ver `docs/sistemas/mapas.md` |
+| A2 | **Alto** — dar spawn solto ao Aprendiz Mascarado | `tools/map/build_regions.py` (`build_coastal_tides`, bloco de spawns) | `masked_apprentice` | Adicionar grupo de spawn próprio, 2-3 unidades, nível 17, entre `mist_guardian` e a arena do boss | A1 (senão ninguém no nível certo consegue caçar lá) | `grep -o 'name="Aprendiz Mascarado"' valley-spawn.xml` retorna ≥2; matar 6 conta para `q_coastal_apprentice` sem depender do boss — **feito (Lote M)**: 3 unidades, respawn 90s, centro (1029,1153); ver `docs/sistemas/mapas.md` |
+| A3 | Semente da Nuvem Vermelha | `data/monsters/forest.json` | `boss_bandit_chief.phases[0]` (50% HP) | Trocar/complementar `message` para citar "nuvem vermelha" de forma sutil | nenhum | Fala aparece no chat de combate ao boss cruzar 50% HP (checar em log de combate/playtest) — **feito (Lote A)** |
+| A4 | Gancho de saída — Floresta da Vila | `data/npcs/leaf.json` (`quest_giver_leaf`) | nova entrada de diálogo/quest final | Ver texto proposto no Arco 1 (aponta Costa + Floresta da Morte) | nenhum | Falar com Capitã Rin depois de `q_bandit_chief` concluída mostra a nova fala — **feito (Lote A)** |
+| A5 | (Opcional) Missão do Cervo | `data/npcs/leaf.json` (`quest_giver_leaf`) | `q_forest_deer_1` | `collect_item`: 3 `onigiri` | nenhum | Missão aceitável, completável, entrega recompensa — **feito (Lote A)** |
+| A6 | Gancho de saída — Costa | `data/npcs/coastal_tides.json` (`quest_giver_coastal`) | fala pós-`q_coastal_swordsman` | Ver texto proposto no Arco 2 (aponta Floresta da Morte) | A1, A2 | Falar com Ancião Tazu depois do Espadachim morto mostra a nova fala — **feito (Lote A)** |
 
 **Falas-chave propostas (pt-BR, tom da bíblia):**
 - Capitã Rin (A4): *"Bom trabalho, Genin. Mas isso foi só a estrada perto de casa — a Floresta da
@@ -795,17 +834,35 @@ dentro dela).
 
 | # | Ação | Arquivo | Item afetado | Objetivo/mudança | Pré-requisito | Critério de aceite |
 |---|---|---|---|---|---|---|
-| B1 | **Crítico** — posicionar Ancião Kaito e Tsubaki | `tools/map/build_regions.py` (`build_ruins`, lista `npcs`) | NPCs `quest_giver_ruins`/`merchant_ruins` | Adicionar as 2 entradas que faltam à lista `npcs` retornada, perto do gate/entrada (mesmo padrão do Mestre de Tarefas Dokan) | nenhum | `grep -o 'name="Ancião Kaito"' valley-spawn.xml` e `name="Tsubaki, a Escavadora"` retornam 1 cada; falar com Kaito abre o menu de missão |
-| B2 | **Crítico** — portar spawn da Serpente Menor | `tools/map/build_valley.py` (`DEATH_SETS`/`DEATH_CLEARINGS`) | `lesser_serpent` | Portar os 3 pontos já desenhados em `data/maps/forest_valley.json` (x=74,y=18 / x=82,y=8 / x=86,y=34, coords locais da zona) | nenhum | `grep -o 'name="Serpente Menor"' valley-spawn.xml` retorna ≥3; matar conta para `q_lesser_serpents` sem depender do boss |
-| B3 | Remover redundância de boss (Goro × Ibuki) | `data/npcs/leaf.json` (`quest_giver_swamp`) | `q_elder_toad_hunt`, `q_white_serpent` | Trocar `objective.kind` de `kill` duplicado para checagem de `quest_chain_complete` da respectiva etapa do exame (`exam_chunin_2a`/`2b`) | B2 não depende, mas ideal aplicar junto | Completar a etapa do exame também completa a quest da Goro, sem exigir 2ª morte do mesmo boss |
-| B4 | Gancho de saída — Exame Chunin | `data/npcs/leaf.json` (`exam_proctor_forest`) | fala em `exam_chunin_3c_rival_mist` (pós-`grants_rank`) | Ver texto proposto no Arco 3 | nenhum | Falar com Ibuki depois do torneio mostra a nova fala |
-| B5 | Gancho de saída — Ruínas | `data/npcs/ruins.json` (`quest_giver_ruins`) | fala em `q_ruins_boss` (pós-`grants_rank_progress`) | Ver texto proposto no Arco 4 | B1 | Falar com Kaito depois do Marionetista morto mostra a nova fala |
+| B1 | **Crítico** — posicionar Ancião Kaito e Tsubaki | `tools/map/build_regions.py` (`build_ruins`, lista `npcs`) | NPCs `quest_giver_ruins`/`merchant_ruins` | Adicionar as 2 entradas que faltam à lista `npcs` retornada, perto do gate/entrada (mesmo padrão do Mestre de Tarefas Dokan) | nenhum | `grep -o 'name="Ancião Kaito"' valley-spawn.xml` e `name="Tsubaki, a Escavadora"` retornam 1 cada; falar com Kaito abre o menu de missão — **feito (Lote M)**: Kaito em (1205,1022), Tsubaki em (1207,1022); ver `docs/sistemas/mapas.md` |
+| B2 | **Crítico** — portar spawn da Serpente Menor | `tools/map/build_valley.py` (`DEATH_SETS`/`DEATH_CLEARINGS`) | `lesser_serpent` | Portar os 3 pontos já desenhados em `data/maps/forest_valley.json` (x=74,y=18 / x=82,y=8 / x=86,y=34, coords locais da zona) | nenhum | `grep -o 'name="Serpente Menor"' valley-spawn.xml` retorna ≥3; matar conta para `q_lesser_serpents` sem depender do boss — **feito (Lote M)**: 3 clareiras novas (2-3 unidades cada, 8 no total) em (1158,1048)/(1178,1030)/(1188,1105); ver `docs/sistemas/mapas.md` |
+| B3 | Remover redundância de boss (Goro × Ibuki) | `data/npcs/leaf.json` (`quest_giver_swamp`) | `q_elder_toad_hunt`, `q_white_serpent` | Trocar `objective.kind` de `kill` duplicado para checagem de `quest_chain_complete` da respectiva etapa do exame (`exam_chunin_2a`/`2b`) | B2 não depende, mas ideal aplicar junto | Completar a etapa do exame também completa a quest da Goro, sem exigir 2ª morte do mesmo boss — **parcial (Lote A)**: textos amarram Goro↔Ibuki como pré-requisito narrativo; mecanicamente ainda exige 2 mortes (motor não suporta `quest_chain_complete`/`requires.quests` sem `docs/sistemas/missoes.md` — ver relatório da missão) |
+| B4 | Gancho de saída — Exame Chunin | `data/npcs/leaf.json` (`exam_proctor_forest`) | fala em `exam_chunin_3c_rival_mist` (pós-`grants_rank`) | Ver texto proposto no Arco 3 | nenhum | Falar com Ibuki depois do torneio mostra a nova fala — **feito (Lote A)** |
+| B5 | Gancho de saída — Ruínas | `data/npcs/ruins.json` (`quest_giver_ruins`) | fala em `q_ruins_boss` (pós-`grants_rank_progress`) | Ver texto proposto no Arco 4 | B1 | **feito (Lote B)** — implementado como `done_text` de `q_ruins_boss` (texto idêntico ao proposto). Falar com Kaito depois do Marionetista morto mostra a nova fala; depende de B1 (posicionar Kaito no mapa, fora do escopo deste agente) para o jogador conseguir chegar até lá |
 
 **Falas-chave propostas:**
 - Instrutora Ibuki (B4): *"Chunin. Agora sim pode seguir — a Costa das Marés precisa de gente como
   você, e as Ruínas do Clã Marionetista não vão esperar."*
 - Ancião Kaito (B5): *"Metade do caminho. Se o Espadachim da Névoa também caiu, a Montanha do
-  Trovão está esperando por você."*
+  Trovão está esperando por você."* — **feito (Lote B)**
+
+**Trabalho adicional feito (Lote B), além da tabela original:**
+- Cadeia inteira de Ancião Kaito (`data/npcs/ruins.json`) reescrita como história com
+  começo/meio/fim: falas de `q_ruins_intro`, `q_ruins_puppets`, `q_ruins_sentinels` e
+  `q_ruins_shamans` enriquecidas para deixar explícito o arco chegada (Chunin recém-promovido) →
+  Kaito explica o clã que virou marionetes → coleta de peças → rastros de quem ainda comanda os
+  bonecos/sentinelas → xamãs como último passo antes do desertor → boss. `q_ruins_curse_lore`
+  (quiz) e `q_ruins_deserter` mantidos como estavam (já adequados). `q_ruins_boss` ganhou texto de
+  confronto final novo.
+- `data/monsters/ruins.json`: fase de 15% HP de `boss_puppeteer` ganhou fala explícita citando a
+  Nuvem Vermelha ("A Nuvem Vermelha prometeu poder a quem guardasse este templo até o fim") —
+  semente nº 2 do enredo principal, pedida no escopo desta missão.
+- `data/monsters/swamp.json`: `lesser_serpent` teve XP ajustado de 260 para 290 (mesmo
+  nível/HP/ataque de `rogue_ninja`, que dá 300 XP — ficava ~13% abaixo do comparável de mesmo
+  tier sem justificativa, agora coerente com L15-20 já que a Serpente Menor passa a ter spawn
+  solto — ver B2). `boss_white_serpent`, fase de 25% HP, ganhou fala velada citando "a
+  organização" que o expulsou — semente nº 1,5, sem nomear a Nuvem Vermelha diretamente
+  (diferença intencional de tom vs. a fala explícita do Marionetista).
 
 ---
 
@@ -817,12 +874,14 @@ dentro dela).
 
 | # | Ação | Arquivo | Item afetado | Objetivo/mudança | Pré-requisito | Critério de aceite |
 |---|---|---|---|---|---|---|
-| C1 | **Crítico** — posicionar Mestra Yuki e Ferreiro Genzo | `tools/map/build_regions.py` (`build_mountain`, lista `npcs`) | NPCs `quest_giver_mountain`/`merchant_mountain` | Adicionar as 2 entradas que faltam (mesmo padrão do Mestre de Tarefas Kaji) | nenhum | `grep -o 'name="Mestra Yuki"' valley-spawn.xml` e `name="Ferreiro Genzo"` retornam 1 cada; falar com Yuki abre o menu de missão |
-| C2 | Ensinar a resposta antes do quiz | `data/npcs/mountain.json` (`quest_giver_mountain`) | texto de introdução de `q_mountain_lore` | Adicionar a informação que a pergunta cobra antes de abrir o quiz | C1 | Um jogador que nunca leu a lore consegue responder certo só com o que Yuki acabou de dizer |
-| C3 | Gancho de saída — Montanha | `data/npcs/mountain.json` (`quest_giver_mountain`) | fala em `q_mountain_boss` (pós-`grants_rank_progress`) | Ver texto proposto no Arco 5 | C1 | Falar com Yuki depois do Oni Ancestral morto mostra a nova fala |
-| C4 | Dar mecânica de summon ao boss final | `data/monsters/akatsuki_lair.json` | `boss_crimson_ancestor.phases` | Adicionar summon/transformação na fase de 25% HP (ex.: `elite_cloud_guard` com o próprio `looktype` reduzido) | nenhum | Fase de 25% HP invoca reforço visível em combate |
-| C5 | Trocar summon genérico por cópia do próprio boss | `data/monsters/akatsuki_lair.json` | `boss_rings_bearer.phases[1]` (60% HP) | Trocar `elite_cloud_guard` por um summon com o `looktype` do próprio boss (HP reduzido) | nenhum | Fase de 60% HP invoca uma versão visualmente idêntica ao boss |
-| C6 | (Opcional) Quiz de fechamento do Covil | `data/npcs/akatsuki_lair.json` (`quest_giver_akatsuki_lair`) | nova quest `keyword_quiz` antes de `q_lair_3_rings_bearer` | 3 perguntas citando Serpente Branca/Marionetista/Sócio Eterno-Oni Ancestral | nenhum | Quiz aceitável e completável, referencia os 3 bosses anteriores |
+| C1 | **Crítico** — posicionar Mestra Yuki e Ferreiro Genzo | `tools/map/build_regions.py` (`build_mountain`, lista `npcs`) | NPCs `quest_giver_mountain`/`merchant_mountain` | Adicionar as 2 entradas que faltam (mesmo padrão do Mestre de Tarefas Kaji) | nenhum | `grep -o 'name="Mestra Yuki"' valley-spawn.xml` e `name="Ferreiro Genzo"` retornam 1 cada; falar com Yuki abre o menu de missão — **feito (Lote M)**: diferente do Kaji, os dois ficam ANTES do gate Jonin (posto avançado em (1222,1058)/(1228,1058)) pra não depender do próprio rank que a missão de Yuki ajuda a conceder; ver `docs/sistemas/mapas.md` |
+| C2 | **feito (Lote C)** — Ensinar a resposta antes do quiz | `data/npcs/mountain.json` (`quest_giver_mountain`) | texto de introdução de `q_mountain_lore` | Adicionar a informação que a pergunta cobra antes de abrir o quiz | C1 | Um jogador que nunca leu a lore consegue responder certo só com o que Yuki acabou de dizer |
+| C3 | **feito (Lote C)** — Gancho de saída — Montanha | `data/npcs/mountain.json` (`quest_giver_mountain`) | fala em `q_mountain_boss` (pós-`grants_rank_progress`) | Ver texto proposto no Arco 5 | C1 | Falar com Yuki depois do Oni Ancestral morto mostra a nova fala |
+| C4 | **feito (Lote C)** — Dar mecânica de summon ao boss final | `data/monsters/akatsuki_lair.json` | `boss_crimson_ancestor.phases` | Adicionar summon/transformação na fase de 25% HP (ex.: `elite_cloud_guard` com o próprio `looktype` reduzido) | nenhum | Fase de 25% HP invoca reforço visível em combate |
+| C5 | **feito (Lote C)** — Trocar summon genérico por cópia do próprio boss | `data/monsters/akatsuki_lair.json` | `boss_rings_bearer.phases[1]` (60% HP) | Trocar `elite_cloud_guard` por um summon com o `looktype` do próprio boss (HP reduzido) | nenhum | Fase de 60% HP invoca uma versão visualmente idêntica ao boss |
+| C6 | **feito (Lote C)** — Quiz de fechamento do Covil | `data/npcs/akatsuki_lair.json` (`quest_giver_akatsuki_lair`) | nova quest `keyword_quiz` antes de `q_lair_3_rings_bearer` | 3 perguntas citando Serpente Branca/Marionetista/Sócio Eterno-Oni Ancestral | nenhum | Quiz aceitável e completável, referencia os 3 bosses anteriores |
+
+*Nota (Lote C, 2026-09-05): C2-C6 implementados em dados (`data/npcs/mountain.json`, `data/npcs/akatsuki_lair.json`, `data/monsters/mountain.json`, `data/monsters/akatsuki_lair.json`). C1 (posicionar Mestra Yuki/Ferreiro Genzo no mapa) permanece pendente — pertence ao Lote M (`tools/map`), não tocado por este lote. C4/C5 criaram 2 monstros novos (`crimson_echo`, `invoked_path`) que precisam de entrada nova em `data/tfs_mapping.json` (looktype 913/911, mesma dos bosses) — arquivo compartilhado, não editado; ver relatório final da missão.*
 
 **Falas-chave propostas:**
 - Mestra Yuki (C2, antes do quiz): *"Vocês vão enfrentar uma dupla que a Nuvem Vermelha já usou

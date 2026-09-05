@@ -100,6 +100,7 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - Chakra sustentável numa caçada real (30 min, com/sem pílula): `python3 tools/balance/sim.py --hunt --json /tmp/hunt.json`.
 - Som (SFX de jutsu/combate/UI, síntese própria, sem downloads — ADR-002): `.venv/bin/python tools/audio/gen_sfx.py` gera `client-otc/data/sounds/naruto/*.ogg` (único formato que o cliente carrega) + `assets-src/audio/sfx_catalog.json`; toque com `modules.naruto_sounds.play('sfx_id')`. Ver `docs/sistemas/audio.md`.
 - Sprites de criatura procedurais: `tools/spr/gen_animals.py` (animais dedicados 100% procedurais, looktypes 940–945), `tools/spr/gen_humanoid_variants.py` (variante de paleta por hue-shift do PNG importado, looktypes 946–957), `tools/spr/gen_effects.py` (efeitos/misseis próprios dos jutsus). Ver `docs/sistemas/arte-e-sprites.md`.
+- Depois de `tools/map/build_valley.py`, rode `.venv/bin/python tools/map/validate_world.py` (cruza `data/npcs`/`data/tasks.json`/`data/dailies.json`/`data/monsters` com o `valley-spawn.xml`/`valley.otbm` gerado — monstro de missão sem spawn, NPC de missão/loja sem spawn, posição não caminhável; exit 1 em falha). Ver `docs/sistemas/mapas.md`.
 
 ## Armadilhas já encontradas
 - `var x := dict["k"]` não compila (tipo não inferível). Use `var x: float = dict["k"]`.

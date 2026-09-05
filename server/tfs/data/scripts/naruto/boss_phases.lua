@@ -12,26 +12,26 @@ local PHASES = {
 	},
 	['O Portador dos Seis Caminhos'] = {
 		{hp = 100, mult = 1.0, message = 'A dor é o único caminho para a paz.', summons = {}},
-		{hp = 60, mult = 1.0, message = 'Meus caminhos não lutam sozinhos.', summons = {{name = 'Ninja Elite da Aurora', count = 2}}},
+		{hp = 60, mult = 1.0, message = 'Minha vontade não cabe em um corpo só. Vejam com seus próprios olhos.', summons = {{name = 'Caminho Invocado', count = 2}}},
 		{hp = 25, mult = 1.5, message = 'Vou mostrar a vocês o verdadeiro poder de um deus.', summons = {}},
 	},
 	['O Ancestral da Nuvem Vermelha'] = {
 		{hp = 100, mult = 1.0, message = 'Eu fundei isso tudo antes de qualquer um de vocês nascer.', summons = {}},
-		{hp = 60, mult = 1.3, message = 'Você acha mesmo que chegou ao fim?', summons = {}},
-		{hp = 25, mult = 1.7, message = 'Então prove que merece o título que veio buscar.', summons = {}},
+		{hp = 60, mult = 1.3, message = 'A Grande Guerra nunca terminou. Só mudou de nome.', summons = {}},
+		{hp = 25, mult = 1.7, message = 'As vilas dizem que venceram aquela guerra. Mentira que contam há uma geração — e o eco que vocês veem agora é a prova de que nada acabou.', summons = {{name = 'Eco Carmesim', count = 1}}},
 	},
 	['Espadachim da Névoa'] = {
 		{hp = 100, mult = 1.0, message = 'Não é nada pessoal, moleque. É só o trabalho.', summons = {}},
-		{hp = 60, mult = 1.0, message = 'Ainda não. Não vou deixar que ele me leve ainda.', summons = {{name = 'Aprendiz Mascarado', count = 1}}},
+		{hp = 60, mult = 1.0, message = 'Ainda não. Não vou deixar que ele me leve ainda — ele não luta por dinheiro, luta por mim.', summons = {{name = 'Aprendiz Mascarado', count = 1}}},
 		{hp = 25, mult = 1.6, message = 'Vocês tiraram tudo que eu tinha. Agora eu não tenho mais nada a perder.', summons = {}},
 	},
 	['Chefe dos Bandidos'] = {
-		{hp = 50, mult = 1.0, message = 'Venham, seus inúteis!', summons = {{name = 'Bandido', count = 3}}},
+		{hp = 50, mult = 1.0, message = 'Venham, seus inúteis! Essa ‘nuvem vermelha’ que anda nos vigiando não fui eu quem escolhi, moleque — fui só pago.', summons = {{name = 'Bandido', count = 3}}},
 		{hp = 20, mult = 1.5, message = 'Não vou cair para um genin!', summons = {}},
 	},
 	['O Sócio Eterno'] = {
 		{hp = 75, mult = 1.0, message = 'Mais um coração ainda bate.', summons = {}},
-		{hp = 50, mult = 1.3, message = 'Você vai precisar de mais do que isso.', summons = {}},
+		{hp = 50, mult = 1.3, message = 'As fendas ainda respondem ao meu chamado.', summons = {{name = 'Serpente de Magma', count = 2}}},
 		{hp = 25, mult = 1.6, message = 'O último coração é sempre o mais faminto.', summons = {}},
 	},
 	['Oni Ancestral'] = {
@@ -45,7 +45,7 @@ local PHASES = {
 	['Marionetista das Ruínas'] = {
 		{hp = 70, mult = 1.0, message = 'Vocês vieram brincar com meus bonecos?', summons = {{name = 'Marionete de Combate', count = 2}}},
 		{hp = 40, mult = 1.0, message = 'A sentinela acorda. Corram.', summons = {{name = 'Sentinela de Pedra', count = 1}, {name = 'Marionete de Combate', count = 2}}},
-		{hp = 15, mult = 1.5, message = 'Então eu mesmo corto os fios!', summons = {}},
+		{hp = 15, mult = 1.5, message = 'Então eu mesmo corto os fios! A Nuvem Vermelha prometeu poder a quem guardasse este templo até o fim — e é isso que vou fazer.', summons = {}},
 	},
 	['Sapo Ancião'] = {
 		{hp = 60, mult = 1.0, message = 'Meus filhos, devorem o intruso!', summons = {{name = 'Sapo Gigante', count = 2}}},
@@ -54,7 +54,7 @@ local PHASES = {
 	['Serpente Branca'] = {
 		{hp = 100, mult = 1.0, message = 'Que curioso... um genin que ainda não sabe correr.', summons = {}},
 		{hp = 60, mult = 1.0, message = 'Chega de fingir que sou gente. Vejam o que eu realmente sou!', looktype = 890, summons = {{name = 'Cobra da Floresta', count = 3}}},
-		{hp = 25, mult = 1.9, message = 'Minhas crias vão limpar o que sobrar de você!', summons = {{name = 'Serpente Menor', count = 2}}},
+		{hp = 25, mult = 1.9, message = 'Minhas crias vão limpar o que sobrar de você! Nem a organização que me expulsou quis ver o que eu virei — e vocês vão descobrir por quê.', summons = {{name = 'Serpente Menor', count = 2}}},
 	},
 }
 

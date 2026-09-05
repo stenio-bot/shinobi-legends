@@ -1067,6 +1067,21 @@ DEATH_CLEARINGS = [
     ("Lamaçal Sul", 1145, 1090, 5),
     ("Charco Profundo", 1180, 1095, 5),
     ("Ninho da Serpente", 1190, 1015, 5),
+    # Item B2 da auditoria de historia (Lote M): Serpente Menor (lesser_
+    # serpent) so existia em data/maps/forest_valley.json (protótipo Godot
+    # abstrato, mapa 200x40) — sem NENHUM spawn no mapa OTBM real, tornando
+    # `q_lesser_serpents` (quest_giver_swamp) impossivel de completar sem
+    # depender de reforcos de boss. Os 3 pontos originais (x=74,y=18 /
+    # x=82,y=8 / x=86,y=34, locais a zona "Floresta da Morte" = rect
+    # [50,0,46,40] nesse JSON) foram convertidos p/ globais por escala
+    # proporcional dentro do retangulo real da zona (DEATH_WALL=1130,1000,
+    # 1199,1119 => largura 69, altura 119): real = zona_origem +
+    # fracao_local * tamanho_real. Os 3 resultados foram deslocados alguns
+    # tiles pra nao empilhar em cima do Torre/protected rect nem das outras
+    # clareiras (mesma folga de 4-5 tiles usada entre elas).
+    ("Charco das Serpentes Menores", 1158, 1048, 4),   # ~conversao de (74,18)
+    ("Poça Turva", 1178, 1030, 4),                     # ~conversao de (82,8)
+    ("Juncal do Sul", 1188, 1105, 4),                  # ~conversao de (86,34)
 ]
 
 
@@ -1110,7 +1125,7 @@ FOREST_SETS = [
     ("Lobo", 2, 60), ("Lobo", 2, 60), ("Cobra da Floresta", 2, 70),
     ("Bandido", 3, 80), ("Bandido Arqueiro", 2, 90), ("Lobo", 1, 60),
     ("Bandido", 3, 80), ("Cobra da Floresta", 3, 70),
-    ("Bandido Arqueiro", 2, 90), ("Lobo", 2, 60),
+    ("Bandido Arqueiro", 2, 90), ("Cervo", 3, 60),  # cervo: passivo, 4 tarefas + missao do onigiri exigem spawn
 ]
 
 DEATH_SETS = [
@@ -1118,6 +1133,8 @@ DEATH_SETS = [
     ("Sapo Gigante", 3, 90), ("Ninja Renegado", 2, 120),
     ("Sapo Gigante", 4, 90), ("Ninja Renegado", 3, 120),
     ("Serpente Branca", 1, 3600),
+    # B2 (Lote M) — zip 1:1 com os 3 novos DEATH_CLEARINGS acima.
+    ("Serpente Menor", 3, 90), ("Serpente Menor", 2, 90), ("Serpente Menor", 3, 90),
 ]
 
 OFFSETS = [(0, 0), (2, -1), (-2, 1), (1, 2), (-1, -2), (3, 0), (0, 3), (-3, -1)]

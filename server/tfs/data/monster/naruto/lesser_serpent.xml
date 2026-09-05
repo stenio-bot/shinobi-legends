@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
-<monster name="Serpente Menor" nameDescription="uma serpente menor" race="venom" experience="260" speed="500" manacost="0">
+<monster name="Serpente Menor" nameDescription="uma serpente menor" race="venom" experience="290" speed="500" manacost="0">
 	<health now="340" max="340"/>
 	<look type="943" head="62" body="62" legs="62" feet="62" corpse="4238"/>
 	<targetchange interval="4000" chance="10"/>

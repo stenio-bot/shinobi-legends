@@ -6,6 +6,8 @@
 <monster name="O Mascarado das Sombras" file="naruto/boss_masked_puppeteer.xml"/>
 <monster name="O Portador dos Seis Caminhos" file="naruto/boss_rings_bearer.xml"/>
 <monster name="O Ancestral da Nuvem Vermelha" file="naruto/boss_crimson_ancestor.xml"/>
+<monster name="Caminho Invocado" file="naruto/invoked_path.xml"/>
+<monster name="Eco Carmesim" file="naruto/crimson_echo.xml"/>
 <monster name="Mercenário da Ponte" file="naruto/mercenary_bridge.xml"/>
 <monster name="Batedor da Névoa" file="naruto/mist_scout.xml"/>
 <monster name="Guardião da Neblina" file="naruto/mist_guardian.xml"/>

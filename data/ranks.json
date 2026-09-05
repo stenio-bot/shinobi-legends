@@ -5,7 +5,7 @@
     "quest_id": null,
     "unlocks": {
       "title": "Genin da vila",
-      "areas": ["floresta_da_vila"],
+      "areas": ["floresta_da_vila", "costa_das_mares"],
       "jutsu_tier": 1,
       "status_bonus": {}
     }
@@ -16,7 +16,7 @@
     "quest_id": "exam_chunin",
     "unlocks": {
       "title": "Chunin — aprovado no Exame Chunin",
-      "areas": ["floresta_da_morte", "costa_das_mares", "ruinas_do_cla_marionetista"],
+      "areas": ["floresta_da_morte", "ruinas_do_cla_marionetista"],
       "jutsu_tier": 2,
       "status_bonus": {"max_hp": 30, "max_chakra": 15}
     }

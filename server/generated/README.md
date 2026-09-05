@@ -23,4 +23,4 @@ Gerado por `tools/export_tfs.py` a partir de `data/*.json`. **Não edite à mão
 | `scripts/naruto/*.lua` | `data/scripts/naruto/` | revscriptsys carrega sozinho (rank_gate, rank_look, tasks, dailies inclusos) |
 | `world/*-spawn.xml` | referência para o Remere's Map Editor | manual |
 
-Totais: 38 monstros, 54 jutsus, 174 itens, 21 NPCs, 45 missões, 4 vocações, 5 ranks, 114 tarefas, 60 diárias (pool).
+Totais: 40 monstros, 54 jutsus, 174 itens, 21 NPCs, 47 missões, 4 vocações, 5 ranks, 114 tarefas, 60 diárias (pool).

@@ -1242,18 +1242,30 @@ nada disso** — só consertei o que faltava rodar/validar:
 
 Todos os 17 NPCs (os 8 acima + os 9 pré-existentes) confirmados no
 `valley-spawn.xml` gerado e no tour in-game (ver "Validação in-game v3"
-abaixo).
+abaixo). **Atualização (Lote M, ver seção no fim do arquivo): mais 4 NPCs
+posicionados** (Ancião Kaito/Tsubaki nas Ruínas, Mestra Yuki/Ferreiro Genzo
+na Montanha) — total agora 21.
 
 ### Gates de rank (Missão A.2) — cobertura final
 
 | Região | Rank mínimo | actionid | Onde (largura cobre toda a entrada) |
 |---|---|---|---|
 | Floresta da Morte | — (Genin, de propósito) | — | Sem gate físico: o Exame Chunin roda DENTRO dela (Instrutora Ibuki manda matar Sapo Ancião/Serpente Branca lá dentro) — gatear a entrada por Chunin criaria paradoxo (precisa entrar pra virar Chunin, só Chunin entra). Decisão do agente anterior, mantida por ser exatamente a exceção que a missão previu ("se o lore não disser: Floresta da Morte = Genin com quest"). |
-| Costa das Marés | Chunin | 45002 | (1028-1030, 1120) — 3 marcadores `gate_marker`, largura da trilha |
+| Costa das Marés | **Genin** (era Chunin — corrigido no Lote M, ver seção no fim do arquivo) | **45001** | (1028-1030, 1120) — 3 marcadores `gate_marker`, largura da trilha. Todo jogador já nasce Genin, então o gate nunca barra ninguém (paridade visual com as outras regiões, sem bloquear a região de nível 12-19). |
 | Ruínas do Clã Marionetista | Chunin | 45002 | (1200, 1020) e (1200, 1021) — 2 marcadores, largura do corredor de entrada |
 | Montanha do Trovão | Jonin | 45003 | (1224-1226, 1060) — 3 marcadores, largura do corredor vindo das Ruínas |
 | Covil da Nuvem Vermelha | Anbu | 45004 | Teleporte gated em (1225, 1103), no topo da Montanha — única entrada da masmorra, já existia antes desta missão |
 | (Kage, 45005) | Kage | 45005 | Não usado: `data/ranks.json` não lista nenhuma área nova pro Kage (fim da progressão) |
+
+> **Nota (Lote M)**: `data/ranks.json` (`unlocks.areas` do rank `chunin`)
+> ainda lista `costa_das_mares` — usado só por `NarutoRanks.zoneMinIndex`/
+> `canEnter()`, que por sua vez só é lido pelo comando de debug de GM
+> `/sl canenter <zona>` (`server/tfs/data/scripts/naruto/gm_tools.lua`).
+> Nenhum gate de jogo consulta essa tabela — `rank_gate.lua` olha só o
+> `actionid` do item no tile (ver abaixo) — então a inconsistência de dado
+> não afeta o jogo real, só o output desse comando de debug. Não corrigida
+> aqui (fora do escopo de mapa desta missão; edição de `data/ranks.json` é
+> de outro agente/lote).
 
 `server/generated/scripts/naruto/rank_gate.lua` (MoveEvent `stepin`) lê o
 actionid do TILE (não de item empilhado) — confirmado lendo o gerador:
@@ -1320,3 +1332,121 @@ nenhuma nova).
   se as mudanças desta missão criaram bolsões NOVOS do mesmo tipo — só
   validei que o `%` de alcançável do templo continua alto (89.9%) e que
   `validate()` não reporta nenhum centro de spawn/NPC/criatura inalcançável.
+
+## Lote M (2026-09-05) — bugs de mapa que bloqueavam a história
+
+Missão de mapa do plano `docs/design/auditoria-historia.md`, itens **A1, A2,
+B1, B2, C1** (os 5 "críticos" que bloqueavam progressão jogável) + um
+validador cruzado novo. Único arquivo tocado: `tools/map/build_regions.py` e
+`tools/map/build_valley.py` (+ `tools/map/validate_world.py`, novo).
+
+### A1 — gate da Costa das Marés (Chunin → Genin)
+
+A Costa (nível 12-19) tinha o MESMO gate de rank Chunin das Ruínas — um
+Genin recém-saído da Floresta da Vila (que ainda não fez o Exame Chunin, só
+disponível DEPOIS na Floresta da Morte) era barrado na entrada e nunca
+conseguia caçar lá (Achado #1 da auditoria). Corrigido em
+`tools/map/build_regions.py::build_coastal_tides`: o gate trocou de
+`"chunin"` (actionid 45002) pra `"genin"` (actionid 45001, novo na tabela
+`RANK_GATE_ACTIONID`) — todo jogador já nasce rank Genin
+(`NarutoRanks.get()` retorna índice 1 por padrão), então o item físico
+continua no tile (mesma posição/largura) mas NUNCA barra ninguém. Placa
+trocada de "Além daqui: nível Chunin ou superior." pra "Costa das Marés -
+nível recomendado 12+." (não é mais um requisito, é uma sugestão). Ruínas
+(Chunin) e Montanha (Jonin) continuam com seus gates originais, coerentes
+com a tabela acima.
+
+`data/ranks.json` ainda lista `costa_das_mares` em `unlocks.areas` do rank
+Chunin — inconsistência de DADO que não afeta o jogo real (ver nota na
+tabela de gates acima), fora do escopo desta missão de mapa (não editei
+`data/ranks.json`).
+
+### A2 — spawn solto do Aprendiz Mascarado
+
+`masked_apprentice` só existia como reforço invocado na fase 60% HP do
+Espadachim da Névoa — sem spawn próprio, `q_coastal_apprentice` (matar 6)
+era praticamente impossível. Adicionado grupo de 3 unidades (respawn 90s)
+em `build_coastal_tides`, centro `(1029, 1153)` raio 5, posições exatas
+`(1025,1152)`, `(1032,1153)`, `(1030,1154)` — praia aberta entre o grupo do
+Guardião da Neblina (`(1029, 1139)`) e a arena do boss (`boss_pos`,
+`(1029, 1166)`), longe das 4 cabanas de pescadores e dos postes de
+amarração.
+
+### B1 — Ancião Kaito e Tsubaki (Ruínas)
+
+Nunca tinham sido posicionados (só existiam em `data/npcs/ruins.json`, sem
+spawn). Adicionados em `build_ruins`, mesmo padrão do Mestre de Tarefas
+Dokan (perto do gate/entrada): **Ancião Kaito** (`quest_giver_ruins`) em
+`(1205, 1022)`, **Tsubaki, a Escavadora** (`merchant_ruins`) em
+`(1207, 1022)` — chão aberto do pátio, 2 tiles a leste/sul do corredor
+estreito de entrada (que continua livre, sem bloqueio de passagem).
+
+### B2 — spawn solto da Serpente Menor
+
+`lesser_serpent` só existia em `data/maps/forest_valley.json` (protótipo
+Godot abstrato, mapa 200×40) — sem spawn no OTBM real, `q_lesser_serpents`
+ficava praticamente impossível. Os 3 pontos originais (zona "Floresta da
+Morte" desse JSON, rect local `[50,0,46,40]`: `(74,18)`, `(82,8)`, `(86,34)`)
+foram convertidos pra globais por escala proporcional dentro do retângulo
+real da zona (`DEATH_WALL = (1130,1000,1199,1119)`, fórmula `real = origem +
+fração_local × tamanho_real`), depois deslocados alguns tiles pra não
+empilhar em cima da Torre (rect protegido) nem das outras clareiras.
+Adicionados a `DEATH_CLEARINGS`/`DEATH_SETS` em `tools/map/build_valley.py`
+(mesma lista/mecanismo das clareiras existentes — carve automático +
+conexão à trilha principal + spawn):
+
+| Clareira nova | Centro (x, y) | Raio | Serpente Menor |
+|---|---|---|---|
+| Charco das Serpentes Menores | 1158, 1048 | 4 | 3 unidades, respawn 90s |
+| Poça Turva | 1178, 1030 | 4 | 2 unidades, respawn 90s |
+| Juncal do Sul | 1188, 1105 | 4 | 3 unidades, respawn 90s |
+
+### C1 — Mestra Yuki e Ferreiro Genzo (Montanha)
+
+Nunca tinham sido posicionados — bloqueava as 7 missões da Montanha e as 2
+metades do Exame Anbu. **Diferente** do Mestre de Tarefas Kaji (posicionado
+DEPOIS do gate, já dentro da zona Jonin — ok pra um quadro de tarefas
+repetíveis), o dador de missão/mercador precisa ficar acessível a quem AINDA
+NÃO é Jonin: é a missão de Yuki que guia o jogador até o Exame Anbu, então
+ela não pode depender do próprio gate que a missão dela ajuda a superar
+(mesmo paradoxo que a Floresta da Morte evita com o Chunin). Aberto um
+pequeno "posto avançado" (`build_mountain`, patamar 7 tiles de largura, 3
+tiles ANTES do gate, no lado Ruínas): **Mestra Yuki** (`quest_giver_mountain`)
+em `(1222, 1058)`, **Ferreiro Genzo** (`merchant_mountain`) em
+`(1228, 1058)` — o corredor central (largura 1) fica livre entre os dois,
+sem bloquear a passagem até o gate/Kaji.
+
+### Validador cruzado — `tools/map/validate_world.py`
+
+Script novo, roda DEPOIS de `tools/map/build_valley.py` (que gera o
+`.otbm`/`-spawn.xml` em `server/generated/world/`). Lê `data/npcs/*.json`,
+`data/tasks.json`, `data/dailies.json`, `data/monsters/*.json` e
+`server/generated/world/valley-spawn.xml`/`valley.otbm`; falha (exit 1) se:
+
+(a) algum `monster_id` exigido por `objective.kill` de missão/tarefa/diária
+não tem spawn no XML — exceto `invoked_path`/`crimson_echo` (reforços de
+fase do boss final do Covil, nunca spawn solto, listados em
+`SUMMON_ONLY_MONSTERS` no topo do script); (b) algum NPC com `quests` ou
+`type=="shop"` não está no XML (por nome exato); (c) algum NPC/monstro do
+XML está numa posição não caminhável (mesma regra real do TFS que
+`tools/map/walk_audit.py` usa — chão/item `blockSolid`; NPC aceita raio 3,
+monstro exige célula exata).
+
+Rodado após o Lote M: confirma os 5 itens acima (21 NPCs, todos os nomes de
+Kaito/Tsubaki/Yuki/Genzo/Aprendiz Mascarado/Serpente Menor presentes e
+caminháveis) e revela **1 problema pré-existente fora do escopo desta
+missão**: `forest_deer` ("Cervo") é exigido por 4 tarefas
+(`data/tasks.json`) mas não tem nenhum spawn no mapa — mesma classe de bug
+do B2, mas não estava na lista de itens deste Lote; ver `data/maps/
+forest_valley.json` (2 pontos já desenhados, zona "Floresta da Vila", nunca
+portados). Não corrigido aqui (fora de escopo); marcado como tarefa de
+acompanhamento.
+
+### Rebuild e instalação
+
+`.venv/bin/python tools/map/build_valley.py` (0 problemas) →
+`tools/map/walk_audit.py` (2 divergências, ambas pré-existentes — portas
+fechadas da Arena/Vila, nada novo) → `tools/map/validate_world.py` (1 falha,
+`forest_deer`, fora de escopo — ver acima) → copiado `valley.otbm`/
+`valley-spawn.xml`/`valley-house.xml` pra `server/tfs/data/world/`.
+Servidor **não** foi reiniciado (sessão de jogo em andamento).

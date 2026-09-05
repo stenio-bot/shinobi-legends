@@ -40,8 +40,9 @@
 		<monster name="Bandido Arqueiro" x="2" y="-1" z="7" spawntime="90"/>
 	</spawn>
 	<spawn centerx="1005" centery="1005" centerz="7" radius="4">
-		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
-		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Cervo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Cervo" x="-2" y="1" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1140" centery="1015" centerz="7" radius="4">
 		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="70"/>
@@ -76,6 +77,20 @@
 	</spawn>
 	<spawn centerx="1190" centery="1015" centerz="7" radius="4">
 		<monster name="Serpente Branca" x="0" y="0" z="7" spawntime="3600"/>
+	</spawn>
+	<spawn centerx="1158" centery="1048" centerz="7" radius="4">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Serpente Menor" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Serpente Menor" x="-2" y="1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1178" centery="1030" centerz="7" radius="4">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Serpente Menor" x="2" y="-1" z="7" spawntime="90"/>
+	</spawn>
+	<spawn centerx="1188" centery="1105" centerz="7" radius="4">
+		<monster name="Serpente Menor" x="0" y="0" z="7" spawntime="90"/>
+		<monster name="Serpente Menor" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Serpente Menor" x="-2" y="1" z="7" spawntime="90"/>
 	</spawn>
 	<spawn centerx="1100" centery="1100" centerz="7" radius="3">
 		<monster name="Chefe dos Bandidos" x="0" y="0" z="7" spawntime="3600"/>
@@ -143,8 +158,20 @@
 	<spawn centerx="1202" centery="1020" centerz="7" radius="1">
 		<npc name="Mestre de Tarefas Dokan" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
+	<spawn centerx="1205" centery="1022" centerz="7" radius="1">
+		<npc name="Ancião Kaito" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1207" centery="1022" centerz="7" radius="1">
+		<npc name="Tsubaki, a Escavadora" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
 	<spawn centerx="1228" centery="1062" centerz="7" radius="1">
 		<npc name="Mestre de Tarefas Kaji" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1222" centery="1058" centerz="7" radius="1">
+		<npc name="Mestra Yuki" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1228" centery="1058" centerz="7" radius="1">
+		<npc name="Ferreiro Genzo" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1406" centery="1010" centerz="7" radius="1">
 		<npc name="Capitã Anbu Suzu" x="0" y="0" z="7" spawntime="60"/>
@@ -173,6 +200,11 @@
 		<monster name="Guardião da Neblina" x="0" y="0" z="7" spawntime="60"/>
 		<monster name="Guardião da Neblina" x="2" y="-1" z="7" spawntime="60"/>
 		<monster name="Guardião da Neblina" x="-2" y="1" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1029" centery="1153" centerz="7" radius="5">
+		<monster name="Aprendiz Mascarado" x="-4" y="-1" z="7" spawntime="90"/>
+		<monster name="Aprendiz Mascarado" x="3" y="0" z="7" spawntime="90"/>
+		<monster name="Aprendiz Mascarado" x="1" y="1" z="7" spawntime="90"/>
 	</spawn>
 	<spawn centerx="1029" centery="1166" centerz="7" radius="2">
 		<monster name="Espadachim da Névoa" x="0" y="0" z="7" spawntime="7200"/>
