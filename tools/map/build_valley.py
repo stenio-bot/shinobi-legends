@@ -1122,10 +1122,15 @@ def connect_clearings(b):
 FOREST_SETS = [
     # Playtest r3 (2026-09-05): 3-4 lobos por spawn matavam o Genin L1 duas vezes seguidas
     # (pull do spawn inteiro). Grupos menores: 1-2 lobos por ponto, mesma cobertura da trilha.
+    # Ordem = CLEARINGS: Trilha dos Lobos, Bosque Norte, Riacho, Campina Oeste, Clareira Central,
+    # Bosque Leste, Trilha Sul, Clareira dos Bandidos, Bosque Sudeste, Mata Norte.
+    # Playtest r5 (2026-09-05): a Clareira Central fica na rota natural Portao Leste -> lobos e
+    # arqueiros (L6-10) matavam o Genin L1 em 15 s so' de passar. Clareira Central = cervos (passivos);
+    # arqueiros ficam so' no Bosque Sudeste, longe da rota inicial.
     ("Lobo", 2, 60), ("Lobo", 2, 60), ("Cobra da Floresta", 2, 70),
-    ("Bandido", 3, 80), ("Bandido Arqueiro", 2, 90), ("Lobo", 1, 60),
+    ("Bandido", 3, 80), ("Cervo", 3, 60), ("Lobo", 1, 60),
     ("Bandido", 3, 80), ("Cobra da Floresta", 3, 70),
-    ("Bandido Arqueiro", 2, 90), ("Cervo", 3, 60),  # cervo: passivo, 4 tarefas + missao do onigiri exigem spawn
+    ("Bandido Arqueiro", 3, 90), ("Cobra da Floresta", 2, 70),
 ]
 
 DEATH_SETS = [

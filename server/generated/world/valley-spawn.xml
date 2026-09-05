@@ -19,8 +19,9 @@
 		<monster name="Bandido" x="-2" y="1" z="7" spawntime="80"/>
 	</spawn>
 	<spawn centerx="1070" centery="1040" centerz="7" radius="4">
-		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="90"/>
-		<monster name="Bandido Arqueiro" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Cervo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Cervo" x="-2" y="1" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1105" centery="1045" centerz="7" radius="4">
 		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
@@ -38,11 +39,11 @@
 	<spawn centerx="1112" centery="1075" centerz="7" radius="4">
 		<monster name="Bandido Arqueiro" x="0" y="0" z="7" spawntime="90"/>
 		<monster name="Bandido Arqueiro" x="2" y="-1" z="7" spawntime="90"/>
+		<monster name="Bandido Arqueiro" x="-2" y="1" z="7" spawntime="90"/>
 	</spawn>
 	<spawn centerx="1005" centery="1005" centerz="7" radius="4">
-		<monster name="Cervo" x="0" y="0" z="7" spawntime="60"/>
-		<monster name="Cervo" x="2" y="-1" z="7" spawntime="60"/>
-		<monster name="Cervo" x="-2" y="1" z="7" spawntime="60"/>
+		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="70"/>
+		<monster name="Cobra da Floresta" x="2" y="-1" z="7" spawntime="70"/>
 	</spawn>
 	<spawn centerx="1140" centery="1015" centerz="7" radius="4">
 		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="70"/>
