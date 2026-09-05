@@ -118,13 +118,14 @@ Estado: checkpoint `fff60df`. Sistemas de rank/exame/tarefas/diárias/achievemen
 com 6 regiões; walk-cycle validado por filtro geométrico; 173 itens, 54 jutsus, 38 monstros, 21+8 NPCs.
 
 Em andamento (agentes paralelos, eu reviso):
-- [ ] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água; regen do mapa
-- [ ] Cliente UX: aba "Missões" no Menu Shinobi (rank, tarefas, diárias, história) via opcode 210 `get_progress`; rank na tela; login temático; mensagens de sistema em pt-BR
-- [ ] Balanceamento: simulador `tools/balance/sim.py` com fórmulas reais do TFS; matriz L1–100 × monstros × 2 builds; ajustes nos JSONs
+- [x] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água (`215721f`)
+- [x] Cliente UX: aba "Missões" no Menu Shinobi via opcode 210 `get_progress`; rank na janela de atributos; mensagens de sistema em pt-BR + fix cp1252 (`e0e683f`)
+- [x] Balanceamento rodada 1: simulador `tools/balance/sim.py`; stages de XP desligadas (eram 5–7×), skill mult 1.1, mana mult 1.3 (`eada82c`)
+- [ ] Balanceamento rodada 2 (em andamento): identidade ninjutsu vs taijutsu com simulador multi-alvo
 
 Próximos (ordem de valor):
-- [ ] Mapa: posicionar NPCs novos (6 Mestres de Tarefas, Quadro de Missões, Instrutora Ibuki) e aplicar actionid 45001–45005 nos tiles de entrada das regiões (gate de rank)
-- [ ] Arte de região: Ruínas (piso quebrado, pilares, entulho), Montanha (rocha/neve/lava), Covil (pedra escura, tochas vermelhas) — hoje tudo é o mesmo cobble liso
+- [x] Mapa v3: 8 NPCs posicionados, gates de rank 45001–45005, identidade visual de Ruínas/Montanha/Covil, bordas dirt_sand e snow_rock (`b8b8ded`)
+- [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [ ] Playtest L1–20 como jogador comum (conta `teste`): fricções, tempo real por level, bugs de quest
 - [ ] VFX de jutsus (efeitos próprios no .dat) e sons procedurais
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
