@@ -152,6 +152,14 @@ local CP1252_EXTRA = {
     [0x0153] = 0x9C, [0x017E] = 0x9E, [0x0178] = 0x9F,
 }
 
+-- Byte de continuacao UTF-8 valido (0x80-0xBF)? Sem essa checagem, um 'a' cp1252 (0xE3)
+-- seguido de 'o' era lido como sequencia de 3 bytes e string.char explodia (2026-09-05:
+-- o servidor passou a mandar as strings ja em cp1252, ver tools/export_tfs.py _lua_cp1252).
+local function isCont(s, k)
+    local c = s:byte(k)
+    return c ~= nil and c >= 0x80 and c <= 0xBF
+end
+
 local function utf8ToCp1252(str)
     if not str:find('[\128-\255]') then
         return str -- ASCII puro: nada a fazer (o caso do 'words' dos jutsus)
@@ -162,9 +170,9 @@ local function utf8ToCp1252(str)
         local cp, len
         if b < 0x80 then
             cp, len = b, 1
-        elseif b >= 0xC2 and b <= 0xDF and i + 1 <= n then
+        elseif b >= 0xC2 and b <= 0xDF and isCont(str, i + 1) then
             cp, len = (b - 0xC0) * 64 + (str:byte(i + 1) - 0x80), 2
-        elseif b >= 0xE0 and b <= 0xEF and i + 2 <= n then
+        elseif b >= 0xE0 and b <= 0xEF and isCont(str, i + 1) and isCont(str, i + 2) then
             cp = (b - 0xE0) * 4096 + (str:byte(i + 1) - 0x80) * 64 + (str:byte(i + 2) - 0x80)
             len = 3
         else
