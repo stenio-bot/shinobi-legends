@@ -1,139 +1,139 @@
 [
- {
-  "id": "suiton_mizudan",
-  "name": "Suiton: Projétil de Água",
-  "description": "Bala de água comprimida.",
-  "element": "suiton",
-  "type": "projectile",
-  "range": 6,
-  "chakra_cost": 12,
-  "cooldown_s": 2.0,
-  "base_damage": 7.7,
-  "level_scale": 0.385,
-  "skill_scale": 0.28,
-  "skill": "ninjutsu",
-  "required_level": 1,
-  "villages": [],
-  "tier": 1,
-  "effects": [
-   {
-    "type": "slow",
-    "chance": 0.25,
-    "duration_s": 3,
-    "value": 0.3
-   }
-  ],
-  "animation": "fx_water_bullet",
-  "sfx": "sfx_splash"
- },
- {
-  "id": "suiton_suiryuudan",
-  "name": "Suiton: Dragão de Água",
-  "description": "Onda em linha que empurra e desacelera.",
-  "element": "suiton",
-  "type": "beam",
-  "shape": "line_5",
-  "range": 5,
-  "chakra_cost": 158,
-  "cooldown_s": 6.0,
-  "base_damage": 71.775,
-  "level_scale": 7.047,
-  "skill_scale": 0.7177,
-  "skill": "ninjutsu",
-  "required_level": 25,
-  "villages": [],
-  "tier": 2,
-  "effects": [
-   {
-    "type": "slow",
-    "chance": 0.7,
-    "duration_s": 4,
-    "value": 0.5
-   }
-  ],
-  "animation": "fx_water_dragon",
-  "sfx": "sfx_wave"
- },
- {
-  "id": "suiton_nevoa_cortante",
-  "name": "Suiton: Névoa Cortante",
-  "description": "Uma névoa densa de gotículas afiadas cobre uma área maior à frente, encharcando e retardando quem passar.",
-  "element": "suiton",
-  "type": "area",
-  "shape": "cone_3",
-  "range": 2,
-  "chakra_cost": 15,
-  "cooldown_s": 1.6,
-  "base_damage": 5.25,
-  "level_scale": 0.315,
-  "skill_scale": 0.227,
-  "skill": "ninjutsu",
-  "required_level": 6,
-  "villages": [],
-  "tier": 1,
-  "effects": [
-   {
-    "type": "slow",
-    "chance": 0.6,
-    "duration_s": 5,
-    "value": 0.45
-   }
-  ],
-  "animation": "fx_mist_cone",
-  "sfx": "sfx_mist"
- },
- {
-  "id": "suiton_prisao_agua",
-  "name": "Suiton: Prisão de Água",
-  "description": "Uma esfera de água prende o alvo no lugar e o sufoca lentamente.",
-  "element": "suiton",
-  "type": "target",
-  "range": 3,
-  "chakra_cost": 38,
-  "cooldown_s": 7.0,
-  "base_damage": 30.6,
-  "level_scale": 1.17,
-  "skill_scale": 0.9,
-  "skill": "genjutsu",
-  "required_level": 22,
-  "villages": [],
-  "tier": 2,
-  "effects": [
-   {
-    "type": "paralyze",
-    "chance": 0.7,
-    "duration_s": 3.0
-   }
-  ],
-  "animation": "fx_water_prison",
-  "sfx": "sfx_bubble"
- },
- {
-  "id": "suiton_vortice_devorador",
-  "name": "Suiton: Vórtice Devorador",
-  "description": "Um redemoinho colossal engole a área e arrasta tudo para o centro.",
-  "element": "suiton",
-  "type": "area",
-  "shape": "circle_r2",
-  "range": 5,
-  "chakra_cost": 72,
-  "cooldown_s": 9.0,
-  "base_damage": 79.2,
-  "level_scale": 1.89,
-  "skill_scale": 1.17,
-  "skill": "ninjutsu",
-  "required_level": 45,
-  "villages": [],
-  "tier": 3,
-  "effects": [
-   {
-    "type": "slow",
-    "chance": 0.9,
-    "duration_s": 5,
-    "value": 0.5
-   }
-  ],
-  "animation": "fx_water_vortex",
-  "sfx": "sfx_wave"
- }
+  {
+    "id": "suiton_mizudan",
+    "name": "Suiton: Projétil de Água",
+    "description": "Bala de água comprimida.",
+    "element": "suiton",
+    "type": "projectile",
+    "range": 6,
+    "chakra_cost": 16,
+    "cooldown_s": 3.5,
+    "base_damage": 7.82,
+    "level_scale": 3.03,
+    "skill_scale": 0.1,
+    "skill": "ninjutsu",
+    "required_level": 1,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "slow",
+        "chance": 0.25,
+        "duration_s": 3,
+        "value": 0.3
+      }
+    ],
+    "animation": "fx_water_bullet",
+    "sfx": "sfx_splash"
+  },
+  {
+    "id": "suiton_suiryuudan",
+    "name": "Suiton: Dragão de Água",
+    "description": "Onda em linha que empurra e desacelera.",
+    "element": "suiton",
+    "type": "beam",
+    "shape": "line_5",
+    "range": 5,
+    "chakra_cost": 158,
+    "cooldown_s": 6.0,
+    "base_damage": 71.775,
+    "level_scale": 7.047,
+    "skill_scale": 0.7177,
+    "skill": "ninjutsu",
+    "required_level": 25,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "slow",
+        "chance": 0.7,
+        "duration_s": 4,
+        "value": 0.5
+      }
+    ],
+    "animation": "fx_water_dragon",
+    "sfx": "sfx_wave"
+  },
+  {
+    "id": "suiton_nevoa_cortante",
+    "name": "Suiton: Névoa Cortante",
+    "description": "Uma névoa densa de gotículas afiadas cobre uma área maior à frente, encharcando e retardando quem passar.",
+    "element": "suiton",
+    "type": "area",
+    "shape": "cone_3",
+    "range": 2,
+    "chakra_cost": 15,
+    "cooldown_s": 1.6,
+    "base_damage": 5.25,
+    "level_scale": 0.315,
+    "skill_scale": 0.227,
+    "skill": "ninjutsu",
+    "required_level": 6,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "slow",
+        "chance": 0.6,
+        "duration_s": 5,
+        "value": 0.45
+      }
+    ],
+    "animation": "fx_mist_cone",
+    "sfx": "sfx_mist"
+  },
+  {
+    "id": "suiton_prisao_agua",
+    "name": "Suiton: Prisão de Água",
+    "description": "Uma esfera de água prende o alvo no lugar e o sufoca lentamente.",
+    "element": "suiton",
+    "type": "target",
+    "range": 3,
+    "chakra_cost": 38,
+    "cooldown_s": 7.0,
+    "base_damage": 30.6,
+    "level_scale": 1.17,
+    "skill_scale": 0.9,
+    "skill": "genjutsu",
+    "required_level": 22,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "paralyze",
+        "chance": 0.7,
+        "duration_s": 3.0
+      }
+    ],
+    "animation": "fx_water_prison",
+    "sfx": "sfx_bubble"
+  },
+  {
+    "id": "suiton_vortice_devorador",
+    "name": "Suiton: Vórtice Devorador",
+    "description": "Um redemoinho colossal engole a área e arrasta tudo para o centro.",
+    "element": "suiton",
+    "type": "area",
+    "shape": "circle_r2",
+    "range": 5,
+    "chakra_cost": 72,
+    "cooldown_s": 9.0,
+    "base_damage": 79.2,
+    "level_scale": 1.89,
+    "skill_scale": 1.17,
+    "skill": "ninjutsu",
+    "required_level": 45,
+    "villages": [],
+    "tier": 3,
+    "effects": [
+      {
+        "type": "slow",
+        "chance": 0.9,
+        "duration_s": 5,
+        "value": 0.5
+      }
+    ],
+    "animation": "fx_water_vortex",
+    "sfx": "sfx_wave"
+  }
 ]

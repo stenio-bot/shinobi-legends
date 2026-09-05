@@ -27,6 +27,17 @@ python3 tools/balance/sim.py --group-matrix --json /tmp/group.json
 
 # mais trials por ponto (mais lento, menos ruído)
 python3 tools/balance/sim.py --matrix --trials 100 --json /tmp/matrix.json
+
+# rodada 4: cenário de "hunt de 30 min" (sequência de pulls do monstro comum mais próximo do
+# nível, pausas de 5-15s entre lutas) — mede chakra sustentável de verdade, não numa luta só.
+# Sozinho roda HUNT_LEVELS (5/15/30/60/100) x build hybrid, com e sem pílula de chakra.
+python3 tools/balance/sim.py --hunt --json /tmp/hunt.json
+
+# hunt pontual (nível/monstro/build escolhidos), com pílula de chakra ligada
+python3 tools/balance/sim.py --hunt --level 15 --monster mist_scout --build hybrid --chakra-pills --minutes 30
+
+# --chakra-pills também funciona em --level/--monster sem --hunt (luta única)
+python3 tools/balance/sim.py --level 60 --monster boss_ancestral_oni --build hybrid --chakra-pills
 ```
 
 Saída de cada simulação (`simulate()`): `ttk_s_mean`/`ttk_s_p10` (tempo até matar, só contando
@@ -290,6 +301,66 @@ jutsu). "Empatar desistindo do jutsu" não é o mesmo que "empatar competindo".
    `circulo_de_selos` (×1,4) e `fuuton_rasteira_vento` (×1,6), os únicos jutsus não-compartilhados
    desses 2 personagens. Os 9 ficaram entre -8,6% e +10,2% (relatório v3 §7).
 
+## Achados da rodada 4 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v4.md`
+
+1. **Tensão burst-vs-sustentado da rodada 3 (§8) resolvida via cooldown maior, não mais número
+   maior**: com `cooldown_tier1 == ATTACK_INTERVAL_S` (2,0s = 2,0s), burst (≥1,3× o hit de arma)
+   e paridade sustentada são matematicamente incompatíveis (relatório v3 provou isso). Com
+   `cooldown_tier1 = 3,5s`, os dois lados destravam ao mesmo tempo (relatório v4 §2 tem a
+   prova). Os 5 projéteis tier 1 (`katon_goukakyuu`/`fuuton_lamina_vento`/`raiton_hari`/
+   `doton_bala_lama`/`suiton_mizudan`) foram recalibrados: cooldown 2,0s→3,5s, `chakra_cost`
+   ~2× (12-16→25-30), `base_damage`/`level_scale` bem maiores (`skill_scale` só um pouco — o
+   magic level não é confiável o bastante numa faixa tão ampla, nível puro é o lever principal).
+   Resultado: burst ≥1,3× fecha de L1 a L30 (era só L1-5); L40+ continua abaixo, mas a distância
+   caiu de "5-6× fraco" pra "20-30% fraco" — melhora de ordem de grandeza, não perfeita.
+2. **Modelo de híbrido reescrito**: arma e jutsu agora correm em cadências INDEPENDENTES pro
+   build `hybrid` (a arma ataca sozinha no intervalo normal, o jutsu lança por cima sempre que
+   pronto/pagável) — antes, cast de jutsu bloqueava a arma pelo cooldown INTEIRO (bug real desde
+   a rodada 1, só passou a importar quando o cooldown de tier 1 ficou maior que o intervalo de
+   ataque). Isso é literalmente o "arma entre casts" pedido na missão. Consequência: o híbrido
+   agora usa o jutsu com `no_fallback=True` fixo (é aditivo, não substituto — "só uso se bate a
+   arma" não faz sentido quando o jutsu não ocupa o turno da arma), tornando-o sistematicamente
+   ≥ os builds puros (nunca mais atrás) — `HYBRID_TAIJUTSU_FRAC`/`HYBRID_NINJUTSU_FRAC` caiu de
+   0,5/0,5 pra 0,4/0,4 pra conter o quanto ele passa do melhor build puro (ainda excede o teto de
+   +15% em 4 dos 6 bosses testados — pendência, ver abaixo).
+3. **Bug do simulador corrigido**: `best_item_for_slot` escolhia o item de MAIOR
+   `required_level`, não o de maior `attack`/`defense` — fazia `gloves_taijutsu` (req10, attack
+   **14**) "substituir" `tanto_steel` (req8, attack **16**) de L10 a L19, um downgrade
+   automático que piorava o platô de arma que deixava o boss L19 fora da meta desde a rodada 2.
+4. **Platô de arma L8→L20 corrigido**: item novo `wakizashi_temperado` (req15, attack 21) entre
+   `tanto_steel` (req8, 16) e `katana_ronin` (req20, 28) — vendido na região do próprio boss L19
+   (Mercador Itsuki, Costa das Marés). O fix de arma sozinho (bug do item 3 + item novo) derrubou
+   o desvio do boss L19 de -25,8% (rodada 3) pra -1,2% — quase toda a diferença já era o platô.
+5. **`_CHAKRA_POTIONS` finalmente usado em combate** (pendência #5 da rodada 3): `--chakra-pills`
+   (1×1) e a nova `simulate_hunt`/`--hunt` (sequência de pulls de 30 min com pausas de 5-15s,
+   chakra persistindo com regen contínuo entre lutas) simulam o jogador bebendo a melhor pílula
+   desbloqueada quando não consegue pagar o jutsu escolhido.
+6. **3 tier 2 do kit automático ganharam cooldown 6-12s** (`katon_housenka` 4,0s→6,0s,
+   `fuuton_rajada_cortante` 4,5s→6,5s, `raiton_lanca_relampago` 5,5s→6,5s), dano escalado pelo
+   MESMO fator do cooldown (preserva o DPS já calibrado na rodada 3).
+
+## Pendências honestas da rodada 4 (ver relatório v4 §10 pros números)
+
+- **Boss L19 continua fora da meta, por um motivo NOVO** (-22,4%, não mais o platô de arma —
+  esse boss é o único teste onde o elemento com vantagem só tem o tier 1 desbloqueado, tornando-o
+  o mais sensível de todos aos novos números de tier 1).
+- **Híbrido nunca fica abaixo do melhor build puro (ganho real), mas excede o teto de +15% em 4
+  dos 6 bosses** (chega a +47,6% em L19) — nenhuma fração de skill testada (0,15-0,55) fecha os
+  dois lados ao mesmo tempo; `HYBRID_TAIJUTSU_FRAC=0,4` prioriza "nunca abaixo do melhor".
+- **Chakra sustentável falha em L5/L15 numa hunt de 30 min sem pílula** (97,6%/93,4% do tempo
+  sem chakra pro tier 1, meta ≤20%) — tensão nova: custo flat calibrado pra boss L12-25 é
+  proporcionalmente enorme contra o pool minúsculo de L5-15. Em L5 a economia nem sustenta
+  pílulas suficientes pra compensar (déficit de ~3.548 ryo/h).
+- **Grupo 3+ segue não-uniforme** — `ruin_puppet`/`lesser_serpent` entraram na meta (+35%/+33%),
+  `thunder_eagle` melhorou muito (+442%→+178%) mas continua acima; `wolf`/`bandit`/`leech` seguem
+  abaixo; `curse_shaman`/`storm_monk`/`elite_cloud_guard` seguem muito acima; `white_clone` virou
+  negativo. Mesma causa raiz da rodada 3 (HP total do pull varia demais pro mesmo multiplicador).
+- **Personagens (±15%) não reverificados** — `personal.json`/`neutral.json` não foram tocados,
+  mas a proxy de valor usada nas rodadas 2/3 depende da média de dano/chakra de todo jutsu de
+  dano, que mudou com os 8 jutsus elementais recalibrados. Risco não quantificado nesta rodada.
+- **Ranged tem o mesmo platô de arma que o melee tinha** (`senbon_de_ferro` req10→`fuuma_shuriken`
+  req25) — fora do escopo desta rodada (a missão citava L15-20/boss L19, um encontro melee).
+
 ## Pendências honestas da rodada 3 (ver relatório v3 §10 pros números)
 
 - **Boss L19 continua fora da meta** (-25,8% no modo `--no-fallback`, o mesmo platô de tier de
@@ -317,3 +388,11 @@ jutsu). "Empatar desistindo do jutsu" não é o mesmo que "empatar competindo".
   L100: 1750s pra regenerar do zero). Não mexi nisso nesta sessão porque toda a calibração de
   chakra_cost (item 3) assumiu esse regen como está; subir o regen sem recalibrar de novo
   desfaria a paridade 1×1 recém-alcançada.
+
+**Resolvido na rodada 4**: os dois itens acima ("não simula pílula em combate" e "regen fixo")
+foram endereçados — pílula de chakra agora é simulada (`_CHAKRA_POTIONS`, `--chakra-pills`/
+`--hunt`) e o regen fixo foi RE-CONFIRMADO como intencional/permanente (não mais documentado como
+"ausência de regen" — ver `character_switch.lua`), mas continua não escalando com level, e essa
+mesma característica (regen fixo + custo flat de tier 1) é a causa da nova pendência "chakra
+sustentável falha em L5/L15" acima — não foi "resolvido" no sentido de deixar de ser um problema,
+só de deixar de ser uma lacuna de MODELAGEM do simulador.

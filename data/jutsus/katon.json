@@ -1,142 +1,142 @@
 [
- {
-  "id": "katon_goukakyuu",
-  "name": "Katon: Grande Bola de Fogo",
-  "description": "Dispara uma bola de fogo que explode no impacto.",
-  "element": "katon",
-  "type": "projectile",
-  "shape": "circle_r1",
-  "range": 5,
-  "chakra_cost": 15,
-  "cooldown_s": 2.0,
-  "base_damage": 8.75,
-  "level_scale": 0.42,
-  "skill_scale": 0.28,
-  "skill": "ninjutsu",
-  "required_level": 1,
-  "villages": [],
-  "tier": 1,
-  "effects": [
-   {
-    "type": "burn",
-    "chance": 0.3,
-    "duration_s": 4,
-    "value": 3
-   }
-  ],
-  "animation": "fx_fireball",
-  "sfx": "sfx_fire_whoosh"
- },
- {
-  "id": "katon_housenka",
-  "name": "Katon: Flores de Fênix",
-  "description": "Vários projéteis de fogo em cone à frente.",
-  "element": "katon",
-  "type": "area",
-  "shape": "cone_3",
-  "range": 3,
-  "chakra_cost": 105,
-  "cooldown_s": 4.0,
-  "base_damage": 16.2,
-  "level_scale": 2.07,
-  "skill_scale": 0.63,
-  "skill": "ninjutsu",
-  "required_level": 12,
-  "villages": [],
-  "tier": 2,
-  "effects": [
-   {
-    "type": "burn",
-    "chance": 0.5,
-    "duration_s": 5,
-    "value": 4
-   }
-  ],
-  "animation": "fx_fire_cone",
-  "sfx": "sfx_fire_burst"
- },
- {
-  "id": "katon_karyuu_endan",
-  "name": "Katon: Dragão de Fogo",
-  "description": "Um dragão de chamas em linha reta, atravessa inimigos.",
-  "element": "katon",
-  "type": "beam",
-  "shape": "line_6",
-  "range": 6,
-  "chakra_cost": 210,
-  "cooldown_s": 8.0,
-  "base_damage": 71.82,
-  "level_scale": 10.26,
-  "skill_scale": 0.3694,
-  "skill": "ninjutsu",
-  "required_level": 35,
-  "villages": [],
-  "tier": 3,
-  "effects": [
-   {
-    "type": "burn",
-    "chance": 0.8,
-    "duration_s": 6,
-    "value": 8
-   }
-  ],
-  "animation": "fx_fire_dragon",
-  "sfx": "sfx_dragon_roar"
- },
- {
-  "id": "katon_sopro_brasas",
-  "name": "Katon: Sopro de Brasas",
-  "description": "Um sopro curto de brasas que cobre os tiles imediatamente à frente.",
-  "element": "katon",
-  "type": "area",
-  "shape": "cone_2",
-  "range": 2,
-  "chakra_cost": 18,
-  "cooldown_s": 3.0,
-  "base_damage": 5.6,
-  "level_scale": 0.315,
-  "skill_scale": 0.21,
-  "skill": "ninjutsu",
-  "required_level": 6,
-  "villages": [],
-  "tier": 1,
-  "effects": [
-   {
-    "type": "burn",
-    "chance": 0.35,
-    "duration_s": 4,
-    "value": 3
-   }
-  ],
-  "animation": "fx_ember_cone",
-  "sfx": "sfx_fire_puff"
- },
- {
-  "id": "katon_anel_chamas",
-  "name": "Katon: Anel de Chamas",
-  "description": "Um anel de fogo explode ao redor do conjurador, queimando tudo em volta.",
-  "element": "katon",
-  "type": "area",
-  "shape": "circle_r2",
-  "range": 0,
-  "chakra_cost": 147,
-  "cooldown_s": 6.0,
-  "base_damage": 36.0,
-  "level_scale": 2.898,
-  "skill_scale": 0.9,
-  "skill": "ninjutsu",
-  "required_level": 20,
-  "villages": [],
-  "tier": 2,
-  "effects": [
-   {
-    "type": "burn",
-    "chance": 0.6,
-    "duration_s": 5,
-    "value": 6
-   }
-  ],
-  "animation": "fx_fire_ring",
-  "sfx": "sfx_fire_burst"
- }
+  {
+    "id": "katon_goukakyuu",
+    "name": "Katon: Grande Bola de Fogo",
+    "description": "Dispara uma bola de fogo que explode no impacto.",
+    "element": "katon",
+    "type": "projectile",
+    "shape": "circle_r1",
+    "range": 5,
+    "chakra_cost": 20,
+    "cooldown_s": 3.5,
+    "base_damage": 8.3,
+    "level_scale": 3.3,
+    "skill_scale": 0.1,
+    "skill": "ninjutsu",
+    "required_level": 1,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.3,
+        "duration_s": 4,
+        "value": 3
+      }
+    ],
+    "animation": "fx_fireball",
+    "sfx": "sfx_fire_whoosh"
+  },
+  {
+    "id": "katon_housenka",
+    "name": "Katon: Flores de Fênix",
+    "description": "Vários projéteis de fogo em cone à frente.",
+    "element": "katon",
+    "type": "area",
+    "shape": "cone_3",
+    "range": 3,
+    "chakra_cost": 105,
+    "cooldown_s": 6.0,
+    "base_damage": 24.3,
+    "level_scale": 3.105,
+    "skill_scale": 0.945,
+    "skill": "ninjutsu",
+    "required_level": 12,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.5,
+        "duration_s": 5,
+        "value": 4
+      }
+    ],
+    "animation": "fx_fire_cone",
+    "sfx": "sfx_fire_burst"
+  },
+  {
+    "id": "katon_karyuu_endan",
+    "name": "Katon: Dragão de Fogo",
+    "description": "Um dragão de chamas em linha reta, atravessa inimigos.",
+    "element": "katon",
+    "type": "beam",
+    "shape": "line_6",
+    "range": 6,
+    "chakra_cost": 210,
+    "cooldown_s": 8.0,
+    "base_damage": 71.82,
+    "level_scale": 10.26,
+    "skill_scale": 0.3694,
+    "skill": "ninjutsu",
+    "required_level": 35,
+    "villages": [],
+    "tier": 3,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.8,
+        "duration_s": 6,
+        "value": 8
+      }
+    ],
+    "animation": "fx_fire_dragon",
+    "sfx": "sfx_dragon_roar"
+  },
+  {
+    "id": "katon_sopro_brasas",
+    "name": "Katon: Sopro de Brasas",
+    "description": "Um sopro curto de brasas que cobre os tiles imediatamente à frente.",
+    "element": "katon",
+    "type": "area",
+    "shape": "cone_2",
+    "range": 2,
+    "chakra_cost": 18,
+    "cooldown_s": 3.0,
+    "base_damage": 5.6,
+    "level_scale": 0.315,
+    "skill_scale": 0.21,
+    "skill": "ninjutsu",
+    "required_level": 6,
+    "villages": [],
+    "tier": 1,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.35,
+        "duration_s": 4,
+        "value": 3
+      }
+    ],
+    "animation": "fx_ember_cone",
+    "sfx": "sfx_fire_puff"
+  },
+  {
+    "id": "katon_anel_chamas",
+    "name": "Katon: Anel de Chamas",
+    "description": "Um anel de fogo explode ao redor do conjurador, queimando tudo em volta.",
+    "element": "katon",
+    "type": "area",
+    "shape": "circle_r2",
+    "range": 0,
+    "chakra_cost": 147,
+    "cooldown_s": 6.0,
+    "base_damage": 36.0,
+    "level_scale": 2.898,
+    "skill_scale": 0.9,
+    "skill": "ninjutsu",
+    "required_level": 20,
+    "villages": [],
+    "tier": 2,
+    "effects": [
+      {
+        "type": "burn",
+        "chance": 0.6,
+        "duration_s": 5,
+        "value": 6
+      }
+    ],
+    "animation": "fx_fire_ring",
+    "sfx": "sfx_fire_burst"
+  }
 ]

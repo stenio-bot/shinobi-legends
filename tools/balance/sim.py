@@ -218,8 +218,21 @@ def typical_skills_split(level, taijutsu_frac=1.0, ninjutsu_frac=1.0):
 # build "híbrido" (rodada 2): metade do tempo de combate treinando taijutsu, metade ninjutsu —
 # não é média dos dois pura-raça, é um personagem que de fato joga assim (skills mais baixas
 # nas duas trilhas que um especialista, mas com acesso pleno às duas).
-HYBRID_TAIJUTSU_FRAC = 0.5
-HYBRID_NINJUTSU_FRAC = 0.5
+# FIX rodada 4: era 0.5/0.5 desde a rodada 2 (modelo antigo, ação única — jutsu OU arma, e o
+# jutsu só era usado se batesse o DPS de arma). Duas mudanças da rodada 4 turbinam o híbrido: (1)
+# arma+jutsu em cadências independentes ("arma entre casts") e (2) o híbrido agora sempre lança o
+# jutsu quando pronto/pagável (`no_fallback=True` fixo pro build hybrid — o jutsu é ADITIVO pro
+# híbrido, não substituto, então "só usa se bate a arma" não faz sentido aqui, ver
+# `simulate_fight`). Isso faz QUALQUER fração >0 deixar o híbrido sistematicamente à frente do
+# melhor build puro (o objetivo "híbrido ≥ ambos" nunca falha por baixo com 0.4) — mas nenhuma
+# fração testada (0.15–0.55) mantém TODOS os 6 bosses dentro do teto de +15% ao mesmo tempo (ver
+# docs/sistemas/balanceamento-relatorio-v4.md §2/§10): frações maiores estouram o teto em mais
+# bosses; frações menores derrubam o híbrido ABAIXO do melhor puro em alguns (viola "≥ambos").
+# 0.4 foi escolhido por ser a maior fração testada em que NENHUM boss cai abaixo do melhor puro
+# (prioriza "híbrido nunca pior que o melhor", o pendant mais grave) — o teto de +15% fica sem
+# fechar em vários bosses (chega a +49%), pendência honesta desta rodada.
+HYBRID_TAIJUTSU_FRAC = 0.4
+HYBRID_NINJUTSU_FRAC = 0.4
 
 def typical_skills(level):
     """Skill 'típico' de um jogador médio no nível L: tries acumuladas = horas jogadas até esse
@@ -257,18 +270,28 @@ def _equippable_items():
 EQUIP_ITEMS = _equippable_items()
 
 def best_item_for_slot(level, slot, weapon_class=None):
-    """Melhor item (maior required_level <= level) para o slot pedido. Para weapon, filtra por
-    weapon_class (melee/ranged) quando informado."""
+    """Melhor item desbloqueado (required_level <= level) pro slot pedido, pelo maior
+    ATRIBUTO relevante (attack pra arma, defense pra armadura) — NÃO pelo maior required_level.
+
+    FIX (rodada 4): antes ordenava só por `required_level` e pegava o último — um jogador
+    racional nunca trocaria uma arma melhor por uma pior só porque desbloqueou depois. Isso
+    tinha um efeito real: `gloves_taijutsu` (req10, attack=14) tem required_level MAIOR que
+    `tanto_steel` (req8, attack=16), mas attack MENOR — do L10 ao L19 o simulador vestia as
+    luvas (mais fracas) em vez do tantō, piorando artificialmente o platô de arma L8→L20 (ver
+    docs/sistemas/balanceamento-relatorio-v4.md §3). Para weapon, filtra por weapon_class
+    (melee/ranged) quando informado."""
     candidates = [it for it in EQUIP_ITEMS if it.get("required_level", 0) <= level]
     if slot == "weapon":
         candidates = [it for it in candidates if it["type"] == "weapon" and
                       (weapon_class is None or it.get("weapon_class") == weapon_class)]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda it: it.get("attack", 0))
     else:
         candidates = [it for it in candidates if it["type"] == "armor" and it.get("slot") == slot]
-    if not candidates:
-        return None
-    candidates.sort(key=lambda it: it["required_level"])
-    return candidates[-1]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda it: it.get("defense", 0))
 
 def best_accessories(level, n=2):
     candidates = [it for it in EQUIP_ITEMS if it["type"] == "accessory" and it.get("required_level", 0) <= level]
@@ -474,15 +497,37 @@ def best_potion(level, potions):
 POTION_HEAL_THRESHOLD = 0.35   # bebe poção de HP quando abaixo de 35% da vida máxima
 POTION_DRINK_COOLDOWN_S = 1.0  # exhaustion de consumível (aproximação; TFS usa ~1s)
 
-def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=True, no_fallback=False):
+def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=True, no_fallback=False,
+                    use_chakra_pills=False):
     """Simulação por eventos (dt discreto de 0.1s é suficiente pra granularidade de cooldowns
-    de 1.5-10s deste jogo). Retorna dict com ttk_s, dmg_taken, chakra_spent, died(bool).
+    de 1.5-12s deste jogo). Retorna dict com ttk_s, dmg_taken, chakra_spent, died(bool).
 
     `use_potions`: joga como um jogador de verdade jogaria — bebe a melhor poção de vida
     disponível pro nível quando HP cai abaixo de POTION_HEAL_THRESHOLD (loot e ryo do próprio
     monstro cobrem isso perto da faixa recomendada, ver relatório). Sem isso, TODO boss (que
     é justamente pensado para gastar poção) aparece como "mata o jogador" mesmo quando é uma
-    luta perfeitamente normal com poções — ver docs/sistemas/monstros-e-pvm.md."""
+    luta perfeitamente normal com poções — ver docs/sistemas/monstros-e-pvm.md.
+
+    `use_chakra_pills` (rodada 4, item 1/5 da missão — pendência da rodada 3): bebe a melhor
+    pílula de chakra desbloqueada (`_CHAKRA_POTIONS`) quando o chakra não basta mais pro jutsu
+    escolhido, mesma lógica de `hp_potion` acima (cooldown de 1s — aproximação documentada,
+    não uma exhaustion real: `server/tfs/data/actions/scripts/other/potions.lua:onUse` não seta
+    nenhuma `Condition`/exhaustion pro item, TFS 1.4.2 deixa beber poção tão rápido quanto o
+    cliente manda o pacote; sem ALGUM cooldown o Monte Carlo bebe uma pilha inteira num só tick
+    de 0.1s). Desligado por padrão (preserva a curva 1×1 de boss calibrada sem pílula desde a
+    rodada 2); ligado por `simulate_hunt` (cenário de 30 min, onde a pergunta É "quantas pílulas
+    isso consome").
+
+    HÍBRIDO (rodada 4, "burst feel"): arma e jutsu correm em CADÊNCIAS INDEPENDENTES — o
+    personagem ataca com a arma no intervalo normal (`ATTACK_INTERVAL_S`) e, por cima, lança o
+    jutsu sempre que ele estiver pronto (cooldown 3-4s, ver `data/jutsus/*.json`) e pagável —
+    isso é o "arma entre casts" pedido na missão, possível agora que o cooldown de tier 1 (3-4s)
+    é maior que o intervalo de ataque do player (2,0s, `ATTACK_INTERVAL_S`), deixando uma janela
+    ociosa real entre casts que um jogador de verdade preencheria com golpes de arma. NINJUTSU
+    PURO continua no modelo de AÇÃO ÚNICA (jutsu OU arma, nunca os dois no mesmo intervalo) —
+    é o "caster" que abre mão do ataque básico pra se concentrar em jutsu quando o jutsu vale a
+    pena (mesma lógica de fallback da rodada 2/3: `pick_ninjutsu_jutsu`); é esse modelo exclusivo
+    que mantém a curva −15%/+10% de paridade sustentada calibrada nas rodadas 2/3."""
     p = SimPlayer(level, build, rng)
     monster_hp = monster["hp"]
     m_defense = monster["defense"]
@@ -492,56 +537,106 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
     player_element, jutsu = (None, None)
     if build in ("ninjutsu", "hybrid"):
         taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
+        # HÍBRIDO (rodada 4): o jutsu é ADITIVO (camada por cima da arma, que já ataca sozinha
+        # na sua cadência — ver docstring), não um SUBSTITUTO da arma como no ninjutsu puro —
+        # então a checagem "só usa se bate o DPS de arma" (pensada pro modelo de ação única,
+        # ver `pick_ninjutsu_jutsu`) não faz sentido pro híbrido: até um jutsu com DPS "pior"
+        # que a arma ainda vale a pena quando ele não CUSTA nenhum turno de arma. Por isso o
+        # híbrido sempre usa `no_fallback=True` (pega o melhor jutsu do kit incondicionalmente);
+        # só o ninjutsu PURO respeita `no_fallback` (padrão False = decisão racional).
+        jutsu_no_fallback = True if build == "hybrid" else no_fallback
         player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
-                                                      taijutsu_dps_est, no_fallback=no_fallback)
-    next_player_action = 0.0
+                                                      taijutsu_dps_est, no_fallback=jutsu_no_fallback)
+    interleave = (build == "hybrid")   # ver docstring acima
+    next_player_action = 0.0   # modo exclusivo (taijutsu/ninjutsu/shuriken)
+    next_weapon_action = 0.0   # modo híbrido: cadência da arma
+    next_jutsu_action = 0.0    # modo híbrido: cadência do jutsu (independente da arma)
     t = 0.0
-    dt = 0.1  # granularidade suficiente p/ cooldowns de 1.5-10s deste jogo; mantém a matriz <60s
+    dt = 0.1  # granularidade suficiente p/ cooldowns de 1.5-12s deste jogo; mantém a matriz <120s
     dmg_taken_total = 0.0
     chakra_spent_total = 0.0
     jutsu_dmg_total = 0.0
     melee_swings = 0
     hp_potion = best_potion(level, _HP_POTIONS) if use_potions else None
+    chakra_potion = best_potion(level, _CHAKRA_POTIONS) if use_chakra_pills else None
     potions_used = 0
     ryo_spent_potions = 0
+    chakra_potions_used = 0
     next_potion_ok = 0.0
+    next_chakra_potion_ok = 0.0
+
+    def _result(died, timeout=False):
+        return {
+            "ttk_s": t, "dmg_taken": dmg_taken_total, "chakra_spent": chakra_spent_total,
+            "died": died, "hp_left_pct": (0.0 if died else p.hp / p.hp_max),
+            "melee_swings": melee_swings, "potions_used": potions_used,
+            "ryo_spent_potions": ryo_spent_potions, "chakra_potions_used": chakra_potions_used,
+            "jutsu_dmg_total": jutsu_dmg_total, **({"timeout": True} if timeout else {}),
+        }
+
     while t < max_seconds:
-        # regen contínuo
+        # regen contínuo (permanente desde a rodada 4 — CONDITION_REGENERATION ticks=-1 aplicada
+        # no login, `server/tfs/data/scripts/naruto/character_switch.lua`; não depende de comida
+        # nem é suspensa em combate, ver docs/sistemas/balanceamento.md)
         p.regen_tick(dt)
         if hp_potion and p.hp < POTION_HEAL_THRESHOLD * p.hp_max and t >= next_potion_ok:
             p.hp = min(p.hp_max, p.hp + hp_potion["effect"]["value"])
             potions_used += 1
             ryo_spent_potions += hp_potion["buy_price"]
             next_potion_ok = t + POTION_DRINK_COOLDOWN_S
-        # ataque do player
-        if t >= next_player_action:
-            used_jutsu = False
-            if build in ("ninjutsu", "hybrid") and jutsu and p.chakra >= jutsu["chakra_cost"]:
+        if (chakra_potion and jutsu and build in ("ninjutsu", "hybrid")
+                and p.chakra < jutsu["chakra_cost"] and t >= next_chakra_potion_ok):
+            p.chakra = min(p.chakra_max, p.chakra + chakra_potion["effect"]["value"])
+            chakra_potions_used += 1
+            ryo_spent_potions += chakra_potion["buy_price"]
+            next_chakra_potion_ok = t + POTION_DRINK_COOLDOWN_S
+
+        if interleave:
+            # jutsu na sua própria cadência (não consome o turno da arma)
+            if jutsu and t >= next_jutsu_action and p.chakra >= jutsu["chakra_cost"]:
                 p.chakra -= jutsu["chakra_cost"]
                 chakra_spent_total += jutsu["chakra_cost"]
                 mult = elemental_multiplier(player_element, monster["element"])
                 dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
                 monster_hp -= dmg
                 jutsu_dmg_total += dmg
-                next_player_action = t + jutsu["cooldown_s"]
-                used_jutsu = True
-            if not used_jutsu:
+                next_jutsu_action = t + jutsu["cooldown_s"]
+                if monster_hp <= 0:
+                    return _result(died=False)
+            # arma na sua própria cadência (independente do jutsu — "arma entre casts")
+            if t >= next_weapon_action:
                 raw = p.roll_weapon_damage()
-                # weapons.cpp: WeaponMelee/WeaponDistance ambas setam params.blockedByArmor=true
-                # e blockedByShield=true -> mitigado pela armor/defense do MONSTRO (monster.h:
-                # getArmor()/getDefense() = mType->info.armor/defense, o mesmo m["defense"] do
-                # JSON usado nos dois atributos de <defenses>, ver tools/export_tfs.py:284).
                 dmg = apply_mitigation(rng, raw, m_defense, m_armor)
                 monster_hp -= dmg
                 melee_swings += 1
-                next_player_action = t + ATTACK_INTERVAL_S
-            if monster_hp <= 0:
-                return {
-                    "ttk_s": t, "dmg_taken": dmg_taken_total, "chakra_spent": chakra_spent_total,
-                    "died": False, "hp_left_pct": p.hp / p.hp_max, "melee_swings": melee_swings,
-                    "potions_used": potions_used, "ryo_spent_potions": ryo_spent_potions,
-                    "jutsu_dmg_total": jutsu_dmg_total,
-                }
+                next_weapon_action = t + ATTACK_INTERVAL_S
+                if monster_hp <= 0:
+                    return _result(died=False)
+        else:
+            if t >= next_player_action:
+                used_jutsu = False
+                if build in ("ninjutsu", "hybrid") and jutsu and p.chakra >= jutsu["chakra_cost"]:
+                    p.chakra -= jutsu["chakra_cost"]
+                    chakra_spent_total += jutsu["chakra_cost"]
+                    mult = elemental_multiplier(player_element, monster["element"])
+                    dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
+                    monster_hp -= dmg
+                    jutsu_dmg_total += dmg
+                    next_player_action = t + jutsu["cooldown_s"]
+                    used_jutsu = True
+                if not used_jutsu:
+                    raw = p.roll_weapon_damage()
+                    # weapons.cpp: WeaponMelee/WeaponDistance ambas setam params.blockedByArmor=
+                    # true e blockedByShield=true -> mitigado pela armor/defense do MONSTRO
+                    # (monster.h: getArmor()/getDefense() = mType->info.armor/defense, o mesmo
+                    # m["defense"] do JSON usado nos dois atributos de <defenses>, ver
+                    # tools/export_tfs.py:284).
+                    dmg = apply_mitigation(rng, raw, m_defense, m_armor)
+                    monster_hp -= dmg
+                    melee_swings += 1
+                    next_player_action = t + ATTACK_INTERVAL_S
+                if monster_hp <= 0:
+                    return _result(died=False)
         # ataques do monstro
         for i, atk in enumerate(attacks):
             if t >= next_monster_attack[i]:
@@ -558,25 +653,17 @@ def simulate_fight(level, monster, build, rng, max_seconds=600.0, use_potions=Tr
                 p.hp -= dmg
                 dmg_taken_total += dmg
                 if p.hp <= 0:
-                    return {
-                        "ttk_s": t, "dmg_taken": dmg_taken_total, "chakra_spent": chakra_spent_total,
-                        "died": True, "hp_left_pct": 0.0, "melee_swings": melee_swings,
-                        "potions_used": potions_used, "ryo_spent_potions": ryo_spent_potions,
-                        "jutsu_dmg_total": jutsu_dmg_total,
-                    }
+                    return _result(died=True)
         t += dt
-    return {
-        "ttk_s": max_seconds, "dmg_taken": dmg_taken_total, "chakra_spent": chakra_spent_total,
-        "died": False, "hp_left_pct": p.hp / p.hp_max, "melee_swings": melee_swings, "timeout": True,
-        "potions_used": potions_used, "ryo_spent_potions": ryo_spent_potions,
-        "jutsu_dmg_total": jutsu_dmg_total,
-    }
+    t = max_seconds
+    return _result(died=False, timeout=True)
 
 # ============================================================== agregação Monte Carlo
-def simulate(level, monster_id, build, trials=60, seed=1234, no_fallback=False):
+def simulate(level, monster_id, build, trials=60, seed=1234, no_fallback=False, use_chakra_pills=False):
     monster = MONSTERS[monster_id]
     rng = random.Random(seed)
-    results = [simulate_fight(level, monster, build, rng, no_fallback=no_fallback) for _ in range(trials)]
+    results = [simulate_fight(level, monster, build, rng, no_fallback=no_fallback,
+                               use_chakra_pills=use_chakra_pills) for _ in range(trials)]
     kill_results = [r for r in results if not r["died"] and not r.get("timeout")]
     death_results = [r for r in results if r["died"]]
     dmg_taken = [r["dmg_taken"] for r in results]
@@ -907,12 +994,201 @@ def run_boss_matrix(trials=30, seed=1234):
             out.append(simulate(lvl, bid, build, trials=trials, seed=seed))
     return out
 
+# ============================================================== hunt de 30 min (rodada 4)
+# Missão item 1: "medir chakra sustentável" numa SESSÃO DE CAÇA, não numa luta única — uma
+# sequência de pulls do monstro comum mais próximo do nível pedido, com pausas realistas
+# (5-15s: andar até o próximo alvo + lootar, ver DOWNTIME_BETWEEN_KILLS_S — aqui usamos a faixa
+# pedida pela missão em vez do valor fixo de 3.0s do XP/h "throughput máximo") entre lutas, HP e
+# CHAKRA persistindo (com regen contínuo) de uma luta pra outra. Mede a fração do tempo de caça
+# em que o chakra fica ABAIXO do custo do tier 1 do elemento escolhido (jutsu índice 0 de
+# `element_sets.json` — sempre o projétil básico, ver ELEMENT_SETS) — a pergunta literal da
+# missão ("o híbrido não fica >20% do tempo sem chakra pro tier 1 sem pílulas").
+DEATH_RECOVERY_S = 75.0   # docs/qa/playtest-l1-20-r3.md: ~25-30s desconectado + ~75s de viagem
+                          # de volta ao spot médios de uma morte real — usamos o valor de viagem
+                          # citado no playtest (mais conservador que o de contar só a desconexão)
+
+def nearest_common_monster(level):
+    """Monstro comum (não-boss) de `data/monsters/*.json` com nível mais próximo do pedido —
+    usado pra escolher automaticamente o alvo de uma hunt/pull quando só o nível é informado
+    (ver GROUP_SCENARIOS pra cenários com N de pull já medido por região)."""
+    candidates = [m for m in MONSTERS.values() if not m["id"].startswith("boss_")]
+    return min(candidates, key=lambda m: abs(m["level"] - level))["id"]
+
+def simulate_hunt(level, monster_id, build, minutes=30, use_chakra_pills=False, seed=1234,
+                   pause_min_s=5.0, pause_max_s=15.0):
+    """Sequência de pulls 1x1 do mesmo monstro comum, HP/chakra do player persistindo (com
+    regen contínuo) entre uma luta e a próxima — ver cabeçalho da seção acima. Cada pull reusa
+    a MESMA lógica de ação de `simulate_fight` (híbrido intercalado / ninjutsu exclusivo), só
+    que sem recriar o SimPlayer a cada luta. Uma morte custa `DEATH_RECOVERY_S` + a pausa normal
+    (o personagem volta com HP/chakra cheios, confirmado no playtest — reconectar no templo)."""
+    rng = random.Random(seed)
+    monster = MONSTERS[monster_id]
+    p = SimPlayer(level, build, rng)
+    m_defense = monster["defense"]
+    m_armor = monster["defense"]
+    player_element, jutsu = (None, None)
+    if build in ("ninjutsu", "hybrid"):
+        taijutsu_dps_est = estimate_weapon_dps(p, m_defense, m_armor)
+        jutsu_no_fallback = True if build == "hybrid" else False   # ver simulate_fight
+        player_element, jutsu = pick_ninjutsu_jutsu(monster["element"], level, p.ninjutsu,
+                                                      taijutsu_dps_est, no_fallback=jutsu_no_fallback)
+    tier1 = None
+    if player_element:
+        eset = ELEMENT_SETS.get(player_element)
+        if eset:
+            tier1 = JUTSUS[eset["jutsus"][0]]   # índice 0 = sempre o projétil tier 1, ver header
+    tier1_cost = tier1["chakra_cost"] if tier1 else None
+    interleave = (build == "hybrid")
+    hp_potion = best_potion(level, _HP_POTIONS)
+    chakra_potion = best_potion(level, _CHAKRA_POTIONS) if use_chakra_pills else None
+
+    total_s = minutes * 60.0
+    dt = 0.1
+    t = 0.0
+    time_below_tier1 = 0.0
+    kills = 0
+    deaths = 0
+    total_chakra_spent = 0.0
+    total_jutsu_dmg = 0.0
+    chakra_potions_used = 0
+    ryo_spent_chakra_potions = 0
+    hp_potions_used = 0
+    ryo_spent_hp_potions = 0
+    next_potion_ok = 0.0
+    next_chakra_potion_ok = 0.0
+    next_weapon_action = 0.0
+    next_jutsu_action = 0.0
+    next_player_action = 0.0
+    monster_hp = monster["hp"]
+    attacks = monster["attacks"]
+    next_monster_attack = [0.0] * len(attacks)
+    in_fight = True
+    resume_at = 0.0
+    while t < total_s:
+        p.regen_tick(dt)
+        if tier1_cost is not None and p.chakra < tier1_cost:
+            time_below_tier1 += dt
+        if hp_potion and p.hp < POTION_HEAL_THRESHOLD * p.hp_max and t >= next_potion_ok:
+            p.hp = min(p.hp_max, p.hp + hp_potion["effect"]["value"])
+            hp_potions_used += 1
+            ryo_spent_hp_potions += hp_potion["buy_price"]
+            next_potion_ok = t + POTION_DRINK_COOLDOWN_S
+        if (chakra_potion and tier1_cost is not None and p.chakra < tier1_cost
+                and t >= next_chakra_potion_ok):
+            p.chakra = min(p.chakra_max, p.chakra + chakra_potion["effect"]["value"])
+            chakra_potions_used += 1
+            ryo_spent_chakra_potions += chakra_potion["buy_price"]
+            next_chakra_potion_ok = t + POTION_DRINK_COOLDOWN_S
+
+        if in_fight:
+            died_this_tick = False
+            if interleave:
+                if jutsu and t >= next_jutsu_action and p.chakra >= jutsu["chakra_cost"]:
+                    p.chakra -= jutsu["chakra_cost"]
+                    total_chakra_spent += jutsu["chakra_cost"]
+                    mult = elemental_multiplier(player_element, monster["element"])
+                    dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
+                    monster_hp -= dmg
+                    total_jutsu_dmg += dmg
+                    next_jutsu_action = t + jutsu["cooldown_s"]
+                if monster_hp > 0 and t >= next_weapon_action:
+                    raw = p.roll_weapon_damage()
+                    dmg = apply_mitigation(rng, raw, m_defense, m_armor)
+                    monster_hp -= dmg
+                    next_weapon_action = t + ATTACK_INTERVAL_S
+            else:
+                if t >= next_player_action:
+                    used_jutsu = False
+                    if build == "ninjutsu" and jutsu and p.chakra >= jutsu["chakra_cost"]:
+                        p.chakra -= jutsu["chakra_cost"]
+                        total_chakra_spent += jutsu["chakra_cost"]
+                        mult = elemental_multiplier(player_element, monster["element"])
+                        dmg = jutsu_damage(rng, jutsu, level, p.ninjutsu, mult)
+                        monster_hp -= dmg
+                        total_jutsu_dmg += dmg
+                        next_player_action = t + jutsu["cooldown_s"]
+                        used_jutsu = True
+                    if not used_jutsu:
+                        raw = p.roll_weapon_damage()
+                        dmg = apply_mitigation(rng, raw, m_defense, m_armor)
+                        monster_hp -= dmg
+                        next_player_action = t + ATTACK_INTERVAL_S
+            if monster_hp <= 0:
+                kills += 1
+                in_fight = False
+                resume_at = t + rng.uniform(pause_min_s, pause_max_s)
+                monster_hp = monster["hp"]
+                next_monster_attack = [0.0] * len(attacks)
+            else:
+                for i, atk in enumerate(attacks):
+                    if t >= next_monster_attack[i]:
+                        next_monster_attack[i] = t + atk["cooldown_s"]
+                        raw = _normal_random(rng, atk["damage_min"], atk["damage_max"])
+                        dmg = apply_mitigation(rng, raw, 0, p.armor) if atk["type"] == "melee" else raw
+                        p.hp -= dmg
+                        if p.hp <= 0:
+                            deaths += 1
+                            p.hp = p.hp_max     # relogin no templo: HP/chakra cheios (playtest)
+                            p.chakra = p.chakra_max
+                            in_fight = False
+                            resume_at = t + rng.uniform(pause_min_s, pause_max_s) + DEATH_RECOVERY_S
+                            monster_hp = monster["hp"]
+                            next_monster_attack = [0.0] * len(attacks)
+                            died_this_tick = True
+                            break
+            if died_this_tick:
+                pass
+        else:
+            if t >= resume_at:
+                in_fight = True
+                next_weapon_action = t
+                next_jutsu_action = max(next_jutsu_action, t)
+                next_player_action = t
+        t += dt
+    pct_below = time_below_tier1 / t if t > 0 else 0.0
+    return {
+        "level": level, "monster_id": monster_id, "build": build, "minutes": minutes,
+        "use_chakra_pills": use_chakra_pills,
+        "kills": kills, "deaths": deaths,
+        "chakra_spent_total": round(total_chakra_spent, 1),
+        "jutsu_dmg_total": round(total_jutsu_dmg, 1),
+        "chakra_potions_used": chakra_potions_used,
+        "ryo_spent_chakra_potions": ryo_spent_chakra_potions,
+        "hp_potions_used": hp_potions_used,
+        "ryo_spent_hp_potions": ryo_spent_hp_potions,
+        "pct_time_without_chakra_for_tier1": round(pct_below, 3),
+        "tier1_jutsu": tier1["id"] if tier1 else None,
+        "tier1_chakra_cost": tier1_cost,
+    }
+
+HUNT_LEVELS = [5, 15, 30, 60, 100]
+
+def run_hunt_matrix(minutes=30, seed=1234):
+    """Roda a hunt de 30 min em HUNT_LEVELS, build 'hybrid' (a build que a missão pede medir —
+    'o híbrido não fica >20% do tempo sem chakra'), com E sem pílula de chakra."""
+    out = []
+    for level in HUNT_LEVELS:
+        mid = nearest_common_monster(level)
+        for use_pills in (False, True):
+            out.append(simulate_hunt(level, mid, "hybrid", minutes=minutes,
+                                      use_chakra_pills=use_pills, seed=seed))
+    return out
+
 # ============================================================== CLI
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--matrix", action="store_true", help="roda level x monstro x build completo (1x1)")
     ap.add_argument("--group-matrix", action="store_true",
                      help="roda o cenário multi-alvo (pull por região) + bosses, builds taijutsu/ninjutsu/hybrid")
+    ap.add_argument("--hunt", action="store_true",
+                     help="rodada 4: cenário de caça de 30 min (sequência de pulls com pausas "
+                          "5-15s) em vez de luta única — mede chakra sustentável de verdade. Com "
+                          "--level/--monster/--build roda 1 hunt; sozinho roda HUNT_LEVELS x "
+                          "build hybrid, com e sem pílula de chakra (--minutes ajusta a duração).")
+    ap.add_argument("--minutes", type=float, default=30.0, help="duração da hunt (--hunt)")
+    ap.add_argument("--chakra-pills", action="store_true",
+                     help="--hunt/--level+--monster: simula o jogador bebendo pílula de chakra "
+                          "quando não consegue pagar o tier 1 (ver _CHAKRA_POTIONS)")
     ap.add_argument("--level", type=int)
     ap.add_argument("--monster")
     ap.add_argument("--n-monsters", type=int, default=1, help="tamanho do pull (--monster vira N cópias)")
@@ -958,13 +1234,32 @@ def main():
             print(json.dumps(out, ensure_ascii=False, indent=1))
         return
 
+    if args.hunt:
+        t0 = time.time()
+        if args.level and args.monster:
+            mid = args.monster
+            res = simulate_hunt(args.level, mid, args.build, minutes=args.minutes,
+                                 use_chakra_pills=args.chakra_pills)
+        else:
+            res = run_hunt_matrix(minutes=args.minutes)
+        dt = time.time() - t0
+        print(f"# hunt: em {dt:.2f}s", file=sys.stderr)
+        if args.json:
+            with open(args.json, "w", encoding="utf-8") as f:
+                json.dump(res, f, ensure_ascii=False, indent=1)
+            print(f"salvo em {args.json}", file=sys.stderr)
+        else:
+            print(json.dumps(res, ensure_ascii=False, indent=1))
+        return
+
     if args.level and args.monster and args.n_monsters > 1:
         r = simulate_group(args.level, args.monster, args.build, args.n_monsters, trials=args.trials)
         print(json.dumps(r, ensure_ascii=False, indent=2))
         return
 
     if args.level and args.monster:
-        r = simulate(args.level, args.monster, args.build, trials=args.trials, no_fallback=args.no_fallback)
+        r = simulate(args.level, args.monster, args.build, trials=args.trials, no_fallback=args.no_fallback,
+                      use_chakra_pills=args.chakra_pills)
         print(json.dumps(r, ensure_ascii=False, indent=2))
         if args.verbose:
             skills = typical_skills(args.level)

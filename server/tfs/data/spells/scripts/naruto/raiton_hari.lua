@@ -7,7 +7,7 @@ combat:setParameter(COMBAT_PARAM_EFFECT, 208)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, 62)
 
 function onGetFormulaValues(player, level, maglevel)
-	local base = 3.2 + level * 3.03 + maglevel * 0.1125
+	local base = 7.5 + level * 3.03 + maglevel * 0.1125
 	return -math.floor(base * 0.9), -math.floor(base * 1.1)
 end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

@@ -137,6 +137,16 @@ L50 → ~20.000 (faixa "20.000+"); L60 → ~28.800; L70 → ~39.200.
 **Ataque de arma:** `≈ 1.35 * required_level` (kodachi L28 = 40; katana do trovão L55 = 74;
 kanabō L70 = 96; lâmina lendária do boss L78 = 112, ~15% acima da curva por ser drop de boss).
 
+**Platô L8→L20 corrigido na rodada 4**: a arma melee ficava travada em `Tantō de Aço` (req8,
+attack 16) por 12 níveis inteiros até `Katana do Ronin` (req20, attack 28) — o boss L19
+(Espadachim da Névoa) lutava com uma arma efetivamente 11 níveis atrasada. Item novo
+`wakizashi_temperado` (req15, attack 21, `buy_price = 8×15² = 1800` exatamente na fórmula acima)
+preenche o meio do caminho, vendido no Mercador Itsuki (Costa das Marés, a região do próprio
+boss L19) e na Velha Sumi. Um bug do simulador de balanceamento (`best_item_for_slot` escolhia
+o item pelo maior `required_level`, não pelo maior `attack` — fazia `gloves_taijutsu`, req10 mas
+attack **14**, "substituir" o Tantō de attack 16 de L10 a L19) também foi corrigido — ver
+relatório v4 §3.
+
 **Pergaminhos** (âncora de `economia.md`: t1 500 · t2 5.000 · t3 50.000):
 tier 1 = 500 · tier 2 = 5.000–9.000 · tier 3 = 20.000–45.000.
 
@@ -152,19 +162,40 @@ conveniência e não eficiência.
 | Pílula de Chakra Grande | 350 CK | 250 | 1,40 |
 | Pílula do Soldado | 500 HP + 500 CK | 900 | 1,11 (contando os dois) |
 
-**Economia de chakra (checada na rodada 3):** regen passivo é `gainmanaticks=5 gainmanaamount=3`
-(0,6 chakra/s, igual em toda vila, **não escala com level** — `tools/export_tfs.py`) contra um
-pool de `50+level*10`. Com os custos de tier 2/3 da rodada 3 (105–245, ver tabela de escala por
-tier acima), a rotação de ninjutsu "seca" (chakra insuficiente pro jutsu que estava usando) bem
-antes dos 30s em quase todo nível — L15 seca em 4s, L30 em 12s, L60 em 24s, L100 em 40s (jutsu
-tier 1 "de sustento", mais barato, aguenta mais: 12–20s em L5–10). Isso é **intencional, não bug**:
-é o mecanismo que faz o burst de tier 2/3 (calibrado pra bater o dano de arma num boss) não virar
-DPS sustentado de graça — o resto da luta (que dura minutos contra um boss) é taijutsu. Regen
-natural do zero ao cheio leva de 250s (L10) a 1750s (L100) — trickle entre lutas, não um lever de
-combate. O lever de combate real são as **pílulas de chakra**: uma Pílula Grande (350 CK, req
-L30) dá ~1,7 cast extra de tier 3 no meio de uma luta longa. `tools/balance/sim.py` ainda não
-simula o jogador bebendo pílula de chakra em combate (só HP) — pendência documentada em
-`balanceamento-relatorio-v3.md` §8.
+**Regen de chakra é PERMANENTE desde a rodada 4** (não é "ausência de regen"): `character_switch.lua`
+(`server/tfs/data/scripts/naruto/`) aplica no login uma `Condition(CONDITION_REGENERATION, ...)`
+com `CONDITION_PARAM_TICKS=-1` (permanente, nunca expira, não depende de comida nem é suspensa em
+combate) usando `gainmanaticks=5 gainmanaamount=3` da vocação (0,6 chakra/s, igual em toda vila,
+**não escala com level** — `tools/export_tfs.py`) contra um pool de `50+level*10`. O achado do
+playtest r3 ("chakra travado por 7 minutos") é a escala real do número, não um bug: 0,6/s é
+imperceptível numa janela de minutos contra um pool de dezenas.
+
+**Economia de chakra (rodada 3, tier 2/3):** com os custos de tier 2/3 da rodada 3 (105–245, ver
+tabela de escala por tier acima), a rotação de ninjutsu "seca" (chakra insuficiente pro jutsu que
+estava usando) bem antes dos 30s em quase todo nível — L15 seca em 4s, L30 em 12s, L60 em 24s,
+L100 em 40s. Isso é **intencional, não bug**: é o mecanismo que faz o burst de tier 2/3
+(calibrado pra bater o dano de arma num boss) não virar DPS sustentado de graça — o resto da
+luta (que dura minutos contra um boss) é taijutsu. Regen natural do zero ao cheio leva de 250s
+(L10) a 1750s (L100) — trickle entre lutas, não um lever de combate.
+
+**Tier 1 (rodada 4)**: cooldown subiu de 2,0s pra 3,5s e o custo de 12–15 pra 25–30 (ver §6) — o
+tier 1 agora é "sustentável dentro de uma luta longa de boss" mas, medido numa **hunt de 30 min**
+(sequência de pulls, não uma luta só — `tools/balance/sim.py --hunt`, novo na rodada 4), fica sem
+chakra suficiente pro tier 1 **97,6% do tempo em L5 e 93,4% em L15** (meta é ≤20%) — o custo flat
+calibrado pra não dominar um boss de L12-25 é proporcionalmente enorme contra o pool minúsculo de
+L5-15, e o regen de 0,6/s não alcança entre pulls curtos. De L30 em diante fica dentro da meta
+(9,8%–14,6%). Ver `balanceamento-relatorio-v4.md` §5/§6/§10 — pendência real, não resolvida
+(exigiria custo de tier 1 escalando com level, que o formato atual de jutsu não suporta, ou
+pílula grátis/mais barata cedo).
+
+**Pílulas de chakra são simuladas em combate desde a rodada 4** (`_CHAKRA_POTIONS`,
+`tools/balance/sim.py --chakra-pills`/`--hunt`): bebidas quando o chakra não basta pro jutsu
+escolhido, mesma aproximação de cooldown de 1,0s da poção de vida (o TFS real, `server/tfs/data/
+actions/scripts/other/potions.lua:onUse`, **não seta exhaustion nenhuma** pro item — a
+aproximação existe só pra evitar o Monte Carlo bebendo uma pilha inteira num tick). Com pílula,
+o tempo sem chakra pro tier 1 cai pra ~0% em todos os níveis testados — mas em L5 o jogador não
+consegue BANCAR pílulas suficiente (precisaria de ~304/h = 9.120 ryo/h; a caça só rende ~5.572
+ryo/h líquido nesse nível — déficit real, ver relatório v4 §6).
 
 **Material exclusivo de boss:** `sell_price ≈ 3 × (4.5 * L)` — a Presa da Serpente Branca (L25)
 vale 340, contra ~112 de um material comum da mesma faixa. Cai 100% (1–2), então é a renda
@@ -196,15 +227,37 @@ dano_medio(jutsu) ≈ base_damage + level*level_scale + ninjutsu*skill_scale
 > ganhou um tier 3 de verdade no kit (`raiton_punho_trovao` trocou de lugar com
 > `raiton_armadura_eletrica` em `data/element_sets.json`) — sem isso, o elemento não tinha como
 > acompanhar katon/doton/fuuton em L50+ (só `suiton` continua sem tier 3 no kit, por design; seu
-> tier 2 `suiryuudan` recebeu compensação extra). Números **pós-rodada-3** abaixo.
+> tier 2 `suiryuudan` recebeu compensação extra).
+
+> **Atualizado na rodada 4** (`docs/sistemas/balanceamento-relatorio-v4.md`): o tier 1 (o
+> projétil básico de cada elemento, escolhido pela rotação 1×1 desde a rodada 1) tinha
+> cooldown IGUAL ao intervalo de ataque do player (2,0s) — a rodada 3 provou matematicamente que
+> isso torna "burst sentido" (hit ≥1,3× o hit de arma) e "paridade sustentada" incompatíveis
+> (se os cooldowns são iguais, `dano_tier1 ≈ dano_arma` por hit, nunca 1,3×). FIX: **cooldown
+> 2,0s→3,5s** nos 5 projéteis tier 1 (`katon_goukakyuu`, `fuuton_lamina_vento`, `raiton_hari`,
+> `doton_bala_lama`, `suiton_mizudan`) — com cooldown maior que o da arma, os dois lados da
+> tensão se destravam ao mesmo tempo (ver relatório v4 §2 pra prova). `base_damage`/`level_scale`
+> subiram bem mais que `skill_scale` (o magic level não é confiável o bastante numa faixa tão
+> ampla — nível puro é o lever principal) e `chakra_cost` subiu ~2× (25-30, contra 12-15 antes)
+> — não mais que isso, porque um custo maior (testado até 12× nesta rodada) quebra a
+> sustentabilidade de uma **hunt de 30 min** em L5-15 (ver acima) sem resolver totalmente a
+> paridade sustentada em boss (a causa raiz virou outra: L19 é o único boss testado onde o
+> elemento com vantagem só tem o tier 1 desbloqueado — ver relatório v4 §10). 3 dos 8 tier 2 do
+> kit automático (`katon_housenka`, `fuuton_rajada_cortante`, `raiton_lanca_relampago`) tinham
+> cooldown abaixo de 6s — subidos pra 6,0-6,5s com dano escalado pelo MESMO fator (preserva o
+> DPS já calibrado na rodada 3, só o hit fica maior e o cast mais espaçado). O **híbrido** ganhou
+> um modelo novo: arma e jutsu em cadências independentes (arma ataca no intervalo normal, jutsu
+> lança por cima sempre que pronto/pagável — "arma entre casts" de verdade, não só design) —
+> isso tornou o híbrido sistematicamente ≥ os builds puros (nunca mais atrás), ao custo de
+> exceder o teto de +15% em vários bosses (pendência, ver relatório v4 §10).
 
 Escala por tier (com `required_level` de referência e ninjutsu = magic level real, ver acima):
 
 | Tier | base_damage | level_scale | skill_scale | chakra | cooldown |
 |---|---|---|---|---|---|
-| 1 projétil | 7–9 | 0,385–0,42 | 0,28–0,315 | 12–16 | 2,0 s (inalterado na rodada 3) |
-| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus ganharam CD menor, ver §4 do relatório v3) |
-| 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 16–37,8 | 2,07–3,1 | 0,63–0,9 | 105–147 | 4,0–6,0 s |
+| 1 projétil (pós-rodada-4) | 3,2–4,0 | 3,03–3,3 | 0,1–0,1125 | 25–30 | **3,5 s** (era 2,0 s) |
+| 1 área/self | 4,9–5,6 (área) / 0 (self) | 0,315 | 0,21–0,245 | 14–28 | 1,3–3,0 s (2 jutsus ganharam CD menor, ver §4 do relatório v3 — inalterados na rodada 4) |
+| 2 "normal" (katon/doton/fuuton, tem tier 3 atrás) | 24,3–38,99 (3 recalibrados na r4, ver acima) / 16–37,8 (os demais) | 1,596–3,886 | 0,585–1,17 / 0,63–0,9 | 105–147 | **6,0–6,5 s** (3 subiram de 4,0-5,5s na r4) |
 | 2 "teto do elemento" (raiton/suiton, sem tier 3 no kit) | 39,6–71,8 | 1,35–7,05 | 0,5–0,72 | 140–158 | 5,5–6,0 s |
 | 3 | 54–86 | 9,0–11,9 | 0,18–0,37 | 175–245 | 7,0–9,0 s |
 
