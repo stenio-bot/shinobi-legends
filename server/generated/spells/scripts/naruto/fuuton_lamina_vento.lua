@@ -13,6 +13,6 @@ end
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
 function onCastSpell(creature, variant)
-	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_wind_cut")
+	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(creature:getPosition(), "sfx_wind_cut") end
 	return combat:execute(creature, variant)
 end

@@ -474,6 +474,63 @@ local function progressStatusLabel(status)
     return 'Dispon\xEDvel', COLOR_GREY -- 'available'
 end
 
+-- ---------------------------------------------------------------------------
+-- secao Conquistas (dentro da aba Missoes): X/55 no total + por categoria, lista
+-- completa com desbloqueadas destacadas e progresso x/y nas contaveis. Vem do
+-- mesmo `progress` (campo novo `achievements`, ver NarutoAchievements.progressJson
+-- no servidor). Ordem = data/achievements.json (ja agrupado por categoria).
+-- ---------------------------------------------------------------------------
+local ACH_CATEGORY_LABEL = {
+    exploration = 'Explora\xE7\xE3o', exam = 'Exame', quest = 'Cadeias de Hist\xF3ria',
+    boss = 'Chefes', kill = 'Abates', level = 'N\xEDvel', task = 'Tarefas',
+    daily = 'Di\xE1rias', collection = 'Cole\xE7\xE3o',
+}
+
+local function buildAchievementsSection(list, p)
+    local achievements = p.achievements or {}
+    local unlockedCount = 0
+    for _, a in ipairs(achievements) do
+        if a.unlocked then unlockedCount = unlockedCount + 1 end
+    end
+    addSectionHeader(list, 'CONQUISTAS (' .. unlockedCount .. '/' .. #achievements .. ')')
+    if #achievements == 0 then
+        emptyList(list, 'Sistema de conquistas indispon\xEDvel no servidor.')
+        return
+    end
+    local lastCategory = nil
+    for _, a in ipairs(achievements) do
+        if a.category ~= lastCategory then
+            lastCategory = a.category
+            local catUnlocked, catTotal = 0, 0
+            for _, b in ipairs(achievements) do
+                if b.category == a.category then
+                    catTotal = catTotal + 1
+                    if b.unlocked then catUnlocked = catUnlocked + 1 end
+                end
+            end
+            addInfoRow(list, {
+                title = ACH_CATEGORY_LABEL[a.category] or a.category,
+                sub = '',
+                status = catUnlocked .. '/' .. catTotal,
+                statusColor = (catUnlocked >= catTotal) and COLOR_GREEN or COLOR_GREY,
+            })
+        end
+        local status, color
+        if a.unlocked then
+            status, color = 'Desbloqueada', COLOR_GREEN
+        elseif a.progress ~= nil and a.count ~= nil then
+            status, color = a.progress .. '/' .. a.count, COLOR_GOLD
+        else
+            status, color = 'Bloqueada', COLOR_GREY
+        end
+        addInfoRow(list, {
+            title = a.name or a.id or '?',
+            sub = a.description or '',
+            status = status, statusColor = color,
+        })
+    end
+end
+
 local function buildMissionsTab()
     local list = missionsTab.list
     list:destroyChildren()
@@ -577,6 +634,8 @@ local function buildMissionsTab()
             })
         end
     end
+
+    buildAchievementsSection(list, p)
 end
 
 -- ---------------------------------------------------------------------------
@@ -750,7 +809,12 @@ local function createCommandsTab()
     cmdTab:setId('shinobiCommandsTab')
     cmdTab.hint:setText('Comandos de GM (talkactions de ' ..
         'server/tfs/data/scripts/naruto/gm_tools.lua). Esta aba s\xF3 aparece para conta GOD.')
-    cmdTab.btnGod.onClick = function() talk('/god') end
+    cmdTab.btnGod.onClick = function()
+        if modules.naruto_sounds then
+            modules.naruto_sounds.playClick()
+        end
+        talk('/god')
+    end
     cmdTab.btnFull.onClick = function() talk('/full') end
     cmdTab.btnArena.onClick = function() talk('/arena') end
     cmdTab.btnPvm.onClick = function() talk('/pvm') end
@@ -829,7 +893,7 @@ local function createTabs()
     missionsTab = g_ui.createWidget('ShinobiMissionsTab')
     missionsTab:setId('shinobiMissionsTab')
     missionsTab.list = missionsTab.listArea.list
-    missionsTab.hint:setText('Rank, tarefas ativas, di\xE1rias de hoje e miss\xF5es de hist\xF3ria.')
+    missionsTab.hint:setText('Rank, tarefas ativas, di\xE1rias de hoje, miss\xF5es de hist\xF3ria e conquistas.')
     missionsTab.refreshButton:setText('Atualizar')
     missionsTab.refreshButton.onClick = requestProgress
     missionsTabButton = tabBar:addTab('Miss\xF5es', missionsTab)
@@ -975,13 +1039,27 @@ function onProgress(data)
     return true
 end
 
+-- data.type == 'sfx' e' despachado por modules/naruto_sounds (opcode 210 ja e'
+-- registrado aqui - so pode haver 1 registerExtendedOpcode por codigo, ver
+-- gamelib/protocolgame.lua - entao naruto_sounds nao registra de novo, so
+-- expoe NarutoSounds.onOpcodeSfx para quem já escuta o opcode chamar).
+local function onSfx(data)
+    if type(data) ~= 'table' or data.type ~= 'sfx' then
+        return false
+    end
+    if modules.naruto_sounds and modules.naruto_sounds.onOpcodeSfx then
+        return modules.naruto_sounds.onOpcodeSfx(data)
+    end
+    return true -- reconhecido mesmo sem o modulo de audio carregado
+end
+
 local function onExtendedOpcode(protocol, code, buffer)
     local ok, data = pcall(json.decode, buffer)
     if not ok then
         g_logger.error('naruto_menu: JSON invalido no opcode ' .. OPCODE .. ': ' .. tostring(data))
         return
     end
-    if onState(data) or onProgress(data) then
+    if onState(data) or onProgress(data) or onSfx(data) then
         return
     end
     log('mensagem ignorada (type = ' ..
@@ -994,6 +1072,9 @@ end
 function show(tabName)
     if not menuWindow then
         return
+    end
+    if modules.naruto_sounds then
+        modules.naruto_sounds.play('sfx_menu_open')
     end
     menuWindow:show()
     menuWindow:raise()
@@ -1011,6 +1092,9 @@ end
 
 function hide()
     if menuWindow then
+        if modules.naruto_sounds then
+            modules.naruto_sounds.play('sfx_menu_close')
+        end
         menuWindow:hide()
     end
 end

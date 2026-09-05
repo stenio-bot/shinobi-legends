@@ -354,6 +354,16 @@ def spell_words(j):
 spells_xml = [HEADER_XML, "<!-- Cole dentro de <spells> em data/spells/spells.xml -->"]
 for spell_idx, j in enumerate(jutsus.values(), start=1):
     el = M["elements"][j["element"]]
+    # SFX (docs/sistemas/audio.md): sem gancho client-side para "efeito visto na tela",
+    # o servidor avisa o cliente via opcode 210 (NarutoJson.broadcastSfx) no cast.
+    # `if NarutoJson.broadcastSfx then` blinda contra o `data/lib/*.lua` do processo
+    # em memoria ainda ser o de ANTES desta funcao existir (libs so recarregam com
+    # reinicio do servidor - /reload spells|scripts|all NAO os toca; achado real ao
+    # testar sem reiniciar o servidor compartilhado, ver docs/sistemas/audio.md) -
+    # sem a blindagem, o cast inteiro falhava com "attempt to call field
+    # 'broadcastSfx' (a nil value)" em vez de so pular o som.
+    sfx_call = (f'\n\tif NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(pos, "{j["sfx"]}") end'
+                if j.get("sfx") else "")
     need_target = 1 if j["type"] in ("projectile", "target") else 0
     group = "healing" if j["type"] == "self" else "attack"
     # NOVO MODELO: jutsu não é mais filtrado por vila — quem controla o acesso é o
@@ -376,7 +386,7 @@ for spell_idx, j in enumerate(jutsus.values(), start=1):
         if j["id"] == "kawarimi":
             poof_id = jutsu_effect_id(j)  # fx_smoke_poof (catalogo em assets-src/sprites/effects.json)
             lua.append(f"""function onCastSpell(creature, variant)
-	local pos = creature:getPosition()
+	local pos = creature:getPosition(){sfx_call}
 	local dir = creature:getDirection()
 	local back = Position(pos)
 	for _ = 1, 2 do
@@ -400,7 +410,7 @@ end""")
             clone_id = jutsu_effect_id(j)  # fx_shadow_clone (distinto do poof do kawarimi)
             lua.append(f"""-- TODO: criar monstro 'Clone' (cópia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
 function onCastSpell(creature, variant)
-	local pos = creature:getPosition()
+	local pos = creature:getPosition(){sfx_call}
 	pos:sendMagicEffect({clone_id})
 	for _, spec in ipairs(Game.getSpectators(pos, false, false, 8, 8, 8, 8)) do
 		if spec:isMonster() and spec:getTarget() == creature then
@@ -421,7 +431,8 @@ condition:setParameter(CONDITION_PARAM_HEALTHTICKS, 1000)
 
 function onCastSpell(creature, variant)
 	creature:addCondition(condition)
-	creature:getPosition():sendMagicEffect({buff_id})
+	local pos = creature:getPosition(){sfx_call}
+	pos:sendMagicEffect({buff_id})
 	return true
 end""")
     else:
@@ -455,8 +466,10 @@ local condition = Condition(CONDITION_PARALYZE)
 condition:setParameter(CONDITION_PARAM_TICKS, {int(e["duration_s"]*1000)})
 condition:setFormula({change}, 0, {change}, 0)
 combat:addCondition(condition)  -- {t}, chance {e["chance"]}""")
-        lua.append("""
-function onCastSpell(creature, variant)
+        combat_sfx_line = (f'\n\tif NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(creature:getPosition(), "{j["sfx"]}") end'
+                           if j.get("sfx") else "")
+        lua.append(f"""
+function onCastSpell(creature, variant){combat_sfx_line}
 	return combat:execute(creature, variant)
 end""")
     write(f"spells/scripts/naruto/{j['id']}.lua", "\n".join(lua) + "\n")
@@ -862,6 +875,30 @@ function NarutoJson.sendExtended(player, opcode, str)
 	msg:delete()
 	return true
 end
+
+-- ------------------------------------------------------------------ SFX (opcode 210, acao "sfx")
+-- Gancho de audio do cliente (docs/sistemas/audio.md): o OTClient Redemment nao tem
+-- callback Lua para "efeito magico visto na tela" (parseMagicEffect e' so C++, nao chama
+-- callLuaField nenhum - conferido em src/client/protocolgameparse.cpp), entao o som de
+-- jutsu e' avisado pelo SERVIDOR via opcode 210 para o conjurador + quem esta por perto.
+-- modules/naruto_menu.lua (dono do opcode 210 no cliente) despacha type == 'sfx' para
+-- modules/naruto_sounds.lua.
+local SFX_OPCODE = 210
+
+--- Manda {"type":"sfx","id":sfxId} para o conjurador e criaturas/jogadores num raio de
+--- `radius` tiles (padrao 7, igual ao alcance de visao normal da tela) ao redor de `pos`.
+--- So chega a clientes OTClient (sendExtended ja filtra isUsingOtClient); nao quebra nada
+--- se sfxId vier nil (spell sem campo `sfx` no JSON).
+function NarutoJson.broadcastSfx(pos, sfxId, radius)
+	if not sfxId then return end
+	radius = radius or 7
+	local payload = NarutoJson.encode({type = 'sfx', id = sfxId})
+	for _, spec in ipairs(Game.getSpectators(pos, false, false, radius, radius, radius, radius)) do
+		if spec:isPlayer() then
+			NarutoJson.sendExtended(spec, SFX_OPCODE, payload)
+		end
+	end
+end
 """
 write("lib/naruto_json.lua", NARUTO_JSON_LUA)
 
@@ -1238,6 +1275,14 @@ local function missionsProgressJson(player)
 	return out
 end
 
+--- Conquistas (NarutoAchievements, data/lib/naruto_achievements.lua): delega tudo para
+--- NarutoAchievements.progressJson (lá mora a lista/categoria/progresso de cada uma) -
+--- guarda `if` só para o caso raro de rodar sem data/achievements.json (compat).
+local function achievementsProgressJson(player)
+	if not NarutoAchievements then return NarutoJson.array({}) end
+	return NarutoAchievements.progressJson(player)
+end
+
 --- Monta e envia o `progress` para o cliente (opcode 210, buffer JSON) - aba Missoes.
 function NarutoCharacters.sendProgress(player)
 	if not player or not player:isPlayer() then return false end
@@ -1247,6 +1292,7 @@ function NarutoCharacters.sendProgress(player)
 		tasks = tasksProgressJson(player),
 		dailies = dailiesProgressJson(player),
 		missions = missionsProgressJson(player),
+		achievements = achievementsProgressJson(player),
 	}
 	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(progress))
 end
@@ -1619,6 +1665,7 @@ local function deliverCallback(cid, message, keywords, parameters, node)
 			player:addExperience(xp, true)
 			if t.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, t.reward.ryo) end
 			for _, it in ipairs(t.reward.items) do player:addItem(it.id, it.count) end
+			if NarutoAchievements then NarutoAchievements.onTaskDelivered(player) end
 			npcHandler:say('Tarefa entregue: ' .. t.name .. '. +' .. xp .. ' xp, +' .. t.reward.ryo .. ' ryo.', cid)
 			return true
 		end
@@ -1795,6 +1842,15 @@ local function completeQuest(player, q)
 	local msg = "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída."
 	local rankMsg = grantQuestRankIfReady(player, q)
 	if rankMsg then msg = msg .. " " .. rankMsg end
+	-- conquista quest_chain_complete (docs/sistemas/progressao-servidor.md): só quando TODAS as
+	-- quests desse NPC (a cadeia inteira da região) já estiverem DONE, não só esta.
+	if NarutoAchievements then
+		local allDone = true
+		for _, qq in ipairs(NarutoQuests.byNpc[q.npc] or {{}}) do
+			if player:getStorageValue(qq.storage) ~= NarutoQuests.DONE then allDone = false end
+		end
+		if allDone then NarutoAchievements.onQuestChainComplete(player, q.npc) end
+	end
 	return msg
 end
 
@@ -1981,6 +2037,7 @@ function NarutoRanks.promote(player, rankId)
 	if NarutoCharacters and NarutoCharacters.sendState then
 		NarutoCharacters.sendState(player)
 	end
+	if NarutoAchievements then NarutoAchievements.onRankPromoted(player, rankId) end
 	return true
 end
 """
@@ -2022,11 +2079,22 @@ rank_look_lua = HEADER_LUA + """-- Coloque em data/scripts/naruto/rank_look.lua 
 -- data/scripts/eventcallbacks/player/default_onLook.lua) em vez de editar
 -- data/events/scripts/player.lua à mão — o default_onLook roda primeiro (ordem alfabética de
 -- pasta) e monta "You see ...", este só acrescenta uma linha com o rank.
+--
+-- Título de conquista (opcional, docs/sistemas/progressao-servidor.md seção Conquistas): sem
+-- UI de seleção (fora do escopo desta missão), mostra o título da ÚLTIMA conquista desbloqueada
+-- (NarutoAchievements.LAST_UNLOCKED) se houver uma — simplificação deliberada e documentada.
 local ec = EventCallback
 ec.onLook = function(self, thing, position, distance, description)
 	if NarutoRanks and thing:isCreature() and thing:isPlayer() then
 		local rank = NarutoRanks.get(thing)
 		description = description .. "\\nRank: " .. rank.title .. "."
+	end
+	if NarutoAchievements and thing:isCreature() and thing:isPlayer() then
+		local idx = thing:getStorageValue(NarutoAchievements.LAST_UNLOCKED)
+		local a = (idx and idx > 0) and NarutoAchievements.list[idx] or nil
+		if a then
+			description = description .. "\\nTítulo: " .. a.title .. "."
+		end
 	end
 	return description
 end
@@ -2247,6 +2315,7 @@ function NarutoDailies.deliver(player)
 				totalRyo = totalRyo + entry.reward.ryo
 				for _, it in ipairs(entry.reward.items) do player:addItem(it.id, it.count) end
 				player:setStorageValue(NarutoDailies.SLOT_PROGRESS[slot], entry.count + 1)
+				if NarutoAchievements then NarutoAchievements.onDailyDelivered(player) end
 			end
 		end
 	end
@@ -2310,6 +2379,410 @@ talk:register()
     write("scripts/naruto/dailies.lua", dailies_script)
 else:
     WARNINGS.append("data/dailies.json não existe: sistema de diárias NÃO gerado (compat).")
+
+# ---------------------------------------------------------------- conquistas (data/achievements.json)
+# docs/sistemas/progressao-servidor.md, seção "Conquistas". Storages novos (nenhum colide com os
+# já reservados: 45001-45005 gates, 50000-50500 quests, 60000-60026 personagem/elemento/rank/
+# diárias, 61000+/63000+ tarefas):
+#   64000+i  = "desbloqueada" (i = índice 1-based na ordem de data/achievements.json; 1 = sim).
+#   65000    = contador global de mortes (qualquer monstro) — NÃO existia antes desta missão.
+#   65001    = contador global de tarefas entregues (qualquer NPC "Mestre de Tarefas").
+#   65002    = contador global de diárias entregues (apesar do nome "daily_streak" no schema, o
+#              texto das 3 conquistas é "no total", não "dias seguidos" — implementado como total).
+#   65003    = índice (NarutoAchievements.list) da última conquista desbloqueada, só para could
+#              mostrar um "título" no /look (rank_look.lua) sem precisar de UI de seleção.
+if achievements_data is not None:
+    ACH_UNLOCK_BASE = 64000
+    ACH_EFFECT_ID = _catalog_id("fx_seal_glow", "effect") or 222  # assets-src/sprites/effects.json
+
+    ach_defs = []
+    for i, a in enumerate(achievements_data, start=1):
+        cond = a.get("condition") or {}
+        kind = cond.get("kind", "")
+        target = cond.get("target", "")
+        count = int(cond.get("count") or 0)
+        extra = ""
+        if kind == "kill_specific":
+            mon = monsters.get(target)
+            extra = f", monsterName = {lua_q(mon['name'] if mon else target)}"
+        elif kind == "collect_set":
+            tier = int(target.split("_")[-1]) if target.startswith("tier_") else 0
+            extra = f", tier = {tier}"
+        elif kind == "collect_item_count":
+            prefix = target[:-1] if target.endswith("*") else target
+            extra = f", itemPrefix = {lua_q(prefix)}"
+        ach_defs.append(
+            f"\t{{idx = {i}, id = {lua_q(a['id'])}, name = {lua_q(a['name'])}, "
+            f"description = {lua_q(a['description'])}, category = {lua_q(a['category'])}, "
+            f"kind = {lua_q(kind)}, target = {lua_q(target)}, count = {count}, "
+            f"title = {lua_q(a['reward']['title'])}, ryo = {int(a['reward'].get('ryo', 0))}, "
+            f"storage = {ACH_UNLOCK_BASE + i}{extra}}},")
+
+    # conjuntos de equipamento por tier (collect_set): slot -> ids TFS de qualquer item de
+    # data/items/*.json com required_level == tier nesse slot (várias armas por tier contam
+    # igual — ver gloves_taijutsu/senbon_de_ferro no tier 10, por exemplo). tier_20 fica sem
+    # 'accessory' porque não existe nenhum item nessa faixa — gap de dado real (documentado no
+    # relatório da missão), não um bug do exportador: o requisito dessa conquista some com 5
+    # dos 6 slots em vez de 6.
+    GEAR_SLOTS = ["head", "body", "legs", "feet", "accessory", "weapon"]
+    gear_tiers = sorted({int(a["condition"]["target"].split("_")[-1]) for a in achievements_data
+                          if a["condition"]["kind"] == "collect_set" and a["condition"]["target"].startswith("tier_")})
+    gear_lua_rows = []
+    for tier in gear_tiers:
+        by_slot = {}
+        for it in items.values():
+            if it.get("required_level") == tier and it.get("slot") in GEAR_SLOTS:
+                iid = item_id(it["id"])
+                if iid:
+                    by_slot.setdefault(it["slot"], []).append(iid)
+        if not by_slot:
+            continue
+        slot_parts = [f"{slot} = {{{', '.join(str(x) for x in ids)}}}" for slot, ids in by_slot.items()]
+        gear_lua_rows.append(f"\t[{tier}] = {{{', '.join(slot_parts)}}},")
+
+    # ids de item por prefixo (collect_item_count, ex. 'trophy_' -> os 38 troféus de
+    # data/items/trophies.json, já concedidos como recompensa da tarefa "Lendária" de cada
+    # monstro — ver tasks.json). Genérico: funciona para qualquer prefixo futuro, não só troféu.
+    collect_prefixes = sorted({(a["condition"]["target"][:-1] if a["condition"]["target"].endswith("*") else a["condition"]["target"])
+                                for a in achievements_data if a["condition"]["kind"] == "collect_item_count"})
+    prefix_items_lua_rows = []
+    for prefix in collect_prefixes:
+        ids = sorted({item_id(it["id"]) for it in items.values() if it["id"].startswith(prefix) and item_id(it["id"])})
+        prefix_items_lua_rows.append(f"\t[{lua_q(prefix)}] = {{{', '.join(str(x) for x in ids)}}},")
+
+    achievements_lib_template = HEADER_LUA + """-- Coloque em data/lib/naruto_achievements.lua e adicione dofile em data/lib/lib.lua.
+-- Conquistas (data/achievements.json, docs/sistemas/progressao-servidor.md, seção
+-- "Conquistas"). Cada conquista tem UM storage de "desbloqueada" (NarutoAchievements.
+-- UNLOCK_BASE + índice); os únicos contadores NOVOS são TOTAL_KILLS/TOTAL_TASKS/TOTAL_DAILIES
+-- (nada preexistente contava "mortes/tarefas/diárias de qualquer tipo, somadas" antes desta
+-- missão — os storages de tasks/dailies são por-tarefa/por-slot, não um total).
+NarutoAchievements = {}
+NarutoAchievements.UNLOCK_BASE = 64000
+NarutoAchievements.TOTAL_KILLS = 65000
+NarutoAchievements.TOTAL_TASKS = 65001
+NarutoAchievements.TOTAL_DAILIES = 65002
+NarutoAchievements.LAST_UNLOCKED = 65003
+NarutoAchievements.EFFECT_ID = __EFFECT_ID__
+
+NarutoAchievements.list = {
+__ACH_DEFS__
+}
+NarutoAchievements.byId = {}
+NarutoAchievements.byKind = {}
+for _, a in ipairs(NarutoAchievements.list) do
+	NarutoAchievements.byId[a.id] = a
+	NarutoAchievements.byKind[a.kind] = NarutoAchievements.byKind[a.kind] or {}
+	table.insert(NarutoAchievements.byKind[a.kind], a)
+end
+
+NarutoAchievements.gearSets = {
+__GEAR_SETS__
+}
+NarutoAchievements.SLOT_CONST = {head = CONST_SLOT_HEAD, body = CONST_SLOT_ARMOR, legs = CONST_SLOT_LEGS, feet = CONST_SLOT_FEET, accessory = CONST_SLOT_RING}
+
+NarutoAchievements.itemPrefixIds = {
+__PREFIX_ITEMS__
+}
+
+-- Zonas: aproximação por retângulo de posição (o TFS não tem "zona" em runtime, só os
+-- retângulos que tools/map/build_valley.py (X0/Y0=1000/1000, DEATH_X0=1130) e
+-- tools/map/build_regions.py (COAST_*/RUINS_*/MOUNT_*/LAIR_*) usaram para desenhar o mapa —
+-- reaproveitados aqui verbatim). Boa o suficiente para "visitou pela 1a vez"; os 6 retângulos
+-- não se sobrepõem.
+NarutoAchievements.zoneBounds = {
+	floresta_da_vila = {1000, 1000, 1129, 1119},
+	floresta_da_morte = {1130, 1000, 1199, 1119},
+	costa_das_mares = {1000, 1120, 1049, 1169},
+	ruinas_do_cla_marionetista = {1200, 1000, 1249, 1049},
+	montanha_do_trovao = {1200, 1060, 1249, 1109},
+	covil_nuvem_vermelha = {1400, 1000, 1449, 1049},
+}
+
+function NarutoAchievements.zoneAt(pos)
+	for zone, b in pairs(NarutoAchievements.zoneBounds) do
+		if pos.x >= b[1] and pos.x <= b[3] and pos.y >= b[2] and pos.y <= b[4] then
+			return zone
+		end
+	end
+	return nil
+end
+
+function NarutoAchievements.isUnlocked(player, a)
+	return player:getStorageValue(a.storage) == 1
+end
+
+--- Concede a conquista `a`: marca o storage, manda mensagem de sistema + efeito visual + ryo.
+--- Idempotente (retorna false sem fazer nada se já estava desbloqueada).
+function NarutoAchievements.grant(player, a)
+	if NarutoAchievements.isUnlocked(player, a) then return false end
+	player:setStorageValue(a.storage, 1)
+	player:setStorageValue(NarutoAchievements.LAST_UNLOCKED, a.idx)
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Conquista desbloqueada: " .. a.name .. "!")
+	player:getPosition():sendMagicEffect(NarutoAchievements.EFFECT_ID)
+	if a.ryo and a.ryo > 0 and NarutoQuests then
+		player:addItem(NarutoQuests.RYO_ID, a.ryo)
+	end
+	return true
+end
+
+--- true se o jogador tem TODOS os slots do tier vestidos ao mesmo tempo (arma aceita qualquer
+--- id da lista — ex. tier 1 aceita kunai OU shuriken de ferro).
+function NarutoAchievements.hasGearSet(player, tier)
+	local set = NarutoAchievements.gearSets[tier]
+	if not set then return false end
+	for slot, ids in pairs(set) do
+		if slot == 'weapon' then
+			local left = player:getSlotItem(CONST_SLOT_LEFT)
+			local right = player:getSlotItem(CONST_SLOT_RIGHT)
+			local leftId = left and left:getId() or 0
+			local rightId = right and right:getId() or 0
+			local ok = false
+			for _, iid in ipairs(ids) do
+				if leftId == iid or rightId == iid then ok = true end
+			end
+			if not ok then return false end
+		else
+			local slotConst = NarutoAchievements.SLOT_CONST[slot]
+			local it = slotConst and player:getSlotItem(slotConst)
+			local itemId = it and it:getId() or 0
+			local ok = false
+			for _, iid in ipairs(ids) do
+				if itemId == iid then ok = true end
+			end
+			if not ok then return false end
+		end
+	end
+	return true
+end
+
+function NarutoAchievements.prefixItemCount(player, prefix)
+	local ids = NarutoAchievements.itemPrefixIds[prefix]
+	if not ids then return 0 end
+	local n = 0
+	for _, iid in ipairs(ids) do
+		if player:getItemCount(iid) > 0 then n = n + 1 end
+	end
+	return n
+end
+
+-- ------------------------------------------------------------------ hooks por tipo de evento
+-- (chamados de dentro de scripts/naruto/achievements.lua e dos módulos já existentes —
+-- naruto_ranks.lua/NarutoRanks.promote, naruto_quests.lua/completeQuest, e o "tasks"/deliverCallback
+-- gerado por npc_files() — NUNCA duplicando um contador que já existe).
+
+function NarutoAchievements.onKill(player, monsterName)
+	local total = player:getStorageValue(NarutoAchievements.TOTAL_KILLS)
+	if total < 0 then total = 0 end
+	total = total + 1
+	player:setStorageValue(NarutoAchievements.TOTAL_KILLS, total)
+	for _, a in ipairs(NarutoAchievements.byKind['kill_count'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and total >= a.count then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+	for _, a in ipairs(NarutoAchievements.byKind['kill_specific'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and a.monsterName == monsterName then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+function NarutoAchievements.onTaskDelivered(player)
+	local total = player:getStorageValue(NarutoAchievements.TOTAL_TASKS)
+	if total < 0 then total = 0 end
+	total = total + 1
+	player:setStorageValue(NarutoAchievements.TOTAL_TASKS, total)
+	for _, a in ipairs(NarutoAchievements.byKind['task_count'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and total >= a.count then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+function NarutoAchievements.onDailyDelivered(player)
+	local total = player:getStorageValue(NarutoAchievements.TOTAL_DAILIES)
+	if total < 0 then total = 0 end
+	total = total + 1
+	player:setStorageValue(NarutoAchievements.TOTAL_DAILIES, total)
+	for _, a in ipairs(NarutoAchievements.byKind['daily_streak'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and total >= a.count then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+function NarutoAchievements.onRankPromoted(player, rankId)
+	for _, a in ipairs(NarutoAchievements.byKind['grants_rank'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and a.target == rankId then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+function NarutoAchievements.onQuestChainComplete(player, npcId)
+	for _, a in ipairs(NarutoAchievements.byKind['quest_chain_complete'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and a.target == npcId then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+function NarutoAchievements.onLevelReached(player, newLevel)
+	for _, a in ipairs(NarutoAchievements.byKind['level_reached'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and newLevel >= a.count then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+end
+
+--- Checagens sem evento dedicado (posição/equipamento/itens): chamada no login e por um
+--- GlobalEvent periódico (scripts/naruto/achievements.lua) — o TFS 1.4.2 não tem onEquip nem
+--- "entrou na zona X" genéricos sem editar item por item ou o mapa; poll é a solução mais
+--- simples que cobre os 55 sem tocar nesses dois (ver limitação no relatório da missão).
+function NarutoAchievements.pollPlayer(player)
+	local zone = NarutoAchievements.zoneAt(player:getPosition())
+	if zone then
+		for _, a in ipairs(NarutoAchievements.byKind['visit_zone'] or {}) do
+			if not NarutoAchievements.isUnlocked(player, a) and a.target == zone then
+				NarutoAchievements.grant(player, a)
+			end
+		end
+	end
+	for _, a in ipairs(NarutoAchievements.byKind['collect_set'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) and NarutoAchievements.hasGearSet(player, a.tier) then
+			NarutoAchievements.grant(player, a)
+		end
+	end
+	for _, a in ipairs(NarutoAchievements.byKind['collect_item_count'] or {}) do
+		if not NarutoAchievements.isUnlocked(player, a) then
+			local n = NarutoAchievements.prefixItemCount(player, a.itemPrefix)
+			if n >= a.count then
+				NarutoAchievements.grant(player, a)
+			end
+		end
+	end
+end
+
+--- JSON para a aba Missões (seção Conquistas, opcode 210 get_progress) — ver
+--- character_switch.lua/achievementsProgressJson. Contáveis ganham progress/count; as demais
+--- (kill_specific/quest_chain_complete/grants_rank/visit_zone/collect_set) só unlocked.
+function NarutoAchievements.progressJson(player)
+	local out = NarutoJson.array({})
+	for _, a in ipairs(NarutoAchievements.list) do
+		local entry = {
+			id = a.id, name = a.name, description = a.description,
+			category = a.category, title = a.title, unlocked = NarutoAchievements.isUnlocked(player, a),
+		}
+		if a.kind == 'kill_count' then
+			entry.progress = math.min(math.max(player:getStorageValue(NarutoAchievements.TOTAL_KILLS), 0), a.count)
+			entry.count = a.count
+		elseif a.kind == 'task_count' then
+			entry.progress = math.min(math.max(player:getStorageValue(NarutoAchievements.TOTAL_TASKS), 0), a.count)
+			entry.count = a.count
+		elseif a.kind == 'daily_streak' then
+			entry.progress = math.min(math.max(player:getStorageValue(NarutoAchievements.TOTAL_DAILIES), 0), a.count)
+			entry.count = a.count
+		elseif a.kind == 'level_reached' then
+			entry.progress = math.min(player:getLevel(), a.count)
+			entry.count = a.count
+		elseif a.kind == 'collect_item_count' then
+			entry.progress = math.min(NarutoAchievements.prefixItemCount(player, a.itemPrefix), a.count)
+			entry.count = a.count
+		end
+		out[#out + 1] = entry
+	end
+	return out
+end
+"""
+    achievements_lib = (achievements_lib_template
+                         .replace("__EFFECT_ID__", str(ACH_EFFECT_ID))
+                         .replace("__ACH_DEFS__", "\n".join(ach_defs))
+                         .replace("__GEAR_SETS__", "\n".join(gear_lua_rows))
+                         .replace("__PREFIX_ITEMS__", "\n".join(prefix_items_lua_rows)))
+    write("lib/naruto_achievements.lua", achievements_lib)
+
+    achievements_script = HEADER_LUA + """-- Coloque em data/scripts/naruto/achievements.lua (revscriptsys carrega sozinho).
+-- `if not NarutoAchievements then return true end` em TODO gancho (achado real ao testar
+-- audio, docs/sistemas/audio.md): data/lib/naruto_achievements.lua so entra em memoria com
+-- REINICIO do servidor (dofile em data/lib/lib.lua, so roda no boot - nenhum /reload toca
+-- libs); esta script (revscriptsys) já recarrega com /reload scripts|all. Sem a blindagem,
+-- um servidor que já tinha os HOOKS mas ainda nao tinha a LIB (ex.: logo apos um /reload sem
+-- reiniciar) derrubava o onLogin de todo mundo com "attempt to index global
+-- 'NarutoAchievements' (a nil value)".
+local killEvent = CreatureEvent("NarutoAchievementKill")
+function killEvent.onKill(player, target)
+	if not NarutoAchievements then return true end
+	if not target:isMonster() then return true end
+	NarutoAchievements.onKill(player, target:getName())
+	return true
+end
+killEvent:register()
+
+local advanceEvent = CreatureEvent("NarutoAchievementAdvance")
+function advanceEvent.onAdvance(player, skill, oldLevel, newLevel)
+	if NarutoAchievements and skill == SKILL_LEVEL then
+		NarutoAchievements.onLevelReached(player, newLevel)
+	end
+	return true
+end
+advanceEvent:register()
+
+local login = CreatureEvent("NarutoAchievementLogin")
+function login.onLogin(player)
+	player:registerEvent("NarutoAchievementKill")
+	player:registerEvent("NarutoAchievementAdvance")
+	if NarutoAchievements then NarutoAchievements.pollPlayer(player) end
+	return true
+end
+login:register()
+
+-- Sem onEquip/"entrou na zona" genérico no TFS 1.4.2: um GlobalEvent periódico cobre visit_zone
+-- e collect_set para todos os jogadores online (NarutoAchievements.pollPlayer). 7s é baixo o
+-- bastante pra não demorar perceptivelmente depois de vestir o conjunto/entrar numa zona nova,
+-- e alto o bastante pra não pesar com a contagem de jogadores esperada do projeto.
+local poll = GlobalEvent("NarutoAchievementPoll")
+function poll.onThink(interval, lastExecution)
+	if not NarutoAchievements then return true end
+	for _, player in ipairs(Game.getPlayers()) do
+		NarutoAchievements.pollPlayer(player)
+	end
+	return true
+end
+poll:interval(7000)
+poll:register()
+
+--- !conquistas: resumo (desbloqueadas/total) por categoria no chat.
+local talk = TalkAction("!conquistas")
+function talk.onSay(player, words, param)
+	if not NarutoAchievements then
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Conquistas ainda não carregadas neste servidor (precisa reiniciar).")
+		return false
+	end
+	local total, unlocked = #NarutoAchievements.list, 0
+	local byCat, catOrder = {}, {}
+	for _, a in ipairs(NarutoAchievements.list) do
+		local done = NarutoAchievements.isUnlocked(player, a)
+		if done then unlocked = unlocked + 1 end
+		if not byCat[a.category] then
+			byCat[a.category] = {0, 0}
+			catOrder[#catOrder + 1] = a.category
+		end
+		byCat[a.category][2] = byCat[a.category][2] + 1
+		if done then byCat[a.category][1] = byCat[a.category][1] + 1 end
+	end
+	local parts = {"Conquistas: " .. unlocked .. "/" .. total}
+	for _, cat in ipairs(catOrder) do
+		parts[#parts + 1] = cat .. " " .. byCat[cat][1] .. "/" .. byCat[cat][2]
+	end
+	player:sendTextMessage(MESSAGE_INFO_DESCR, table.concat(parts, " | "))
+	return false
+end
+talk:separator(" ")
+talk:register()
+"""
+    write("scripts/naruto/achievements.lua", achievements_script)
+else:
+    WARNINGS.append("data/achievements.json não existe: sistema de conquistas NÃO gerado (compat).")
 
 # bosses: fases via onHealthChange
 phases = [HEADER_LUA, "-- Coloque em data/scripts/naruto/boss_phases.lua", "local PHASES = {"]

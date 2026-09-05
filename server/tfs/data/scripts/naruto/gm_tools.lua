@@ -291,7 +291,10 @@ t:register()
 --                        (para teste — bypassa NarutoRanks.checkProgress/rankGroups).
 -- /zonecheck zona        mostra se o rank atual deixaria entrar na área nomeada
 --                        (docs/lore/mundo.md; ver NarutoRanks.canEnter).
-local debugCmds = TalkAction("/storage", "/rank", "/zonecheck", "/npc")
+-- /conquista [id]         sem id: lista os ids de data/achievements.json ainda bloqueados
+--                        (para copiar/colar). Com id: força o desbloqueio (ignora a condição
+--                        de verdade) para teste — ver NarutoAchievements.grant.
+local debugCmds = TalkAction("/storage", "/rank", "/zonecheck", "/npc", "/conquista")
 function debugCmds.onSay(player, words, param)
 	if not isGod(player) then return true end
 	param = param and param:trim() or ""
@@ -332,6 +335,24 @@ function debugCmds.onSay(player, words, param)
 		if param == "" then player:sendCancelMessage("Uso: /zonecheck zona") return false end
 		local ok = NarutoRanks.canEnter(player, param)
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "canEnter('" .. param .. "') = " .. tostring(ok) .. " (rank atual: " .. NarutoRanks.get(player).rank .. ")")
+	elseif words == "/conquista" then
+		if not NarutoAchievements then player:sendCancelMessage("NarutoAchievements não carregado.") return false end
+		if param == "" then
+			local ids = {}
+			for _, a in ipairs(NarutoAchievements.list) do
+				if not NarutoAchievements.isUnlocked(player, a) then ids[#ids + 1] = a.id end
+			end
+			player:sendTextMessage(MESSAGE_INFO_DESCR, #ids .. " bloqueadas: " .. table.concat(ids, ", "))
+		else
+			local a = NarutoAchievements.byId[param]
+			if not a then
+				player:sendCancelMessage("Id desconhecido. Use /conquista sem parâmetro para listar os ids bloqueados.")
+			elseif NarutoAchievements.isUnlocked(player, a) then
+				player:sendCancelMessage("Já desbloqueada.")
+			else
+				NarutoAchievements.grant(player, a)
+			end
+		end
 	end
 	return false
 end

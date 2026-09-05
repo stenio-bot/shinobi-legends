@@ -14,12 +14,14 @@ Estendido o opcode 210 existente (`character_switch.lua`, gerado por `tools/expo
 com uma ação nova, **sem quebrar as 3 já existentes** (`state`, `select`, `get_state`):
 
 - Cliente → servidor: `{"type":"get_progress"}`.
-- Servidor → cliente: `{"type":"progress", rank, tasks, dailies, missions}` — rank atual +
-  próximo rank (com a lista de requisitos pendentes, via `NarutoQuests.rankGroups` +
+- Servidor → cliente: `{"type":"progress", rank, tasks, dailies, missions, achievements}` — rank
+  atual + próximo rank (com a lista de requisitos pendentes, via `NarutoQuests.rankGroups` +
   um índice reverso novo `NarutoQuests.byStorage`), tarefas ativas (`NarutoTasks`, com
   progresso `x/y` e cooldown restante em minutos), diárias do dia (`NarutoDailies`, com
-  status `progress`/`ready`/`delivered`) e as 45 missões de história (`NarutoQuests.list`) com
-  status (`available`/`in_progress`/`done`) e o NPC que a dá.
+  status `progress`/`ready`/`delivered`), as 45 missões de história (`NarutoQuests.list`) com
+  status (`available`/`in_progress`/`done`) e o NPC que a dá, e as **55 conquistas**
+  (`NarutoAchievements.list`, campo novo desta missão) com `unlocked` + `progress`/`count` nas
+  contáveis — ver `docs/sistemas/progressao-servidor.md`, seção "Conquistas".
 - O `state` (já existente, empurrado sozinho no login/troca de personagem) ganhou um campo
   `rank` (`{id, title, index}` ou `null`) — é o que alimenta a seção 2 abaixo.
 
@@ -35,10 +37,28 @@ Ao contrário do `state`, o `progress` **não** é empurrado sozinho: o cliente 
   (hint + botão "Atualizar" + `ShinobiListArea` já usada nas outras abas).
 - `naruto_menu.lua`: `requestProgress()`, `onProgress(data)` (decodifica com o mesmo
   `decodeStrings`/`utf8ToCp1252` já usado pelo `state`), `buildMissionsTab()` monta a lista do
-  zero a cada `progress` recebido — 4 seções (RANK, TAREFAS ATIVAS, DIÁRIAS DE HOJE, MISSÕES).
-  O botão "Entregar" de uma diária pronta manda `g_game.talk('!diaria entregar')` (o comando
-  de jogador já existente, `docs/sistemas/progressao-servidor.md`) e repede o `progress` 500 ms
-  depois para refletir a entrega.
+  zero a cada `progress` recebido — 5 seções (RANK, TAREFAS ATIVAS, DIÁRIAS DE HOJE, MISSÕES,
+  CONQUISTAS). O botão "Entregar" de uma diária pronta manda `g_game.talk('!diaria entregar')`
+  (o comando de jogador já existente, `docs/sistemas/progressao-servidor.md`) e repede o
+  `progress` 500 ms depois para refletir a entrega.
+
+### Seção "CONQUISTAS" (dentro da aba Missões — nova nesta missão)
+
+`buildAchievementsSection(list, p)` monta, a partir de `p.achievements` (55 entradas, mesma
+ordem/agrupamento por categoria de `data/achievements.json`):
+
+- Um cabeçalho `CONQUISTAS (X/55)` no topo (`X` = quantas o jogador já desbloqueou).
+- Um sub-cabeçalho por categoria (`ShinobiInfoRow` reaproveitado como header, ex. "Chefes  —
+  3/12") sempre que a categoria muda no array (já vem agrupado, então isso é só detectar a
+  borda) — rótulos em pt-BR (`ACH_CATEGORY_LABEL`: Exploração, Exame, Cadeias de História,
+  Chefes, Abates, Nível, Tarefas, Diárias, Coleção).
+- Uma linha por conquista (nome + descrição), com status: **verde "Desbloqueada"** se
+  `unlocked`, **dourado `x/y`** se ainda bloqueada mas contável (`progress`/`count` presentes —
+  abates/tarefas/diárias/nível/troféus), **cinza "Bloqueada"** nas demais (chefe/cadeia de
+  história/exame/zona/conjunto — só binário, sem progresso numérico do servidor).
+
+Nenhum estilo `.otui` novo foi necessário — reaproveita `ShinobiSectionHeader`/`ShinobiInfoRow`
+já existentes (mesmo padrão das outras 4 seções).
 
 ### Testado (conta `teste`, Genin nível 7-8)
 
@@ -195,6 +215,19 @@ Missões, rank em tela, hook de chat), `client-otc/modules/naruto_theme/{naruto_
 (crédito OTClient).
 
 **Docs**: este arquivo + `docs/sistemas/combate-e-jutsus.md` (protocolo opcode 210 atualizado).
+
+**Conquistas (missão posterior, mesma seção "1")**: `tools/export_tfs.py` ganhou a geração de
+`lib/naruto_achievements.lua` + `scripts/naruto/achievements.lua`, o campo `achievements` no
+`progress` (`character_switch.lua`/`achievementsProgressJson`), o hook de conquista em
+`naruto_quests.lua` (`completeQuest`), `naruto_ranks.lua` (`promote`), `naruto_dailies.lua`
+(`deliver`) e no template de NPC "tasks" (`deliverCallback`, `npc_files()`), e a 2ª linha
+("Título: ...") em `rank_look.lua`. Manual: `server/tfs/data/lib/lib.lua` (novo `dofile`),
+`tools/install_generated.sh` (cp/dofile condicional, mesmo padrão de tasks/dailies),
+`server/tfs/data/scripts/naruto/gm_tools.lua` (`/conquista`). Cliente:
+`client-otc/modules/naruto_menu/naruto_menu.lua` (`buildAchievementsSection`, seção
+"CONQUISTAS" dentro da aba Missões — sem `.otui` novo). Docs: `docs/sistemas/
+progressao-servidor.md` (seção 9, "Conquistas") + este arquivo + `docs/sistemas/
+combate-e-jutsus.md` (campo `achievements` no `progress`).
 
 ## Ambiente / achados operacionais (para quem testar isto depois)
 

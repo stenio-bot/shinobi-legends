@@ -86,5 +86,6 @@ function NarutoRanks.promote(player, rankId)
 	if NarutoCharacters and NarutoCharacters.sendState then
 		NarutoCharacters.sendState(player)
 	end
+	if NarutoAchievements then NarutoAchievements.onRankPromoted(player, rankId) end
 	return true
 end

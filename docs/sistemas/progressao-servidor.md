@@ -358,3 +358,158 @@ Resultado, ponta a ponta, **zero Lua Script Error** no log do servidor:
 - **Senha da conta `teste`** foi alterada temporariamente durante o teste e restaurada para
   `teste` (mesmo padrão de `god`/`god`) ao final — confirme com quem administra se esse era o
   valor original.
+
+## 9. Conquistas (`data/achievements.json`)
+
+55 conquistas fixas (schema `data/schemas/achievement.schema.json`), geradas por
+`tools/export_tfs.py` em `server/generated/lib/naruto_achievements.lua` (dados: lista completa +
+conjuntos de equipamento por tier + ids de item por prefixo) e
+`server/generated/scripts/naruto/achievements.lua` (revscript: `CreatureEvent`s, `GlobalEvent` de
+poll e `!conquistas`). Antes desta missão **nenhuma** das 55 tinha lógica no servidor.
+
+### Storages (faixa nova, documentada aqui — não colide com nada existente)
+
+| Storage | Conteúdo |
+|---|---|
+| `64000 + i` | "desbloqueada" da conquista de índice `i` (1-based, ordem de `data/achievements.json` = ordem de `NarutoAchievements.list`) — ausente/≠1 = bloqueada, `1` = desbloqueada. 55 conquistas → `64001`..`64055`. |
+| `65000` | contador **global** de mortes (qualquer monstro) — não existia nenhum contador "total de mortes, qualquer tipo" antes desta missão (os storages de tasks/quests são por-monstro/por-tarefa). |
+| `65001` | contador global de tarefas entregues (soma de qualquer NPC "Mestre de Tarefas", qualquer região). |
+| `65002` | contador global de diárias entregues (ver nota sobre `daily_streak` abaixo). |
+| `65003` | índice (`NarutoAchievements.list`) da **última** conquista desbloqueada — só para ter algo pra mostrar no `/look` (ver seção "Título no /look"). |
+
+Confirmado sem colisão com: `45001-45005` (gates de rank), `50000-50500` (quests de história,
+`NarutoQuests.DONE = 50500`), `60000-60002` (personagem/elemento), `60010` (rank),
+`60020-60026` (diárias), `61001-61114` (progresso de tarefas), `63001-63114` (cooldown de
+tarefas) — a faixa `62000-64999` estava livre, e `64000+`/`65000+` foram escolhidos por serem a
+sugestão já dada na missão.
+
+### Tipos de condição: implementados vs. não
+
+Todos os 10 `kind` do schema (`data/schemas/achievement.schema.json`) estão implementados — a
+tabela abaixo mostra o evento/hook exato de cada um:
+
+| `kind` | Conquistas | Hook | Onde |
+|---|---|---|---|
+| `kill_count` (target `any`) | 5 (100/500/1000/5000/10000 abates) | `CreatureEvent NarutoAchievementKill.onKill` → `NarutoAchievements.onKill` incrementa `65000` e checa | `scripts/naruto/achievements.lua` |
+| `kill_specific` (target = monster_id) | 12 (bosses) | mesmo `onKill`, compara `target:getName()` com o nome resolvido do monstro (`monsters[target].name`, pré-computado em `tools/export_tfs.py`) | idem |
+| `quest_chain_complete` (target = npc id) | 6 (uma por região) | `completeQuest` (`naruto_quests.lua`), depois de marcar a quest atual `DONE`: percorre `NarutoQuests.byNpc[q.npc]` inteiro e só dispara se **todas** já estiverem `DONE` | `server/generated/lib/naruto_quests.lua` |
+| `grants_rank` (target = rank id) | 4 (exames) | `NarutoRanks.promote`, depois de `player:setStorageValue(STORAGE, ...)` | `server/generated/lib/naruto_ranks.lua` |
+| `level_reached` (count = nível) | 4 (25/50/75/100) | `CreatureEvent NarutoAchievementAdvance.onAdvance` (nativo do TFS, `skill == SKILL_LEVEL`) | `scripts/naruto/achievements.lua` |
+| `task_count` (target `any`) | 3 (10/50/100 tarefas) | `deliverCallback` do NPC "Mestre de Tarefas" (gerado por `npc_files()`, branch `n["type"] == "tasks"` — as 6 regiões compartilham o mesmo template Python), depois de conceder XP/ryo/itens: incrementa `65001` e checa | `server/generated/npc/scripts/naruto/task_master_*.lua` |
+| `daily_streak` (target `any`) | 3 (7/30/100 diárias) | `NarutoDailies.deliver`, uma vez por slot efetivamente entregue nessa chamada: incrementa `65002` e checa | `server/generated/lib/naruto_dailies.lua` |
+| `visit_zone` (target = zona) | 6 (uma por região) | poll (ver abaixo) — sem hook de evento dedicado | `NarutoAchievements.pollPlayer` |
+| `collect_set` (target `tier_N`) | 11 (kits de equipamento) | poll — idem | idem |
+| `collect_item_count` (target `trophy_*`) | 1 (38 troféus) | poll — idem | idem |
+
+**Nenhum contador pré-existente foi duplicado**: os únicos 3 contadores novos (`65000-65002`)
+não tinham equivalente antes — tudo o mais (rank atual, storage de cada quest, progresso de
+cada tarefa/diária, level do jogador, itens no inventário, slots equipados) é **lido direto**
+das libs já existentes (`NarutoRanks`, `NarutoQuests`, `player:getLevel()`,
+`player:getItemCount()`, `player:getSlotItem()`), nunca recontado à parte.
+
+### `visit_zone`/`collect_set`/`collect_item_count`: por que poll, e a limitação real
+
+O TFS 1.4.2 não tem um evento nativo "jogador entrou na zona X" nem "jogador equipou o item Y"
+— o primeiro exigiria um sistema de zonas em runtime que não existe (as "regiões" do jogo são
+só retângulos de posição usados **na hora de construir o mapa**, `tools/map/build_valley.py` e
+`tools/map/build_regions.py`, sem contrapartida em nenhum arquivo carregado pelo servidor); o
+segundo exigiria um script `onEquip`/`onDeEquip` por item nos 47 equipamentos de
+`data/items/tiers.json`+`armor.json`+`weapons.json` (fora do escopo — editar item por item).
+
+**Solução adotada**: um `GlobalEvent` (`NarutoAchievementPoll`, intervalo de 7 s) itera
+`Game.getPlayers()` e chama `NarutoAchievements.pollPlayer(player)`, que:
+
+1. Calcula a zona pela posição (`NarutoAchievements.zoneAt`, comparando contra os **mesmos**
+   retângulos `X0/Y0/DEATH_X0` (`build_valley.py`) e `COAST_*/RUINS_*/MOUNT_*/LAIR_*`
+   (`build_regions.py`) copiados **verbatim** para `NarutoAchievements.zoneBounds` — os 6 não se
+   sobrepõem, então a checagem é só "está dentro do retângulo?"). **Limitação**: se o agente de
+   mapa mudar essas coordenadas no futuro sem atualizar `tools/export_tfs.py` em conjunto, o
+   `visit_zone` desalinha silenciosamente (nenhum erro, só para de bater na hora certa).
+2. Checa `collect_set` via `player:getSlotItem` nos 6 slots (`CONST_SLOT_HEAD/ARMOR/LEGS/FEET/
+   RING` + `LEFT`/`RIGHT` para arma) contra `NarutoAchievements.gearSets[tier]`.
+3. Checa `collect_item_count` via `player:getItemCount` para cada id do prefixo (`trophy_`).
+
+Também chamado uma vez no login (`NarutoAchievementLogin.onLogin`), então um jogador que já
+estava com o conjunto vestido ou já tinha os 38 troféus antes desta missão existir é premiado
+logo ao entrar, sem esperar o próximo tick do poll. **Latência real**: até 7 s de atraso entre
+"vestir a última peça"/"entrar na zona" e a mensagem de desbloqueio aparecer — aceitável para
+conquistas (não são checks de gameplay sensíveis a frame).
+
+### `collect_set`: gap de dado real (não é bug do exportador)
+
+`tools/export_tfs.py` monta `NarutoAchievements.gearSets[tier]` varrendo `data/items/*.json`
+por `required_level == tier` nos 6 slots (`head/body/legs/feet/accessory/weapon`). Os tiers
+**1, 10, 30, 40, 50, 60, 70, 80, 90, 100** têm os 6 slots completos (a arma aceita qualquer uma
+das opções cadastradas nesse level, ex. tier 1 aceita `kunai_iron` OU `shuriken_iron`) — **mas
+o tier 20 não tem nenhum item `accessory` cadastrado** em `data/items/*.json`. A conquista
+`gearset_l20` ("Uniforme Chunin") fica, portanto, com um requisito de **5 dos 6 slots**
+(head/body/legs/feet/weapon), não 6 como as outras 10 — a lógica (`NarutoAchievements.
+hasGearSet`) simplesmente itera os slots que existem em `gearSets[20]`, então funciona, só que
+com um "kit" objetivamente mais fácil que os outros. Fica registrado aqui para quem for
+adicionar um acessório de tier 20 depois (basta rodar o exportador de novo, nada de código
+muda).
+
+### `daily_streak`: nome do `kind` não bate com o comportamento (schema pré-existente)
+
+O `kind` no schema chama-se `daily_streak`, mas a descrição das 3 conquistas
+(`dailies_completed_7/30/100`) é explicitamente "no total", não "N dias seguidos" — e o próprio
+sistema de diárias (`NarutoDailies`) não guarda nenhum conceito de sequência/streak (só o dia do
+último sorteio, `NarutoDailies.DAY`). Implementado fielmente à **descrição** (contador
+cumulativo de diárias entregues, storage `65002`), não ao nome do `kind` — uma conquista de
+streak de verdade (ex.: "diária todo dia por 7 dias seguidos, sem furar") exigiria um storage
+de "última data que entregou pelo menos 1" + zerar o contador se um dia pular, o que é uma
+mudança de schema/design maior, fora do escopo desta missão de implementação.
+
+### Feedback ao desbloquear
+
+`NarutoAchievements.grant(player, a)` (idempotente — não faz nada se já desbloqueada):
+
+1. `player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Conquista desbloqueada: <nome>!")`.
+2. Efeito visual: `player:getPosition():sendMagicEffect(NarutoAchievements.EFFECT_ID)`, onde
+   `EFFECT_ID = 222` (`fx_seal_glow` do catálogo `assets-src/sprites/effects.json`, resolvido em
+   tempo de exportação via a mesma `_catalog_id()` que os jutsus usam).
+3. Recompensa: **só `ryo`** (`player:addItem(NarutoQuests.RYO_ID, a.ryo)`) — `data/
+   achievements.json` (`reward: {title, ryo}`, ver o schema) não tem campo de XP nem de item;
+   a missão pediu "xp/ryo/item/título conforme o JSON", mas o JSON em si só carrega `ryo` e
+   `title`, então XP e item **não existem para conceder** (não é uma omissão da implementação —
+   não há dado de origem). Se o time de conteúdo quiser XP/item por conquista, é preciso
+   estender o schema + preencher os 55 registros primeiro.
+4. Título: ver próxima seção.
+
+### Título de conquista no `/look` (simplificação deliberada)
+
+O pedido original ("título de conquista opcional no `/look`, junte com `rank_look.lua`") não
+especifica COMO escolher qual título mostrar entre até 55 possíveis — implementar uma UI de
+seleção de título está fora do escopo desta missão de conteúdo/backend. **Decisão tomada**:
+`rank_look.lua` (mesmo `EventCallback.onLook` que já mostra o rank) agora também mostra o
+**título da última conquista desbloqueada** (`NarutoAchievements.LAST_UNLOCKED`, atualizado a
+cada `grant`), como uma segunda linha `"Título: <nome>."` — sem quebrar a linha de rank
+existente. Não há comando para o jogador *escolher* qual dos títulos já conquistados exibir;
+isso ficaria para uma missão de UX dedicada (o `!conquistas`/aba Conquistas já mostram todos os
+títulos disponíveis, então o jogador sabe o que tem).
+
+### Comandos
+
+- **`!conquistas`** (qualquer jogador): resumo no chat — `"Conquistas: X/55 | kill Y/5 | boss
+  Y/12 | ..."` (uma entrada por categoria, na ordem em que aparecem em
+  `data/achievements.json`).
+- **`/conquista [id]`** (GM, `gm_tools.lua` — arquivo manual, não gerado): sem parâmetro, lista
+  os `id`s ainda bloqueados do próprio GM (para copiar/colar); com um `id` de
+  `data/achievements.json`, força o desbloqueio via `NarutoAchievements.grant` (ignora a
+  condição de verdade — só para teste, mesmo padrão do `/rank`/`/storage` já existentes).
+
+### Cliente (aba Missões → seção Conquistas)
+
+Ver `docs/sistemas/cliente-ux.md` para a UI. Resumo: `NarutoCharacters.sendProgress` ganhou um
+campo `achievements` (array das 55, com `id/name/description/category/title/unlocked` e
+`progress/count` nas 5 categorias contáveis) — `client-otc/modules/naruto_menu/naruto_menu.lua`
+(`buildAchievementsSection`) monta uma seção "CONQUISTAS (X/55)" dentro da aba Missões já
+existente, com um sub-cabeçalho por categoria (`Y/Z`) e uma linha por conquista (verde
+"Desbloqueada", dourado com progresso `x/y` nas contáveis ainda bloqueadas, cinza "Bloqueada"
+nas demais).
+
+### Testes realizados
+
+Ver o relatório final da missão (mensagem de encerramento da sessão) para os resultados
+in-game (kill de teste, entrega de tarefa, `/conquista` forçado, aba aberta mostrando X/55,
+`!conquistas`) e screenshots — não duplicado aqui para não desincronizar as duas fontes.

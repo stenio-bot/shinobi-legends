@@ -17,6 +17,6 @@ condition:setFormula(-0.9, 0, -0.9, 0)
 combat:addCondition(condition)  -- paralyze, chance 0.75
 
 function onCastSpell(creature, variant)
-	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_wind_trap")
+	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(creature:getPosition(), "sfx_wind_trap") end
 	return combat:execute(creature, variant)
 end

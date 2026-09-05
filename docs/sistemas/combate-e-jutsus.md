@@ -213,19 +213,35 @@ desnecessariamente grande para mandar em todo login/troca de personagem.
                  // available | in_progress | done
     { "id": "q_lair_intro", "name": "Clones não sangram, mas caem",
       "npc": "Capitã Anbu Suzu", "status": "available" }
+  ],
+  "achievements": [  // TODAS as 55 conquistas (NarutoAchievements.list, data/achievements.json),
+                      // na mesma ordem do JSON (já agrupado por categoria)
+    { "id": "kills_total_100", "name": "100 abates",
+      "description": "Derrote 100 monstros no total, de qualquer tipo.",
+      "category": "kill", "title": "Caçador (100)", "unlocked": false,
+      "progress": 37, "count": 100 },  // progress/count só nas contáveis (kill_count/
+                                        // task_count/daily_streak/level_reached/
+                                        // collect_item_count) — as demais só têm "unlocked"
+    { "id": "boss_boss_bandit_chief", "name": "Vitória sobre Chefe dos Bandidos",
+      "description": "Derrote Chefe dos Bandidos pelo menos uma vez.",
+      "category": "boss", "title": "Algoz de Chefe dos Bandidos", "unlocked": true }
   ]
 }
 ```
 
-Implementado em `NarutoCharacters.sendProgress` (mesmo arquivo gerado que `sendState`), com 4
+Implementado em `NarutoCharacters.sendProgress` (mesmo arquivo gerado que `sendState`), com 5
 funções auxiliares (`rankProgressJson`, `tasksProgressJson`, `dailiesProgressJson`,
-`missionsProgressJson`) — cada uma faz `if not NarutoX then return {} end` antes de usar
-`NarutoRanks`/`NarutoTasks`/`NarutoDailies`/`NarutoQuests`, então o `progress` nunca quebra se
-uma dessas libs não estiver instalada (ex.: servidor sem `data/tasks.json`). `NarutoQuests`
-ganhou um índice reverso `NarutoQuests.byStorage[storage] -> quest` (usado por
-`rankProgressJson` para achar nome/NPC de cada requisito de rank) e cada quest/tarefa passou a
-carregar `npcName` (nome de exibição do NPC, ex. "Instrutora Ibuki") além do `npc` (id interno,
-ex. `exam_proctor_forest`) — os dois campos vêm de `tools/export_tfs.py`.
+`missionsProgressJson`, `achievementsProgressJson`) — cada uma faz `if not NarutoX then return
+{} end` antes de usar `NarutoRanks`/`NarutoTasks`/`NarutoDailies`/`NarutoQuests`/
+`NarutoAchievements`, então o `progress` nunca quebra se uma dessas libs não estiver instalada
+(ex.: servidor sem `data/tasks.json`). `NarutoQuests` ganhou um índice reverso
+`NarutoQuests.byStorage[storage] -> quest` (usado por `rankProgressJson` para achar nome/NPC de
+cada requisito de rank) e cada quest/tarefa passou a carregar `npcName` (nome de exibição do
+NPC, ex. "Instrutora Ibuki") além do `npc` (id interno, ex. `exam_proctor_forest`) — os dois
+campos vêm de `tools/export_tfs.py`. `achievementsProgressJson` só delega para
+`NarutoAchievements.progressJson` (toda a lógica de conquistas mora em
+`server/generated/lib/naruto_achievements.lua`, ver `docs/sistemas/progressao-servidor.md`,
+seção "Conquistas").
 
 **`state.rank` e `NarutoRanks.promote`**: `NarutoCharacters.sendState` agora inclui um campo
 `rank` (id/título/índice do rank atual, ou `null` se `NarutoRanks` não estiver carregado) — é

@@ -99,6 +99,15 @@ local function completeQuest(player, q)
 	local msg = "Bom trabalho, ninja. Missão '" .. q.name .. "' concluída."
 	local rankMsg = grantQuestRankIfReady(player, q)
 	if rankMsg then msg = msg .. " " .. rankMsg end
+	-- conquista quest_chain_complete (docs/sistemas/progressao-servidor.md): só quando TODAS as
+	-- quests desse NPC (a cadeia inteira da região) já estiverem DONE, não só esta.
+	if NarutoAchievements then
+		local allDone = true
+		for _, qq in ipairs(NarutoQuests.byNpc[q.npc] or {}) do
+			if player:getStorageValue(qq.storage) ~= NarutoQuests.DONE then allDone = false end
+		end
+		if allDone then NarutoAchievements.onQuestChainComplete(player, q.npc) end
+	end
 	return msg
 end
 

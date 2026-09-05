@@ -1,7 +1,15 @@
 -- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO.
 -- Coloque em data/scripts/naruto/achievements.lua (revscriptsys carrega sozinho).
+-- `if not NarutoAchievements then return true end` em TODO gancho (achado real ao testar
+-- audio, docs/sistemas/audio.md): data/lib/naruto_achievements.lua so entra em memoria com
+-- REINICIO do servidor (dofile em data/lib/lib.lua, so roda no boot - nenhum /reload toca
+-- libs); esta script (revscriptsys) já recarrega com /reload scripts|all. Sem a blindagem,
+-- um servidor que já tinha os HOOKS mas ainda nao tinha a LIB (ex.: logo apos um /reload sem
+-- reiniciar) derrubava o onLogin de todo mundo com "attempt to index global
+-- 'NarutoAchievements' (a nil value)".
 local killEvent = CreatureEvent("NarutoAchievementKill")
 function killEvent.onKill(player, target)
+	if not NarutoAchievements then return true end
 	if not target:isMonster() then return true end
 	NarutoAchievements.onKill(player, target:getName())
 	return true
@@ -10,7 +18,7 @@ killEvent:register()
 
 local advanceEvent = CreatureEvent("NarutoAchievementAdvance")
 function advanceEvent.onAdvance(player, skill, oldLevel, newLevel)
-	if skill == SKILL_LEVEL then
+	if NarutoAchievements and skill == SKILL_LEVEL then
 		NarutoAchievements.onLevelReached(player, newLevel)
 	end
 	return true
@@ -21,7 +29,7 @@ local login = CreatureEvent("NarutoAchievementLogin")
 function login.onLogin(player)
 	player:registerEvent("NarutoAchievementKill")
 	player:registerEvent("NarutoAchievementAdvance")
-	NarutoAchievements.pollPlayer(player)
+	if NarutoAchievements then NarutoAchievements.pollPlayer(player) end
 	return true
 end
 login:register()
@@ -32,6 +40,7 @@ login:register()
 -- e alto o bastante pra não pesar com a contagem de jogadores esperada do projeto.
 local poll = GlobalEvent("NarutoAchievementPoll")
 function poll.onThink(interval, lastExecution)
+	if not NarutoAchievements then return true end
 	for _, player in ipairs(Game.getPlayers()) do
 		NarutoAchievements.pollPlayer(player)
 	end
@@ -43,6 +52,10 @@ poll:register()
 --- !conquistas: resumo (desbloqueadas/total) por categoria no chat.
 local talk = TalkAction("!conquistas")
 function talk.onSay(player, words, param)
+	if not NarutoAchievements then
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "Conquistas ainda não carregadas neste servidor (precisa reiniciar).")
+		return false
+	end
 	local total, unlocked = #NarutoAchievements.list, 0
 	local byCat, catOrder = {}, {}
 	for _, a in ipairs(NarutoAchievements.list) do

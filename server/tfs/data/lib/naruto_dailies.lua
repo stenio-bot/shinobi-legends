@@ -145,6 +145,7 @@ function NarutoDailies.deliver(player)
 				totalRyo = totalRyo + entry.reward.ryo
 				for _, it in ipairs(entry.reward.items) do player:addItem(it.id, it.count) end
 				player:setStorageValue(NarutoDailies.SLOT_PROGRESS[slot], entry.count + 1)
+				if NarutoAchievements then NarutoAchievements.onDailyDelivered(player) end
 			end
 		end
 	end

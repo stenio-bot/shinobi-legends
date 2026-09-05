@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Achievement",
-  "description": "Conquista (data/achievements.json). Só dados nesta missão de conteúdo — o servidor ainda não lê/concede conquistas (ver relatório da missão para o formato proposto de armazenamento/entrega).",
+  "description": "Conquista (data/achievements.json). Implementado no servidor: tools/export_tfs.py gera server/generated/lib/naruto_achievements.lua + scripts/naruto/achievements.lua a partir daqui — ver docs/sistemas/progressao-servidor.md, seção 'Conquistas', para storages/hooks/limitações.",
   "type": "object",
   "required": ["id", "name", "description", "category", "reward"],
   "additionalProperties": false,
@@ -12,7 +12,7 @@
     "category": {"enum": ["kill", "boss", "quest", "exam", "exploration", "collection", "task", "daily", "level"]},
     "condition": {
       "type": "object",
-      "description": "Documentário: como o servidor deve detectar a conquista, quando a lógica for implementada.",
+      "description": "Como o servidor detecta a conquista (NarutoAchievements, server/generated/lib/naruto_achievements.lua) — os 10 'kind' abaixo estão todos implementados.",
       "properties": {
         "kind": {"enum": ["kill_count", "kill_specific", "quest_chain_complete", "grants_rank", "visit_zone", "collect_set", "task_count", "daily_streak", "level_reached", "collect_item_count"]},
         "target": {"type": "string", "description": "monster_id, zone, rank ou outro identificador conforme 'kind'"},

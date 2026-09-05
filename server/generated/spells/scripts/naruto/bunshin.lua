@@ -4,7 +4,7 @@
 -- TODO: criar monstro 'Clone' (cópia do outfit do jogador, 1 HP, some em 6s) e usar creature:addSummon.
 function onCastSpell(creature, variant)
 	local pos = creature:getPosition()
-	NarutoJson.broadcastSfx(pos, "sfx_poof")
+	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(pos, "sfx_poof") end
 	pos:sendMagicEffect(223)
 	for _, spec in ipairs(Game.getSpectators(pos, false, false, 8, 8, 8, 8)) do
 		if spec:isMonster() and spec:getTarget() == creature then

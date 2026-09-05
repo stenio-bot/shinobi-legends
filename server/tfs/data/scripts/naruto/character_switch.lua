@@ -301,6 +301,14 @@ local function missionsProgressJson(player)
 	return out
 end
 
+--- Conquistas (NarutoAchievements, data/lib/naruto_achievements.lua): delega tudo para
+--- NarutoAchievements.progressJson (lá mora a lista/categoria/progresso de cada uma) -
+--- guarda `if` só para o caso raro de rodar sem data/achievements.json (compat).
+local function achievementsProgressJson(player)
+	if not NarutoAchievements then return NarutoJson.array({}) end
+	return NarutoAchievements.progressJson(player)
+end
+
 --- Monta e envia o `progress` para o cliente (opcode 210, buffer JSON) - aba Missoes.
 function NarutoCharacters.sendProgress(player)
 	if not player or not player:isPlayer() then return false end
@@ -310,6 +318,7 @@ function NarutoCharacters.sendProgress(player)
 		tasks = tasksProgressJson(player),
 		dailies = dailiesProgressJson(player),
 		missions = missionsProgressJson(player),
+		achievements = achievementsProgressJson(player),
 	}
 	return NarutoJson.sendExtended(player, OPCODE, NarutoJson.encode(progress))
 end

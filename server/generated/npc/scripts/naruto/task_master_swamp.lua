@@ -72,6 +72,7 @@ local function deliverCallback(cid, message, keywords, parameters, node)
 			player:addExperience(xp, true)
 			if t.reward.ryo > 0 then player:addItem(NarutoQuests.RYO_ID, t.reward.ryo) end
 			for _, it in ipairs(t.reward.items) do player:addItem(it.id, it.count) end
+			if NarutoAchievements then NarutoAchievements.onTaskDelivered(player) end
 			npcHandler:say('Tarefa entregue: ' .. t.name .. '. +' .. xp .. ' xp, +' .. t.reward.ryo .. ' ryo.', cid)
 			return true
 		end

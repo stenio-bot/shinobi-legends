@@ -17,6 +17,6 @@ condition:setFormula(-0.3, 0, -0.3, 0)
 combat:addCondition(condition)  -- slow, chance 0.25
 
 function onCastSpell(creature, variant)
-	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_punch")
+	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(creature:getPosition(), "sfx_punch") end
 	return combat:execute(creature, variant)
 end

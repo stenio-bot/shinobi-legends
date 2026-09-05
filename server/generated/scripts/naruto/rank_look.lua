@@ -5,11 +5,22 @@
 -- data/scripts/eventcallbacks/player/default_onLook.lua) em vez de editar
 -- data/events/scripts/player.lua à mão — o default_onLook roda primeiro (ordem alfabética de
 -- pasta) e monta "You see ...", este só acrescenta uma linha com o rank.
+--
+-- Título de conquista (opcional, docs/sistemas/progressao-servidor.md seção Conquistas): sem
+-- UI de seleção (fora do escopo desta missão), mostra o título da ÚLTIMA conquista desbloqueada
+-- (NarutoAchievements.LAST_UNLOCKED) se houver uma — simplificação deliberada e documentada.
 local ec = EventCallback
 ec.onLook = function(self, thing, position, distance, description)
 	if NarutoRanks and thing:isCreature() and thing:isPlayer() then
 		local rank = NarutoRanks.get(thing)
 		description = description .. "\nRank: " .. rank.title .. "."
+	end
+	if NarutoAchievements and thing:isCreature() and thing:isPlayer() then
+		local idx = thing:getStorageValue(NarutoAchievements.LAST_UNLOCKED)
+		local a = (idx and idx > 0) and NarutoAchievements.list[idx] or nil
+		if a then
+			description = description .. "\nTítulo: " .. a.title .. "."
+		end
 	end
 	return description
 end

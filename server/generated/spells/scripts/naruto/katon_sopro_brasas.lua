@@ -23,6 +23,6 @@ condition:addDamage(4, 1000, -3)
 combat:addCondition(condition)  -- chance 0.35: TODO aplicar chance via callback
 
 function onCastSpell(creature, variant)
-	NarutoJson.broadcastSfx(creature:getPosition(), "sfx_fire_puff")
+	if NarutoJson.broadcastSfx then NarutoJson.broadcastSfx(creature:getPosition(), "sfx_fire_puff") end
 	return combat:execute(creature, variant)
 end

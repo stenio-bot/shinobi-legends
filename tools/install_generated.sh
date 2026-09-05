@@ -26,9 +26,11 @@ cp "$GEN"/lib/naruto_villages.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_characters.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_ranks.lua "$TFS/lib/"
 cp "$GEN"/lib/naruto_rewards.lua "$TFS/lib/"
-# tarefas/diárias são opcionais (só existem se data/tasks.json / data/dailies.json existirem)
+# tarefas/diárias/conquistas são opcionais (só existem se data/tasks.json / data/dailies.json /
+# data/achievements.json existirem)
 [ -f "$GEN/lib/naruto_tasks.lua" ] && cp "$GEN/lib/naruto_tasks.lua" "$TFS/lib/" || rm -f "$TFS/lib/naruto_tasks.lua"
 [ -f "$GEN/lib/naruto_dailies.lua" ] && cp "$GEN/lib/naruto_dailies.lua" "$TFS/lib/" || rm -f "$TFS/lib/naruto_dailies.lua"
+[ -f "$GEN/lib/naruto_achievements.lua" ] && cp "$GEN/lib/naruto_achievements.lua" "$TFS/lib/" || rm -f "$TFS/lib/naruto_achievements.lua"
 
 # Blocos delimitados por marcadores: substitui se já existir, senão insere antes da tag de fechamento.
 inject() {  # inject <arquivo> <tag_fechamento> <arquivo_bloco>
@@ -95,5 +97,10 @@ if [ -f "$TFS/lib/naruto_dailies.lua" ]; then
   grep -q "naruto_dailies" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_dailies.lua')" >> "$TFS/lib/lib.lua"
 else
   sed -i.bak "/naruto_dailies/d" "$TFS/lib/lib.lua" && rm -f "$TFS/lib/lib.lua.bak"
+fi
+if [ -f "$TFS/lib/naruto_achievements.lua" ]; then
+  grep -q "naruto_achievements" "$TFS/lib/lib.lua" || echo "dofile('data/lib/naruto_achievements.lua')" >> "$TFS/lib/lib.lua"
+else
+  sed -i.bak "/naruto_achievements/d" "$TFS/lib/lib.lua" && rm -f "$TFS/lib/lib.lua.bak"
 fi
 echo "instalado em $TFS"
