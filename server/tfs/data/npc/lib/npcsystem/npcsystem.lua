@@ -23,7 +23,7 @@ if not NpcSystem then
 	-- Global npc constants:
 
 	-- Greeting and unGreeting keywords. For more information look at the top of modules.lua
-	FOCUS_GREETWORDS = {'hi', 'hello'}
+	FOCUS_GREETWORDS = {'hi', 'hello', 'oi', 'ola', 'olá', 'ol\225'}
 	FOCUS_FAREWELLWORDS = {'bye', 'farewell'}
 
 	-- The word for requesting trade window. For more information look at the top of modules.lua

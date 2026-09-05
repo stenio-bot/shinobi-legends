@@ -2,7 +2,7 @@
 
 if Modules == nil then
 	-- default words for greeting and ungreeting the npc. Should be a table containing all such words.
-	FOCUS_GREETWORDS = {"hi", "hello"}
+	FOCUS_GREETWORDS = {"hi", "hello", "oi", "ola", "olá", "ol\225"}
 	FOCUS_FAREWELLWORDS = {"bye", "farewell"}
 
 	-- The words for requesting trade window.
