@@ -133,8 +133,11 @@ Próximos (ordem de valor):
 - [x] Conquistas: 55 implementadas no servidor + seção na aba Missões (`e02aa0b`); validação in-game pendente
 - [x] Regeneração natural de HP/chakra e spawns iniciais reduzidos (`77def75`, `c62e75e`)
 - [x] Documento mãe do jogo `docs/00-biblia-do-jogo.md` (`2a0a261`)
-- [ ] Som procedural (em andamento): `tools/audio/gen_sfx.py` + módulo `naruto_sounds`
-- [ ] Playtest rodada 4: L1–10 com regen e spawns novos; medir XP/h e chakra
+- [x] Som procedural: 51 SFX sintetizados + módulo `naruto_sounds` (`ef195b4`); falta música ambiente e sons de monstros (`docs/backlog-audio.md`)
+- [x] Playtest rodada 4 (`docs/qa/playtest-l1-20-r4.md`): interrompido por queda do servidor; achou conquista de zona destravando na vila — corrigido (`bea6efc`)
+- [ ] Playtest rodada 5 (em andamento): medir regen de chakra e curva L1–10
+- [x] Balanceamento rodada 4 (`7dee1ac`): hunt 30 min com regen/pílulas, tier 1 cooldown 3,5 s escalando por level, wakizashi temperado L15; custo tier 1 ×1,3
+- [ ] Balanceamento rodada 5: chakra sustentável em L5–15 (custo flat vs pool pequeno — avaliar `manapercent` ou pool inicial maior), grupo 3+ uniforme, híbrido ≤ +15%
 - [x] Playtest rodada 3 (`docs/qa/playtest-l1-20-r3.md`): combate real no L1; achou chakra sem regen e 4 lobos por spawn — corrigidos
 - [ ] (antigo) Playtest rodada 3: chegar aos lobos e medir XP/h + chakra L1–10 (bloqueado até liberar disco)
 - [x] VFX de jutsus: `tools/spr/gen_effects.py`, 27 effects (ids 200–226) + 8 missiles (60–67) + 14 slots vanilla redesenhados, mapeados no exportador (`1e4f280`/`c21a304`); sons ficam para depois
