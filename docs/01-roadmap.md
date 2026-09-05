@@ -128,8 +128,9 @@ Em andamento (agentes paralelos, eu reviso):
 Próximos (ordem de valor):
 - [x] Mapa v3: 8 NPCs posicionados, gates de rank 45001–45005, identidade visual de Ruínas/Montanha/Covil, bordas dirt_sand e snow_rock (`b8b8ded`)
 - [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
-- [ ] Playtest L1–20 como jogador comum (conta `teste`): fricções, tempo real por level, bugs de quest
-- [ ] VFX de jutsus (efeitos próprios no .dat) e sons procedurais
+- [x] Playtest L1–20 rodada 1 (`docs/qa/playtest-l1-20.md`): achou 2 P0 (sem kit inicial; loja com erro Lua) — corrigidos em `1e4f280`
+- [ ] Playtest rodada 2 (em andamento): validar P0s, medir XP/h e chakra por level (`docs/qa/playtest-l1-20-r2.md`)
+- [ ] VFX de jutsus (em andamento): `tools/spr/gen_effects.py`, effects/missiles próprios no .dat, mapeamento no exportador; sons ficam para depois
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
 - [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
 - [ ] Party com XP compartilhada, clãs, PvP em arena
