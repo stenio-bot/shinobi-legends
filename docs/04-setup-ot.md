@@ -619,3 +619,11 @@ de teste apagada do banco ao final.
   diálogo nativo "reabrir janelas?". Contorno aplicado na máquina de dev:
   `defaults write com.otclient ApplePersistenceIgnoreState -bool YES` (ajuste o bundle id se o
   app usar outro; o valor global `-g` também funciona).
+
+- **Morte desconecta**: após "You are dead." o cliente fica ~30 s parado e cai por timeout; ao
+  relogar o personagem está no templo com HP/chakra cheios. É o comportamento do TFS clássico.
+  Scripts de QA precisam tratar a queda e relogar. Use `g_game.safeLogout()` ao encerrar sessões
+  automatizadas — `kill -9` deixa a sessão "fantasma" no servidor até o timeout de rede.
+- **Regeneração**: no TFS a regeneração de HP/mana só roda com comida. No Shinobi Legends o
+  `character_switch.lua` (gerado) adiciona no login uma condição permanente (subId 9020) com os
+  valores da vocação, então HP e chakra voltam sozinhos; comida soma por cima.

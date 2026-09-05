@@ -1105,10 +1105,12 @@ def connect_clearings(b):
 # ------------------------------------------------------------------ spawns
 
 FOREST_SETS = [
-    ("Lobo", 3, 60), ("Lobo", 4, 60), ("Cobra da Floresta", 3, 70),
-    ("Bandido", 3, 80), ("Bandido Arqueiro", 2, 90), ("Lobo", 3, 60),
-    ("Bandido", 4, 80), ("Cobra da Floresta", 4, 70),
-    ("Bandido Arqueiro", 3, 90), ("Lobo", 2, 60),
+    # Playtest r3 (2026-09-05): 3-4 lobos por spawn matavam o Genin L1 duas vezes seguidas
+    # (pull do spawn inteiro). Grupos menores: 1-2 lobos por ponto, mesma cobertura da trilha.
+    ("Lobo", 2, 60), ("Lobo", 2, 60), ("Cobra da Floresta", 2, 70),
+    ("Bandido", 3, 80), ("Bandido Arqueiro", 2, 90), ("Lobo", 1, 60),
+    ("Bandido", 3, 80), ("Cobra da Floresta", 3, 70),
+    ("Bandido Arqueiro", 2, 90), ("Lobo", 2, 60),
 ]
 
 DEATH_SETS = [

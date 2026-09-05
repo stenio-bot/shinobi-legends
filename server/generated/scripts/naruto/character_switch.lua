@@ -353,6 +353,21 @@ function login.onLogin(player)
 		player:setMaxMana(60)
 		player:addMana(60)
 	end
+	-- Regeneracao natural de HP/chakra (playtest r3, 2026-09-05): no TFS a regeneracao so' roda
+	-- enquanto o jogador tem comida (Player.feed em lib/core/player.lua). Num jogo de ninja o
+	-- chakra volta sozinho: condicao permanente (ticks -1, subId 9020) com os valores da vocacao
+	-- (vocations.xml gainhp/gainmana); comida continua somando por cima como bonus.
+	do
+		local voc = player:getVocation()
+		local regen = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
+		regen:setParameter(CONDITION_PARAM_SUBID, 9020)
+		regen:setParameter(CONDITION_PARAM_TICKS, -1)
+		regen:setParameter(CONDITION_PARAM_HEALTHGAIN, voc:getHealthGainAmount())
+		regen:setParameter(CONDITION_PARAM_HEALTHTICKS, voc:getHealthGainTicks() * 1000)
+		regen:setParameter(CONDITION_PARAM_MANAGAIN, voc:getManaGainAmount())
+		regen:setParameter(CONDITION_PARAM_MANATICKS, voc:getManaGainTicks() * 1000)
+		player:addCondition(regen)
+	end
 	-- Kit inicial da vila (data/villages.json starting_items): o AAC/TFS criam o jogador so' com
 	-- o kit vanilla (bag/jacket). Sem arma o Genin novo morre pros 3 lobos da trilha (playtest
 	-- 2026-09-05). addItem com slot WHEREEVER equipa automaticamente o que couber no slot.
