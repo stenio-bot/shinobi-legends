@@ -113,6 +113,12 @@
 		<monster name="Rival do Exame — Névoa" x="0" y="0" z="7" spawntime="120"/>
 		<monster name="Rival do Exame — Névoa" x="2" y="0" z="7" spawntime="120"/>
 	</spawn>
+	<spawn centerx="1035" centery="1040" centerz="7" radius="1">
+		<npc name="Quadro de Missões" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1030" centery="1067" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Jiro" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
 	<spawn centerx="1303" centery="1001" centerz="7" radius="1">
 		<npc name="Ichiro, o Mercador" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
@@ -131,17 +137,32 @@
 	<spawn centerx="1135" centery="1058" centerz="7" radius="1">
 		<npc name="Rastreador Goro" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
+	<spawn centerx="1137" centery="1057" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Ren" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
 	<spawn centerx="1026" centery="1145" centerz="7" radius="1">
 		<npc name="Mercador Itsuki" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1032" centery="1145" centerz="7" radius="1">
 		<npc name="Ancião Tazu" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
+	<spawn centerx="1029" centery="1147" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Umi" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1202" centery="1020" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Dokan" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1228" centery="1062" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Kaji" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
 	<spawn centerx="1406" centery="1010" centerz="7" radius="1">
 		<npc name="Capitã Anbu Suzu" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1406" centery="1012" centerz="7" radius="1">
 		<npc name="Fornecedor Enji" x="0" y="0" z="7" spawntime="60"/>
+	</spawn>
+	<spawn centerx="1406" centery="1014" centerz="7" radius="1">
+		<npc name="Mestre de Tarefas Kuro" x="0" y="0" z="7" spawntime="60"/>
 	</spawn>
 	<spawn centerx="1010" centery="1150" centerz="7" radius="6">
 		<monster name="Mercenário da Ponte" x="0" y="0" z="7" spawntime="45"/>
@@ -165,7 +186,7 @@
 	<spawn centerx="1029" centery="1166" centerz="7" radius="2">
 		<monster name="Espadachim da Névoa" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1209" centery="1011" centerz="7" radius="3">
+	<spawn centerx="1209" centery="1009" centerz="7" radius="3">
 		<monster name="Marionete de Combate" x="0" y="0" z="7" spawntime="70"/>
 		<monster name="Marionete de Combate" x="1" y="0" z="7" spawntime="70"/>
 		<monster name="Marionete de Combate" x="-1" y="0" z="7" spawntime="70"/>
@@ -173,7 +194,7 @@
 		<monster name="Marionete de Combate" x="0" y="-1" z="7" spawntime="70"/>
 		<monster name="Marionete de Combate" x="1" y="1" z="7" spawntime="70"/>
 	</spawn>
-	<spawn centerx="1224" centery="1025" centerz="7" radius="3">
+	<spawn centerx="1222" centery="1024" centerz="7" radius="3">
 		<monster name="Sentinela de Pedra" x="0" y="0" z="7" spawntime="90"/>
 		<monster name="Sentinela de Pedra" x="1" y="0" z="7" spawntime="90"/>
 		<monster name="Sentinela de Pedra" x="-1" y="0" z="7" spawntime="90"/>
@@ -184,7 +205,7 @@
 		<monster name="Guerreiro Espectral" x="1" y="0" z="7" spawntime="100"/>
 		<monster name="Guerreiro Espectral" x="-1" y="0" z="7" spawntime="100"/>
 	</spawn>
-	<spawn centerx="1240" centery="1010" centerz="7" radius="3">
+	<spawn centerx="1239" centery="1009" centerz="7" radius="3">
 		<monster name="Xamã da Maldição" x="0" y="0" z="7" spawntime="110"/>
 		<monster name="Xamã da Maldição" x="1" y="0" z="7" spawntime="110"/>
 		<monster name="Xamã da Maldição" x="-1" y="0" z="7" spawntime="110"/>
@@ -195,33 +216,33 @@
 	<spawn centerx="1242" centery="1025" centerz="7" radius="3">
 		<monster name="Marionetista das Ruínas" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1225" centery="1068" centerz="7" radius="4">
+	<spawn centerx="1225" centery="1066" centerz="7" radius="3">
 		<monster name="Águia do Trovão" x="0" y="0" z="7" spawntime="70"/>
-		<monster name="Águia do Trovão" x="2" y="-1" z="7" spawntime="70"/>
-		<monster name="Águia do Trovão" x="-2" y="1" z="7" spawntime="70"/>
-		<monster name="Águia do Trovão" x="1" y="2" z="7" spawntime="70"/>
-		<monster name="Águia do Trovão" x="-1" y="-2" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="2" y="0" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="-2" y="0" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="1" y="1" z="7" spawntime="70"/>
+		<monster name="Águia do Trovão" x="-1" y="-1" z="7" spawntime="70"/>
 	</spawn>
-	<spawn centerx="1225" centery="1077" centerz="7" radius="4">
+	<spawn centerx="1225" centery="1071" centerz="7" radius="3">
 		<monster name="Oni da Geleira" x="0" y="0" z="7" spawntime="90"/>
-		<monster name="Oni da Geleira" x="2" y="-1" z="7" spawntime="90"/>
-		<monster name="Oni da Geleira" x="-2" y="1" z="7" spawntime="90"/>
-		<monster name="Oni da Geleira" x="1" y="2" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="2" y="0" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="-2" y="0" z="7" spawntime="90"/>
+		<monster name="Oni da Geleira" x="1" y="1" z="7" spawntime="90"/>
 	</spawn>
-	<spawn centerx="1225" centery="1086" centerz="7" radius="4">
+	<spawn centerx="1225" centery="1072" centerz="7" radius="3">
 		<monster name="Monge da Tempestade" x="0" y="0" z="7" spawntime="100"/>
-		<monster name="Monge da Tempestade" x="2" y="-1" z="7" spawntime="100"/>
-		<monster name="Monge da Tempestade" x="-2" y="1" z="7" spawntime="100"/>
+		<monster name="Monge da Tempestade" x="2" y="0" z="7" spawntime="100"/>
+		<monster name="Monge da Tempestade" x="-2" y="0" z="7" spawntime="100"/>
 	</spawn>
-	<spawn centerx="1225" centery="1095" centerz="7" radius="4">
+	<spawn centerx="1225" centery="1072" centerz="7" radius="3">
 		<monster name="Serpente de Magma" x="0" y="0" z="7" spawntime="100"/>
-		<monster name="Serpente de Magma" x="2" y="-1" z="7" spawntime="100"/>
-		<monster name="Serpente de Magma" x="-2" y="1" z="7" spawntime="100"/>
+		<monster name="Serpente de Magma" x="2" y="0" z="7" spawntime="100"/>
+		<monster name="Serpente de Magma" x="-2" y="0" z="7" spawntime="100"/>
 	</spawn>
-	<spawn centerx="1221" centery="1106" centerz="7" radius="2">
+	<spawn centerx="1225" centery="1090" centerz="7" radius="2">
 		<monster name="O Sócio Eterno" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1229" centery="1106" centerz="7" radius="2">
+	<spawn centerx="1225" centery="1106" centerz="7" radius="2">
 		<monster name="Oni Ancestral" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
 	<spawn centerx="1422" centery="1012" centerz="7" radius="12">
@@ -244,16 +265,16 @@
 		<monster name="Ninja Elite da Aurora" x="6" y="0" z="7" spawntime="110"/>
 		<monster name="Ninja Elite da Aurora" x="10" y="1" z="7" spawntime="110"/>
 	</spawn>
-	<spawn centerx="1414" centery="1007" centerz="7" radius="2">
+	<spawn centerx="1414" centery="1006" centerz="7" radius="1">
 		<monster name="O Vigia Ilusório" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1422" centery="1017" centerz="7" radius="2">
+	<spawn centerx="1422" centery="1018" centerz="7" radius="1">
 		<monster name="O Mascarado das Sombras" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1430" centery="1007" centerz="7" radius="2">
+	<spawn centerx="1430" centery="1006" centerz="7" radius="1">
 		<monster name="O Portador dos Seis Caminhos" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
-	<spawn centerx="1442" centery="1012" centerz="7" radius="3">
+	<spawn centerx="1444" centery="1012" centerz="7" radius="3">
 		<monster name="O Ancestral da Nuvem Vermelha" x="0" y="0" z="7" spawntime="7200"/>
 	</spawn>
 </spawns>

@@ -1,8 +1,8 @@
 {
   "format": 1,
   "_doc": "Alocacao PERMANENTE de ids para os tiles de assets-src/sprites/tiles.json. Nunca edite nem apague uma entrada: o id ficaria orfao em mapas e saves ja gravados. Gerado por tools/spr/build_assets.py.",
-  "next_server_id": 30386,
-  "next_client_id": 24112,
+  "next_server_id": 30439,
+  "next_client_id": 24165,
   "by_key": {
     "tatami_floor": {
       "server_id": 30000,
@@ -1547,6 +1547,218 @@
     "driftwood": {
       "server_id": 30385,
       "client_id": 24111
+    },
+    "ruins_floor_0": {
+      "server_id": 30386,
+      "client_id": 24112
+    },
+    "ruins_floor_1": {
+      "server_id": 30387,
+      "client_id": 24113
+    },
+    "ruins_floor_2": {
+      "server_id": 30388,
+      "client_id": 24114
+    },
+    "mountain_rock_0": {
+      "server_id": 30389,
+      "client_id": 24115
+    },
+    "mountain_rock_1": {
+      "server_id": 30390,
+      "client_id": 24116
+    },
+    "mountain_snow_0": {
+      "server_id": 30391,
+      "client_id": 24117
+    },
+    "frozen_lake": {
+      "server_id": 30392,
+      "client_id": 24118
+    },
+    "lair_basalt_0": {
+      "server_id": 30393,
+      "client_id": 24119
+    },
+    "lair_basalt_1": {
+      "server_id": 30394,
+      "client_id": 24120
+    },
+    "ruin_wall_broken": {
+      "server_id": 30395,
+      "client_id": 24121
+    },
+    "basalt_wall_h": {
+      "server_id": 30396,
+      "client_id": 24122
+    },
+    "basalt_wall_v": {
+      "server_id": 30397,
+      "client_id": 24123
+    },
+    "basalt_wall_c": {
+      "server_id": 30398,
+      "client_id": 24124
+    },
+    "pillar_standing": {
+      "server_id": 30399,
+      "client_id": 24125
+    },
+    "pillar_fallen": {
+      "server_id": 30400,
+      "client_id": 24126
+    },
+    "broken_puppet": {
+      "server_id": 30401,
+      "client_id": 24127
+    },
+    "prayer_flag_post": {
+      "server_id": 30402,
+      "client_id": 24128
+    },
+    "red_torch": {
+      "server_id": 30403,
+      "client_id": 24129
+    },
+    "blood_pool": {
+      "server_id": 30404,
+      "client_id": 24130
+    },
+    "lava_pool_cold": {
+      "server_id": 30405,
+      "client_id": 24131
+    },
+    "gate_marker": {
+      "server_id": 30406,
+      "client_id": 24132
+    },
+    "border_snow_rock_n": {
+      "server_id": 30407,
+      "client_id": 24133
+    },
+    "border_snow_rock_s": {
+      "server_id": 30408,
+      "client_id": 24134
+    },
+    "border_snow_rock_e": {
+      "server_id": 30409,
+      "client_id": 24135
+    },
+    "border_snow_rock_w": {
+      "server_id": 30410,
+      "client_id": 24136
+    },
+    "border_snow_rock_cnw": {
+      "server_id": 30411,
+      "client_id": 24137
+    },
+    "border_snow_rock_cne": {
+      "server_id": 30412,
+      "client_id": 24138
+    },
+    "border_snow_rock_csw": {
+      "server_id": 30413,
+      "client_id": 24139
+    },
+    "border_snow_rock_cse": {
+      "server_id": 30414,
+      "client_id": 24140
+    },
+    "border_snow_rock_icnw": {
+      "server_id": 30415,
+      "client_id": 24141
+    },
+    "border_snow_rock_icne": {
+      "server_id": 30416,
+      "client_id": 24142
+    },
+    "border_snow_rock_icsw": {
+      "server_id": 30417,
+      "client_id": 24143
+    },
+    "border_snow_rock_icse": {
+      "server_id": 30418,
+      "client_id": 24144
+    },
+    "border_snow_rock_n2": {
+      "server_id": 30419,
+      "client_id": 24145
+    },
+    "border_snow_rock_s2": {
+      "server_id": 30420,
+      "client_id": 24146
+    },
+    "border_snow_rock_e2": {
+      "server_id": 30421,
+      "client_id": 24147
+    },
+    "border_snow_rock_w2": {
+      "server_id": 30422,
+      "client_id": 24148
+    },
+    "border_dirt_sand_n": {
+      "server_id": 30423,
+      "client_id": 24149
+    },
+    "border_dirt_sand_s": {
+      "server_id": 30424,
+      "client_id": 24150
+    },
+    "border_dirt_sand_e": {
+      "server_id": 30425,
+      "client_id": 24151
+    },
+    "border_dirt_sand_w": {
+      "server_id": 30426,
+      "client_id": 24152
+    },
+    "border_dirt_sand_cnw": {
+      "server_id": 30427,
+      "client_id": 24153
+    },
+    "border_dirt_sand_cne": {
+      "server_id": 30428,
+      "client_id": 24154
+    },
+    "border_dirt_sand_csw": {
+      "server_id": 30429,
+      "client_id": 24155
+    },
+    "border_dirt_sand_cse": {
+      "server_id": 30430,
+      "client_id": 24156
+    },
+    "border_dirt_sand_icnw": {
+      "server_id": 30431,
+      "client_id": 24157
+    },
+    "border_dirt_sand_icne": {
+      "server_id": 30432,
+      "client_id": 24158
+    },
+    "border_dirt_sand_icsw": {
+      "server_id": 30433,
+      "client_id": 24159
+    },
+    "border_dirt_sand_icse": {
+      "server_id": 30434,
+      "client_id": 24160
+    },
+    "border_dirt_sand_n2": {
+      "server_id": 30435,
+      "client_id": 24161
+    },
+    "border_dirt_sand_s2": {
+      "server_id": 30436,
+      "client_id": 24162
+    },
+    "border_dirt_sand_e2": {
+      "server_id": 30437,
+      "client_id": 24163
+    },
+    "border_dirt_sand_w2": {
+      "server_id": 30438,
+      "client_id": 24164
     }
   }
 }

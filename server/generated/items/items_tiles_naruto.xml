@@ -1172,3 +1172,162 @@
 <item id="30385" name="madeira encalhada">  <!-- driftwood (decoration, clientId 24111) -->
 	<attribute key="description" value="Um galho de madeira encalhado na praia, esbranquicado pelo sal."/>
 </item>
+<item id="30386" name="piso rachado das ruinas (1)">  <!-- ruins_floor_0 (ground, clientId 24112) -->
+	<attribute key="description" value="Laje de pedra antiga, rachada pelo tempo."/>
+</item>
+<item id="30387" name="piso rachado das ruinas (2)">  <!-- ruins_floor_1 (ground, clientId 24113) -->
+	<attribute key="description" value="Laje de pedra antiga, rachada pelo tempo."/>
+</item>
+<item id="30388" name="piso rachado das ruinas (musgo)">  <!-- ruins_floor_2 (ground, clientId 24114) -->
+	<attribute key="description" value="Laje de pedra antiga, rachada e tomada por musgo."/>
+</item>
+<item id="30389" name="rocha da montanha (1)">  <!-- mountain_rock_0 (ground, clientId 24115) -->
+	<attribute key="description" value="Rocha cinza-azulada, batida pelo vento."/>
+</item>
+<item id="30390" name="rocha da montanha (2, respingo de neve)">  <!-- mountain_rock_1 (ground, clientId 24116) -->
+	<attribute key="description" value="Rocha cinza-azulada, batida pelo vento, com respingos de neve."/>
+</item>
+<item id="30391" name="neve da montanha">  <!-- mountain_snow_0 (ground, clientId 24117) -->
+	<attribute key="description" value="Neve compacta, perto do topo da montanha."/>
+</item>
+<item id="30392" name="lago congelado">  <!-- frozen_lake (ground, clientId 24118) -->
+	<attribute key="description" value="Gelo espesso sobre um lago da montanha — fino demais para confiar o peso."/>
+</item>
+<item id="30393" name="basalto do covil (1)">  <!-- lair_basalt_0 (ground, clientId 24119) -->
+	<attribute key="description" value="Rocha vulcanica escura, fria ha seculos."/>
+</item>
+<item id="30394" name="basalto do covil (2)">  <!-- lair_basalt_1 (ground, clientId 24120) -->
+	<attribute key="description" value="Rocha vulcanica escura, fria ha seculos."/>
+</item>
+<item id="30395" name="parede de ruina quebrada">  <!-- ruin_wall_broken (wall, clientId 24121) -->
+	<attribute key="description" value="Um trecho de parede de pedra, desabado e coberto de musgo."/>
+</item>
+<item id="30396" name="parede de basalto (L-O)">  <!-- basalt_wall_h (wall, clientId 24122) -->
+	<attribute key="description" value="Parede de rocha negra e fria."/>
+</item>
+<item id="30397" name="parede de basalto (N-S)">  <!-- basalt_wall_v (wall, clientId 24123) -->
+	<attribute key="description" value="Parede de rocha negra e fria."/>
+</item>
+<item id="30398" name="canto de basalto">  <!-- basalt_wall_c (wall, clientId 24124) -->
+	<attribute key="description" value="Canto de uma parede de rocha negra."/>
+</item>
+<item id="30399" name="pilar de pedra">  <!-- pillar_standing (decoration, clientId 24125) -->
+	<attribute key="description" value="Um pilar de pedra, ainda de pe entre as ruinas."/>
+</item>
+<item id="30400" name="pilar caido">  <!-- pillar_fallen (decoration, clientId 24126) -->
+	<attribute key="description" value="Um pilar de pedra, derrubado ha muito tempo."/>
+</item>
+<item id="30401" name="marionete quebrada">  <!-- broken_puppet (decoration, clientId 24127) -->
+	<attribute key="description" value="Uma marionete de guerra, despedacada e imovel."/>
+</item>
+<item id="30402" name="poste de bandeiras de oracao">  <!-- prayer_flag_post (decoration, clientId 24128) -->
+	<attribute key="description" value="Bandeiras de oracao desbotadas pelo vento da montanha."/>
+</item>
+<item id="30403" name="tocha vermelha">  <!-- red_torch (decoration, clientId 24129) -->
+	<attribute key="description" value="Uma tocha de chama avermelhada, sempre acesa."/>
+</item>
+<item id="30404" name="poca de sangue">  <!-- blood_pool (decoration, clientId 24130) -->
+	<attribute key="description" value="Uma poca de sangue seco no chao de pedra."/>
+</item>
+<item id="30405" name="lava fria">  <!-- lava_pool_cold (decoration, clientId 24131) -->
+	<attribute key="description" value="Lava ha muito solidificada, ainda morna ao toque."/>
+</item>
+<item id="30406" name="limiar de pedra">  <!-- gate_marker (decoration, clientId 24132) -->
+	<attribute key="description" value="Um limiar de pedra gravado, marcando a entrada de outra regiao."/>
+</item>
+<item id="30407" name="borda neve/rocha (n)">  <!-- border_snow_rock_n (decoration, clientId 24133) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (norte)."/>
+</item>
+<item id="30408" name="borda neve/rocha (s)">  <!-- border_snow_rock_s (decoration, clientId 24134) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (sul)."/>
+</item>
+<item id="30409" name="borda neve/rocha (e)">  <!-- border_snow_rock_e (decoration, clientId 24135) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (leste)."/>
+</item>
+<item id="30410" name="borda neve/rocha (w)">  <!-- border_snow_rock_w (decoration, clientId 24136) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (oeste)."/>
+</item>
+<item id="30411" name="borda neve/rocha (cnw)">  <!-- border_snow_rock_cnw (decoration, clientId 24137) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo noroeste)."/>
+</item>
+<item id="30412" name="borda neve/rocha (cne)">  <!-- border_snow_rock_cne (decoration, clientId 24138) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo nordeste)."/>
+</item>
+<item id="30413" name="borda neve/rocha (csw)">  <!-- border_snow_rock_csw (decoration, clientId 24139) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo sudoeste)."/>
+</item>
+<item id="30414" name="borda neve/rocha (cse)">  <!-- border_snow_rock_cse (decoration, clientId 24140) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo sudeste)."/>
+</item>
+<item id="30415" name="borda neve/rocha (icnw)">  <!-- border_snow_rock_icnw (decoration, clientId 24141) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno noroeste)."/>
+</item>
+<item id="30416" name="borda neve/rocha (icne)">  <!-- border_snow_rock_icne (decoration, clientId 24142) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno nordeste)."/>
+</item>
+<item id="30417" name="borda neve/rocha (icsw)">  <!-- border_snow_rock_icsw (decoration, clientId 24143) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno sudoeste)."/>
+</item>
+<item id="30418" name="borda neve/rocha (icse)">  <!-- border_snow_rock_icse (decoration, clientId 24144) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno sudeste)."/>
+</item>
+<item id="30419" name="borda neve/rocha (n2)">  <!-- border_snow_rock_n2 (decoration, clientId 24145) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (norte (variante))."/>
+</item>
+<item id="30420" name="borda neve/rocha (s2)">  <!-- border_snow_rock_s2 (decoration, clientId 24146) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (sul (variante))."/>
+</item>
+<item id="30421" name="borda neve/rocha (e2)">  <!-- border_snow_rock_e2 (decoration, clientId 24147) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (leste (variante))."/>
+</item>
+<item id="30422" name="borda neve/rocha (w2)">  <!-- border_snow_rock_w2 (decoration, clientId 24148) -->
+	<attribute key="description" value="Borda de neve avancando sobre rocha (oeste (variante))."/>
+</item>
+<item id="30423" name="borda terra/areia (n)">  <!-- border_dirt_sand_n (decoration, clientId 24149) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (norte)."/>
+</item>
+<item id="30424" name="borda terra/areia (s)">  <!-- border_dirt_sand_s (decoration, clientId 24150) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (sul)."/>
+</item>
+<item id="30425" name="borda terra/areia (e)">  <!-- border_dirt_sand_e (decoration, clientId 24151) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (leste)."/>
+</item>
+<item id="30426" name="borda terra/areia (w)">  <!-- border_dirt_sand_w (decoration, clientId 24152) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (oeste)."/>
+</item>
+<item id="30427" name="borda terra/areia (cnw)">  <!-- border_dirt_sand_cnw (decoration, clientId 24153) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo noroeste)."/>
+</item>
+<item id="30428" name="borda terra/areia (cne)">  <!-- border_dirt_sand_cne (decoration, clientId 24154) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo nordeste)."/>
+</item>
+<item id="30429" name="borda terra/areia (csw)">  <!-- border_dirt_sand_csw (decoration, clientId 24155) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo sudoeste)."/>
+</item>
+<item id="30430" name="borda terra/areia (cse)">  <!-- border_dirt_sand_cse (decoration, clientId 24156) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo sudeste)."/>
+</item>
+<item id="30431" name="borda terra/areia (icnw)">  <!-- border_dirt_sand_icnw (decoration, clientId 24157) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno noroeste)."/>
+</item>
+<item id="30432" name="borda terra/areia (icne)">  <!-- border_dirt_sand_icne (decoration, clientId 24158) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno nordeste)."/>
+</item>
+<item id="30433" name="borda terra/areia (icsw)">  <!-- border_dirt_sand_icsw (decoration, clientId 24159) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno sudoeste)."/>
+</item>
+<item id="30434" name="borda terra/areia (icse)">  <!-- border_dirt_sand_icse (decoration, clientId 24160) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno sudeste)."/>
+</item>
+<item id="30435" name="borda terra/areia (n2)">  <!-- border_dirt_sand_n2 (decoration, clientId 24161) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (norte (variante))."/>
+</item>
+<item id="30436" name="borda terra/areia (s2)">  <!-- border_dirt_sand_s2 (decoration, clientId 24162) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (sul (variante))."/>
+</item>
+<item id="30437" name="borda terra/areia (e2)">  <!-- border_dirt_sand_e2 (decoration, clientId 24163) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (leste (variante))."/>
+</item>
+<item id="30438" name="borda terra/areia (w2)">  <!-- border_dirt_sand_w2 (decoration, clientId 24164) -->
+	<attribute key="description" value="Borda de terra avancando sobre areia (oeste (variante))."/>
+</item>

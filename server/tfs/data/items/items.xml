@@ -36963,6 +36963,7 @@
 	<attribute key="slotType" value="ring"/>
 	<attribute key="maxhitpoints" value="70"/>
 	<attribute key="skillShield" value="4"/>
+	<attribute key="armor" value="3"/>
 	
 </item>
 <item id="1953" name="pergaminho: anel de chamas">  
@@ -37010,6 +37011,7 @@
 	<attribute key="weight" value="30"/>
 	<attribute key="description" value="Loot exclusivo do Marionetista das Ruínas. Os fios obedecem sozinhos."/>
 	<attribute key="slotType" value="ring"/>
+	<attribute key="attack" value="8"/>
 	<attribute key="skillSword" value="5"/>
 	<attribute key="speed" value="30"/>
 	
@@ -38737,6 +38739,165 @@
 </item>
 <item id="30385" name="madeira encalhada">  
 	<attribute key="description" value="Um galho de madeira encalhado na praia, esbranquicado pelo sal."/>
+</item>
+<item id="30386" name="piso rachado das ruinas (1)">  
+	<attribute key="description" value="Laje de pedra antiga, rachada pelo tempo."/>
+</item>
+<item id="30387" name="piso rachado das ruinas (2)">  
+	<attribute key="description" value="Laje de pedra antiga, rachada pelo tempo."/>
+</item>
+<item id="30388" name="piso rachado das ruinas (musgo)">  
+	<attribute key="description" value="Laje de pedra antiga, rachada e tomada por musgo."/>
+</item>
+<item id="30389" name="rocha da montanha (1)">  
+	<attribute key="description" value="Rocha cinza-azulada, batida pelo vento."/>
+</item>
+<item id="30390" name="rocha da montanha (2, respingo de neve)">  
+	<attribute key="description" value="Rocha cinza-azulada, batida pelo vento, com respingos de neve."/>
+</item>
+<item id="30391" name="neve da montanha">  
+	<attribute key="description" value="Neve compacta, perto do topo da montanha."/>
+</item>
+<item id="30392" name="lago congelado">  
+	<attribute key="description" value="Gelo espesso sobre um lago da montanha — fino demais para confiar o peso."/>
+</item>
+<item id="30393" name="basalto do covil (1)">  
+	<attribute key="description" value="Rocha vulcanica escura, fria ha seculos."/>
+</item>
+<item id="30394" name="basalto do covil (2)">  
+	<attribute key="description" value="Rocha vulcanica escura, fria ha seculos."/>
+</item>
+<item id="30395" name="parede de ruina quebrada">  
+	<attribute key="description" value="Um trecho de parede de pedra, desabado e coberto de musgo."/>
+</item>
+<item id="30396" name="parede de basalto (L-O)">  
+	<attribute key="description" value="Parede de rocha negra e fria."/>
+</item>
+<item id="30397" name="parede de basalto (N-S)">  
+	<attribute key="description" value="Parede de rocha negra e fria."/>
+</item>
+<item id="30398" name="canto de basalto">  
+	<attribute key="description" value="Canto de uma parede de rocha negra."/>
+</item>
+<item id="30399" name="pilar de pedra">  
+	<attribute key="description" value="Um pilar de pedra, ainda de pe entre as ruinas."/>
+</item>
+<item id="30400" name="pilar caido">  
+	<attribute key="description" value="Um pilar de pedra, derrubado ha muito tempo."/>
+</item>
+<item id="30401" name="marionete quebrada">  
+	<attribute key="description" value="Uma marionete de guerra, despedacada e imovel."/>
+</item>
+<item id="30402" name="poste de bandeiras de oracao">  
+	<attribute key="description" value="Bandeiras de oracao desbotadas pelo vento da montanha."/>
+</item>
+<item id="30403" name="tocha vermelha">  
+	<attribute key="description" value="Uma tocha de chama avermelhada, sempre acesa."/>
+</item>
+<item id="30404" name="poca de sangue">  
+	<attribute key="description" value="Uma poca de sangue seco no chao de pedra."/>
+</item>
+<item id="30405" name="lava fria">  
+	<attribute key="description" value="Lava ha muito solidificada, ainda morna ao toque."/>
+</item>
+<item id="30406" name="limiar de pedra">  
+	<attribute key="description" value="Um limiar de pedra gravado, marcando a entrada de outra regiao."/>
+</item>
+<item id="30407" name="borda neve/rocha (n)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (norte)."/>
+</item>
+<item id="30408" name="borda neve/rocha (s)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (sul)."/>
+</item>
+<item id="30409" name="borda neve/rocha (e)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (leste)."/>
+</item>
+<item id="30410" name="borda neve/rocha (w)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (oeste)."/>
+</item>
+<item id="30411" name="borda neve/rocha (cnw)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo noroeste)."/>
+</item>
+<item id="30412" name="borda neve/rocha (cne)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo nordeste)."/>
+</item>
+<item id="30413" name="borda neve/rocha (csw)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo sudoeste)."/>
+</item>
+<item id="30414" name="borda neve/rocha (cse)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto externo sudeste)."/>
+</item>
+<item id="30415" name="borda neve/rocha (icnw)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno noroeste)."/>
+</item>
+<item id="30416" name="borda neve/rocha (icne)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno nordeste)."/>
+</item>
+<item id="30417" name="borda neve/rocha (icsw)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno sudoeste)."/>
+</item>
+<item id="30418" name="borda neve/rocha (icse)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (canto interno sudeste)."/>
+</item>
+<item id="30419" name="borda neve/rocha (n2)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (norte (variante))."/>
+</item>
+<item id="30420" name="borda neve/rocha (s2)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (sul (variante))."/>
+</item>
+<item id="30421" name="borda neve/rocha (e2)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (leste (variante))."/>
+</item>
+<item id="30422" name="borda neve/rocha (w2)">  
+	<attribute key="description" value="Borda de neve avancando sobre rocha (oeste (variante))."/>
+</item>
+<item id="30423" name="borda terra/areia (n)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (norte)."/>
+</item>
+<item id="30424" name="borda terra/areia (s)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (sul)."/>
+</item>
+<item id="30425" name="borda terra/areia (e)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (leste)."/>
+</item>
+<item id="30426" name="borda terra/areia (w)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (oeste)."/>
+</item>
+<item id="30427" name="borda terra/areia (cnw)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo noroeste)."/>
+</item>
+<item id="30428" name="borda terra/areia (cne)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo nordeste)."/>
+</item>
+<item id="30429" name="borda terra/areia (csw)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo sudoeste)."/>
+</item>
+<item id="30430" name="borda terra/areia (cse)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto externo sudeste)."/>
+</item>
+<item id="30431" name="borda terra/areia (icnw)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno noroeste)."/>
+</item>
+<item id="30432" name="borda terra/areia (icne)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno nordeste)."/>
+</item>
+<item id="30433" name="borda terra/areia (icsw)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno sudoeste)."/>
+</item>
+<item id="30434" name="borda terra/areia (icse)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (canto interno sudeste)."/>
+</item>
+<item id="30435" name="borda terra/areia (n2)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (norte (variante))."/>
+</item>
+<item id="30436" name="borda terra/areia (s2)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (sul (variante))."/>
+</item>
+<item id="30437" name="borda terra/areia (e2)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (leste (variante))."/>
+</item>
+<item id="30438" name="borda terra/areia (w2)">  
+	<attribute key="description" value="Borda de terra avancando sobre areia (oeste (variante))."/>
 </item>
 <!-- NARUTO:END -->
 </items>

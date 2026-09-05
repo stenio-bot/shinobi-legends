@@ -426,6 +426,7 @@
 	<attribute key="slotType" value="ring"/>
 	<attribute key="maxhitpoints" value="70"/>
 	<attribute key="skillShield" value="4"/>
+	<attribute key="armor" value="3"/>
 	<!-- required_level 32: aplicar via movements.xml (level) -->
 </item>
 <item id="1953" name="pergaminho: anel de chamas">  <!-- scroll_katon_anel_chamas (rare) -->
@@ -473,6 +474,7 @@
 	<attribute key="weight" value="30"/>
 	<attribute key="description" value="Loot exclusivo do Marionetista das Ruínas. Os fios obedecem sozinhos."/>
 	<attribute key="slotType" value="ring"/>
+	<attribute key="attack" value="8"/>
 	<attribute key="skillSword" value="5"/>
 	<attribute key="speed" value="30"/>
 	<!-- required_level 45: aplicar via movements.xml (level) -->

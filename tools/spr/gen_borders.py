@@ -67,6 +67,17 @@ PAIRS = {
     "cobble_dirt": (GT.P_COBBLE, GT.P_DIRT),
     "grass_sand": (GT.P_GRASS, GT.P_SAND),
     "sand_water": (GT.P_SAND, GT.P_WATER),
+    # Costa das Mares (Missão B): estrada de terra que termina em corte reto
+    # na areia (achado do tour visual, screenshots/decor_v2_08). Na hierarquia
+    # agua<areia<lama<terra<grama<cobble, terra (`dirt`) e' mais ALTA que
+    # areia (`sand`), entao o par e' `dirt_sand` (terra invade areia), mesma
+    # convencao <alto>_<baixo> dos outros pares.
+    "dirt_sand": (GT.P_DIRT, GT.P_SAND),
+    # Montanha do Trovao (v3, docs/sistemas/mapas.md): neve invadindo rocha,
+    # no topo/bordas do planalto. Aplicado LOCALMENTE por build_regions.py
+    # (nao entra na hierarquia global agua<areia<lama<terra<grama<cobble),
+    # mas usa a MESMA maquinaria de 16 pecas deste gerador.
+    "snow_rock": (GT.P_SNOW_V4, GT.P_ROCK_V4),
 }
 #: pares cuja borda de contato usa espuma/areia clara (margem de agua) em vez
 #: da sombra escura de contato padrao dos pares terrosos.
@@ -256,6 +267,10 @@ def _texture_hi(pair_key, hi_pal):
         return GT.cobble(1)
     if pair_key.startswith("sand"):
         return GT.sand(1)
+    if pair_key.startswith("snow"):
+        return GT.snow(0)
+    if pair_key.startswith("dirt"):
+        return GT.dirt(1)
     return GT.grass(1)
 
 

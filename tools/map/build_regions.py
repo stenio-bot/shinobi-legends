@@ -74,6 +74,42 @@ def in_rect(x, y, r):
     return x0 <= x <= x1 and y0 <= y <= y1
 
 
+# ==================================================== gates de rank (Missão A.2)
+# actionid 45001..45005 = rank minimo 1 Genin..5 Kage (data/ranks.json,
+# server/generated/scripts/naruto/rank_gate.lua). Os indices batem com
+# NarutoRanks.zoneMinIndex (server/tfs/data/lib/naruto_ranks.lua), ja
+# gerado a partir de data/ranks.json/progressao.md: floresta_da_morte=2,
+# costa_das_mares=2, ruinas_do_cla_marionetista=2, montanha_do_trovao=3,
+# covil_nuvem_vermelha=4. Floresta da Morte fica DE PROPOSITO sem gate fisico
+# aqui (ver docs/sistemas/mapas.md): o Exame Chunin em si roda dentro dela
+# (Instrutora Ibuki manda matar o Sapo Anciao/Serpente Branca, os DOIS la
+# dentro) — gatear a entrada por Chunin criaria um paradoxo (precisa entrar
+# pra virar Chunin, mas so Chunin entra). As outras 3 regioes sao destino
+# de PROVA, nao de exame-em-andamento, entao o gate de zoneMinIndex vale.
+RANK_GATE_ACTIONID = {"chunin": 45002, "jonin": 45003, "anbu": 45004, "kage": 45005}
+
+
+def place_rank_gate(b, sid, positions, rank, text=None, sign_pos=None):
+    """Estampa o item `gate_marker` (walkable, carrega o actionid do rank) em
+    TODAS as celulas de `positions` — o gate precisa cobrir a largura inteira
+    da entrada, senao da pra contornar andando por uma trilha ao lado que nao
+    tem o item. Nao apaga o chao (so empilha por cima, como toda decoracao).
+    `text`/`sign_pos`: placa extra (so se a regiao ainda nao tiver uma placa
+    de bifurcacao explicando o requisito de rank)."""
+    aid = RANK_GATE_ACTIONID[rank]
+    n = 0
+    for (x, y) in positions:
+        c = b.cells.get((x, y))
+        if c is None:
+            continue
+        b.put(x, y, sid["gate_marker"], action_id=aid)
+        n += 1
+    if text and positions:
+        px, py = sign_pos if sign_pos else positions[0]
+        sign(b, px, py, text)
+    return n
+
+
 class SpawnSpec:
     """Um grupo de spawn adiado — vira ``sf.group(...)`` quando
     ``add_spawns_fn(sf)`` roda (o SpawnFile so existe depois de
@@ -409,6 +445,14 @@ def build_coastal_tides(b, sid, tpls, rng):
     sign(b, COAST_PATH_X - 4, 1091,
          "<- Vila da Folha  |  Costa das Mares ->")
 
+    # gate de rank (Missão A.2, ranks.json: costa_das_mares exige Chunin) — na
+    # fronteira da regiao (COAST_Y0), cobrindo a largura inteira da trilha
+    # (width=3) pra nao dar pra contornar.
+    n_gate_costa = place_rank_gate(
+        b, sid, [(COAST_PATH_X - 1, y0), (COAST_PATH_X, y0), (COAST_PATH_X + 1, y0)],
+        "chunin", text="Alem daqui: nivel Chunin ou superior.",
+        sign_pos=(COAST_PATH_X - 2, y0))
+
     # vila de pescadores: 4 cabanas (blue_house) em volta de um patio de areia
     cabins = [
         ("blue_house", COAST_PATH_X - 8, 1143),
@@ -466,6 +510,10 @@ def build_coastal_tides(b, sid, tpls, rng):
     npcs = [
         ("Mercador Itsuki", (COAST_PATH_X - 3, 1145)),
         ("Ancião Tazu", (COAST_PATH_X + 3, 1145)),
+        # Mestre de Tarefas Umi (task_master_coastal, data/npcs/coastal_tides.json)
+        # — na entrada segura da vila de pescadores (mesmo x/y ja gravado no
+        # JSON; so faltava o spawn no mapa, ver docs/sistemas/mapas.md).
+        ("Mestre de Tarefas Umi", (COAST_PATH_X, 1147)),
     ]
     for (_, (nx, ny)) in npcs:
         b.clear_items(nx, ny)
@@ -508,6 +556,8 @@ def build_coastal_tides(b, sid, tpls, rng):
                  "autoborder proprio (border_grass_sand_*/border_sand_water_*, "
                  "tools/spr/gen_borders.py) — aplicado pelo passe apply_borders() "
                  "do build_valley.py, nao aqui")
+    notes.append("costa das mares: gate de rank Chunin (actionid %d), %d marcadores "
+                 "em (%d,%d)" % (RANK_GATE_ACTIONID["chunin"], n_gate_costa, COAST_PATH_X, y0))
 
     # -- spawns ---------------------------------------------------------
     spec = SpawnSpec()
@@ -536,10 +586,51 @@ RUINS_X0, RUINS_Y0, RUINS_X1, RUINS_Y1 = 1200, 1000, 1249, 1049
 RUINS_GATE_Y = (1020, 1021)
 
 
+def ruin_room(b, sid, rng, rect, doors, weather=0.3):
+    """Sala fechada das Ruinas: piso `ruins_floor_*`, paredes de pedra
+    intactas (b.walls, com um vao real em `doors` — celulas sem item, floor
+    aberto) e ~`weather` fracao das paredes trocadas por `ruin_wall_broken`
+    (mesma silhueta quebrada, ainda bloqueia) pra ler como ruina de verdade,
+    nao um predio novo."""
+    x0, y0, x1, y1 = rect
+    doors = set(doors)
+    ruins_floor = [sid[k] for k in ("ruins_floor_0", "ruins_floor_1", "ruins_floor_2") if k in sid]
+    b.fill(x0, y0, x1, y1, ruins_floor or BV.STONE_FLOOR)
+    b.walls(x0, y0, x1, y1, BV.STONE_WALL_H, BV.STONE_WALL_V, BV.STONE_WALL_C, doors=doors)
+    wall_cells = ([(x, y0) for x in range(x0 + 1, x1)] + [(x, y1) for x in range(x0 + 1, x1)] +
+                  [(x0, y) for y in range(y0 + 1, y1)] + [(x1, y) for y in range(y0 + 1, y1)])
+    broken_id = sid.get("ruin_wall_broken")
+    if broken_id:
+        for (wx, wy) in wall_cells:
+            if (wx, wy) in doors:
+                continue
+            if rng.random() < weather:
+                b.clear_items(wx, wy)
+                b.put(wx, wy, broken_id)
+    return rect
+
+
 def build_ruins(b, sid, tpls, rng):
     notes = []
     x0, y0, x1, y1 = RUINS_X0, RUINS_Y0, RUINS_X1, RUINS_Y1
-    b.fill(x0, y0, x1, y1, BV.DIRT)
+    ruins_floor = [sid[k] for k in ("ruins_floor_0", "ruins_floor_1", "ruins_floor_2") if k in sid]
+    b.fill(x0, y0, x1, y1, ruins_floor or BV.DIRT)
+    # terra invadindo (pedido da missão): manchas de BV.DIRT substituindo o
+    # chao de pedra rachada em algumas manchas circulares — a mesma ideia do
+    # par grass_dirt, aplicada manualmente ao GROUND (Builder.blob() poe
+    # ITENS, nao troca o chao, entao nao serve aqui).
+    for _ in range(9):
+        cx = x0 + 4 + rng.randrange(x1 - x0 - 8)
+        cy = y0 + 4 + rng.randrange(y1 - y0 - 8)
+        r = 2.0 + rng.random() * 2.0
+        ri = int(r) + 1
+        for dy in range(-ri, ri + 1):
+            for dx in range(-ri, ri + 1):
+                if dx * dx + (dy * 1.3) ** 2 > r * r:
+                    continue
+                c = b.cells.get((cx + dx, cy + dy))
+                if c is not None and c.ground in (ruins_floor if isinstance(ruins_floor, list) else []):
+                    b.ground(cx + dx, cy + dy, BV.DIRT)
 
     # abre um portao no muro leste da Floresta da Morte, alinhado a esta zona
     for y in RUINS_GATE_Y:
@@ -551,64 +642,71 @@ def build_ruins(b, sid, tpls, rng):
     b.put(BV.DEATH_WALL[2], RUINS_GATE_Y[1] + 1, BV.TORCH)
     sign(b, BV.DEATH_WALL[2] - 1, RUINS_GATE_Y[0] - 1,
          "<- Floresta da Morte  |  Ruinas do Cla Marionetista ->")
-    b.path(BV.DEATH_WALL[2] + 1, RUINS_GATE_Y[0], x0 + 4, RUINS_GATE_Y[0], BV.DIRT, width=2)
+    # corredor de entrada, estreito (largura 2) — primeiro trecho legivel
+    # como CORREDOR antes do patio abrir (pedido da missao: "corredores,
+    # salas menores, um patio central", nao um salao unico).
+    b.path(BV.DEATH_WALL[2] + 1, RUINS_GATE_Y[0], x0 + 8, RUINS_GATE_Y[0], BV.DIRT, width=2)
+    # gate de rank (ranks.json: ruinas_do_cla_marionetista exige Chunin) —
+    # logo depois do portao, cobrindo a largura do corredor.
+    n_gate_ruins = place_rank_gate(
+        b, sid, [(x0, RUINS_GATE_Y[0]), (x0, RUINS_GATE_Y[1])], "chunin")
+    # Mestre de Tarefas Dokan (task_master_ruins, data/npcs/ruins.json) — base
+    # segura logo apos o gate, antes do patio.
+    dokan_pos = (x0 + 2, RUINS_GATE_Y[0])
+    b.clear_items(*dokan_pos)
 
-    sign(b, x0 + 5, y0 + 2, "Ruinas do Cla Marionetista (nivel 25-50)")
+    sign(b, x0 + 9, RUINS_GATE_Y[0] - 1, "Ruinas do Cla Marionetista (nivel 25-50)")
 
-    # muros de pedra QUEBRADOS: retangulos parciais (so' norte+oeste, o
-    # "quebrado" e' o proprio buraco onde leste/sul deveriam fechar) + um
-    # trecho de parede interna solta (parede sem cantos, tipo cota que
-    # desabou) + entulho (pedras/tocos/galhos) espalhado ao redor — pra ler
-    # como um patio arruinado de verdade, nao só cantos isolados no vazio.
-    broken = [
-        (x0 + 4, y0 + 6, x0 + 14, y0 + 16),
-        (x0 + 18, y0 + 20, x0 + 30, y0 + 30),
-        (x0 + 2, y0 + 30, x0 + 12, y0 + 40),
-        (x0 + 20, y0 + 4, x0 + 28, y0 + 12),
-        (x0 + 6, y0 + 20, x0 + 14, y0 + 28),
-    ]
-    loose_walls = [
-        (x0 + 30, y0 + 6, x0 + 30, y0 + 14),   # trecho de parede solta (so' 1 lado)
-        (x0 + 16, y0 + 32, x0 + 24, y0 + 32),
-    ]
+    # -- 3 SALAS MENORES fechadas (piso proprio + paredes com trechos
+    # quebrados), cada uma abrindo pro patio central por um vao real --------
+    room_a = ruin_room(b, sid, rng, (x0 + 4, y0 + 4, x0 + 14, y0 + 14),
+                        doors=[(x0 + 8, y0 + 14), (x0 + 9, y0 + 14)])
+    sign(b, x0 + 5, y0 + 5, "Camara Norte")
+    # porta a OESTE (nao ao sul): ao sul dessa sala fica a parede norte do
+    # salao do boss (hx0=x1-13=x0+36..x1, hy0=y0+15) — uma porta ao sul
+    # bateria direto nela e isolaria a sala (achado do 1o build/BFS).
+    room_b = ruin_room(b, sid, rng, (x0 + 34, y0 + 4, x0 + 45, y0 + 14),
+                        doors=[(x0 + 34, y0 + 8), (x0 + 34, y0 + 9)])
+    sign(b, x0 + 35, y0 + 5, "Camara do Xama")
+    room_c = ruin_room(b, sid, rng, (x0 + 2, y0 + 30, x0 + 13, y0 + 41),
+                        doors=[(x0 + 6, y0 + 30), (x0 + 7, y0 + 30)])
+    sign(b, x0 + 3, y0 + 31, "Camara Sul")
+
+    # -- patio CENTRAL, marcado e decorado (pilares caidos + entulho em anel,
+    # nao espalhado ao acaso) ------------------------------------------------
+    patio_c = (x0 + 22, y0 + 24)
+    sign(b, patio_c[0] - 3, patio_c[1] - 7, "Patio Central das Ruinas")
     rubble_pool = [sid[k] for k in ("rock_medium", "rock_large", "tree_stump_0",
-                                     "tree_stump_1", "fallen_branch")
+                                     "tree_stump_1", "fallen_branch", "pillar_fallen",
+                                     "broken_puppet")
                    if k in sid]
-    for (bx0, by0, bx1, by1) in broken:
-        for x in range(bx0, bx1 + 1):
-            b.clear_items(x, by0)
-            b.put(x, by0, BV.STONE_WALL_H)
-        for yy in range(by0, by1 + 1):
-            c = b.cells.get((bx0, yy))
-            if c is not None:
-                b.clear_items(bx0, yy)
-                b.put(bx0, yy, BV.STONE_WALL_V)
-        # o lado leste e o sul ficam abertos (parede desabada) — nao fecha
-        for x in range(bx0 + 3, bx1 - 2):
-            b.clear_items(x, by0)   # reabre um trecho da parede norte tb
-        # entulho encostado nas paredes (fora do retangulo, no patio aberto)
-        if rubble_pool:
-            for (rx, ry) in ((bx0 - 1, by0 + 2), (bx1 + 1, by0 + 1),
-                              (bx0 + 2, by1 + 1), (bx1 - 1, by1 + 1)):
-                c = b.cells.get((rx, ry))
-                if c is not None and not c.items and c.ground in BV._DIRT_SET:
-                    b.put(rx, ry, rng.choice(rubble_pool))
-    for (lx0, ly0, lx1, ly1) in loose_walls:
-        if ly0 == ly1:
-            for x in range(lx0, lx1 + 1):
-                c = b.cells.get((x, ly0))
-                if c is not None and not c.items:
-                    b.put(x, ly0, BV.STONE_WALL_H)
-        else:
-            for yy in range(ly0, ly1 + 1):
-                c = b.cells.get((lx0, yy))
-                if c is not None and not c.items:
-                    b.put(lx0, yy, BV.STONE_WALL_V)
+    if rubble_pool:
+        ring = [(-6, -3), (6, -3), (-6, 3), (6, 3), (0, -6), (0, 6), (-4, 5), (4, -5)]
+        for (dx, dy) in ring:
+            rx, ry = patio_c[0] + dx, patio_c[1] + dy
+            c = b.cells.get((rx, ry))
+            if c is not None and not c.items:
+                b.put(rx, ry, rng.choice(rubble_pool))
 
-    # salao do Marionetista, intacto, no fundo (leste)
+    # -- 1 trecho de parede solta (cota desabada, so' 1 lado) perto do patio,
+    # pura atmosfera — mistura ruin_wall_broken pra variar a silhueta --------
+    loose_x = x0 + 30
+    for yy in range(y0 + 22, y0 + 30):
+        c = b.cells.get((loose_x, yy))
+        if c is not None and not c.items:
+            wid = sid.get("ruin_wall_broken") if rng.random() < 0.5 else BV.STONE_WALL_V
+            b.put(loose_x, yy, wid)
+    if rubble_pool:
+        for (rx, ry) in ((loose_x - 1, y0 + 24), (loose_x + 1, y0 + 27)):
+            c = b.cells.get((rx, ry))
+            if c is not None and not c.items:
+                b.put(rx, ry, rng.choice(rubble_pool))
+
+    # salao do Marionetista, intacto, no fundo (leste) — 2 pilares de pe +
+    # marionetes quebradas (pedido da missao: sala do boss com identidade)
     hall = (x1 - 13, y0 + 15, x1 - 1, y0 + 35)
     hx0, hy0, hx1, hy1 = hall
-    b.fill(hx0, hy0, hx1, hy1, BV.STONE_FLOOR)
+    b.fill(hx0, hy0, hx1, hy1, ruins_floor or BV.STONE_FLOOR)
     b.walls(hx0, hy0, hx1, hy1, BV.STONE_WALL_H, BV.STONE_WALL_V, BV.STONE_WALL_C,
             doors=[(hx0, (hy0 + hy1) // 2)])
     b.put(hx0 + 2, hy0 + 2, BV.TORCH)
@@ -617,20 +715,36 @@ def build_ruins(b, sid, tpls, rng):
     b.path(hall_door[0] - 6, hall_door[1], hall_door[0] - 1, hall_door[1], BV.DIRT, width=2)
     sign(b, hx0 + 1, hy0 + 1, "Salao do Marionetista")
     boss_pos = ((hx0 + hx1) // 2, (hy0 + hy1) // 2)
+    pillar_id = sid.get("pillar_standing")
+    if pillar_id:
+        for (px, py) in ((boss_pos[0] - 4, boss_pos[1] - 3), (boss_pos[0] + 4, boss_pos[1] + 3)):
+            c = b.cells.get((px, py))
+            if c is not None and not c.items:
+                b.put(px, py, pillar_id)
+    puppet_id = sid.get("broken_puppet")
+    if puppet_id:
+        for (px, py) in ((hx0 + 3, hy1 - 2), (hx1 - 3, hy0 + 5)):
+            c = b.cells.get((px, py))
+            if c is not None and not c.items:
+                b.put(px, py, puppet_id)
 
-    notes.append("ruinas do cla marionetista: complexo compacto x%d-%d,y%d-%d, "
-                 "3 paredes quebradas + salao do marionetista em %r"
-                 % (x0, x1, y0, y1, hall))
+    notes.append("ruinas do cla marionetista v3: corredor de entrada + 3 salas fechadas "
+                 "(%r, %r, %r) + patio central em %r + salao do boss com 2 pilares de pe, "
+                 "piso proprio ruins_floor_0/1/2 (era stone_floor generico)"
+                 % (room_a, room_b, room_c, patio_c))
+    notes.append("ruinas: gate de rank Chunin (actionid %d), %d marcadores em x=%d"
+                 % (RANK_GATE_ACTIONID["chunin"], n_gate_ruins, x0))
 
     spec = SpawnSpec()
     off = [(0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (1, 1)]
-    # centros escolhidos a dedo, bem no MEIO de cada patio (>=5 tiles de
-    # qualquer parede quebrada) — evita cair em cima de uma parede/canto.
+    # centros dentro das SALAS/patio novos (substituem os antigos "no meio do
+    # dirt aberto" — mantém a MESMA lista de monstros/quantidades da missão
+    # anterior, só reposicionados pra dentro da geometria nova).
     monster_centers = [
-        ("Marionete de Combate", 6, 70, (1209, 1011)),
-        ("Sentinela de Pedra", 4, 90, (1224, 1025)),
-        ("Guerreiro Espectral", 3, 100, (1207, 1035)),
-        ("Xamã da Maldição", 3, 110, (1240, 1010)),
+        ("Marionete de Combate", 6, 70, (room_a[0] + 5, room_a[1] + 5)),
+        ("Sentinela de Pedra", 4, 90, patio_c),
+        ("Guerreiro Espectral", 3, 100, (room_c[0] + 5, room_c[1] + 5)),
+        ("Xamã da Maldição", 3, 110, (room_b[0] + 5, room_b[1] + 5)),
     ]
     for (mon, count, stime, (cx, cy)) in monster_centers:
         g = spec.group(cx, cy, radius=3)
@@ -641,7 +755,8 @@ def build_ruins(b, sid, tpls, rng):
         .add_monster("Desertor de Elite", 0, 0, spawntime=1800)
     spec.group(*boss_pos, radius=3).add_monster("Marionetista das Ruínas", 0, 0, spawntime=7200)
 
-    return [], spec, notes
+    npcs = [("Mestre de Tarefas Dokan", dokan_pos)]
+    return npcs, spec, notes
 
 
 # --------------------------------------------------------- Montanha do Trovao
@@ -649,23 +764,71 @@ MOUNT_X0, MOUNT_Y0, MOUNT_X1, MOUNT_Y1 = 1200, 1060, 1249, 1109
 MOUNT_TRAIL_X = 1225
 COVIL_GATE_ACTIONID = 45004
 
+#: registrado por `_install_snow_rock_border` — usado só pra log/relatorio.
+_SNOW_ROCK_INSTALLED = [False]
+
+
+def _install_snow_rock_border(sid):
+    """Registra 'rock'/'snow' no autoborder GENERICO de build_valley.py (mesma
+    maquinaria de grass_dirt/cobble_dirt/etc — ver docs/sistemas/mapas.md).
+    Puramente ADITIVO: os ids novos (>=30386) nao colidem com nenhum dos
+    conjuntos GRASS/DIRT/COBBLE/MUD/WATER/SAND ja existentes, entao nenhuma
+    outra regiao do mapa e afetada. Precisa rodar ANTES de apply_borders()
+    (chamado por build_all(), que roda antes de apply_borders() no main())."""
+    rock_ids = {sid[k] for k in ("mountain_rock_0", "mountain_rock_1") if k in sid}
+    snow_ids = {sid[k] for k in ("mountain_snow_0",) if k in sid}
+    if not rock_ids or not snow_ids:
+        return False
+    orig_classify = BV.classify_ground
+
+    def classify_ground2(gid):
+        if gid in rock_ids:
+            return "rock"
+        if gid in snow_ids:
+            return "snow"
+        return orig_classify(gid)
+
+    BV.classify_ground = classify_ground2
+    BV.BORDER_INVADERS = dict(BV.BORDER_INVADERS)
+    BV.BORDER_INVADERS["rock"] = ("snow",)
+    BV.BORDER_PAIR_KEY = dict(BV.BORDER_PAIR_KEY)
+    BV.BORDER_PAIR_KEY[("snow", "rock")] = "snow_rock"
+    BV._MATERIAL_RANK = dict(BV._MATERIAL_RANK)
+    BV._MATERIAL_RANK["snow"] = 6
+    _SNOW_ROCK_INSTALLED[0] = True
+    return True
+
 
 def build_mountain(b, sid, tpls, rng):
     notes = []
     x0, y0, x1, y1 = MOUNT_X0, MOUNT_Y0, MOUNT_X1, MOUNT_Y1
-    b.fill(x0, y0, x1, y1, BV.STONE_FLOOR)
+    rock_floor = [sid[k] for k in ("mountain_rock_0", "mountain_rock_1") if k in sid]
+    snow_id = sid.get("mountain_snow_0")
+    ice_id = sid.get("frozen_lake")
+    _install_snow_rock_border(sid)
+    b.fill(x0, y0, x1, y1, rock_floor or BV.STONE_FLOOR)
 
     # corredor ligando o fim das Ruinas (y=1049) ate aqui, contornando o gap
     # y1050-1059 (nenhuma das duas zonas usa essa faixa).
     b.path(MOUNT_TRAIL_X, RUINS_Y1, MOUNT_TRAIL_X, y0, BV.DIRT, width=3)
     sign(b, MOUNT_TRAIL_X - 3, RUINS_Y1 + 1,
          "<- Ruinas do Cla Marionetista  |  Montanha do Trovao ->")
+    # gate de rank (ranks.json: montanha_do_trovao exige Jonin) — na entrada,
+    # cobrindo a largura do corredor (width=3).
+    n_gate_mount = place_rank_gate(
+        b, sid, [(MOUNT_TRAIL_X - 1, y0), (MOUNT_TRAIL_X, y0), (MOUNT_TRAIL_X + 1, y0)],
+        "jonin", text="Alem daqui: nivel Jonin ou superior.",
+        sign_pos=(MOUNT_TRAIL_X - 4, y0 + 1))
+    # Mestre de Tarefas Kaji (task_master_mountain, data/npcs/mountain.json) —
+    # base segura logo apos o gate, no pe da trilha.
+    kaji_pos = (MOUNT_TRAIL_X + 3, y0 + 2)
+    b.clear_items(*kaji_pos)
 
-    # trilha de pedra sinuosa flanqueada por abismo (agua) — penhascos.
-    # trail_w cobre o pior caso (deslocamento da curva +- 3) + o maior offset
-    # de spawn (+-3) com folga, senao um monstro podia cair no "abismo".
+    # trilha de pedra sinuosa flanqueada por abismo (agua) — penhascos. Vai so
+    # ate o pe do planalto (PLATEAU_Y0); o planalto e' plano, tratado a parte.
+    PLATEAU_Y0 = y1 - 24
     trail_w = 8
-    for y in range(y0, y1 + 1):
+    for y in range(y0, PLATEAU_Y0):
         wobble = int(3 * ((y - y0) % 14) / 14) - 1
         cx = MOUNT_TRAIL_X + wobble * 3
         for x in range(x0, x1 + 1):
@@ -673,26 +836,150 @@ def build_mountain(b, sid, tpls, rng):
                 continue
             b.ground(x, y, BV.WATER)
             b.clear_items(x, y)
+        # neve nas bordas da trilha, so no ultimo trecho antes do planalto
+        # (pedido da missao: "neve nas bordas/topo") — 2 tiles de cada lado,
+        # por cima da rocha (nao do abismo).
+        if snow_id and y >= PLATEAU_Y0 - 10:
+            for sx in (cx - trail_w, cx - trail_w + 1, cx + trail_w - 1, cx + trail_w):
+                c = b.cells.get((sx, y))
+                if c is not None and c.ground in (rock_floor if isinstance(rock_floor, list) else []):
+                    b.ground(sx, y, snow_id)
 
     sign(b, MOUNT_TRAIL_X, y0 + 2, "Montanha do Trovao (nivel 50-80) - cuidado com o abismo")
 
-    # planalto do topo (sul) — os 2 bosses + o portal gated pro Covil
-    plateau = (MOUNT_TRAIL_X - 10, y1 - 10, MOUNT_TRAIL_X + 10, y1)
+    # -- 2 PATAMARES (muros de rocha + passagem estreita, alternando o lado —
+    # simula a subida em zigue-zague pedida na missao, ja que o z nao muda) --
+    def _band_at(y):
+        wobble = int(3 * ((y - y0) % 14) / 14) - 1
+        cx = MOUNT_TRAIL_X + wobble * 3
+        return cx - trail_w, cx + trail_w
+
+    terrace_ys = [y0 + 14, y0 + 22]
+    terrace_gap_side = [-1, 1]     # alterna oeste/leste a cada patamar
+    for ti, ty in enumerate(terrace_ys):
+        lo0, hi0 = _band_at(ty)
+        # ACHADO (build/BFS): a trilha "balanca" de largura (`wobble`, periodo
+        # 14) e o patamar y0+14 cai EXATAMENTE numa transicao de periodo — o
+        # gap escolhido so' a partir da banda da PROPRIA linha podia ficar
+        # fora da banda da linha vizinha (norte OU sul), tornando a "unica
+        # passagem" um beco sem saida (o muro virava intransponivel de
+        # verdade, nao so' visualmente). Corrigido: o gap so' pode ficar na
+        # INTERSECAO das bandas de ty-1/ty/ty+1, garantindo que a passagem
+        # sempre conecta os dois lados de verdade.
+        lo_prev, hi_prev = _band_at(ty - 1)
+        lo_next, hi_next = _band_at(ty + 1)
+        safe_lo = max(lo0, lo_prev, lo_next)
+        safe_hi = min(hi0, hi_prev, hi_next)
+        mid = (safe_lo + safe_hi) // 2
+        bias = terrace_gap_side[ti] * max(0, min(2, (safe_hi - safe_lo) // 2 - 1))
+        gap_cx = max(safe_lo + 1, min(safe_hi - 1, mid + bias))
+        for x in range(lo0, hi0 + 1):
+            if gap_cx - 1 <= x <= gap_cx + 1:
+                continue
+            c = b.cells.get((x, ty))
+            if c is not None:
+                b.clear_items(x, ty)
+                b.put(x, ty, BV.STONE_WALL_H)
+        c = b.cells.get((gap_cx, ty - 1))
+        if c is not None and not c.items:
+            b.put(gap_cx, ty - 1, BV.TORCH)
+
+    # -- lago gelado pequeno, num trecho largo da trilha entre os 2 patamares.
+    # So' o lado LESTE de cada linha vira gelo (calculado por linha, com
+    # _band_at, nao um cx fixo — a banda "balanca" por causa do wobble
+    # periodico, um cx fixo podia sobrar fora da banda real de uma linha e
+    # deixar um buraco sem chao ali); o lado OESTE (>= 3 tiles) fica sempre
+    # rocha caminhavel, garantindo uma faixa continua ao longo de toda a
+    # extensao do lago (mesmo achado do bug dos patamares acima).
+    lake_y0, lake_y1 = terrace_ys[0] + 2, terrace_ys[1] - 2
+    if ice_id:
+        for ly in range(lake_y0, lake_y1 + 1):
+            lo, hi = _band_at(ly)
+            for lx in range(lo + 5, hi - 1):
+                c = b.cells.get((lx, ly))
+                if c is not None:
+                    b.clear_items(lx, ly)
+                    b.ground(lx, ly, ice_id)
+        lo_sign, _ = _band_at(lake_y0)
+        sign(b, lo_sign + 1, lake_y0 - 1, "Lago Gelado - gelo fino, nao ande sobre ele")
+        notes.append("montanha: lago gelado em y=%d-%d (lado leste da trilha, lado "
+                     "oeste sempre livre)" % (lake_y0, lake_y1))
+
+    # ===================================================================
+    # PLANALTO DO TOPO — dividido em 2: SANTUARIO (norte, O Socio Eterno)
+    # e ARENA (sul, Oni Ancestral + portal do Covil), separados por uma
+    # parede com 1 passagem estreita — nunca aparecem juntos na mesma tela
+    # (achado do tour in-game v2.1: ficavam a so' 8 tiles um do outro).
+    # ===================================================================
+    plateau = (MOUNT_TRAIL_X - 10, PLATEAU_Y0, MOUNT_TRAIL_X + 10, y1)
     px0, py0, px1, py1 = plateau
     for y in range(py0, py1 + 1):
         for x in range(px0, px1 + 1):
             c = b.cells.get((x, y))
             if c is not None:
-                b.ground(x, y, BV.STONE_FLOOR)
+                b.ground(x, y, rock_floor or BV.STONE_FLOOR)
                 b.clear_items(x, y)
-    b.put(px0 + 1, py0 + 1, BV.TORCH)
-    b.put(px1 - 1, py0 + 1, BV.TORCH)
-    sign(b, px0 + 1, py0 + 2, "Topo da Montanha - a Dupla Imortal")
+    # neve no TOPO (perimetro inteiro do planalto, pedido da missao)
+    if snow_id:
+        for x in range(px0, px1 + 1):
+            for y in (py0, py1):
+                b.ground(x, y, snow_id)
+        for y in range(py0, py1 + 1):
+            for x in (px0, px1):
+                b.ground(x, y, snow_id)
 
-    partner_pos = (MOUNT_TRAIL_X - 4, py1 - 3)
-    oni_pos = (MOUNT_TRAIL_X + 4, py1 - 3)
+    SHRINE_Y1 = py0 + 7
+    DIVIDER_Y = SHRINE_Y1 + 1
+    shrine = (px0, py0, px1, SHRINE_Y1)
+    arena = (px0, DIVIDER_Y + 1, px1, py1)
 
-    gate_pos = (MOUNT_TRAIL_X, py1 - 6)
+    # parede divisoria com 1 passagem estreita (3 tiles) no meio
+    gap_x = (px0 + px1) // 2
+    for x in range(px0 + 1, px1):
+        if gap_x - 1 <= x <= gap_x + 1:
+            continue
+        c = b.cells.get((x, DIVIDER_Y))
+        if c is not None:
+            b.clear_items(x, DIVIDER_Y)
+            b.put(x, DIVIDER_Y, BV.STONE_WALL_H)
+    for tx in (gap_x - 2, gap_x + 2):
+        c = b.cells.get((tx, DIVIDER_Y - 1))
+        if c is not None and not c.items:
+            b.put(tx, DIVIDER_Y - 1, BV.TORCH)
+    sign(b, gap_x - 1, DIVIDER_Y - 2, "Santuario do Socio Eterno ->  <- Arena do Oni Ancestral")
+
+    # -- santuario (norte): O Socio Eterno + mobilia de santuario (mesmos
+    # itens da decor v2 do templo — estatua/lanterna — pra dar leitura clara
+    # de "lugar sagrado", nao so um boss solto) + bandeiras de oracao --------
+    partner_pos = (MOUNT_TRAIL_X, shrine[1] + 5)
+    statue_id, lantern_id, flag_id = sid.get("shrine_statue_mossy"), sid.get("stone_lantern"), sid.get("prayer_flag_post")
+    if statue_id:
+        c = b.cells.get((partner_pos[0], partner_pos[1] - 2))
+        if c is not None and not c.items:
+            b.put(partner_pos[0], partner_pos[1] - 2, statue_id)
+    for (lx, ly) in ((partner_pos[0] - 3, partner_pos[1] - 1), (partner_pos[0] + 3, partner_pos[1] - 1)):
+        if lantern_id:
+            c = b.cells.get((lx, ly))
+            if c is not None and not c.items:
+                b.put(lx, ly, lantern_id)
+    if flag_id:
+        for (fx, fy) in ((shrine[0] + 2, shrine[1] + 2), (shrine[2] - 2, shrine[1] + 2),
+                          (shrine[0] + 2, shrine[3] - 1), (shrine[2] - 2, shrine[3] - 1)):
+            c = b.cells.get((fx, fy))
+            if c is not None and not c.items:
+                b.put(fx, fy, flag_id)
+    sign(b, shrine[0] + 1, shrine[1] + 1, "Santuario do Socio Eterno")
+
+    # -- arena (sul): Oni Ancestral + portal gated pro Covil ----------------
+    oni_pos = (MOUNT_TRAIL_X, arena[3] - 3)
+    if flag_id:
+        for (fx, fy) in ((arena[0] + 2, arena[1] + 1), (arena[2] - 2, arena[1] + 1)):
+            c = b.cells.get((fx, fy))
+            if c is not None and not c.items:
+                b.put(fx, fy, flag_id)
+    sign(b, arena[0] + 1, arena[1] + 1, "Arena do Oni Ancestral")
+
+    gate_pos = (MOUNT_TRAIL_X, arena[3] - 6)
     b.clear_items(*gate_pos)
     b.put(gate_pos[0], gate_pos[1], BV.TELEPORT_ITEM,
           tele_dest=(0, 0, FLOOR),      # ajustado por link_mountain_to_lair()
@@ -701,26 +988,45 @@ def build_mountain(b, sid, tpls, rng):
          "Portal do Covil da Nuvem Vermelha - requer rank Anbu "
          "(gate actionid %d, ver sistema de rank)" % COVIL_GATE_ACTIONID)
 
-    notes.append("montanha do trovao: complexo compacto x%d-%d,y%d-%d, trilha "
-                 "sinuosa com abismo de agua, planalto do topo em %r, portal "
-                 "gated (actionid %d) em %r" % (x0, x1, y0, y1, plateau,
-                                                 COVIL_GATE_ACTIONID, gate_pos))
+    notes.append("montanha do trovao v3: patio dividido em SANTUARIO %r (O Socio Eterno) "
+                 "e ARENA %r (Oni Ancestral + portal do Covil), separados por parede+vao "
+                 "estreito em y=%d — distancia entre os 2 bosses agora %d tiles (era 8)"
+                 % (shrine, arena, DIVIDER_Y, abs(oni_pos[1] - partner_pos[1])))
+    notes.append("montanha: 2 patamares (muros de rocha + passagem estreita alternando "
+                 "lado) simulando subida em zigue-zague, piso proprio mountain_rock_0/1 "
+                 "+ neve mountain_snow_0/border_snow_rock_* (era stone_floor generico)")
+    notes.append("montanha: gate de rank Jonin (actionid %d), %d marcadores em y=%d"
+                 % (RANK_GATE_ACTIONID["jonin"], n_gate_mount, y0))
+
+    # linhas-perigo (patamar OU lago) + 1 de margem — nenhum centro/offset de
+    # spawn pode cair nelas (achado do build/BFS: varios grupos cravavam
+    # criaturas em cima do gelo/muro novo, que agora BLOQUEIAM de verdade).
+    hazard_rows = set(terrace_ys) | set(range(lake_y0, lake_y1 + 1))
+
+    def safe_cy(y):
+        return all((y + d) not in hazard_rows for d in (-1, 0, 1))
 
     spec = SpawnSpec()
-    off = [(0, 0), (2, -1), (-2, 1), (1, 2), (-1, -2), (3, 0)]
+    off = [(0, 0), (2, 0), (-2, 0), (1, 1), (-1, -1), (3, 0)]   # dy so' -1..1
     counts = [("Águia do Trovão", 5, 70), ("Oni da Geleira", 4, 90),
               ("Monge da Tempestade", 3, 100), ("Serpente de Magma", 3, 100)]
-    cy = y0 + 8
+    cy = y0 + 6
     for (mon, count, stime) in counts:
-        g = spec.group(MOUNT_TRAIL_X, cy, radius=4)
+        while not safe_cy(cy) and cy < PLATEAU_Y0 - 1:
+            cy += 1
+        cy = min(cy, PLATEAU_Y0 - 2)
+        while not safe_cy(cy) and cy > y0 + 6:
+            cy -= 1
+        g = spec.group(MOUNT_TRAIL_X, cy, radius=3)
         for i in range(count):
             dx, dy = off[i % len(off)]
             g.add_monster(mon, dx, dy, spawntime=stime)
-        cy += 9
+        cy += 5
     spec.group(*partner_pos, radius=2).add_monster("O Sócio Eterno", 0, 0, spawntime=7200)
     spec.group(*oni_pos, radius=2).add_monster("Oni Ancestral", 0, 0, spawntime=7200)
 
-    return [], spec, notes, gate_pos
+    npcs = [("Mestre de Tarefas Kaji", kaji_pos)]
+    return npcs, spec, notes, gate_pos
 
 
 # ---------------------------------------------------- Covil da Nuvem Vermelha
@@ -735,19 +1041,46 @@ LAIR_FINAL = (1436, 1000, 1449, 1024)
 
 def build_akatsuki_lair(b, sid, tpls, rng):
     """Masmorra final, ISOLADA (sem trilha a pe): so' alcancavel pelo
-    teleporte gated no topo da Montanha (ver build_mountain/link_mountain)."""
+    teleporte gated no topo da Montanha (ver build_mountain/link_mountain).
+
+    v2 (Missão B — identidade visual): piso/paredes de basalto (`lair_basalt_*`/
+    `basalt_wall_*`, tools/spr/gen_terrain.py), tochas VERMELHAS (`red_torch`)
+    no lugar da tocha branca vanilla, poças de sangue/lava fria como decor NAO
+    caminhavel (nunca em cima de um tile usado por NPC/porta/spawn-center) e
+    uma ANTECAMARA de 1-2 tiles antes de CADA uma das 4 salas de boss (parede
+    extra + porta propria, separada da sala do boss em si) — pedido explicito
+    da missao ("antecamaras antes de cada um dos 4 bosses finais")."""
     notes = []
     x0, y0, x1, y1 = LAIR_X0, LAIR_Y0, LAIR_X1, LAIR_Y1
-    b.fill(x0, y0, x1, y1, BV.STONE_FLOOR)
+    floor = [sid[k] for k in ("lair_basalt_0", "lair_basalt_1") if k in sid] or BV.STONE_FLOOR
+    wall_h = sid.get("basalt_wall_h", BV.STONE_WALL_H)
+    wall_v = sid.get("basalt_wall_v", BV.STONE_WALL_V)
+    wall_c = sid.get("basalt_wall_c", BV.STONE_WALL_C)
+    torch_id = sid.get("red_torch", BV.TORCH)
+    blood_id = sid.get("blood_pool")
+    lava_id = sid.get("lava_pool_cold")
+    b.fill(x0, y0, x1, y1, floor)
+
+    def scatter_gore(cells):
+        """Poça de sangue/lava fria em células dadas — só se vazias (nunca
+        em cima de NPC/porta/pad/centro de spawn, o chamador já filtra isso
+        passando só cantos/cantos de sala)."""
+        for i, (gx, gy) in enumerate(cells):
+            c = b.cells.get((gx, gy))
+            if c is None or c.items:
+                continue
+            item = lava_id if (i % 3 == 2 and lava_id) else blood_id
+            if item:
+                b.put(gx, gy, item)
 
     hx0, hy0, hx1, hy1 = LAIR_HALL
-    b.walls(hx0, hy0, hx1, hy1, BV.STONE_WALL_H, BV.STONE_WALL_V, BV.STONE_WALL_C,
+    b.walls(hx0, hy0, hx1, hy1, wall_h, wall_v, wall_c,
             doors=[(hx1, y) for y in range(LAIR_CORRIDOR_Y[0], LAIR_CORRIDOR_Y[1] + 1)])
     for x in range(hx0, hx1 + 1):
         for y in (hy0, hy1):
             c = b.cells.get((x, y))
             if c is not None and not c.items:
-                b.put(x, y, BV.TORCH)
+                b.put(x, y, torch_id)
 
     landing = (hx0 + 4, hy0 + 3)
     exitpad = (hx0 + 2, hy0 + 3)
@@ -757,10 +1090,17 @@ def build_akatsuki_lair(b, sid, tpls, rng):
     b.put(exitpad[0], exitpad[1], BV.TELEPORT_ITEM, tele_dest=(0, 0, FLOOR))
     sign(b, hx0 + 1, hy0 + 1, "Covil da Nuvem Vermelha - Anbu/Kage, nivel 80-100")
 
+    # Mestre de Tarefas Kuro (task_master_lair, data/npcs/akatsuki_lair.json,
+    # x/y ja documentado la: 1406,1014) — no hall, base segura antes do
+    # corredor patrulhado.
+    kuro_pos = (hx0 + 6, hy0 + 9)
+    b.clear_items(*kuro_pos)
     npcs = [
         ("Capitã Anbu Suzu", (hx0 + 6, hy0 + 5)),
         ("Fornecedor Enji", (hx0 + 6, hy0 + 7)),
+        ("Mestre de Tarefas Kuro", kuro_pos),
     ]
+    scatter_gore([(hx0 + 2, hy0 + 12), (hx1 - 2, hy0 + 13), (hx0 + 3, hy1 - 2)])
 
     # corredor principal (piso primeiro; a parede do corredor so' e' fechada
     # DEPOIS que as salas abrem suas proprias portas — ver door_gaps abaixo —
@@ -768,23 +1108,49 @@ def build_akatsuki_lair(b, sid, tpls, rng):
     # verdade, so' fica vazia por fora sem ligar com o corredor).
     for y in range(LAIR_CORRIDOR_Y[0], LAIR_CORRIDOR_Y[1] + 1):
         for x in range(hx1 + 1, LAIR_FINAL[0]):
-            b.ground(x, y, BV.STONE_FLOOR)
+            b.ground(x, y, floor)
             b.clear_items(x, y)
 
     door_gaps = set()
 
     def build_room(rect, door_x, boss_name, level, from_north):
+        """Sala do boss + ANTECAMARA de 1 tile logo depois da porta externa,
+        separada por uma 2a parede (com porta propria no MESMO door_x, pra
+        manter a linha de visao reta corredor->antecamara->camara) — o
+        "achado" da missao (rooms rasos, so 5 tiles de profundidade) exigiu
+        antecamara FINA (1 tile) em vez dos 2 tiles originalmente cogitados,
+        senao a camara do boss ficava profunda demais pro raio de spawn."""
         rx0, ry0, rx1, ry1 = rect
-        b.fill(rx0, ry0, rx1, ry1, BV.STONE_FLOOR)
+        b.fill(rx0, ry0, rx1, ry1, floor)
         door_y = ry1 if from_north else ry0
-        b.walls(rx0, ry0, rx1, ry1, BV.STONE_WALL_H, BV.STONE_WALL_V, BV.STONE_WALL_C,
-                doors=[(door_x, door_y)])
+        b.walls(rx0, ry0, rx1, ry1, wall_h, wall_v, wall_c, doors=[(door_x, door_y)])
         door_gaps.add((door_x, door_y))
-        for (tx, ty) in ((rx0 + 1, ry0 + 1), (rx1 - 1, ry0 + 1)):
+        # -- antecamara: parede interna paralela a parede externa, 2 tiles
+        # pra dentro (1 tile de antecamara entre as duas) ------------------
+        inner_y = ry1 - 2 if from_north else ry0 + 2
+        ante_y = ry1 - 1 if from_north else ry0 + 1
+        for x in range(rx0, rx1 + 1):
+            if x == door_x:
+                continue
+            c = b.cells.get((x, inner_y))
+            if c is not None:
+                b.clear_items(x, inner_y)
+                b.put(x, inner_y, wall_c if x in (rx0, rx1) else wall_h)
+        for (tx, ty) in ((rx0 + 1, ante_y), (rx1 - 1, ante_y)):
             c = b.cells.get((tx, ty))
             if c is not None and not c.items:
-                b.put(tx, ty, BV.TORCH)
-        center = ((rx0 + rx1) // 2, (ry0 + ry1) // 2)
+                b.put(tx, ty, torch_id)
+        sign(b, rx0 + 1 if door_x - rx0 > rx1 - door_x else rx1 - 2, ante_y,
+             "Antecamara - alem, %s" % boss_name)
+        # câmara do boss, do outro lado da antecamara
+        chamber_y0 = ry0 + 1 if from_north else inner_y + 1
+        chamber_y1 = inner_y - 1 if from_north else ry1 - 1
+        for (tx, ty) in ((rx0 + 1, chamber_y0), (rx1 - 1, chamber_y0)):
+            c = b.cells.get((tx, ty))
+            if c is not None and not c.items:
+                b.put(tx, ty, torch_id)
+        scatter_gore([(rx0 + 1, chamber_y1), (rx1 - 1, chamber_y0)])
+        center = (rx0 + rx1) // 2, (chamber_y0 + chamber_y1) // 2
         sign(b, rx0 + 1, ry1 - 1 if from_north else ry0 + 1,
              "%s (nivel %d)" % (boss_name, level))
         return center
@@ -799,21 +1165,41 @@ def build_akatsuki_lair(b, sid, tpls, rng):
                 continue
             c = b.cells.get((x, y))
             if c is not None and not c.items:
-                b.put(x, y, BV.STONE_WALL_H)
+                b.put(x, y, wall_h)
 
-    # sala final, grande, no extremo leste
+    # sala final, grande, no extremo leste — com antecamara propria (foyer
+    # 4x5 logo apos a porta do corredor, parede+porta separando do salao
+    # grande do boss) antes do Ancestral da Nuvem Vermelha.
     fx0, fy0, fx1, fy1 = LAIR_FINAL
-    b.fill(fx0, fy0, fx1, fy1, BV.STONE_FLOOR)
-    b.walls(fx0, fy0, fx1, fy1, BV.STONE_WALL_H, BV.STONE_WALL_V, BV.STONE_WALL_C,
+    b.fill(fx0, fy0, fx1, fy1, floor)
+    b.walls(fx0, fy0, fx1, fy1, wall_h, wall_v, wall_c,
             doors=[(fx0, y) for y in range(LAIR_CORRIDOR_Y[0], LAIR_CORRIDOR_Y[1] + 1)])
+    ante_x1 = fx0 + 4
+    ante_gap_y = (LAIR_CORRIDOR_Y[0] + LAIR_CORRIDOR_Y[1]) // 2
+    b.walls(fx0 + 1, LAIR_CORRIDOR_Y[0] - 1, ante_x1, LAIR_CORRIDOR_Y[1] + 1,
+            wall_h, wall_v, wall_c,
+            doors=[(fx0 + 1, y) for y in range(LAIR_CORRIDOR_Y[0] - 1, LAIR_CORRIDOR_Y[1] + 2)] +
+                  [(ante_x1, ante_gap_y)])
+    for (tx, ty) in ((fx0 + 2, LAIR_CORRIDOR_Y[0]), (fx0 + 2, LAIR_CORRIDOR_Y[1])):
+        c = b.cells.get((tx, ty))
+        if c is not None and not c.items:
+            b.put(tx, ty, torch_id)
+    sign(b, fx0 + 2, ante_gap_y, "Antecamara - alem, O Ancestral da Nuvem Vermelha")
     for (tx, ty) in ((fx0 + 2, fy0 + 2), (fx1 - 2, fy0 + 2),
                      (fx0 + 2, fy1 - 2), (fx1 - 2, fy1 - 2)):
         c = b.cells.get((tx, ty))
         if c is not None and not c.items:
-            b.put(tx, ty, BV.TORCH)
+            b.put(tx, ty, torch_id)
+    scatter_gore([(fx0 + 6, fy0 + 3), (fx1 - 3, fy0 + 3), (fx0 + 6, fy1 - 3), (fx1 - 3, fy1 - 3)])
     b.put(fx0 + 2, fy0 + 1, BV.SIGN, text="O Ancestral da Nuvem Vermelha (nivel 100) - sala final")
-    c4 = ((fx0 + fx1) // 2, (fy0 + fy1) // 2)
+    c4 = ((ante_x1 + fx1) // 2, (fy0 + fy1) // 2)
 
+    notes.append("covil da nuvem vermelha v2: piso/paredes de basalto (lair_basalt_0/1, "
+                 "basalt_wall_h/v/c — era stone_floor/stone_wall generico), tochas "
+                 "vermelhas (red_torch) no lugar da tocha branca, pocas de sangue/lava "
+                 "fria (blood_pool/lava_pool_cold) como decor nao caminhavel em cantos "
+                 "vazios, ANTECAMARA de 1 tile (com parede+porta propria) antes de cada "
+                 "uma das 4 salas de boss (pedido explicito da missao)")
     notes.append("covil da nuvem vermelha: masmorra ISOLADA x%d-%d,y%d-%d, 4 salas de "
                  "boss sequenciais + sala final, entrada so por teleporte gated "
                  "(ver montanha do trovao)" % (x0, x1, y0, y1))
@@ -834,9 +1220,13 @@ def build_akatsuki_lair(b, sid, tpls, rng):
         dx = int(-corridor_half + 2 + (2 * corridor_half - 4) * i / 5)
         dy = (i % 3) - 1
         g2.add_monster("Ninja Elite da Aurora", dx, dy, spawntime=110)
-    spec.group(*c1, radius=2).add_monster("O Vigia Ilusório", 0, 0, spawntime=7200)
-    spec.group(*c2, radius=2).add_monster("O Mascarado das Sombras", 0, 0, spawntime=7200)
-    spec.group(*c3, radius=2).add_monster("O Portador dos Seis Caminhos", 0, 0, spawntime=7200)
+    # raio 1 (era 2): a camara do boss ficou mais rasa depois da antecamara
+    # nova (3 linhas de profundidade em vez de 5) — radius=2 ainda funcionaria
+    # (paredes bloqueiam o monstro de qualquer jeito), mas 1 e' mais fiel ao
+    # tamanho real da sala.
+    spec.group(*c1, radius=1).add_monster("O Vigia Ilusório", 0, 0, spawntime=7200)
+    spec.group(*c2, radius=1).add_monster("O Mascarado das Sombras", 0, 0, spawntime=7200)
+    spec.group(*c3, radius=1).add_monster("O Portador dos Seis Caminhos", 0, 0, spawntime=7200)
     spec.group(*c4, radius=3).add_monster("O Ancestral da Nuvem Vermelha", 0, 0, spawntime=7200)
 
     # NPCs vao SO' na lista `npcs` devolvida (build_valley.build_spawns ja os

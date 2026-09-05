@@ -526,6 +526,169 @@ def sand(v):
     return img
 
 
+# =========================================================== RUINAS (piso rachado)
+#: mesma regra de baixo contraste v4 (grama/lama/areia): 3 tons proximos, TODAS
+#: as variantes no MESMO campo fbm — so a densidade de rachadura/musgo muda.
+#: Tom acinzentado-amarronzado, distinto do stone_floor cinza-claro da praca
+#: (evita o "mesmo piso de cobble liso" reportado pelo usuario).
+P_CRACKSTONE_V4 = [(104, 96, 82, 255), (112, 104, 88, 255), (120, 112, 94, 255)]
+CRACKSTONE_V4_OCTAVES = ((3, 1.0), (7, 0.4))
+CRACKSTONE_V4_SEED = 71050
+
+
+def crackstone(v):
+    """Piso de pedra antiga rachada — Ruinas do Cla Marionetista. v=0/1 so
+    rachaduras (densidade crescente); v=2 rachaduras + musgo esparso."""
+    f = fbm(CELL, CRACKSTONE_V4_SEED, CRACKSTONE_V4_OCTAVES)
+    img = quantize(f, P_CRACKSTONE_V4, dither=0.04)
+    rnd = Rnd(4200 + v * 83)
+    for _ in range(2 + v * 2):            # rachaduras finas ramificadas
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        ang = rnd.f() * 2 * math.pi
+        for k in range(4 + rnd.i(5)):
+            put(img, x + int(k * math.cos(ang)), y + int(k * math.sin(ang)),
+                shade(P_CRACKSTONE_V4[0], -30), wrap=False)
+            ang += (rnd.f() - 0.5) * 0.7
+    if v == 2:                            # musgo esparso (1 das 3 variantes)
+        for _ in range(4):
+            x, y = rnd.i(CELL), rnd.i(CELL)
+            put(img, x, y, (70, 88, 52, 255), wrap=False)
+    return img
+
+
+# =========================================================== MONTANHA DO TROVAO
+#: rocha cinza-azulada (trilha/planalto) — mesma regra low-contrast v4.
+P_ROCK_V4 = [(96, 104, 116, 255), (104, 112, 124, 255), (112, 120, 132, 255)]
+ROCK_V4_OCTAVES = ((3, 1.0), (7, 0.4))
+ROCK_V4_SEED = 81060
+
+
+def rock(v):
+    """Piso de rocha da Montanha do Trovao. v=1 ganha respingos claros de
+    neve (perto das bordas nevadas do topo)."""
+    f = fbm(CELL, ROCK_V4_SEED, ROCK_V4_OCTAVES)
+    img = quantize(f, P_ROCK_V4, dither=0.045)
+    rnd = Rnd(5300 + v * 61)
+    for _ in range(6):                    # veios minerais claros
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, shade(P_ROCK_V4[2], 18), wrap=False)
+    if v == 1:
+        for _ in range(5):
+            x, y = rnd.i(CELL), rnd.i(CELL)
+            put(img, x, y, (222, 230, 236, 255), wrap=False)
+    return img
+
+
+#: neve — usada no rim/topo da montanha (chao proprio) E como material ALTO do
+#: par de autoborder snow_rock (gen_borders.py).
+P_SNOW_V4 = [(210, 220, 228, 255), (222, 230, 236, 255), (234, 240, 244, 255)]
+SNOW_V4_OCTAVES = ((3, 1.0), (7, 0.4))
+SNOW_V4_SEED = 81070
+
+
+def snow(v):
+    f = fbm(CELL, SNOW_V4_SEED, SNOW_V4_OCTAVES)
+    img = quantize(f, P_SNOW_V4, dither=0.04)
+    rnd = Rnd(5400 + v * 61)
+    for _ in range(6):                    # sombra rasa (pegada/depressao)
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, shade(P_SNOW_V4[0], -16), wrap=False)
+    return img
+
+
+#: gelo do lago congelado — bloqueia (mesma regra do abismo de agua da trilha).
+P_ICE_V4 = [(150, 190, 208, 255), (176, 210, 224, 255), (204, 228, 236, 255)]
+
+
+def ice():
+    f = fbm(CELL, 81080, ((3, 1.0), (6, 0.4)))
+    img = quantize(f, P_ICE_V4, dither=0.05)
+    rnd = Rnd(9700)
+    for _ in range(4):                    # rachaduras no gelo
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        ang = rnd.f() * 2 * math.pi
+        for k in range(6 + rnd.i(6)):
+            put(img, x + int(k * math.cos(ang)), y + int(k * math.sin(ang) * 0.5),
+                shade(P_ICE_V4[0], -20), wrap=False)
+            ang += (rnd.f() - 0.5) * 0.4
+    return img
+
+
+# =========================================================== COVIL DA NUVEM VERMELHA
+#: basalto escuro — baixo contraste, quase preto, com veios avermelhados
+#: DISCRETOS (regra "nunca neon" do projeto: tom terroso escuro, nao vermelho vivo).
+P_BASALT_V4 = [(46, 42, 44, 255), (52, 48, 50, 255), (58, 54, 56, 255)]
+BASALT_V4_OCTAVES = ((3, 1.0), (7, 0.4))
+BASALT_V4_SEED = 91090
+
+
+def basalt(v):
+    """Piso de basalto do Covil da Nuvem Vermelha."""
+    f = fbm(CELL, BASALT_V4_SEED, BASALT_V4_OCTAVES)
+    img = quantize(f, P_BASALT_V4, dither=0.045)
+    rnd = Rnd(6100 + v * 61)
+    for _ in range(5):                    # veios de calor residual, discretos
+        x, y = rnd.i(CELL), rnd.i(CELL)
+        put(img, x, y, (86, 46, 40, 255), wrap=False)
+    return img
+
+
+def basalt_wall(kind):
+    """Parede de rocha negra (Covil) — mesma alvenaria de `stone_wall`, paleta
+    quase preta com veios avermelhados discretos (calor residual do vulcao)."""
+    pal = [(38, 36, 36, 255), (52, 48, 48, 255), (64, 60, 60, 255),
+           (78, 72, 72, 255), (92, 86, 86, 255)]
+    img = _wall_base(pal, {"h": 31, "v": 32, "c": 33}[kind], (24, 22, 22, 255))
+    rnd = Rnd(199 + ord(kind))
+    if kind == "v":
+        for y in range(4, 64):
+            for x in range(0, 6):
+                img.putpixel((x, y), shade(img.getpixel((x, y)), -18))
+    if kind == "c":
+        for y in range(6, 62):
+            for x in range(6, 26):
+                img.putpixel((x, y), shade(img.getpixel((x, y)), 8))
+        rect(img, 6, 6, 25, 6, shade(pal[4], 12))
+        rect(img, 6, 6, 6, 61, shade(pal[4], 6))
+        rect(img, 25, 6, 25, 61, shade(pal[0], -8))
+    for _ in range(10):                   # veios avermelhados discretos
+        x, y = rnd.i(CELL), 20 + rnd.i(40)
+        put(img, x, y, (74, 40, 36, 255), wrap=False)
+    return img
+
+
+def stone_wall_broken():
+    """Segmento de parede de pedra QUEBRADA (Ruinas do Cla Marionetista) —
+    topo em silhueta IRREGULAR (a parede "desabou" em alturas diferentes por
+    coluna), nao um retangulo perfeito. Ainda bloqueia (blockSolid), mas le
+    como muro em ruina, distinto da stone_wall intacta da praca/vila."""
+    pal = [(70, 68, 64, 255), (96, 94, 90, 255), (118, 116, 110, 255),
+           (140, 138, 132, 255), (160, 158, 152, 255)]
+    img = Image.new("RGBA", (CELL, 64), (0, 0, 0, 0))
+    rnd = Rnd(2600)
+    heights = [26 + rnd.i(24) for _ in range(CELL)]     # 26..49px de altura
+    for x in range(CELL):
+        top = 64 - heights[x]
+        for y in range(top, 64):
+            band = (y - top) // 8
+            c = pal[1 + (band % (len(pal) - 1))]
+            k = 16 if y == top else (-14 if y >= 60 else 0)
+            img.putpixel((x, y), shade(c, k + rnd.i(7) - 3))
+        img.putpixel((x, top), shade(pal[4], 10))       # quina lascada
+    rect(img, 0, 60, 31, 63, shade(pal[0], -10))
+    for _ in range(14):                    # musgo
+        x, y = rnd.i(CELL), 30 + rnd.i(30)
+        if img.getpixel((x, y))[3]:
+            put(img, x, y, (66, 84, 50, 255), wrap=False)
+    for _ in range(8):                     # rachaduras na quina
+        x = rnd.i(CELL)
+        top = 64 - heights[x]
+        y = top + 2 + rnd.i(4)
+        if y < 64:
+            put(img, x, y, shade(pal[0], -26), wrap=False)
+    return img
+
+
 def water(phase, phases=3):
     """v3 — agua rasa animada: o campo de ruido ANDA (offset por fase) e o
     brilho ondula. `phases` fases -> `animationPhases` no .dat (o id 4608 tem
@@ -1049,6 +1212,25 @@ def build():
     for v in range(3):
         save(sand(v), "sand_%d" % v)
         bump("areia")
+
+    for v in range(3):
+        save(crackstone(v), "crackstone_%d" % v)
+        bump("pedra rachada (ruinas)")
+    for v in range(2):
+        save(rock(v), "rock_%d" % v)
+        bump("rocha (montanha)")
+    save(snow(0), "snow_0")
+    bump("neve (montanha)")
+    save(ice(), "ice")
+    bump("gelo (lago congelado)")
+    for v in range(2):
+        save(basalt(v), "basalt_%d" % v)
+        bump("basalto (covil)")
+    save(stone_wall_broken(), "stone_wall_broken")
+    bump("parede de pedra quebrada (ruinas)")
+    for k in ("h", "v", "c"):
+        save(basalt_wall(k), "basalt_wall_%s" % k)
+        bump("paredes de basalto (covil)")
 
     for k in ("fir", "sycamore", "willow", "beech", "pine"):
         save(tree(k), "tree_%s" % k)

@@ -7785,6 +7785,1116 @@
    "xml": {
     "description": "Um galho de madeira encalhado na praia, esbranquicado pelo sal."
    }
+  },
+  {
+   "key": "ruins_floor_0",
+   "name": "piso rachado das ruinas (1)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    112,
+    104,
+    88
+   ],
+   "frames": [
+    "terrain/crackstone_0.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Laje de pedra antiga, rachada pelo tempo."
+   }
+  },
+  {
+   "key": "ruins_floor_1",
+   "name": "piso rachado das ruinas (2)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    112,
+    104,
+    88
+   ],
+   "frames": [
+    "terrain/crackstone_1.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Laje de pedra antiga, rachada pelo tempo."
+   }
+  },
+  {
+   "key": "ruins_floor_2",
+   "name": "piso rachado das ruinas (musgo)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    104,
+    108,
+    82
+   ],
+   "frames": [
+    "terrain/crackstone_2.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Laje de pedra antiga, rachada e tomada por musgo."
+   }
+  },
+  {
+   "key": "mountain_rock_0",
+   "name": "rocha da montanha (1)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    104,
+    112,
+    124
+   ],
+   "frames": [
+    "terrain/rock_0.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Rocha cinza-azulada, batida pelo vento."
+   }
+  },
+  {
+   "key": "mountain_rock_1",
+   "name": "rocha da montanha (2, respingo de neve)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    104,
+    112,
+    124
+   ],
+   "frames": [
+    "terrain/rock_1.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Rocha cinza-azulada, batida pelo vento, com respingos de neve."
+   }
+  },
+  {
+   "key": "mountain_snow_0",
+   "name": "neve da montanha",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    222,
+    230,
+    236
+   ],
+   "frames": [
+    "terrain/snow_0.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Neve compacta, perto do topo da montanha."
+   }
+  },
+  {
+   "key": "frozen_lake",
+   "name": "lago congelado",
+   "group": "ground",
+   "minimap_rgb": [
+    176,
+    210,
+    224
+   ],
+   "frames": [
+    "terrain/ice.png"
+   ],
+   "flags": {
+    "walkable": false
+   },
+   "xml": {
+    "description": "Gelo espesso sobre um lago da montanha — fino demais para confiar o peso."
+   }
+  },
+  {
+   "key": "lair_basalt_0",
+   "name": "basalto do covil (1)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    52,
+    48,
+    50
+   ],
+   "frames": [
+    "terrain/basalt_0.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Rocha vulcanica escura, fria ha seculos."
+   }
+  },
+  {
+   "key": "lair_basalt_1",
+   "name": "basalto do covil (2)",
+   "group": "ground",
+   "speed": 100,
+   "minimap_rgb": [
+    52,
+    48,
+    50
+   ],
+   "frames": [
+    "terrain/basalt_1.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Rocha vulcanica escura, fria ha seculos."
+   }
+  },
+  {
+   "key": "ruin_wall_broken",
+   "name": "parede de ruina quebrada",
+   "group": "wall",
+   "frames": [
+    "terrain/stone_wall_broken.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "blocks_projectile": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Um trecho de parede de pedra, desabado e coberto de musgo."
+   },
+   "size": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "basalt_wall_h",
+   "name": "parede de basalto (L-O)",
+   "group": "wall",
+   "frames": [
+    "terrain/basalt_wall_h.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "blocks_projectile": true,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Parede de rocha negra e fria."
+   },
+   "size": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "basalt_wall_v",
+   "name": "parede de basalto (N-S)",
+   "group": "wall",
+   "frames": [
+    "terrain/basalt_wall_v.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "blocks_projectile": true,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Parede de rocha negra e fria."
+   },
+   "size": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "basalt_wall_c",
+   "name": "canto de basalto",
+   "group": "wall",
+   "frames": [
+    "terrain/basalt_wall_c.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "blocks_projectile": true,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Canto de uma parede de rocha negra."
+   },
+   "size": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "pillar_standing",
+   "name": "pilar de pedra",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/pillar_standing.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "blocks_projectile": true,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Um pilar de pedra, ainda de pe entre as ruinas."
+   },
+   "size": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "pillar_fallen",
+   "name": "pilar caido",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/pillar_fallen.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Um pilar de pedra, derrubado ha muito tempo."
+   }
+  },
+  {
+   "key": "broken_puppet",
+   "name": "marionete quebrada",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/broken_puppet.png"
+   ],
+   "flags": {
+    "walkable": true
+   },
+   "xml": {
+    "description": "Uma marionete de guerra, despedacada e imovel."
+   }
+  },
+  {
+   "key": "prayer_flag_post",
+   "name": "poste de bandeiras de oracao",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/prayer_flag_post.png"
+   ],
+   "flags": {
+    "walkable": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Bandeiras de oracao desbotadas pelo vento da montanha."
+   }
+  },
+  {
+   "key": "red_torch",
+   "name": "tocha vermelha",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/torch_pole_red_0.png",
+    "terrain/decor/torch_pole_red_1.png"
+   ],
+   "animation": {
+    "durations": [
+     [
+      500,
+      500
+     ],
+     [
+      420,
+      420
+     ]
+    ]
+   },
+   "light": {
+    "level": 7,
+    "r": 210,
+    "g": 78,
+    "b": 56
+   },
+   "flags": {
+    "walkable": false,
+    "has_height": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Uma tocha de chama avermelhada, sempre acesa."
+   }
+  },
+  {
+   "key": "blood_pool",
+   "name": "poca de sangue",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/blood_pool.png"
+   ],
+   "flags": {
+    "walkable": false
+   },
+   "xml": {
+    "description": "Uma poca de sangue seco no chao de pedra."
+   }
+  },
+  {
+   "key": "lava_pool_cold",
+   "name": "lava fria",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/lava_pool_cold.png"
+   ],
+   "flags": {
+    "walkable": false
+   },
+   "xml": {
+    "description": "Lava ha muito solidificada, ainda morna ao toque."
+   }
+  },
+  {
+   "key": "gate_marker",
+   "name": "limiar de pedra",
+   "group": "decoration",
+   "frames": [
+    "terrain/decor/gate_marker.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "movable": false
+   },
+   "xml": {
+    "description": "Um limiar de pedra gravado, marcando a entrada de outra regiao."
+   }
+  },
+  {
+   "key": "border_snow_rock_n",
+   "name": "borda neve/rocha (n)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_n.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (norte)."
+   }
+  },
+  {
+   "key": "border_snow_rock_s",
+   "name": "borda neve/rocha (s)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_s.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (sul)."
+   }
+  },
+  {
+   "key": "border_snow_rock_e",
+   "name": "borda neve/rocha (e)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_e.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (leste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_w",
+   "name": "borda neve/rocha (w)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_w.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (oeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_cnw",
+   "name": "borda neve/rocha (cnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_cnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto externo noroeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_cne",
+   "name": "borda neve/rocha (cne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_cne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto externo nordeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_csw",
+   "name": "borda neve/rocha (csw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_csw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto externo sudoeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_cse",
+   "name": "borda neve/rocha (cse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_cse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto externo sudeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_icnw",
+   "name": "borda neve/rocha (icnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_icnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto interno noroeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_icne",
+   "name": "borda neve/rocha (icne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_icne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto interno nordeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_icsw",
+   "name": "borda neve/rocha (icsw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_icsw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto interno sudoeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_icse",
+   "name": "borda neve/rocha (icse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_icse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (canto interno sudeste)."
+   }
+  },
+  {
+   "key": "border_snow_rock_n2",
+   "name": "borda neve/rocha (n2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_n2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (norte (variante))."
+   }
+  },
+  {
+   "key": "border_snow_rock_s2",
+   "name": "borda neve/rocha (s2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_s2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (sul (variante))."
+   }
+  },
+  {
+   "key": "border_snow_rock_e2",
+   "name": "borda neve/rocha (e2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_e2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (leste (variante))."
+   }
+  },
+  {
+   "key": "border_snow_rock_w2",
+   "name": "borda neve/rocha (w2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    200,
+    212,
+    220
+   ],
+   "frames": [
+    "terrain/borders/snow_rock_w2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de neve avancando sobre rocha (oeste (variante))."
+   }
+  },
+  {
+   "key": "border_dirt_sand_n",
+   "name": "borda terra/areia (n)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_n.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (norte)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_s",
+   "name": "borda terra/areia (s)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_s.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (sul)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_e",
+   "name": "borda terra/areia (e)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_e.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (leste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_w",
+   "name": "borda terra/areia (w)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_w.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (oeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_cnw",
+   "name": "borda terra/areia (cnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_cnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto externo noroeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_cne",
+   "name": "borda terra/areia (cne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_cne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto externo nordeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_csw",
+   "name": "borda terra/areia (csw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_csw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto externo sudoeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_cse",
+   "name": "borda terra/areia (cse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_cse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto externo sudeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_icnw",
+   "name": "borda terra/areia (icnw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_icnw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto interno noroeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_icne",
+   "name": "borda terra/areia (icne)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_icne.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto interno nordeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_icsw",
+   "name": "borda terra/areia (icsw)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_icsw.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto interno sudoeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_icse",
+   "name": "borda terra/areia (icse)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_icse.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (canto interno sudeste)."
+   }
+  },
+  {
+   "key": "border_dirt_sand_n2",
+   "name": "borda terra/areia (n2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_n2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (norte (variante))."
+   }
+  },
+  {
+   "key": "border_dirt_sand_s2",
+   "name": "borda terra/areia (s2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_s2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (sul (variante))."
+   }
+  },
+  {
+   "key": "border_dirt_sand_e2",
+   "name": "borda terra/areia (e2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_e2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (leste (variante))."
+   }
+  },
+  {
+   "key": "border_dirt_sand_w2",
+   "name": "borda terra/areia (w2)",
+   "group": "decoration",
+   "minimap_rgb": [
+    96,
+    74,
+    52
+   ],
+   "frames": [
+    "terrain/borders/dirt_sand_w2.png"
+   ],
+   "flags": {
+    "walkable": true,
+    "blocks_pathfind": false
+   },
+   "on_top": true,
+   "top_order": 1,
+   "xml": {
+    "description": "Borda de terra avancando sobre areia (oeste (variante))."
+   }
   }
  ],
  "_doc_buildings": "As chaves bld_* sao geradas por tools/spr/slice_buildings.py a partir de assets-src/import/village_buildings.png (material privado, nao versionado). Nao edite a mao: rode o slicer de novo. A arte fica em assets-src/sprites/tiles/buildings/ e os templates em buildings.json.",

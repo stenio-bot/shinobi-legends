@@ -608,6 +608,141 @@ def mooring_post():
     return GT.outline(img)
 
 
+# =========================================================== RUINAS DO CLA MARIONETISTA
+def broken_puppet():
+    """Marionete de guerra quebrada, caida — decor tematico das Ruinas do Cla
+    Marionetista. Entulho: caminhavel, nao bloqueia."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 27, 10, 3, GT.SHADOW)
+    wood = GT.P_WOOD
+    GT.rect(img, 8, 20, 22, 25, wood[2])                  # corpo caido de lado
+    GT.rect(img, 8, 20, 22, 21, wood[3])
+    GT.rect(img, 8, 24, 22, 25, GT.shade(wood[0], -6))
+    GT.ellipse(img, 6, 21, 4, 4, (214, 202, 178, 255))     # cabeca/mascara rachada
+    GT.put(img, 5, 20, (60, 54, 46, 255), wrap=False)
+    GT.put(img, 6, 22, (60, 54, 46, 255), wrap=False)
+    GT.rect(img, 22, 16, 27, 18, wood[1])                 # braco solto, angulo quebrado
+    GT.rect(img, 24, 12, 26, 17, wood[1])
+    GT.rect(img, 4, 25, 9, 27, wood[0])
+    rnd = GT.Rnd(6900)
+    for (x0, y0) in ((10, 8), (18, 6), (24, 10)):          # fios de marionete arrebentados
+        for k in range(6):
+            GT.put(img, x0 + k // 2, y0 + k, (176, 168, 140, 255), wrap=False)
+    for (x, y) in ((11, 22), (17, 21), (14, 24)):
+        GT.put(img, x, y, GT.shade(wood[0], -20), wrap=False)
+    return GT.outline(img)
+
+
+def pillar_fallen():
+    """Pilar de pedra caido — entulho, caminhavel."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 25, 13, 3, GT.SHADOW)
+    for i, c in enumerate(GT.P_STONE[:4]):
+        GT.rect(img, 4 + i, 18 - i, 28 - i, 23 - i, c)
+    for k in range(3):                                    # aneis do fuste (tambor de pedra)
+        x = 6 + k * 8
+        GT.rect(img, x, 17, x, 24, GT.shade(GT.P_STONE[0], -18))
+    GT.put(img, 24, 19, GT.shade(GT.P_STONE[0], -22), wrap=False)
+    return GT.outline(img)
+
+
+def pillar_standing():
+    """Pilar de pedra de pe, alto — bloqueia (sala do boss das Ruinas)."""
+    img = Image.new("RGBA", (CELL, 64), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 60, 10, 3, GT.SHADOW)
+    for i, c in enumerate(GT.P_STONE[:4]):
+        GT.rect(img, 10 + i, 6, 22 - i, 60, c)
+    GT.rect(img, 8, 4, 24, 8, GT.P_STONE[3])              # capitel
+    GT.rect(img, 8, 56, 24, 61, GT.P_STONE[1])            # base
+    for y in range(10, 56, 6):                            # aneis/juntas
+        GT.rect(img, 11, y, 21, y, GT.shade(GT.P_STONE[0], -14))
+    return GT.outline(img)
+
+
+# =========================================================== MONTANHA DO TROVAO
+#: bandeiras de oracao — 5 cores tradicionais em tom FOSCO/desbotado (regra
+#: "nunca neon" do projeto): vermelho, azul, amarelo, branco, verde.
+_PRAYER_COLORS = [(158, 60, 54, 255), (70, 92, 120, 255), (168, 150, 70, 255),
+                  (206, 200, 186, 255), (74, 108, 70, 255)]
+
+
+def prayer_flag_post():
+    """Poste com bandeiras de oracao no topo da Montanha do Trovao — bloqueia
+    (como um poste de tocha)."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 29, 5, 2, GT.SHADOW)
+    GT.rect(img, 15, 6, 17, 29, GT.P_BARK[2])
+    GT.rect(img, 15, 6, 15, 29, GT.P_BARK[1])
+    rope = (176, 168, 140, 255)
+    GT.rect(img, 4, 6, 28, 7, rope)
+    for i, c in enumerate(_PRAYER_COLORS):
+        x0 = 4 + i * 5
+        GT.rect(img, x0, 7, x0 + 3, 12, c)
+        GT.rect(img, x0, 12, x0 + 3, 12, GT.shade(c, -20))
+        GT.put(img, x0 + 1, 13, GT.shade(c, -10), wrap=False)
+    return GT.outline(img)
+
+
+def torch_pole_red(phase):
+    """Tocha de rua em poste com chama VERMELHA (Covil da Nuvem Vermelha) —
+    variante de `torch_pole`, tom de fogo escurecido/avermelhado, nunca neon."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    rnd = GT.Rnd(8900 + phase)
+    GT.ellipse(img, 16, 29, 7, 3, GT.SHADOW)
+    GT.rect(img, 14, 14, 18, 29, GT.P_BARK[2])
+    GT.rect(img, 14, 14, 15, 29, GT.P_BARK[1])
+    GT.rect(img, 11, 11, 21, 15, (60, 46, 46, 255))
+    GT.rect(img, 11, 11, 21, 12, (90, 70, 70, 255))
+    k = 0 if phase == 0 else 1
+    GT.ellipse(img, 16, 6 - k, 6, 8 + k, (168, 40, 34, 255))
+    GT.ellipse(img, 16, 7 - k, 4, 6, (206, 70, 46, 255))
+    GT.ellipse(img, 16 + (1 if k else -1), 8 - k, 2, 4, (232, 120, 80, 255))
+    for _ in range(4):
+        GT.put(img, 13 + rnd.i(7), rnd.i(6), (222, 96, 60, 255), wrap=False)
+    return img
+
+
+# =========================================================== COVIL DA NUVEM VERMELHA
+def blood_pool():
+    """Poca de sangue seco/escuro — nao caminhavel. Tom terroso escuro (nunca
+    vermelho vivo/neon), decor de horror comedido."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 20, 11, 6, (46, 16, 14, 255))
+    GT.ellipse(img, 16, 19, 8, 4.4, (66, 22, 18, 255))
+    GT.ellipse(img, 14, 17, 3, 1.6, GT.shade((66, 22, 18, 255), 14))
+    for k in range(4):
+        GT.put(img, 16 + (k % 3) - 1, 24 + k, (46, 16, 14, 255), wrap=False)
+    return img
+
+
+def lava_pool_cold():
+    """Lava fria (solidificada, brilho residual esmaecido) — nao caminhavel."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.ellipse(img, 16, 20, 12, 6, (30, 24, 24, 255))
+    GT.ellipse(img, 16, 19, 9, 4.6, (48, 30, 26, 255))
+    rnd = GT.Rnd(3700)
+    for _ in range(6):                                     # veios residuais de calor
+        x = 10 + rnd.i(12)
+        y = 17 + rnd.i(5)
+        GT.put(img, x, y, (108, 48, 34, 255), wrap=False)
+    return img
+
+
+def gate_marker():
+    """Limiar de pedra baixo, gravado — marca visual de entrada de regiao
+    (carrega o actionid do gate de rank; ver tools/map/build_regions.py).
+    Walkable: nao bloqueia, so avisa (analogo ao torii_gate da vila)."""
+    img = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    GT.rect(img, 3, 24, 28, 29, GT.P_STONE[1])
+    GT.rect(img, 3, 24, 28, 25, GT.P_STONE[3])
+    GT.rect(img, 3, 28, 28, 29, GT.shade(GT.P_STONE[0], -14))
+    for x in (3, 28):
+        GT.rect(img, x, 20, x, 29, GT.P_STONE[2])
+    for x in range(8, 24, 4):                              # gravura simbolica no meio
+        GT.put(img, x, 26, GT.shade(GT.P_STONE[4], 10), wrap=False)
+    return GT.outline(img)
+
+
 def driftwood():
     """Galho de madeira encalhado, esbranquiçado pelo sal (paleta propria,
     mais clara/acinzentada que `P_BARK`/`P_WOOD`). 1a versao usava so' 1px de
@@ -727,6 +862,26 @@ def build():
 
     save(driftwood(), "driftwood")
     bump("madeira encalhada", 1)
+
+    save(broken_puppet(), "broken_puppet")
+    bump("marionete quebrada", 1)
+    save(pillar_fallen(), "pillar_fallen")
+    bump("pilar caido", 1)
+    save(pillar_standing(), "pillar_standing")
+    bump("pilar de pe", 1)
+
+    save(prayer_flag_post(), "prayer_flag_post")
+    bump("poste de bandeiras de oracao", 1)
+    save(torch_pole_red(0), "torch_pole_red_0")
+    save(torch_pole_red(1), "torch_pole_red_1")
+    bump("tocha vermelha (fases)", 2)
+
+    save(blood_pool(), "blood_pool")
+    bump("poca de sangue", 1)
+    save(lava_pool_cold(), "lava_pool_cold")
+    bump("lava fria", 1)
+    save(gate_marker(), "gate_marker")
+    bump("limiar de gate de rank", 1)
 
     total = sum(n.values())
     print("decoracao -> %s" % OUT_DIR)

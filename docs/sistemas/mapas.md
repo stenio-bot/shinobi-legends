@@ -1155,3 +1155,168 @@ Log do servidor sem novos `[Warning - Items::…]`. `tools/spr/dump_dat.py`
 (`RESULTADO: OK`) e `tools/map/walk_audit.py` (0 divergências novas —
 as 2 únicas divergências reportadas são portas fechadas pré-existentes,
 não relacionadas a esta missão) rodados após o build.
+
+## Mapa v3 (2026-09-05) — NPCs sem posição, gates de rank, identidade visual das 3 regiões
+
+Continuação de uma missão interrompida (limite de API do agente anterior).
+O agente anterior já tinha deixado prontos (achado ao ler o diff não
+commitado, validado nesta missão): as texturas de piso por região
+(`tools/spr/gen_terrain.py` — `crackstone_*` Ruínas, `rock_*`/`snow_*`/`ice`
+Montanha, `basalt_*`/`basalt_wall_*` Covil, `stone_wall_broken`), o decor
+temático (`tools/spr/gen_decor.py` — marionete quebrada, pilares, bandeiras
+de oração, tochas vermelhas, poças de sangue/lava fria, `gate_marker`), o
+par de borda `snow_rock`, o redesign físico das Ruínas (corredor + 3 salas +
+pátio central + salão do boss com 2 pilares) e da Montanha (2 patamares,
+lago gelado, santuário separado da arena), os 6 gates de rank (Chunin na
+Costa/Ruínas, Jonin na Montanha, Anbu já existia no portal do Covil) e 7 dos
+8 NPCs pedidos (só faltava Mestre de Tarefas Kuro no Covil). **Não redescartei
+nada disso** — só consertei o que faltava rodar/validar:
+
+1. **Bug de build (`tools/spr/tiles.json`)**: `ruin_wall_broken`,
+   `basalt_wall_h/v/c` e `pillar_standing` tinham `"height": 64` (campo não
+   consumido por `tools/spr/tiles.py` — só `flags.has_height` conta pro OTB)
+   mas PNG 32×64 sem `"size": [1, 2]` declarado; `build_assets.py` falhava
+   com `ValueError` no primeiro desses itens. Corrigido: os 5 ganharam
+   `"size": [1, 2]` (largura 1 tile, altura 2 tiles = 64px, a sprite "alta de
+   1 tile só" do Tibia) no lugar do `"height"` morto.
+2. **Bug de conectividade na Montanha (`tools/map/build_regions.py`,
+   `build_mountain`)**: a trilha "balança" de largura (`wobble`, período 14
+   linhas) e o 1º patamar (`y0+14`) caía EXATAMENTE numa transição de
+   período — o gap da parede, calculado só a partir da própria linha, ficava
+   fora da faixa caminhável da linha vizinha (norte OU sul), virando um
+   "beco sem saída": a passagem "única" na prática NUNCA conectava os dois
+   lados, isolando todo o planalto (santuário + arena + portal do Covil) do
+   resto do mapa. Corrigido: o gap agora usa a INTERSECÇÃO das faixas de
+   `y-1`/`y`/`y+1` (`_band_at`), garantindo que a passagem sempre atravessa
+   de verdade. O lago gelado tinha o mesmo risco (calculava a coluna uma vez
+   só, com `cx` fixo) — trocado por cálculo por linha, sempre deixando o
+   lado OESTE livre. Os centros de spawn de monstro (Águia/Oni/Monge/
+   Serpente) também caíam eventualmente em cima do muro novo ou do gelo
+   (`blockSolid`/não-caminhável) — a lista de offsets perdeu o `dy=±2` e o
+   posicionamento agora pula linhas de perigo (patamar OU lago ±1).
+   `python tools/map/build_valley.py` foi de "BUILD FALHOU (48 problemas)"
+   para 0 problemas depois dessas duas correções.
+3. **Covil da Nuvem Vermelha redesenhado** (`build_akatsuki_lair`, era só
+   `STONE_FLOOR`/`STONE_WALL_*`/tocha branca genérica, sem identidade — o
+   único item da missão original ainda não tocado pelo agente anterior):
+   piso e paredes de basalto (`lair_basalt_0/1`, `basalt_wall_h/v/c`),
+   tochas vermelhas (`red_torch`, luz avermelhada) no lugar da tocha branca,
+   poças de sangue/lava fria (`blood_pool`/`lava_pool_cold`) como decor NÃO
+   caminhável em cantos vazios do hall/salas/corredor (nunca em cima de
+   NPC/porta/pad/centro de spawn), e uma **antecâmara de 1 tile** (parede +
+   porta própria, separada da câmara do boss) antes de CADA uma das 4 salas
+   de boss (3 salas menores + a sala final grande) — pedido explícito da
+   missão que ainda não existia. Gate de rank do Covil continua o mesmo
+   (actionid 45004, no portal da Montanha — a masmorra em si não tem outra
+   entrada, então não precisa de gate próprio).
+4. **NPC que faltava**: Mestre de Tarefas Kuro (`task_master_lair`,
+   `data/npcs/akatsuki_lair.json`) posicionado no hall do Covil, em
+   **(1406, 1014)** — mesmo x/y que já estava documentado no JSON (só
+   faltava o spawn físico no mapa).
+5. **Par de autoborder `dirt_sand`** (pedido da missão: "estrada de terra
+   termina em corte reto na areia"): na hierarquia `água < areia < lama <
+   terra < grama < cobble`, terra (`dirt`) é mais ALTA que areia (`sand`),
+   então o par é `dirt_sand` (terra invade areia), convenção `<alto>_<baixo>`
+   de sempre. 16 peças novas em `tools/spr/gen_borders.py` (textura do
+   material alto = `GT.dirt(1)`, mesma receita dos outros pares) + entradas
+   em `tiles.json` + `BORDER_INVADERS["sand"] = ("grass", "dirt")` /
+   `BORDER_PAIR_KEY[("dirt","sand")] = "dirt_sand"` em `build_valley.py`.
+   **Não precisou de código específico de região** — `apply_borders()` já
+   varre o mapa inteiro por adjacência de material, então a borda nova
+   apareceu sozinha nos 11 tiles onde a trilha de terra da Costa das Marés
+   encosta no pátio de areia da vila de pescadores (em torno de
+   `(1027-1031, 1140-1143)`), confirmado lendo o `.otbm` gerado.
+
+### NPCs (Missão A.1) — posições finais
+
+| NPC | Tipo | Região | Posição (x, y, 7) |
+|---|---|---|---|
+| Mestre de Tarefas Jiro | `task_master_leaf` | Vila da Folha (Portão Sul) | 1030, 1067 |
+| Mestre de Tarefas Ren | `task_master_swamp` | Hub do Pântano (antes da Floresta da Morte) | 1137, 1057 |
+| Quadro de Missões | `dailies_board_leaf` | Praça da vila, canto nordeste do templo | 1035, 1040 |
+| Instrutora Ibuki | `exam_proctor_forest` | Academia (já existia antes desta missão) | 1018, 1048 |
+| Mestre de Tarefas Dokan | `task_master_ruins` | Ruínas, logo após o gate de rank | 1202, 1020 |
+| Mestre de Tarefas Kaji | `task_master_mountain` | Montanha, pé da trilha após o gate | 1228, 1062 |
+| Mestre de Tarefas Umi | `task_master_coastal` | Costa das Marés, vila de pescadores | 1029, 1147 |
+| Mestre de Tarefas Kuro | `task_master_lair` | Covil, hall de entrada | 1406, 1014 |
+
+Todos os 17 NPCs (os 8 acima + os 9 pré-existentes) confirmados no
+`valley-spawn.xml` gerado e no tour in-game (ver "Validação in-game v3"
+abaixo).
+
+### Gates de rank (Missão A.2) — cobertura final
+
+| Região | Rank mínimo | actionid | Onde (largura cobre toda a entrada) |
+|---|---|---|---|
+| Floresta da Morte | — (Genin, de propósito) | — | Sem gate físico: o Exame Chunin roda DENTRO dela (Instrutora Ibuki manda matar Sapo Ancião/Serpente Branca lá dentro) — gatear a entrada por Chunin criaria paradoxo (precisa entrar pra virar Chunin, só Chunin entra). Decisão do agente anterior, mantida por ser exatamente a exceção que a missão previu ("se o lore não disser: Floresta da Morte = Genin com quest"). |
+| Costa das Marés | Chunin | 45002 | (1028-1030, 1120) — 3 marcadores `gate_marker`, largura da trilha |
+| Ruínas do Clã Marionetista | Chunin | 45002 | (1200, 1020) e (1200, 1021) — 2 marcadores, largura do corredor de entrada |
+| Montanha do Trovão | Jonin | 45003 | (1224-1226, 1060) — 3 marcadores, largura do corredor vindo das Ruínas |
+| Covil da Nuvem Vermelha | Anbu | 45004 | Teleporte gated em (1225, 1103), no topo da Montanha — única entrada da masmorra, já existia antes desta missão |
+| (Kage, 45005) | Kage | 45005 | Não usado: `data/ranks.json` não lista nenhuma área nova pro Kage (fim da progressão) |
+
+`server/generated/scripts/naruto/rank_gate.lua` (MoveEvent `stepin`) lê o
+actionid do TILE (não de item empilhado) — confirmado lendo o gerador:
+`gate:aid(45001..45005)`, sem `itemid`. Testado com as duas contas: `god`/
+`god` atravessa sem checagem (é GM); `teste`/`teste` (personagem Naruto,
+level 7, rank Genin) foi barrado tentando entrar nas Ruínas, com a mensagem
+de cancelamento e teleporte de volta — ver "Validação in-game v3" abaixo.
+
+> **Bug encontrado e corrigido (`tools/export_tfs.py`, gerador de
+> `rank_gate.lua`)**: como nenhuma missão anterior tinha colocado um
+> actionid 45001-45005 num tile de verdade (o script existia mas nunca
+> rodava — "fallback: no-op"), ninguém tinha notado que `gate.onStepIn`
+> não checava se quem pisou é um jogador. Um monstro perseguindo o
+> personagem (a Serpente Branca, na fronteira Floresta da Morte/Ruínas)
+> pisou no tile do gate e `NarutoRanks.get(monstro)` explodiu com
+> `attempt to call method 'getStorageValue' (a nil value)` (Creature/Monster
+> não tem esse método, só Player) — 6 erros no log do servidor durante o
+> 1º teste. Corrigido com `if not player:isPlayer() then return true end`
+> no início de `onStepIn`; reinstalado (`export_tfs.py` → `install_generated.sh`
+> → `pkill -x tfs` + subir de novo) e reconfirmado com um 2º teste de gate:
+> mesma mensagem de bloqueio, **0 erros no log**.
+
+### Validação in-game v3 (`client-otc/tests/mapa_v3_tour_rc.lua` e `mapa_v3_gate_rc.lua`)
+
+Servidor reiniciado com o mapa/assets novos (`build_assets.py` →
+`build_valley.py` → `install_generated.sh` + cópia manual de
+`valley.otbm`/`valley-spawn.xml`/`valley-house.xml` pra
+`server/tfs/data/world/` + `pkill -x tfs` + subir de novo), confirmado
+`nc -z 127.0.0.1 7171` antes do tour. 21 screenshots `screenshots/mapa_v3_*.png`:
+
+| # | Ponto | Confirmado no screenshot |
+|---|---|---|
+| 01-03 | Ruínas (pátio central, salão do boss, câmara norte) | piso rachado `crackstone`, paredes quebradas com musgo, pilares caídos/de pé, marionete quebrada |
+| 04-06 | Montanha (patamar+lago, santuário, arena+portal) | muro de rocha com vão único, lago gelado (gelo azul-claro), estátua+lanternas do santuário, monstros vivos e alcançáveis (Águia/Oni/Monge/Serpente) |
+| 07-09 | Covil (hall, antecâmara+sala 1, sala final) | basalto escuro, tochas vermelhas, poças de sangue, **O Vigia Ilusório vivo** no fim da antecâmara, monstros de corredor (Clone Branco/Ninja Elite da Aurora) patrulhando |
+| 10-17 | Os 8 NPCs (Quadro de Missões, Jiro, Ibuki, Ren, Umi, Dokan, Kaji, **Kuro**) | todos visíveis e nomeados na tela, no ponto exato da tabela acima — `mapa_v3_17_npc_kuro.png` confirma Kuro ao lado de Suzu/Enji no hall do Covil |
+| 18 | Borda `dirt_sand` (Costa das Marés) | transição terra→areia ondulada, sem corte reto |
+| 19-21 | Gate de rank, 1ª tentativa (conta `teste`) | posição inicial perto do gate das Ruínas — a Serpente Branca (boss da clareira vizinha) matou o personagem antes de ele pisar no tile do gate; inconclusivo por si só, mas confirmou o rank "Genin da vila" no painel de atributos |
+| 20b-21b | Gate de rank, 2ª tentativa (conta `teste`, reposicionado 1 tile a oeste do gate via SQL pra reduzir exposição ao boss) | personagem NÃO atravessa (posição antes/depois idêntica, 1199,1020), mensagem "Você precisa ser Chunin — aprovado no Exame Chunin para entrar aqui." (log `GATEV3B` em `/tmp/otc_gatev3c.log`) — screenshot mostra o personagem, a Serpente Branca e o **Mestre de Tarefas Dokan** visível do outro lado do gate |
+
+Log do servidor sem erros/avisos novos durante as duas sessões (só os 3
+avisos pré-existentes de `areaEffect: energyhit`, não relacionados a esta
+missão). Pipeline completo rodado limpo antes do tour: `build_assets.py`
+(sem processo concorrente), `dump_dat.py` (`validacao: OK, divergencias=0`),
+`test_otb_roundtrip.py` (`RESULTADO: OK`), `build_valley.py` (0 problemas),
+`walk_audit.py` (2 divergências, ambas as portas fechadas já conhecidas —
+nenhuma nova).
+
+### Limitações honestas
+
+- A conta `teste` teve a posição salva (`posx`/`posy`/`posz` na tabela
+  `players`) ajustada manualmente via SQL pra ficar perto do gate das
+  Ruínas antes do teste — sem isso o personagem (level 7, nunca esteve
+  perto de x=1200) levaria muitos saltos de `autoWalk` em área não vista
+  pra chegar lá (ver nota de `walk_audit.py` sobre autoWalk não alcançar
+  alvos fora da tela). É uma mudança de dado de teste (conta de QA, não de
+  usuário real), não do mapa.
+- A antecâmara do Covil ficou com só 1 tile de profundidade (não 2), porque
+  as salas de boss originais já eram rasas (~5-7 tiles) e uma antecâmara
+  maior deixaria pouco espaço pro raio de spawn do boss; o raio de spawn
+  dos 3 bosses menores foi reduzido de 2 para 1 tile por isso.
+- Não recontei manualmente os 406 bolsões pequenos inalcançáveis
+  pré-existentes (mencionados na seção "Pendências" acima) nem investiguei
+  se as mudanças desta missão criaram bolsões NOVOS do mesmo tipo — só
+  validei que o `%` de alcançável do templo continua alto (89.9%) e que
+  `validate()` não reporta nenhum centro de spawn/NPC/criatura inalcançável.

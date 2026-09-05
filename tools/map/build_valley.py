@@ -88,7 +88,10 @@ BORDER_INVADERS = {
     "dirt": ("grass", "cobble"),
     "water": ("grass", "sand"),
     "mud": ("grass",),
-    "sand": ("grass",),
+    # "grass" (estrada de terra que vira grama) ja existia; "dirt" e' o par
+    # NOVO da Missão B (docs/sistemas/mapas.md#autoborder v3): estrada de
+    # terra que termina em corte reto na areia da Costa das Mares.
+    "sand": ("grass", "dirt"),
 }
 BORDER_PAIR_KEY = {
     ("grass", "dirt"): "grass_dirt",
@@ -97,6 +100,7 @@ BORDER_PAIR_KEY = {
     ("cobble", "dirt"): "cobble_dirt",
     ("grass", "sand"): "grass_sand",
     ("sand", "water"): "sand_water",
+    ("dirt", "sand"): "dirt_sand",
 }
 BORDER_PIECES = ("n", "s", "e", "w", "cnw", "cne", "csw", "cse",
                  "icnw", "icne", "icsw", "icse")
@@ -665,6 +669,11 @@ def build(tpls, sid):
     b.put(GATE_X[1], GATE_Y + 1, sid["torii_gate"])
     b.put(GATE_X[0] - 3, GATE_Y + 2, SIGN,
           text="Vila da Folha\nPortao Sul -> avenida principal -> praca -> Torre do Hokage")
+    # Mestre de Tarefas Jiro (task_master_leaf, data/npcs/leaf.json) — posição
+    # calculada aqui (perto do Portão Sul), NPC anexado a `npcs` mais abaixo
+    # (a lista só é criada depois, na seção dos prédios importados).
+    jiro_pos = (GATE_X[1], GATE_Y - 2)
+    b.clear_items(*jiro_pos)
 
     # -- 6.2 ruas: avenida N-S (portao sul - praca - torre) + rua comercial
     for x in range(ROAD_V[0], ROAD_V[1] + 1):
@@ -704,6 +713,17 @@ def build(tpls, sid):
     # DENTRO de uma sala separada (build_shop_interiors), ligada por
     # teleporte na célula em frente à porta.
     npcs = []
+
+    # Quadro de Missões (dailies_board_leaf, data/npcs/leaf.json) — na praça
+    # da vila, perto do templo (canto nordeste do prédio, longe da
+    # fonte/bancos do pátio sul e do caminho até a porta).
+    board_pos = (TEMPLE[2] + 2, TEMPLE[1] + 2)
+    b.clear_items(*board_pos)
+    npcs.append(("Quadro de Missões", board_pos))
+
+    # Mestre de Tarefas Jiro (task_master_leaf) — posição calculada na seção
+    # do Portão Sul (ver `jiro_pos` acima).
+    npcs.append(("Mestre de Tarefas Jiro", jiro_pos))
 
     # -- 6.4 torre do Hokage ao norte da praca (o templo continua a PZ) ----
     tower_door = stamp_building(b, tpls, sid, "tower", 1027, 1036)
@@ -811,6 +831,10 @@ def build(tpls, sid):
     stamp_building(b, tpls, sid, "shop_east", 1132, 1062, ground=STONE_FLOOR)
     npcs.append(("Velha Sumi", (HUB[0] + 2, HUB[1] + 2)))
     npcs.append(("Rastreador Goro", (HUB[0] + 4, HUB[1] + 3)))
+    # Mestre de Tarefas Ren (task_master_swamp, data/npcs/leaf.json) — no
+    # hub, base segura logo antes do portão da Floresta da Morte.
+    b.clear_items(HUB[0] + 6, HUB[1] + 2)
+    npcs.append(("Mestre de Tarefas Ren", (HUB[0] + 6, HUB[1] + 2)))
 
     # 8. torre de pedra do Sapo Ancião ------------------------------------
     b.building(TOWER[0], TOWER[1], TOWER[2], TOWER[3], STONE_FLOOR,
