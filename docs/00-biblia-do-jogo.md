@@ -190,6 +190,39 @@ Chunin sai vivo — este é o teste final antes do posto de Kage. Derrotar os do
 Exame Anbu; derrotar os dois últimos fecha o Exame Kage e encerra a progressão de rank do jogo
 hoje (o posto político de Kage de verdade fica para o pós-jogo, Marco 5).
 
+### Ganchos de saída e a semente da Nuvem Vermelha, arco por arco **(novo, 2026-09-05)**
+
+Resposta à auditoria narrativa (`docs/design/auditoria-historia.md`, achado central: a Nuvem
+Vermelha "só aparecia como resposta de quiz na Montanha"): os 4 lotes de história do dia
+(`1439749`, `6f0893f`, `006f3c3`, `0dc49a5`) plantam a organização e um gancho de saída (fala de
+NPC que empurra o jogador pro próximo arco) em cada um dos 6 arcos, não só no fim:
+
+1. **Floresta da Vila.** O Chefe dos Bandidos, a 50% HP, entrega a semente sem saber o que é:
+   *"Essa 'nuvem vermelha' que anda nos vigiando não fui eu quem escolhi, moleque — fui só
+   pago."* `done_text` de Capitã Rin (`q_bandit_chief`) já empurra pra Floresta da Morte e Costa.
+2. **Costa das Marés.** O Espadachim da Névoa, a 60% HP, revela o Aprendiz Mascarado como algo
+   mais que um subordinado: *"ele não luta por dinheiro, luta por mim."* Rastreador Goro e
+   Instrutora Ibuki referenciam a mesma prova (matar o Sapo Ancião sozinho, "sem pergaminho em
+   jogo, só glória") antes do Exame Chunin oficial cobrar a mesma coisa.
+3. **Floresta da Morte.** A Serpente Branca carrega uma fala velada sobre o próprio passado;
+   `done_text` da Instrutora Ibuki no fim do Exame Chunin aponta pra Costa (se ainda não visitada)
+   e Ruínas.
+4. **Ruínas do Clã Marionetista.** O Marionetista, a 15% HP (última fase, `attack_multiplier
+   1.5`), revela a organização por nome: *"A Nuvem Vermelha prometeu poder a quem guardasse este
+   templo até o fim — e é isso que vou fazer."* Gancho de saída aponta pra Montanha.
+5. **Montanha do Trovão.** Mestra Yuki **ensina a resposta antes de perguntar**: o texto de oferta
+   de `q_mountain_lore` já entrega a informação ("uma dupla que a Nuvem Vermelha já usou contra
+   vilas inteiras, há uma geração, ainda na Grande Guerra") antes do `keyword_quiz` cobrar de
+   volta — decisão de design pra não travar o jogador numa pergunta sem pista. O Sócio Eterno
+   invoca Serpentes de Magma na fase intermediária (50% HP). Gancho de saída aponta pro Covil.
+6. **Covil da Nuvem Vermelha.** Quiz de fechamento; o Portador dos Seis Caminhos invoca Caminhos
+   Invocados, o Ancestral da Nuvem Vermelha invoca um Eco Carmesim e revela a Grande Guerra por
+   nome na última fase: *"A Grande Guerra nunca terminou. Só mudou de nome."* Falas de
+   encerramento e a promoção a Kage fecham a progressão de rank.
+
+Validado in-game nos 2 playtests de história do dia (`docs/qa/playtest-historia-arcos1-3.md`,
+`-arcos4-6.md`): todas as falas de fase e `done_text` acima foram vistas em tela, não só no dado.
+
 ### Mentores e figuras principais
 
 Os poucos looktypes de personagem principal (900–926, ver seção 9) que aparecem fora dos 9
@@ -299,17 +332,23 @@ mais rápido que as demais (`village_bonus_multiplier: 1.2`).
 
 ### Chakra
 
-*Fonte: `data/progression.json`, atualizado na rodada 5 de balanceamento
-(`docs/sistemas/balanceamento-relatorio-v5.md`).* `Chakra máximo = 100 + level*10` (era
+*Fonte: `data/progression.json`, atualizado na rodada 5 de balanceamento e reajustado de novo na
+rodada 7 (`docs/sistemas/balanceamento-relatorio-v7.md`).* `Chakra máximo = 100 + level*10` (era
 `50 + level*10` — o piso de chakra inicial do Genin subiu de 60 para 110 no primeiro login).
 Regen passivo **escala com level** desde a rodada 5 (era fixo, 0,6 chakra/s em qualquer nível):
 `3 + level÷4` a cada 2s — um Genin L1 recupera o pool inteiro parado em ~73s; um Kage L100,
 em ~79s. Os 5 jutsus tier 1 elementais (o projétil básico de cada elemento) custam uma
-**porcentagem do chakra máximo** (2,5–3,0%, não mais um número fixo) — escala automaticamente
-com o pool em qualquer nível, resolvendo o problema de custo fixo ficar desproporcional entre
-Genin (pool pequeno) e Kage (pool grande). Pílulas de chakra (pequena/média/grande, ver seção
-5) continuam o lever real de combate para estender uma rotação de jutsus tier 2/3 (custo fixo,
-inalterado) numa luta longa.
+**porcentagem do chakra máximo** — **12–14% desde a rodada 7** (era 2,5–3,0% nas rodadas 5/6):
+o playtest r5 (`docs/qa/playtest-l1-20-r5.md`) mediu ao vivo que com 2,5–3,0% o chakra nunca saía
+de 108-110/110 em 9 casts seguidos no L1 (a regen entre casts, com cooldown 9,0s, já era maior
+que o próprio custo) — a rodada 7 escalou os 5 valores ~4,7× (proporção relativa entre elementos
+preservada) pra fechar a meta de 6-8 casts por pool cheio (era 36-55) sem tocar cooldown/regen.
+**Achado importante, não fechado**: numa caçada híbrida (arma+jutsu) sustentada de 30 min, o jutsu
+é lançado raro demais (cadência calibrada na rodada 6, `HYBRID_JUTSU_CADENCE_FRAC=0,22`) para
+qualquer custo dentro da faixa permitida criar pressão real de recurso — a meta de 15-25% do tempo
+sem chakra continua em 0% (ver relatório v7 §5 pra prova matemática e a alavanca que fecharia,
+ainda não aplicada). Pílulas de chakra (pequena/média/grande, ver seção 5) continuam o lever real
+de combate para estender uma rotação de jutsus tier 2/3 (custo fixo, inalterado) numa luta longa.
 
 ---
 
@@ -361,6 +400,18 @@ exigem preparo) — o XP/h da tabela é resultado, não um valor arbitrado à pa
 
 A fórmula de XP em si (`50*level² + 50*level`) **não foi alterada** para produzir essa curva — o
 ajuste inteiro está nas horas-por-bloco esperadas (eficiência de caça), não no expoente da fórmula.
+
+### Costa das Marés não exige mais Chunin (Lote M, `0dc49a5`)
+
+A tabela acima já reflete a ordem pretendida da história (Costa jogável nos blocos 11–20, antes do
+Exame Chunin fechar no bloco 21–25) — mas até o Lote M de hoje o gate físico da região (actionid)
+exigia rank **Chunin**, um paradoxo que trancava a Costa atrás do próprio exame que ela deveria
+preceder (achado #1 da auditoria narrativa). Corrigido em `build_regions.py::build_coastal_tides`:
+o gate trocou de `"chunin"` (45002) para `"genin"` (45001, novo) — como todo jogador já nasce
+Genin, o item físico continua na entrada (mesma posição, mesma placa reescrita como sugestão de
+nível, não requisito) mas nunca mais barra ninguém. `data/ranks.json` ainda lista
+`costa_das_mares` em `unlocks.areas` do rank Chunin — dado órfão que só afeta o comando de debug
+`/sl canenter`, não o gate real (ver `docs/sistemas/mapas.md`, "A1").
 
 ---
 
@@ -450,12 +501,22 @@ Cada elemento segue a mesma estrutura de 4 papéis (ver seção 3 e tabela compl
 Quatro categorias de `behavior`: **agressivo** (persegue e ataca sozinho), **passivo** (só briga se
 atacado — hoje só o Cervo), **covarde** (foge abaixo de 20% HP) e **à distância** (mantém alcance,
 atira). Bosses têm `phases`: gatilhos por % de HP que disparam fala, invocação de reforços ou
-transformação visual (`looktype`). O TFS 1.4.2 não permite mudar o dano dos ataques de um monstro
-em tempo real, então a "fase de fúria" é aproximada por cura percentual + aumento de velocidade
-(mais golpes por minuto), documentado como limitação técnica conhecida, não escondida. Exemplo
-completo: a **Serpente Branca** (L25, 4600 HP) tem 3 fases — forma humana (ataque com veneno),
-transformação em serpente 2×2 a 60% de vida (invoca 3 Cobras da Floresta) e fúria a 25% (invoca 2
-Serpentes Menores, +90% de velocidade efetiva).
+transformação visual (`looktype`). O TFS 1.4.2 não deixa reescrever a lista de ataques/spells de um
+monstro em runtime (lida uma única vez do XML no carregamento) — mas desde hoje (`87c19a1`) a
+"fase de fúria" multiplica dano de **verdade**, não só cura+velocidade como antes: o
+`attack_multiplier` de uma fase publica um estado (`NarutoBossPhases`) que o `CreatureEvent
+onHealthChange` do **jogador** (não do monstro — é o jogador que recebe o evento quando o boss
+acerta nele) lê para multiplicar `primaryDamage`/`secondaryDamage` de verdade antes do dano ser
+aplicado (`NarutoBossFury`, `server/generated/scripts/naruto/boss_phases.lua`), cobrindo dano
+melee e de spell do boss por igual. Summons invocados na fase não herdam o multiplicador — só o
+boss original. Cura percentual e aumento de velocidade continuam valendo em cima disso (mais
+golpes por minuto). Testado em 19 casos headless (`tools/tests/test_boss_fury_headless.lua`,
+`tools/tests/run_boss_fury_tests.sh`). Exemplo completo: a **Serpente Branca** (L25, 4600 HP) tem
+3 fases — forma humana (ataque com veneno), transformação em serpente 2×2 a 60% de vida (invoca 3
+Cobras da Floresta) e fúria a 25% (`attack_multiplier 1,9`: dano real ×1,9 + cura pontual +9% +
+velocidade, invoca 2 Serpentes Menores). Efeito colateral: como cura/velocidade já compensavam a
+FALTA de dano real, somar o multiplicador de verdade em cima sobe o TTK de boss acima do
+calibrado nas rodadas 5/6 — recalibração de `attack_multiplier` fica para a rodada 8.
 
 ### Itens, tiers, loot e economia
 
@@ -467,6 +528,20 @@ capacidade). Cada set de armadura é dimensionado por faixa de nível (L1, 10, 2
 acompanhando a jornada da seção 4. Economia: ryo cai de monstro (~N×3 em média) e é ganho vendendo
 loot a NPC (que compra por ~40% do preço de venda); pergaminhos custam de ~500 (tier 1) a
 20.000–45.000 (tier 3, variando por elemento/level).
+
+### Missões (motor v2, `184de6f`)
+
+*Fonte: `docs/sistemas/missoes.md`.* O motor de missões ganhou 4 tipos novos de
+`objective.kind` (era 2: `kill`, `keyword_quiz`) sem mudar o comportamento das 45 missões já
+escritas — todo campo novo é opcional com fallback pro texto/comportamento de sempre:
+`collect_item` (com drops condicionais), `talk_to` universal, `reach` (posição no mapa, checada
+por poll a cada 7s) e `kill` com `any_of`/`boss`. Além disso: pré-requisitos cruzados entre
+missões (`requires.quests`) com `locked_text` dedicado, textos condicionados por placeholders
+(`{player}`, `{count}`, `{needed}`), e recompensas novas (`storage`, `outfit`, `addon`, `title`)
+além de xp/ryo/items — progresso aparece ao vivo na aba Missões do Menu Shinobi. 63 testes
+headless em luajit com stub do TFS (`tools/tests/test_quests_headless.lua`,
+`tools/tests/run_quests_tests.sh`). É a base técnica que os Lotes A/B/C/M usaram para plantar os
+ganchos de saída e a Nuvem Vermelha em cada arco (seção 2).
 
 ### Tarefas, diárias e conquistas
 
@@ -508,6 +583,22 @@ LocalPlayer, {...})`; **(d)** UI (abrir/fechar o Menu Shinobi, clique de botão)
 jogo" no menu de opções (padrão ligado, volume 100). **Música segue sem trilha própria** — a opção
 de música existe no cliente mas fica desligada por padrão (nenhum arquivo além do tema genérico
 herdado do OTClient); é o único item de arte/som ainda 100% pendente (ver seção 9).
+
+### Encoding: cp1252 na tela, UTF-8 no protocolo
+
+*Fonte: `docs/sistemas/cliente-ux.md` §5.* Achado do playtest de história dos arcos 4–6
+(`docs/qa/playtest-historia-arcos4-6.md`): matar um monstro com nome acentuado (`Águia do
+Trovão`, `Xamã da Maldição`, 3 bosses) não contava pra missão, porque o Lua gerado
+(`tools/export_tfs.py`) passou a sair em **cp1252** (fim do mojibake nas falas, rodada anterior)
+enquanto o nome do monstro chega em tempo real do protocolo em **UTF-8** — a comparação de string
+nunca batia. Corrigido em duas camadas hoje: **(1)** `NarutoText.utf8ToCp1252`/`.cp1252ToUtf8`
+(servidor, `naruto_json.lua`) normaliza qualquer nome vindo do jogo antes de comparar contra um
+literal gerado, usado em missões/tarefas/diárias/conquistas/fases de boss (52 testes headless,
+`test_encoding_headless.lua`); **(2)** `InputMessage::getString` (cliente, C++) converte toda
+string do protocolo de UTF-8 para cp1252 **na entrada**, por sequência (`stdext::utf8_to_cp1252`,
+tolera strings mistas como "Loot of …" onde nome de monstro e de item vêm em encodings
+diferentes na mesma mensagem) — fim do mojibake em nomes de NPC, criatura e item na tela, não só
+nas falas.
 
 ### NPCs e lojas
 
@@ -620,11 +711,13 @@ monstros comuns + 1 ou mais bosses.*
 *Fonte: `data/jutsus/*.json` (54 jutsus: 5 Katon, 5 Suiton, 5 Raiton, 4 Doton, 4 Fuuton, 10
 universais/genéricos, 21 pessoais exclusivos — `data/element_sets.json` decide os 4 "de kit" por
 elemento, `data/characters.json` decide os 4 pessoais por personagem, ver seção 3). Tabelas
-regeneradas diretamente de `data/jutsus/*.json` (campos `animation`/`sfx` na última coluna) após
-a rodada 5 de balanceamento (`docs/sistemas/balanceamento-relatorio-v5.md`): os 5 projéteis tier
-1 do kit elemental (nível 1, "burst à distância") agora custam uma **% do pool de chakra**
-(`chakra_cost_percent`/`manapercent`) em vez de um número fixo, e o cooldown desses 5 subiu de
-2,0s (rodada 3) → 3,5s (rodada 4) → **9,0s** (rodada 5, valor atual) — o resto do jutsu (custo
+regeneradas diretamente de `data/jutsus/*.json` (campos `animation`/`sfx` na última coluna) —
+custo dos 5 tier 1 atualizado na rodada 7 de balanceamento
+(`docs/sistemas/balanceamento-relatorio-v7.md`): os 5 projéteis tier 1 do kit elemental (nível 1,
+"burst à distância") custam uma **% do pool de chakra** (`chakra_cost_percent`/`manapercent`) em
+vez de um número fixo — **12–14% desde a rodada 7** (era 2,5–3,0% nas rodadas 5/6, ~4,7× mais
+caro, ver seção 3 "Chakra") — e o cooldown desses 5 subiu de 2,0s (rodada 3) → 3,5s (rodada 4) →
+**9,0s** (rodada 5, valor atual, não tocado nas rodadas 6/7). O resto do jutsu (custo
 fixo, cooldown) foi só reescalado pela mudança do pool de chakra (100+level×10, era
 50+level×10), sem tocar em dano/papel. Som: cada jutsu já tinha um `sfx` no JSON antes desta
 missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seção 5 "Som").
@@ -633,7 +726,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Katon: Grande Bola de Fogo | projectile | 3,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + queimadura | `fx_fireball` · som `sfx_fire_whoosh` |
+| Katon: Grande Bola de Fogo | projectile | 14,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + queimadura | `fx_fireball` · som `sfx_fire_whoosh` |
 | Katon: Sopro de Brasas | area | 26 | 3,0s | 6 | área (reserva, fora do kit) + queimadura | `fx_ember_cone` · som `sfx_fire_puff` |
 | Katon: Flores de Fênix | area | 136 | 6,0s | 12 | área/cone (kit) + queimadura | `fx_fire_cone` · som `sfx_fire_burst` |
 | Katon: Anel de Chamas | area | 176 | 6,0s | 20 | utilitário/área (kit) + queimadura | `fx_fire_ring` · som `sfx_fire_burst` |
@@ -643,8 +736,8 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Suiton: Projétil de Água | projectile | 2,5% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_water_bullet` · som `sfx_splash` |
-| Suiton: Névoa Cortante | area | 22 | 1,6s | 6 | controle de área rápido (kit) + lentidão | `fx_mist_cone` · som `sfx_mist` |
+| Suiton: Projétil de Água | projectile | 12,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_water_bullet` · som `sfx_splash` |
+| Suiton: Névoa Cortante | area | 22 | 3,0s | 6 | controle de área rápido (kit) + lentidão | `fx_mist_cone` · som `sfx_mist` |
 | Suiton: Prisão de Água | target | 45 | 7,0s | 22 | controle/utilitário (kit) + paralisia | `fx_water_prison` · som `sfx_bubble` |
 | Suiton: Dragão de Água | beam | 184 | 6,0s | 25 | burst forte em linha (kit, teto do elemento) + lentidão | `fx_water_dragon` · som `sfx_wave` |
 | Suiton: Vórtice Devorador | area | 79 | 9,0s | 45 | área (reserva, fora do kit) + lentidão | `fx_water_vortex` · som `sfx_wave` |
@@ -653,8 +746,8 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Raiton: Agulha de Raio | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + paralisia | `fx_lightning_needle` · som `sfx_zap` |
-| Raiton: Corrente Estática | area | 20 | 1,3s | 6 | controle de área rápido (kit) + paralisia | `fx_static_cross` · som `sfx_zap` |
+| Raiton: Agulha de Raio | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + paralisia | `fx_lightning_needle` · som `sfx_zap` |
+| Raiton: Corrente Estática | area | 20 | 3,0s | 6 | controle de área rápido (kit) + paralisia | `fx_static_cross` · som `sfx_zap` |
 | Raiton: Lança do Relâmpago | beam | 170 | 6,5s | 18 | burst forte em linha (kit, teto do elemento) + paralisia | `fx_lightning_lance` · som `sfx_thunder` |
 | Raiton: Armadura Elétrica | self | 42 | 16,0s | 24 | utilitário/buff (reserva, fora do kit) + cura contínua | `fx_lightning_armor` · som `sfx_zap_loop` |
 | Raiton: Punho do Trovão | target | 200 | 7,0s | 30 | burst forte single-target (kit) + stun | `fx_thunder_fist` · som `sfx_thunder_hit` |
@@ -663,7 +756,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Doton: Bala de Lama | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_mud_bullet` · som `sfx_splat` |
+| Doton: Bala de Lama | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) + lentidão | `fx_mud_bullet` · som `sfx_splat` |
 | Doton: Muralha de Pedra | self | 39 | 14,0s | 8 | utilitário/defensivo (kit) + cura contínua | `fx_stone_shell` · som `sfx_rock_rumble` |
 | Doton: Estacas de Terra | area | 166 | 6,0s | 22 | área/controle (kit) + paralisia | `fx_earth_spikes` · som `sfx_rock_crack` |
 | Doton: Colapso do Terreno | area | 268 | 9,0s | 48 | área forte (kit) + stun | `fx_earth_collapse` · som `sfx_quake` |
@@ -672,7 +765,7 @@ missão; agora o som toca de verdade em jogo (módulo `naruto_sounds`, ver seç�
 
 | Nome | Tipo | Custo (chakra) | Cooldown | Nível req. | Papel | Efeito visual (som) |
 |---|---|---|---|---|---|---|
-| Fuuton: Lâmina de Vento | projectile | 2,75% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) | `fx_wind_blade` · som `sfx_wind_cut` |
+| Fuuton: Lâmina de Vento | projectile | 13,0% do pool | 9,0s | 1 | burst à distância (projétil básico, kit) | `fx_wind_blade` · som `sfx_wind_cut` |
 | Fuuton: Rajada Cortante | area | 147 | 6,5s | 16 | área/cone (kit) + lentidão | `fx_wind_cone` · som `sfx_wind_burst` |
 | Fuuton: Redemoinho Prisão | target | 45 | 9,0s | 23 | controle/utilitário (kit) + paralisia | `fx_wind_prison` · som `sfx_wind_trap` |
 | Fuuton: Tornado Cortante | beam | 243 | 8,0s | 36 | burst forte em linha (kit) + lentidão | `fx_wind_tornado` · som `sfx_wind_roar` |
@@ -745,10 +838,10 @@ narrativo), `docs/sistemas/mapas.md` "Mapa v3" (posições finais no `.otbm`), `
 | Rastreador Goro | missões — *"Sanguessugas infestam a margem. Mate 8."* | Floresta da Morte | — |
 | Mercador Itsuki | loja | Costa das Marés | 1026, 1145 |
 | Ancião Tazu | missões — *"Mercenários contratados por uma guilda rival atacam quem trabalha na ponte. Afaste-os. Mate 8."* | Costa das Marés | 1032, 1145 |
-| Tsubaki, a Escavadora | loja | Ruínas do Clã Marionetista | — |
-| Ancião Kaito | missões — *"Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete."* | Ruínas do Clã Marionetista | — |
-| Ferreiro Genzo | loja | Montanha do Trovão | — |
-| Mestra Yuki | missões — *"As águias do trovão não deixam ninguém subir a trilha. Abata 15."* | Montanha do Trovão | — |
+| Tsubaki, a Escavadora | loja | Ruínas do Clã Marionetista | 1207, 1022 |
+| Ancião Kaito | missões — *"Ancião Kaito quer entender como as marionetes ainda se movem. Traga 8 juntas de marionete."* Antes dos xamãs, também testa o que o jogador sabe da maldição do clã (quiz). | Ruínas do Clã Marionetista | 1205, 1022 |
+| Ferreiro Genzo | loja | Montanha do Trovão | 1228, 1058 |
+| Mestra Yuki | missões — *"As águias do trovão não deixam ninguém subir a trilha. Abata 15."* Antes do quiz do pacto antigo, já ensina a resposta: *"uma dupla que a Nuvem Vermelha já usou contra vilas inteiras, há uma geração, ainda na Grande Guerra."* | Montanha do Trovão | 1222, 1058 |
 | Fornecedor Enji | loja | Covil da Nuvem Vermelha | 1406, 1012 |
 
 ### Mestres de Tarefas (um por região, sistema novo)
@@ -806,18 +899,22 @@ lanterna, cerca de bambu) e terreno com autoborder (grama↔água↔areia↔lama
 
 A maior parte da arte de criatura/NPC ainda é **placeholder**: sprites genéricos do Tibia vanilla
 recoloridos (procedural) ou recortes de planilhas de terceiros (`assets-src/import/`, "importado
-lateral"). Duas camadas de cobertura hoje (`docs/sistemas/arte-e-sprites.md`, "Criaturas
-procedurais"), nenhuma com pose/andar de verdade fora da primeira:
+lateral"). Três camadas de cobertura hoje (`docs/sistemas/arte-e-sprites.md`, "Criaturas
+procedurais"):
 - **6 monstros com arte 100% procedural e 4 direções reais** (looktypes 940–945, `gen_animals.py`):
   Lobo, Cervo, Águia do Trovão (sempre em voo), Sanguessuga, Sapo Gigante, e as 3 serpentes
   (Cobra da Floresta/Serpente Menor/Serpente de Magma) compartilhando o looktype 943 com máscara
   de cor de verdade (`layers=2`).
-- **12 monstros humanoides com variante de paleta própria, mas pose única** (looktypes 946–957,
-  `gen_humanoid_variants.py`, hue-shift do PNG importado — `layers=1`, sem máscara): Bandido,
-  Bandido Arqueiro, Chefe dos Bandidos, Mercenário da Ponte, Batedor da Névoa, Ninja Renegado,
-  Guardião da Neblina, Marionete de Combate, Marionetista das Ruínas, Guerreiro Espectral, O
-  Sócio Eterno e Oni da Geleira — cada um com sua própria cor, mas a MESMA pose repetida nas 4
-  direções e nas 3 fases de "andar" (limitação da arte importada, não da ferramenta).
+- **12 monstros humanoides agora TAMBÉM com 4 direções reais e andar de verdade** (looktypes
+  946–957, `humanoid_art.py` + `gen_humanoid_variants.py` v2, `2ac02b3`, 2026-09-05 2ª passada):
+  Bandido, Bandido Arqueiro, Chefe dos Bandidos, Mercenário da Ponte, Batedor da Névoa, Ninja
+  Renegado, Guardião da Neblina, Marionete de Combate, Marionetista das Ruínas, Guerreiro
+  Espectral, O Sócio Eterno e Oni da Geleira. O boneco genérico é desenhado do zero por código
+  (`humanoid_art.draw_body`, sem material importado) com 4 direções reais, 3 fases de andar e um
+  adereço próprio por classe (`humanoid_art._gear`: arco+aljava no Bandido Arqueiro, manto longo
+  no Chefe dos Bandidos etc.) — substitui a v1 (hue-shift do PNG importado, `layers=1`, pose
+  única repetida nas 4 direções), que fica só como histórico em
+  `docs/sistemas/arte-e-sprites.md`.
 - **~14 monstros ainda no looktype importado cru**, sem cor nem direção próprias (ex.:
   `elite_cloud_guard`, os 3 `exam_rival_*`) — ver `docs/backlog-sprites.md`.
 
@@ -918,43 +1015,63 @@ Fonte (editar aqui): `data/*.json`, `docs/`, `assets-src/`, `client-otc/modules/
 
 *Fonte: `CLAUDE.md` ("Estado atual"), `docs/01-roadmap.md`, `docs/qa/*.md`.*
 
-### O que está pronto (2026-09-05)
+### O que está pronto (2026-09-05, tarde — HEAD `88ea822`)
 
 O jogo roda ponta a ponta: OTClient compilado, TFS 1.4.2 com todo o conteúdo Naruto instalado,
 mapa próprio `valley` com as 6 regiões fisicamente construídas, sprites placeholder/procedurais
 próprios, ferramentas de GM (`/sl`). Números atuais: **173 itens, 54 jutsus, 38 monstros, 21 NPCs**,
 sistemas de rank/exame/tarefas/diárias/**conquistas** (55, com lógica real, `e02aa0b`) rodando no
-servidor, walk-cycle do outfit do jogador validado por filtro geométrico automático. **Balanceamento
-passou por 5 rodadas completas de calibração via simulação** (seção 5): ninjutsu puro fecha 6 de 6
-bosses de referência dentro da meta de paridade desde a rodada 5 (`1a46739`,
-`docs/sistemas/balanceamento-relatorio-v5.md`). **Som**: 51 SFX procedurais tocando em jogo
-(`ef195b4`, seção 9) — música segue pendente. **Criaturas**: 6 monstros com arte procedural e 4
-direções reais + 12 humanoides com variante de paleta própria (`79881e0`, seção 9). Locale pt-BR
-cobre a UI, os nomes de sistema (Mana→Chakra) e a maior parte das mensagens de sistema do TFS
-(traduzidas no cliente, já que o núcleo C++ do TFS fala inglês). Menu Shinobi (Ctrl+J) com abas
-Personagem/Elemento/Jutsus/Missões (com seção Conquistas)/Comandos (GM) funcionando in-game, rank
-visível na janela de Atributos.
+servidor, walk-cycle do outfit do jogador validado por filtro geométrico automático.
+
+**Sessão da tarde de hoje (6 commits de conteúdo/design + 6 de engenharia)**:
+- **Auditoria narrativa dos 6 arcos** (`5873bd3`) + **Lotes A/B/C/M** (`1439749`, `6f0893f`,
+  `006f3c3`, `0dc49a5`): a Nuvem Vermelha e um gancho de saída plantados em cada um dos 6 arcos
+  (seção 2), 4 NPCs novos posicionados no mapa (Kaito/Tsubaki/Yuki/Genzo, seção 8), gate da Costa
+  das Marés corrigido de Chunin pra Genin (seção 4), spawns soltos do Aprendiz Mascarado/Serpente
+  Menor/Cervo adicionados, `tools/map/validate_world.py` (validador cruzado missão↔spawn↔mapa)
+  novo.
+- **Motor de missões v2** (`184de6f`): 4 tipos de objetivo novos, pré-requisitos cruzados,
+  recompensas storage/outfit/addon/title (seção 5, "Missões").
+- **Humanoides procedurais v2** (`2ac02b3`): os 12 looktypes 946–957 ganharam 4 direções reais e
+  andar de verdade, sem material importado (seção 9).
+- **Balanceamento rodadas 6 e 7** (`5fe6056`, `87c19a1`): híbrido ≤+15% em 6/6 bosses (r6); tier 1
+  reescalado pra 12–14% do pool (r7, seção 3 "Chakra"); **fúria de boss com dano real** via
+  `onHealthChange` do jogador (seção 5, "Monstros: comportamento e bosses").
+- **Encoding**: mojibake nas falas resolvido (`5fe6056`), regressão de kill-por-nome-acentuado
+  encontrada e corrigida em servidor+cliente (`8147d69`, `049981b`, seção 5, "Encoding").
+- **Fix do andar travando** (`bc20778`): bordas geradas sem `FLAG_ALWAYSONTOP` no `items.otb`
+  causavam `stackpos` divergente cliente↔servidor.
+- **2 playtests de história completos** (arcos 1–3 e 4–6, `docs/qa/playtest-historia-arcos1-3.md`,
+  `-arcos4-6.md`) validaram in-game todas as falas/ganchos acima.
+
+**Estado herdado (sessões anteriores)**: ninjutsu puro fecha 6 de 6 bosses de referência dentro da
+meta de paridade desde a rodada 5 (`1a46739`); 51 SFX procedurais tocando em jogo (`ef195b4`) —
+música segue pendente; 6 monstros com arte procedural e 4 direções reais desde `79881e0`. Locale
+pt-BR cobre a UI, os nomes de sistema (Mana→Chakra) e a maior parte das mensagens de sistema do
+TFS. Menu Shinobi (Ctrl+J) com abas Personagem/Elemento/Jutsus/Missões (com seção Conquistas)/
+Comandos (GM) funcionando in-game, rank visível na janela de Atributos.
 
 ### Em andamento
 
-**Balanceamento rodada 6** (próxima, não iniciada): fechar o híbrido dentro do teto de +15% (hoje
-2 de 6 bosses, os outros excedem — rodada 5 §3), uniformizar o cenário de grupo 3+ (+30-60% de
-meta, ainda não-uniforme desde a rodada 3), reverificar paridade de personagens (±15%, não
-reverificada desde a rodada 3), e validar a sensação do cooldown 9,0s do tier 1 com jogadores
-reais. **Playtest rodada 5** (em andamento/pendente): medir de fato o regen de chakra por level e
-a densidade reduzida da Trilha dos Lobos em combate real — as rodadas 3 e 4 já mediram parte disso
-(rodada 3: chakra travado por spawn denso, antes da rodada 5 de balanceamento; rodada 4: interrompida
-por queda de servidor externa antes de qualquer combate). Polimento de mapa (bordas neve↔rocha,
-gelo↔rocha ainda retas em vários trechos); criaturas procedurais humanoides (12 já têm cor própria,
-nenhuma ganhou direção/andar reais — limitação da arte importada, seção 9).
+**Balanceamento rodada 8** (próxima, não iniciada): cortar pela metade o excedente de
+`attack_multiplier` nos bosses (a fúria real da rodada 7 somou dano em cima de cura/velocidade já
+calibradas pra compensar a FALTA de dano, subindo o TTK acima do calibrado — seção 5); resolver a
+meta de 15-25% de tempo sem chakra numa hunt híbrida (rodada 7 fechou casts/pool mas não essa,
+limite estrutural da cadência híbrida `HYBRID_JUTSU_CADENCE_FRAC=0,22` — ver relatório v7 §5).
+**Re-teste de história arcos 4–6** (pendente): o playtest de hoje rodou ANTES do fix de encoding
+049981b/8147d69 estar completamente validado em combate longo — confirmar que kills com nome
+acentuado contam de verdade pra missão/conquista numa sessão nova, do zero. Polimento de mapa
+(bordas neve↔rocha, gelo↔rocha ainda retas em vários trechos); vista de costas do personagem
+ainda sintetizada por código.
 
 ### Próximos passos (ordem de valor, conforme `01-roadmap.md`)
 
-1. Balanceamento rodada 6: híbrido dentro do teto, grupo 3+ uniforme, personagens reverificados.
-2. Playtest rodada 5/6: confirmar em combate real o regen por level e a densidade de spawn
-   ajustada; medir XP/h contra a tabela da seção 4 pela primeira vez com dados completos.
-3. Polimento de mapa v3 (bordas neve/gelo↔rocha, antecâmaras do Covil).
-4. Música ambiente (`tools/audio/gen_music.py`, ainda não escrita) — único item de som pendente.
+1. Balanceamento rodada 8: recalibrar `attack_multiplier` de boss pós-fúria-real; buscar a
+   alavanca que fecha o tempo-sem-chakra em hunt híbrida (relatório v7 §5).
+2. Re-teste de história arcos 4–6 numa sessão nova, do zero, confirmando o fix de encoding em
+   combate real sustentado (não só os primeiros minutos pós-restart).
+3. Música ambiente (`tools/audio/gen_music.py`, ainda não escrita) — único item de som pendente.
+4. Polimento de mapa v3 (bordas neve/gelo↔rocha, antecâmaras do Covil).
 5. Vista de costas real para o personagem padrão (hoje sintetizada por código, não desenhada).
 6. Templos/vilas 2–4 no mapa físico (hoje só a Vila da Folha existe fisicamente; Névoa/Nuvem/Areia
    só existem como vocação/dados, sem cidade própria no OTBM).
@@ -965,22 +1082,24 @@ nenhuma ganhou direção/andar reais — limitação da arte importada, seção 
 
 - **Os looktypes 900–926 (personagens MUGEN) violam a ADR-002 na prática** — não é dívida técnica
   comum, é risco legal de takedown se o jogo for distribuído assim (seção 9).
-- **Sprites de monstro/NPC são majoritariamente placeholder** — 6 animais com direção/andar reais,
-  12 humanoides com cor própria mas pose única, ~14 ainda sem cor nem direção (seção 9); "o jogo
-  parece incompleto" continua o feedback mais provável de um jogador novo.
+- **Sprites de monstro/NPC são majoritariamente placeholder** — 18 monstros/humanoides já com
+  direção/andar reais (6 animais + 12 humanoides v2, hoje), ~14 ainda sem cor nem direção
+  (seção 9); "o jogo parece incompleto" continua o feedback mais provável de um jogador novo.
 - **Vista de costas do personagem é sintetizada por código**, não desenhada — aproximação, não arte
   final.
 - **Sem música** — os 51 efeitos sonoros de combate/UI existem e tocam; trilha ambiente por
   vila/bioma não existe (seção 9).
-- **Playtests com dados de combate parciais, não completos**: a rodada 3 (`playtest-l1-20-r3.md`)
-  produziu o primeiro combate real (2 kills, XP/h medido, achou o chakra sem regen que a rodada 5
-  de balanceamento endereçou) mas não chegou ao nível 2; a rodada 4 foi interrompida por queda do
-  servidor (evento externo, não um bug do jogo) antes de qualquer combate. A comparação completa
-  "tabela da seção 4 vs. realidade" ainda não foi feita.
+- **Fúria real de boss (hoje) ainda não recalibrada** — TTK de boss subiu acima do calibrado nas
+  rodadas 5/6 porque o multiplicador de dano de verdade soma em cima de cura/velocidade que já
+  compensavam a falta dele; rodada 8 corrige.
+- **Chakra do tier 1 fechou casts/pool mas não a meta de tempo-sem-chakra em hunt híbrida**
+  (0% medido contra meta 15-25%, relatório v7 §5) — limite estrutural do modelo híbrido, não
+  fechado ainda por nenhum custo dentro da faixa permitida.
+- **Playtests de história (arcos 1-6) validaram narrativa e falas, não combate sustentado**: os
+  dois playtests do dia confirmaram texto/fases em tela, mas não uma sessão longa pós-fix de
+  encoding — ver "Em andamento".
 - **Só a Vila da Folha existe fisicamente no mapa** — as outras 3 vilas são vocação/dados sem
   cidade própria construída no OTBM ainda.
-- **Híbrido (arma+jutsu) excede o teto de paridade em 4 dos 6 bosses de referência** (seção 5) —
-  pendência conhecida de balanceamento desde a rodada 4, não resolvida na rodada 5.
 - **Sem party, clã, mercado ou PvP** — social é 100% roadmap, não uma omissão silenciosa (Marco 5).
 
 ---
@@ -1031,21 +1150,15 @@ dois documentos discordavam, usei `data/` como fonte e anoto a divergência aqui
    TFS. Usei desse documento só as fórmulas de HP/Chakra (que batem exatamente com
    `data/progression.json`); o restante (seção "Save", menção a "vilas... definem jutsus
    iniciais") deveria ser marcado como histórico ou atualizado.
-3. **`docs/sistemas/monstros-e-pvm.md` (linha do Cervo) ainda descreve o sprite antigo.** A linha
-   do Cervo (`forest_deer`, tabela de comportamento) diz "reaproveita o sprite do Lobo (`looktype
-   21`, `mon_wolf`) recolorido" — mas desde `79881e0` (criaturas procedurais) o Cervo tem looktype
-   **941** dedicado, 100% procedural, 4 direções reais (`tools/spr/gen_animals.py`,
-   `data/tfs_mapping.json`), sem relação nenhuma com o Lobo (looktype 940). Confirmado em
-   `docs/sistemas/arte-e-sprites.md` e nesta bíblia (seção 6, que já usa 941) — só
-   `monstros-e-pvm.md` ficou com o texto pré-procedural.
-4. **`docs/sistemas/arte-e-sprites.md` tem duas seções que se contradizem sobre cobertura de
+3. **`docs/sistemas/arte-e-sprites.md` tem duas seções que se contradizem sobre cobertura de
    criatura.** A tabela antiga "O que existe hoje (placeholder)" (perto do topo do arquivo) diz
    que looktypes de criatura "1..897 ganham arte temática" sem distinguir grau de cobertura; a
-   seção nova "Criaturas procedurais" (final do arquivo, pós `79881e0`) detalha que só 6 monstros
-   têm 4 direções reais e 12 têm variante de paleta com pose única — a tabela antiga nunca foi
-   atualizada para refletir essa distinção, então lida isolada ela sugere uma cobertura mais
-   uniforme do que existe de verdade. Esta bíblia usa a seção mais recente como fonte (seção 9).
-5. **`docs/backlog-audio.md` pode estar desatualizado sobre `task_1e2c0ec0`.** O documento lista
+   seção nova "Criaturas procedurais" (final do arquivo) detalha que hoje **18** monstros (6
+   animais + 12 humanoides desde a v2 de hoje, `2ac02b3`) têm 4 direções reais e andar de verdade
+   — a tabela antiga nunca foi atualizada para refletir essa distinção, então lida isolada ela
+   sugere uma cobertura mais uniforme do que existe de verdade. Esta bíblia usa a seção mais
+   recente como fonte (seção 9).
+4. **`docs/backlog-audio.md` pode estar desatualizado sobre `task_1e2c0ec0`.** O documento lista
    como pendente uma falha de login (`NarutoAchievements` nil, bloqueando toda conta) encontrada
    durante a sessão de áudio (`ef195b4`) e corrigida só em código, sem confirmação ao vivo na
    época. Os playtests seguintes (r3, r4 — ambos posteriores, e a rc de validação `c2d716f`)
@@ -1053,13 +1166,27 @@ dois documentos discordavam, usei `data/` como fonte e anoto a divergência aqui
    mas nenhum documento fecha esse achado explicitamente nem confirma se `task_1e2c0ec0` foi
    encerrada. Não consegui confirmar 100% sem acesso ao rastreador de tasks; sinalizo para quem
    tiver esse acesso fechar ou reabrir.
+5. **`data/ranks.json` ainda lista `costa_das_mares` em `unlocks.areas` do rank Chunin** (achado do
+   Lote M, `docs/sistemas/mapas.md` "A1"), mesmo depois do gate físico ter sido corrigido pra
+   Genin — dado órfão que só afeta o comando de debug de GM `/sl canenter <zona>`
+   (`NarutoRanks.zoneMinIndex`), não o gate real (`rank_gate.lua` lê o actionid do tile, não essa
+   tabela). Não corrigido hoje (edição de `data/ranks.json` fora do escopo do lote de mapa).
+6. **(novo, playtest arcos 4-6) O `attack_multiplier` de fase de boss precisa recalibração
+   pós-fúria-real.** Antes de hoje ele só simulava a fúria via cura+velocidade (compensando a
+   falta de dano de verdade); a rodada 7 de engenharia (`87c19a1`) fez o multiplicador também
+   aumentar o dano de verdade — mas os VALORES de `attack_multiplier` em `data/monsters/*.json`
+   continuam os mesmos calibrados pra rodada 5/6 (quando o multiplicador só afetava velocidade),
+   então o TTK de boss subiu além do calibrado. Sinalizado no próprio
+   `docs/sistemas/monstros-e-pvm.md` como pendência pra rodada 8; ainda não corrigido em nenhum
+   `data/monsters/*.json`.
 
 ### O que ficou faltando (não coberto por esta bíblia)
 
 - Falas-chave completas de NPCs de loja (não existe campo de diálogo/saudação em
   `data/npcs/*.json` além do texto de missão — a seção 8 usa o texto de missão disponível).
-- Posições físicas no mapa de Velha Sumi, Rastreador Goro, Tsubaki, Ancião Kaito, Ferreiro Genzo e
-  Mestra Yuki (mapa abstrato do protótipo Godot, ainda não portado ao OTBM — ver
-  `docs/sistemas/progressao-servidor.md`, pendência "posição física dos NPCs novos").
-- Dados de combate reais (XP/h medido, TTK, chakra até secar) — os playtests realizados não
-  chegaram a produzir essa medição (seção 11).
+- Posições físicas no mapa de Velha Sumi e Rastreador Goro (Floresta da Morte) — únicos 2 NPCs
+  restantes ainda só no mapa abstrato do protótipo Godot; os outros 4 (Tsubaki, Ancião Kaito,
+  Ferreiro Genzo, Mestra Yuki) foram posicionados hoje no Lote M (seção 8).
+- Dados de combate reais (XP/h medido, TTK, chakra até secar) numa sessão de história longa —
+  os 2 playtests de história de hoje mediram narrativa/falas, não uma hunt sustentada
+  pós-fix-de-encoding (seção 11).

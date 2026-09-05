@@ -51,11 +51,16 @@ Ver `docs/03-decisoes-tecnicas.md` (ADR-005).
 - [`cliente-ux.md`](docs/sistemas/cliente-ux.md) — Menu Shinobi, rank em tela, chat pt-BR
 - [`arte-e-sprites.md`](docs/sistemas/arte-e-sprites.md) — pipeline procedural de sprites/tiles/efeitos
 - [`audio.md`](docs/sistemas/audio.md) — pipeline de som procedural (SFX)
+- [`missoes.md`](docs/sistemas/missoes.md) — motor de missões v2 (tipos de objetivo, pré-requisitos, recompensas)
 - [`balanceamento.md`](docs/sistemas/balanceamento.md) — fórmulas e estado atual do balanceamento
-- [`balanceamento-relatorio-v5.md`](docs/sistemas/balanceamento-relatorio-v5.md) — relatório da rodada mais recente (v2/v3/v4 no mesmo diretório, histórico)
+- [`balanceamento-relatorio-v7.md`](docs/sistemas/balanceamento-relatorio-v7.md) — relatório da rodada mais recente (v2–v6 no mesmo diretório, histórico)
 
 **QA** (`docs/qa/`)
-- [`playtest-l1-20-r4.md`](docs/qa/playtest-l1-20-r4.md) — rodada mais recente (r1/r2/r3 no mesmo diretório, histórico)
+- [`playtest-l1-20-r5.md`](docs/qa/playtest-l1-20-r5.md) — rodada de combate mais recente (r1–r4 no mesmo diretório, histórico)
+- [`playtest-historia-arcos1-3.md`](docs/qa/playtest-historia-arcos1-3.md) · [`playtest-historia-arcos4-6.md`](docs/qa/playtest-historia-arcos4-6.md) — playtest de narrativa dos 6 arcos
+
+**Design** (`docs/design/`)
+- [`auditoria-historia.md`](docs/design/auditoria-historia.md) — auditoria narrativa dos 6 arcos, lacunas e plano em lotes
 
 **Lore** (`docs/lore/`)
 - [`mundo.md`](docs/lore/mundo.md) — as 6 regiões, bestiário narrativo, NPCs e bosses
@@ -65,6 +70,8 @@ Ver `docs/03-decisoes-tecnicas.md` (ADR-005).
 **Backlogs**
 - [`docs/backlog-sprites.md`](docs/backlog-sprites.md) — arte pendente (prioridade: looktypes MUGEN)
 - [`docs/backlog-audio.md`](docs/backlog-audio.md) — som pendente (música, sons de monstro)
+
+**Índice completo**: [`docs/ESTRUTURA.md`](docs/ESTRUTURA.md) organiza toda a documentação por tema, na ordem recomendada de leitura.
 
 ## Como começar
 

@@ -33,7 +33,7 @@ funciona, depois o que foi testado e o que falta.
 
 ## 5. Balanceamento
 - [Sistema de balanceamento](sistemas/balanceamento.md) — metas e simulador
-- Relatórios por rodada: [r1](sistemas/balanceamento-relatorio.md) · [r2](sistemas/balanceamento-relatorio-v2.md) · [r3](sistemas/balanceamento-relatorio-v3.md) · [r4](sistemas/balanceamento-relatorio-v4.md) · [r5](sistemas/balanceamento-relatorio-v5.md) · [r6](sistemas/balanceamento-relatorio-v6.md)
+- Relatórios por rodada: [r1](sistemas/balanceamento-relatorio.md) · [r2](sistemas/balanceamento-relatorio-v2.md) · [r3](sistemas/balanceamento-relatorio-v3.md) · [r4](sistemas/balanceamento-relatorio-v4.md) · [r5](sistemas/balanceamento-relatorio-v5.md) · [r6](sistemas/balanceamento-relatorio-v6.md) · [r7](sistemas/balanceamento-relatorio-v7.md)
 
 ## 6. Arte
 - [Arte e sprites](sistemas/arte-e-sprites.md) — pipeline procedural, criaturas, efeitos, regras Tibia
@@ -42,7 +42,7 @@ funciona, depois o que foi testado e o que falta.
 
 ## 7. Qualidade (playtests)
 - [Playtest L1–20 r1](qa/playtest-l1-20.md) · [r2](qa/playtest-l1-20-r2.md) · [r3](qa/playtest-l1-20-r3.md) · [r4](qa/playtest-l1-20-r4.md) · [r5](qa/playtest-l1-20-r5.md)
-- [Playtest de história, arcos 1–3](qa/playtest-historia-arcos1-3.md)
+- [Playtest de história, arcos 1–3](qa/playtest-historia-arcos1-3.md) · [arcos 4–6](qa/playtest-historia-arcos4-6.md)
 
 ## 8. Tecnologia
 - [Arquitetura](02-arquitetura.md)

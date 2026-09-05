@@ -117,6 +117,12 @@ verdade. Resolvido:
 Estado: checkpoint `fff60df`. Sistemas de rank/exame/tarefas/diárias/achievements no servidor; mapa v2.1
 com 6 regiões; walk-cycle validado por filtro geométrico; 173 itens, 54 jutsus, 38 monstros, 21+8 NPCs.
 
+**Checkpoint da tarde: `88ea822`** (servidor reinstalado com fúria real + balanceamento r6/r7 +
+fix de encoding). Desde o checkpoint acima: história dos 6 arcos com ganchos de saída e Nuvem
+Vermelha plantada (auditoria + Lotes A/B/C/M), motor de missões v2, humanoides procedurais v2 (4
+direções reais), fix do andar travando (`FLAG_ALWAYSONTOP`), 2 playtests de história completos —
+ver "Feito" abaixo.
+
 Feito (com hash), ordem aproximada de quando fechou:
 - [x] Decor v2: cadeira, estátua de santuário, lanterna de pedra, decor de praia; autoborder grama↔areia e areia↔água (`215721f`)
 - [x] Cliente UX: aba "Missões" no Menu Shinobi via opcode 210 `get_progress`; rank na janela de atributos; mensagens de sistema em pt-BR + fix cp1252 (`e0e683f`)
@@ -136,15 +142,30 @@ Feito (com hash), ordem aproximada de quando fechou:
 - [x] Balanceamento rodada 4 (`7dee1ac`): cenário de hunt 30 min com regen/pílulas no simulador, híbrido com cadências independentes, tier 1 com cooldown 3,5 s e escala por level, tier 2 recalibrado, wakizashi temperado (L15) fecha o platô de armas; custo de chakra do tier 1 ajustado para ×1,3 (não ×2) e hit L1 preservado
 - [x] Playtest rodada 4 (`docs/qa/playtest-l1-20-r4.md`): interrompido por queda externa do servidor antes de qualquer combate; achou conquista de zona destravando dentro da muralha da vila — corrigido (`bea6efc`)
 - [x] Balanceamento rodada 5 (`1a46739`): economia de chakra estrutural (pool 100+10L, regen por level reaplicada no advance, custo do tier 1 como % do pool via `manapercent`), tier 1 com cooldown 9 s e escala maior; ninjutsu puro 6/6 bosses na meta; entra no próximo reinício do servidor
+- [x] Auditoria narrativa dos 6 arcos, na ordem da história: notas por arco, top 10 lacunas, plano em lotes (`5873bd3`)
+- [x] Motor de missões v2: `collect_item` com drops condicionais, `talk_to` universal, `reach` (poll 7 s), `kill` any_of/boss, pré-requisitos cruzados com `locked_text`, textos condicionados, recompensas storage/outfit/addon/title, progresso na aba Missões; 63 testes headless (`184de6f`, `docs/sistemas/missoes.md`)
+- [x] Lote B (Ruínas): chegada, clã virado marionetes, rastros, confronto; Marionetista revela a Nuvem Vermelha a 15% HP, gancho de saída pra Montanha; Serpente Branca com fala velada (`6f0893f`)
+- [x] Lote C (Montanha + Covil): Montanha ensina a resposta antes do quiz, ganchos de saída, Sócio Eterno invoca serpentes de magma; Covil com quiz de fechamento, Portador invoca Caminhos Invocados, Ancestral invoca Eco Carmesim e revela a Grande Guerra; falas de encerramento e promoção a Kage (`006f3c3`)
+- [x] Lote A (Floresta da Vila + Costa): tutorial, missão do cervo, batedores antecipam o Espadachim, semente da Nuvem Vermelha no Chefe dos Bandidos, Espadachim fala do Aprendiz, Goro/Ibuki referenciam a mesma prova, ganchos de saída via `done_text` (`1439749`)
+- [x] Lote M: Kaito/Tsubaki/Yuki/Genzo posicionados no mapa, gate da Costa das Marés rebaixado de Chunin pra Genin (ordem da história), spawns de Aprendiz Mascarado/Serpente Menor/Cervo, validador cruzado missão↔spawn↔mapa `tools/map/validate_world.py` (`0dc49a5`)
+- [x] Humanoides procedurais v2: boneco Tibia desenhado do zero (`humanoid_art.py`) com 4 direções reais, 3 fases de andar e adereço por classe pros 12 looktypes 946–957, sem material importado (`2ac02b3`)
+- [x] Playtest de história arcos 1–3 (`docs/qa/playtest-historia-arcos1-3.md`): jogável de ponta a ponta; achou mojibake em falas de NPC/monstro
+- [x] Balanceamento rodada 6 (`5fe6056`): híbrido ≤+15% em 6/6 bosses, kits pessoais ±12%, grupo 3+ parcial, summons do endgame ajustados; Lua gerado em cp1252 (fim do mojibake nas falas)
+- [x] Fix do andar travando/nome sumindo (`bc20778`): bordas geradas (128 itens, topOrder 1) sem `FLAG_ALWAYSONTOP` no `items.otb` — stackpos divergente cliente↔servidor; flag derivada do topOrder, validador `dump_dat` confere ordem OTB↔DAT
+- [x] Playtest de história arcos 4–6 (`docs/qa/playtest-historia-arcos4-6.md`, `4690797`): bosses/summons novos confirmados; achou regressão de encoding (kill com nome acentuado não conta pra missão) e mojibake residual em nomes de NPC/item
+- [x] Balanceamento rodada 7 (`87c19a1`): fúria de boss com dano real via `onHealthChange` do jogador (19 testes headless); tier 1 reescalado pra 12–14% do pool (7–8 casts por pool cheio, recupera em ~73 s); relatório v7
+- [x] Fix da regressão de encoding (`8147d69`): `NarutoText.utf8ToCp1252`/`.cp1252ToUtf8` normaliza nomes antes de comparar em missões/tarefas/diárias/conquistas/fases de boss; 52 testes headless
+- [x] Cliente: `InputMessage::getString` converte UTF-8→cp1252 por sequência (`049981b`) — fim do mojibake em nomes de NPC, criatura e item na tela
+- [x] Servidor instalado com fúria real + r7 + fix de encoding (`88ea822`)
 
 Em andamento:
-- [ ] Playtest rodada 5: medir em combate real o regen de chakra por level (rodada 5 de balanceamento) e a densidade reduzida da Trilha dos Lobos; curva L1–10 completa contra `docs/sistemas/progressao-jogador.md`
+- [ ] Re-teste de história arcos 4–6 numa sessão nova, do zero, confirmando o fix de encoding em combate sustentado (o playtest de hoje rodou antes do fix estar 100% validado ao vivo)
+- [ ] Playtest de combate rodada 6: medir XP/h contra `docs/sistemas/progressao-jogador.md` com dados completos, agora com tier 1 a 12–14% do pool
 
 Próximos (ordem de valor):
-- [ ] Balanceamento rodada 6: híbrido ≤ +15% (4/6 bosses acima do teto hoje), grupo 3+ uniforme, reverificar kits pessoais ±15%; validar a sensação do cooldown 9 s no playtest
-- [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
+- [ ] Balanceamento rodada 8: recalibrar `attack_multiplier` de boss pós-fúria-real (TTK subiu acima do calibrado nas rodadas 5/6); buscar a alavanca que fecha o tempo-sem-chakra em hunt híbrida (0% medido contra meta 15-25%, relatório v7 §5)
 - [ ] Música ambiente (`tools/audio/gen_music.py`, ainda não escrita — candidata a ferramenta separada de `gen_sfx.py`) e sons de monstro (`docs/backlog-audio.md`)
-- [ ] Direção/andar reais para os 12 humanoides que hoje só têm variante de paleta (mesma pose nas 4 direções e 3 fases de andar)
+- [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
 - [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
 - [ ] Substituir os 13 looktypes MUGEN (900–926 em uso de produção) — risco legal de ADR-002, P0 de arte

@@ -83,6 +83,10 @@ mais mapas por faixa de level (ver docs/sistemas/mapas.md e o plano de 7 áreas)
 - `openShopWindow`/`luaOpenShopWindow` usa `buy=-1`/`sell=-1` como sentinela e `getField<uint32_t>` explode com esse valor; patch em `server/tfs/src/npc.cpp` lê como `int32_t` e trunca em 0 (exige recompilar o servidor).
 - `manapercent` no XML de spell faz o custo ser uma % do chakra máximo (`chakra_cost_percent` no JSON) em vez de um valor fixo — usado nos 5 jutsus tier 1 elementais desde a rodada 5 de balanceamento.
 - Lua gerado por `tools/export_tfs.py` = cp1252 (para exibição no cliente); nomes que chegam do TFS em tempo de execução (`creature:getName()` etc., vindos do `name=` do XML) chegam em UTF-8 — sempre `NarutoText.utf8ToCp1252(nome)` antes de comparar/indexar contra um literal gerado, e `NarutoText.cp1252ToUtf8(nome)` na direção inversa (`Game.createMonster` de summon); ver `data/lib/naruto_json.lua` e `docs/sistemas/cliente-ux.md`.
+- Cliente converte toda string do protocolo de UTF-8 para cp1252 na entrada (`InputMessage::getString`, por sequência via `stdext::utf8_to_cp1252`) — sem isso, nomes de NPC/criatura/item vindos do servidor viram mojibake nas fontes bitmap cp1252 do OTClient.
+- FLAG_ALWAYSONTOP no `items.otb` precisa ser derivada do `topOrder` do item (não deixada no padrão) — bordas sem a flag empilham diferente entre cliente e servidor, `stackpos` diverge e o andar trava com "no creature found".
+- Fúria de boss com dano real: `attack_multiplier` de uma fase agora multiplica `primaryDamage`/`secondaryDamage` de verdade via `CreatureEvent onHealthChange` do JOGADOR (não do monstro) — o TFS não deixa reescrever ataques de monstro em runtime, então o dano é multiplicado do outro lado.
+- Testes headless por área: `tools/tests/run_quests_tests.sh` (motor de missões) e `tools/tests/run_boss_fury_tests.sh` (fúria de boss) — rodar depois de mexer em `quests_kill.lua`/`boss_phases.lua` gerados.
 
 ## Ambiente compartilhado (servidor/cliente rodam para vários agentes)
 - Nunca rode `pkill -x OTClient` (mata sessões de outros agentes); mate só o PID que você mesmo abriu.
