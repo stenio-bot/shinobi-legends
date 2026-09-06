@@ -18,14 +18,17 @@ Paginas:
     /conta            login (conta+senha): lista personagens (nivel/vila/personagem/ultimo login)
                       + formulario de troca de senha
     /trocar-senha     POST-only, usado pelo formulario acima
-    /sprite/<id>.png  preview PNG de um looktype de personagem inicial (whitelist)
+    /sprite/<id>.png  retrato PNG (4x) de um looktype de personagem inicial (whitelist);
+                      servido de tools/aac/portraits/<looktype>.png, gerado por
+                      tools/spr/render_outfit.py a partir do client-otc/data/things/1098/
+                      (Tibia.spr/Tibia.dat) -- nunca le assets-src/import/ (ADR-002).
 
 Le, mas nunca edita: data/villages.json, data/tfs_mapping.json, data/characters.json,
 data/element_sets.json, data/jutsus/personal.json, data/jutsus/neutral.json,
 server/tfs/config.lua (credenciais/portas do banco e do servidor), server/tfs/schema.sql
-(so leitura humana, nao parseado em runtime).
+(so leitura humana, nao parseado em runtime), tools/aac/portraits/*.png (retratos
+pre-renderados, versionados -- ver tools/aac/README.md).
 """
-import glob
 import hashlib
 import html
 import json
@@ -52,7 +55,7 @@ except ImportError:
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA_DIR = os.path.join(ROOT, "data")
-ASSETS_MUGEN = os.path.join(ROOT, "assets-src", "import", "extracted", "mugen")
+PORTRAITS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "portraits")
 TFS_CONFIG_PATH = os.path.join(ROOT, "server", "tfs", "config.lua")
 
 PORT = int(os.environ.get("AAC_PORT", "8080"))
@@ -179,15 +182,14 @@ for _src in (JUTSUS_PERSONAL, JUTSUS_NEUTRAL):
 
 
 def preview_path(looktype):
-    """Caminho do PNG de preview (frame parado) de um looktype, ou None."""
-    d = os.path.join(ASSETS_MUGEN, str(int(looktype)))
-    if not os.path.isdir(d):
-        return None
-    for pattern in ("idle_*.png", "front_*.png"):
-        matches = sorted(glob.glob(os.path.join(d, pattern)))
-        if matches:
-            return matches[0]
-    return None
+    """Caminho do retrato PNG (parado, olhando pro sul, 4x) de um looktype, ou
+    None se ainda nao foi gerado. Arquivo pre-renderado e versionado em
+    tools/aac/portraits/ -- gerar/regerar com:
+        .venv/bin/python tools/spr/render_outfit.py --looktype <id> \\
+            --outdir tools/aac/portraits --scale 4
+    """
+    p = os.path.join(PORTRAITS_DIR, "%d.png" % int(looktype))
+    return p if os.path.isfile(p) else None
 
 
 # ---------------------------------------------------------------------------

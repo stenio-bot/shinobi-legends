@@ -37,7 +37,7 @@ Porta alternativa: `AAC_PORT=8090 tools/aac.sh`.
 | `/criar-personagem` | GET/POST | Escolhe vila (Folha/Névoa/Nuvem/Areia, com elemento e bônus de skill) → personagem inicial daquela vila (9 cards: preview do outfit, elemento padrão, os 4 jutsus pessoais) → nome do personagem (3-20 letras/espaços) + sexo + login/senha da conta dona do personagem. |
 | `/conta` | GET/POST | Login (conta + senha) → lista os personagens dessa conta (nome, level, vila, personagem, último login) + formulário de troca de senha. |
 | `/trocar-senha` | POST | Só usado pelo formulário de `/conta`: troca a senha da conta (confere a senha atual antes). |
-| `/sprite/<looktype>.png` | GET | Preview PNG (frame parado) de um looktype de personagem inicial. Só serve os looktypes que aparecem em `data/characters.json` (whitelist) — não é um servidor de arquivos genérico. |
+| `/sprite/<looktype>.png` | GET | Retrato PNG (frame parado, olhando pro sul, 4x) de um looktype de personagem inicial, servido de `tools/aac/portraits/<looktype>.png` (arquivo versionado, obra nossa). Só serve os looktypes que aparecem em `data/characters.json` (whitelist) — não é um servidor de arquivos genérico. |
 
 ## De onde vêm os dados
 
@@ -50,10 +50,24 @@ Lido só para leitura, nunca escrito por este script:
 - `data/jutsus/personal.json` e `data/jutsus/neutral.json` — nome de exibição de cada
   jutsu pessoal (alguns, como `kawarimi`/`punho_suave`/`fuuin_contencao`, são "universais"
   e moram em `neutral.json`, não em `personal.json`, apesar de aparecerem em `characters.json`).
-- `assets-src/import/extracted/mugen/<looktype>/idle_*.png` (ou `front_*.png` se
-  não houver `idle_*`) — preview do outfit na tela de criação de personagem.
-  Diretório privado do projeto; o AAC só expõe os looktypes que já aparecem em
-  `characters.json`.
+- `tools/aac/portraits/<looktype>.png` — retrato do outfit na tela de criação de
+  personagem. **Versionado** (obra nossa, ADR-002): renderizado por
+  `tools/spr/render_outfit.py` direto de `client-otc/data/things/1098/Tibia.spr`/
+  `Tibia.dat` (o par que o próprio cliente carrega), nunca de
+  `assets-src/import/` (material de terceiros, gitignored). Regerar depois de
+  qualquer `tools/spr/build_assets.py` que mude os looktypes 900–909:
+  ```bash
+  .venv/bin/python tools/spr/render_outfit.py \
+      --looktype 900 901 902 903 904 905 907 908 909 \
+      --outdir tools/aac/portraits --scale 4
+  ```
+  O AAC só expõe os looktypes que já aparecem em `characters.json` e cujo PNG
+  exista nessa pasta (404 caso contrário — não é um servidor de arquivos
+  genérico). Pendência de **arte**, não do AAC: os 9 looktypes ainda são
+  `layers=1` importado do MUGEN por dentro do `.dat` (ver
+  `docs/sistemas/arte-e-sprites.md` e a linha "Substituir os 13 looktypes
+  MUGEN" em `docs/01-roadmap.md`) — o retrato deixa de ler PNG bruto de
+  terceiros, mas o desenho em si ainda não é arte 100% própria.
 - `server/tfs/config.lua` — host/porta/usuário/senha/banco do MySQL, e também
   `ip`/`loginProtocolPort` (dados de conexão mostrados na home).
 

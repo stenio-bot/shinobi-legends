@@ -2142,3 +2142,59 @@ pequenas em `GEAR_METAL`.
   `exam_rival_sound`=129, `exam_rival_mist`=130) continuam nos looktypes
   importados crus (pose presa, fora do escopo desta passada) — ver
   `docs/backlog-sprites.md`.
+
+## Retratos do AAC (`tools/spr/render_outfit.py`)
+
+O AAC (`tools/aac/aac.py`, rota `/sprite/<looktype>.png`) precisa de um
+retrato PNG por personagem inicial (tela `/criar-personagem`). Antes, esse
+PNG vinha direto de `assets-src/import/extracted/mugen/<looktype>/idle_*.png`
+(rip cru do MUGEN, terceiro, gitignored) — servir isso, mesmo só localmente,
+contraria o espírito do ADR-002. `tools/spr/render_outfit.py` resolve isso
+compondo o retrato a partir do **nosso** `client-otc/data/things/1098/
+Tibia.spr`/`Tibia.dat` (o par binário que o próprio jogo carrega, gerado por
+`build_assets.py` e versionado), sem tocar em `assets-src/import/`.
+
+Reaproveita, em vez de reimplementar:
+- `tools/spr/sprformat.py` (`S`) para ler `.dat`/`.spr` (mesmo módulo de
+  `dump_dat.py`).
+- O algoritmo MULTIPLY de composição de cor de outfit (layer 0 = base, layer
+  1 = template de máscara; pixel exato vermelho/verde/azul/amarelo =
+  body/legs/feet/head — FORMATO.md §3.5), já implementado em
+  `review_animals.py::composite`; `render_outfit.py` generaliza a mesma conta
+  para qualquer looktype/direção/fase/addon lido do `.dat` em vez de desenhar
+  a arte on-the-fly.
+- `tools/spr/tibia_colors.py` (`color_rgb`) para converter índice 0..132 de
+  `data/tfs_mapping.json` em RGB.
+
+```bash
+# retrato único
+.venv/bin/python tools/spr/render_outfit.py --looktype 900 --out /tmp/900.png --scale 4
+
+# vários de uma vez (carrega o .dat/.spr uma única vez)
+.venv/bin/python tools/spr/render_outfit.py \
+    --looktype 900 901 902 903 904 905 907 908 909 \
+    --outdir tools/aac/portraits --scale 4
+
+# looktype com cor de outfit real (layers=2), ex. o lobo procedural (940)
+.venv/bin/python tools/spr/render_outfit.py --looktype 940 \
+    --head 76 --body 76 --legs 115 --feet 115 --out /tmp/wolf.png --scale 6
+```
+
+Direção padrão é sul/frente (`--direction sul`, aceita nome ou índice 0..3 na
+ordem `Otc::Direction`), fase padrão é o frame group "Idle" (`--group idle`,
+fase 0 = parado). `--addon`/`--mount` cobrem `patternY`/`patternZ` quando
+existirem. Sem `--head/--body/--legs/--feet`, a cor é branca (MULTIPLY
+neutro — mostra a base sem recolorir); looktypes com `layers=1` (todo material
+importado, inclusive os 9 personagens iniciais) ignoram essas cores por
+completo, exatamente como o cliente faz.
+
+**Retratos versionados:** `tools/aac/portraits/<looktype>.png` (um por
+personagem de `data/characters.json`, 128×128 = 32×32 em `--scale 4`) é
+gerado por esse comando e commitado — é obra nossa (arte compilada do nosso
+`.spr`, não redistribuição de PNG de terceiro). Regerar sempre que
+`build_assets.py` mudar os sprites 900–909. Pendência que continua em aberto,
+registrada em `docs/01-roadmap.md`: o **desenho** desses 9 looktypes ainda é
+`layers=1` importado pixel-a-pixel do MUGEN por dentro do `.dat` (ver
+"Personagens MUGEN" acima) — o retrato deixou de servir PNG bruto de
+terceiros, mas ainda não é arte 100% própria; isso é backlog de **arte**, não
+do AAC.
