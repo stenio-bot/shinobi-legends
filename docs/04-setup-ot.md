@@ -648,3 +648,4 @@ de teste apagada do banco ao final.
   `character_switch.lua` (gerado) adiciona no login uma condição permanente (subId 9020) com os
   valores da vocação, então HP e chakra voltam sozinhos; comida soma por cima.
 - **`g_game.autoWalk` em scripts de QA**: só acha caminho dentro do minimapa já conhecido pelo cliente; num cliente novo ele retorna NoWay para qualquer alvo fora da tela. Nos rcs de teste ande tile a tile com `g_game.walk(North|South|East|West)` (ver `client-otc/tests/walk_trails_rc.lua`).
+- **Morte de monstro em scripts de QA**: `g_map.getCreatureById(id)` continua devolvendo o monstro depois que ele morre (o índice por id só é limpo no reciclo de slot do protocolo), então `getHealthPercent()` fica preso em 0%. Detecte morte por `creature:getStackPos() == -1` ou pela mensagem de loot (ver `client-otc/tests/boss_recheck_rc.lua`).
