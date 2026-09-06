@@ -30,8 +30,8 @@ dos monstros comuns, porque é o único item desta lista que pode gerar takedown
 
 | Monstro | Região | Quadros necessários | Prioridade | Status atual | Fonte sugerida | Horas (pixel artist) |
 |---|---|---|---|---|---|---|
-| Lobo (`wolf`) | Floresta da Vila | 4 direções × 3 fases de andar × 1 tamanho = 12 | — | **procedural (concluído 2026-09-05)** — looktype 940 dedicado, 4 direções reais + andar, `tools/spr/gen_animals.py`/`animal_art.py` | já feito | 0 |
-| Cervo (`forest_deer`) | Floresta da Vila | 12 (mesmo padrão) | — | **procedural (concluído 2026-09-05)** — looktype 941 dedicado (não recolore mais o Lobo), chifres e silhueta esguia próprios | já feito | 0 |
+| Lobo (`wolf`) | Floresta da Vila | 4 direções × 3 fases de andar × 1 tamanho = 12 | — | **procedural (concluído 2026-09-05, retrabalhado no mesmo dia)** — looktype 940 dedicado, 4 direções reais + andar, `tools/spr/gen_animals.py`/`animal_art.py`. Poses Norte/Sul REDESENHADAS (liam como bípede em pé, achado em playtest) + bug de cor corrigido (`wolf_gray_brown` apontava pra um índice de paleta BEGE de pele, não cinza — ver `docs/sistemas/arte-e-sprites.md`) | já feito | 0 |
+| Cervo (`forest_deer`) | Floresta da Vila | 12 (mesmo padrão) | — | **procedural (concluído 2026-09-05, retrabalhado no mesmo dia)** — looktype 941 dedicado (não recolore mais o Lobo), chifres e silhueta esguia próprios. Poses Norte/Sul REDESENHADAS (mesmo achado do Lobo: corpo alto lia como bípede) — cor já estava correta (marrom-avermelhado com pernas/cauda claras) | já feito | 0 |
 | Cobra da Floresta (`forest_snake`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05)** — looktype 943 (`tools/spr/gen_animals.py`), layers=2: verde-floresta; compartilha o looktype com `lesser_serpent`/`magma_serpent` mas agora com MÁSCARA de cor de verdade (cada uma tem head/body/legs/feet próprios em `data/tfs_mapping.json`) | já feito | 0 |
 | Bandido (`bandit`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 956, marrom, boneco 100% procedural (`tools/spr/humanoid_art.py`, capuz), 4 direções reais + 3 fases de andar (deixou de ser hue-shift de PNG importado) | já feito | 0 |
 | Bandido Arqueiro (`bandit_archer`) | Floresta da Vila | 12 | — | **procedural (concluído 2026-09-05, 2ª passada)** — looktype 946, verde-oliva, boneco procedural com arco visível + aljava nas costas, 4 direções reais + andar | já feito | 0 |
@@ -94,6 +94,21 @@ do escopo desta passada, ainda no looktype importado cru, mesma pose presa). Os 
 bosses do grupo (`boss_bandit_chief`, `boss_puppeteer`, `boss_curse_partner`) ainda
 não têm pose especial de fúria/baixo-HP — próximo passo de maior ganho percebido
 por hora de trabalho agora que a direção/andar já foram resolvidos.
+
+**Retrabalho 2026-09-05 (mesmo dia): poses N/S do Lobo/Cervo pareciam bípede cor de
+pele.** Achado em playtest (`screenshots/walk_bosque_norte.png`): as poses de
+frente/costas do Lobo (940) e do Cervo (941) tinham corpo ALTO (mesma proporção
+tronco+pernas de um humanoide) e o Lobo saía com cabeça/corpo inteiros num BEGE de
+pele (`tools/spr/tibia_colors.py` tinha `wolf_gray_brown` apontando pro índice 20 da
+paleta de outfit, que é `(191,159,143)` — bege quente, não cinza). Redesenhado em
+`tools/spr/animal_art.py` (corpo curto/largo, peito afunilando atrás de frente,
+ancas largas + cauda de costas) e corrigido o índice de cor (76,
+`(109,109,109)`, cinza médio-escuro) em `tools/spr/tibia_colors.py` E
+`data/tfs_mapping.json` (`monsters.wolf.head`/`.body` — índice bruto, não
+gerado a partir do nome). Novo script `tools/spr/review_animals.py` compõe o
+MULTIPLY de verdade (mesma fórmula do cliente) com as cores reais de
+`tfs_mapping.json` pra revisão visual — ver `docs/sistemas/arte-e-sprites.md`
+pra detalhes e `screenshots/animais_v2_review.png`/`animais_v2_*.png` (in-game).
 
 ## NPCs (21 já implementados em `data/npcs/*.json`)
 

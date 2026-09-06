@@ -151,7 +151,16 @@ NAMED = {name: nearest(rgb) for name, rgb in RAW.items()}
 # `idx % 19 != 0`), priorizando ficar na familia de matiz certa em vez do
 # vizinho euclidiano mais proximo:
 NAMED.update({
-    "wolf_gray_brown": 20,      # (191,159,143) bege-acastanhado, hue 20 sat baixa
+    # BUG real corrigido nesta missao (redesenho de poses N/S do lobo/cervo,
+    # ver docs/sistemas/arte-e-sprites.md): idx=20 -> (191,159,143) e um BEGE
+    # de pele quente (mesma familia do BASE["skin"] de art.py!), nao um
+    # "cinza-marrom". Com layers=2 (base quase branca * MULTIPLY), a cabeca e
+    # o corpo inteiros do lobo saiam literalmente cor de pele — lido como um
+    # boneco em pe, nao um lobo. Trocado para o idx=76 (109,109,109), cinza
+    # neutro medio-escuro (a "correcao manual" original evitou o cinza puro
+    # da distancia euclidiana, mas exagerou pro lado claro/rosado; 76 fica no
+    # meio: cinza de verdade, sem ficar bege nem preto puro).
+    "wolf_gray_brown": 76,      # (109,109,109) cinza medio-escuro
     "wolf_dark": 115,           # (127,42,0) marrom escuro
     "eagle_slate": 30,          # (143,159,191) azul-ardosia claro
     "toad_swamp_green": 43,     # (127,191,95) verde medio

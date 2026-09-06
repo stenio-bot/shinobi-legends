@@ -1875,6 +1875,136 @@ mais de um monstro — mas agora com máscara de cor de verdade:
 | `boss_elder_toad` | 60 (inalterado) | continua no looktype importado 2×2, agora sozinho no 60 (o Sapo Gigante saiu) |
 | `leech` | 945 | `leech_dark_purple` (as 4 — legs não aparece na arte) |
 
+### Retrabalho: poses Norte/Sul do Lobo e do Cervo liam como "boneco cor de pele" (2026-09-05)
+
+Achado em playtest (`screenshots/walk_bosque_norte.png`): os 2 "Lobo" perto da
+trilha do Bosque Norte pareciam **bípedes em pé, cor de pele** — nada de
+lobo. Duas causas independentes, uma de forma e uma de cor:
+
+**Causa 1 (forma):** o branch não-perfil (`direction in (0, 2)`) de
+`draw_wolf`/`draw_deer` em `animal_art.py` desenhava um retângulo de corpo
+ALTO (11px, `rect(9,14,22,25,"body")`) em cima de 2 pernas — exatamente a
+proporção tronco+pernas de um humanoide (mesma silhueta de
+`art.draw_humanoid`), só com orelhas no topo. Redesenhado para ler como
+quadrúpede visto de frente/costas: corpo CURTO e LARGO (nunca uma torre),
+cabeça grande com orelhas, e a frente/costas agora são geometrias
+DIFERENTES (antes eram quase idênticas, só a região da cara mudava): de
+frente o peito é largo e afunila para um corpo curto atrás (o quadrúpede
+"recuando" da câmera) com as 2 patas DIANTEIRAS relativamente próximas; de
+costas o dorso é estreito perto do pescoço e alarga nas ANCAS (quadril >
+ombro, como um animal de verdade) com uma CAUDA baixa entre as 2 patas
+TRASEIRAS, mais afastadas que as dianteiras. Armadilha encontrada e corrigida
+nesta mesma passada: a cauda do lobo (de costas) foi desenhada a princípio na
+região `"legs"` — mesma cor que as 2 patas vizinhas — e como a máscara não
+desenha contorno entre regiões vizinhas (só no limite com o fundo
+transparente, ver `art.outline_inner`), as 3 formas grudavam num blob marrom
+só; trocada para a região `"body"` (cor do dorso), a cauda agora aparece como
+uma continuação clara do tronco entre as 2 patas escuras. Outra armadilha: os
+2 olhos do Cervo de frente ficaram ADJACENTES sem gap (`x=14-15` e `x=16-17`)
+e viravam uma faixa preta única em vez de 2 pontos — corrigido com 1px de
+gap entre eles.
+
+**Causa 2 (cor, a raiz do "bege de pele"):** `tools/spr/tibia_colors.py`
+tinha uma correção manual antiga, `NAMED["wolf_gray_brown"] = 20`. O índice
+20 da paleta real de outfit (`Outfit::getColor`, `tibia_colors.color_rgb`) é
+`(191,159,143)` — um BEGE quente, da mesma família de tom que
+`art.BASE["skin"]` — não um cinza-acastanhado. Como o looktype 940 é
+`layers=2` (camada 0 quase branca × MULTIPLY da cor real do
+`data/tfs_mapping.json`, ver "Cores de outfit" acima), a cabeça E o corpo
+INTEIROS do lobo (`data/tfs_mapping.json` tinha `head=20, body=20`) saíam
+literalmente cor de pele — some com a forma de bípede da Causa 1, dava
+exatamente o "boneco cor de pele em pé" do playtest. Corrigido trocando o
+índice para 76 (`(109,109,109)`, cinza neutro médio-escuro — a "correção
+manual" original evitava o cinza puro da distância euclidiana simples, que
+caía num cinza ainda mais claro/genérico, mas exagerou para o lado
+claro/rosado; 76 fica no meio) em **dois lugares** (índice bruto duplicado
+de propósito, não é gerado em runtime a partir de `tibia_colors`):
+`tools/spr/tibia_colors.py` (`NAMED["wolf_gray_brown"]`, documentação/fonte
+de verdade do nome) e `data/tfs_mapping.json` (`monsters.wolf.head` e
+`.body`, o que o protocolo realmente manda — editado à mão, não
+regenerado por nenhum script). Pernas/patas continuam em `wolf_dark`
+(índice 115, `(127,42,0)`, marrom-avermelhado escuro) — o lobo final fica
+corpo cinza + patas marrom escuro, um "cinza-marrom" plausível dado que a
+paleta de outfit da Tibia é esparsa (só 133 índices, HSI de 19 matizes × 7
+combinações de saturação/intensidade — ver comentário em
+`tibia_colors.py`) e não tem nenhum tom "cinza com leve calor" de verdade.
+O Cervo (`deer_tan`=idx 39 → `(191,127,95)` marrom-avermelhado,
+`deer_cream`=idx 22 → `(191,191,143)` creme claro) não tinha esse bug — as
+cores já compunham como pedido (marrom-avermelhado com barriga/perna
+clara) — só a forma (Causa 1) precisava de conserto.
+
+**Verificação:** como não existe (e não existia) nenhum script que
+compusesse o MULTIPLY com as cores reais para revisão visual, foi escrito
+`tools/spr/review_animals.py` — replica exatamente
+`Creature::internalDraw` (`client-otc/src/client/creature.cpp`): desenha a
+camada 0 (base) e, para cada pixel cuja camada 1 bate uma das 4 cores exatas
+de máscara (vermelho/verde/azul/amarelo = body/legs/feet/head), multiplica
+esse pixel pela cor real do monstro em `data/tfs_mapping.json`
+(`tibia_colors.color_rgb(indice)`); pixels fora de máscara (olho, linha,
+sombra) ficam exatamente como desenhados na camada 0, igual ao cliente
+(`Image::overwriteMask`, `client-otc/src/framework/graphics/image.cpp`, só
+recolore o que bate a cor exata da máscara). Gera
+`screenshots/animais_v2_review.png` (zoom 3×, fundo verde, 6 animais × 4
+direções × 3 fases de andar, rótulo com as 4 cores RGB compostas de cada
+monstro). A folha foi OLHADA (não só gerada) e motivou 2 rodadas de ajuste
+(cauda do lobo virando "body" em vez de "legs"; gap entre os olhos do
+Cervo) antes de fechar — águia/cobra/sapo/sanguessuga não precisaram de
+ajuste (já liam bem de todos os ângulos: ave sempre em voo vista de cima,
+cobra/sanguessuga são silhuetas onduladas sem problema de "bípede", sapo é
+uma forma agachada simétrica).
+
+**Pipeline:** `tools/spr/build_assets.py` (`conferencia OTB -> .dat: OK`) →
+`tools/spr/dump_dat.py` (`validacao: OK`, 0 divergências em
+stackable/fluid/splash/animation/**ordem_pilha**) →
+`tools/spr/test_otb_roundtrip.py` (`RESULTADO: OK`, `items.otb` byte a byte
+idêntico — o retrabalho só mexe em `creatures/`, nenhum item).
+
+**Teste in-game:** servidor (`./build/tfs`) já estava no ar (não reiniciado
+por esta missão — na verdade ele reiniciou **sozinho** no meio da sessão,
+externo a esta missão, ver "Limitações" abaixo). Login `slqa`/`slqa123`
+(conta GM já existente) via `client-otc/shinobirc.lua` temporário (copiado de
+`client-otc/tests/animais_v2*_rc.lua`, ausência confirmada antes de cada
+cópia, apagado ao final de cada rodada, nunca comitado). `/tp 1050,1012,7`
+(Bosque Norte, lobos reais patrulhando) confirmou visualmente o Lobo de
+COSTAS (cinza, patas escuras, nada de bípede — rodada com o servidor recém
+reiniciado); como o Lobo é `"behavior": "aggressive"` (`data/monsters/
+forest.json`, `aggro_range: 5`), aproximar-se sem atacar foi o jeito de ver a
+FRENTE sem matar o bicho num golpe só (a conta GM faz dano acima do HP total
+de Lobo/Cervo — 60/30 — matando em 1 hit se atacado, por isso as primeiras
+tentativas com `g_game.attack` só confirmaram a morte, não a virada de
+direção); `/m Cervo` deixado parado (sem ataque) mostrou a mesma FRENTE
+tan/chifres pequenos junto do Lobo. Screenshots finais (scale 0.5, OLHADAS
+nesta sessão) em `screenshots/animais_v2_01_visao_geral.png` (visão geral:
+Lobo perto de frente, Cervo de frente, um 2º Lobo mais longe ainda de
+costas), `animais_v2_02_lobo_frente_zoom.png` e
+`animais_v2_03_cervo_frente_zoom.png` (crops fechados) — confirma que a
+composição estática do `review_animals.py` bate com o que o cliente de
+verdade desenha.
+
+**Limitações desta rodada de teste in-game:**
+- A 1ª tentativa de login (`slqa`/`slqa123`) ficou presa na tela de seleção
+  de personagem (mesmo sintoma já documentado nesta seção do arquivo pra
+  MUGEN v1: "GM has logged in" sem logout correspondente) — descoberto
+  depois o motivo: **outra sessão/agente estava usando a MESMA conta
+  `slqa` ao mesmo tempo** (achado concreto: `client-otc/shinobirc.lua`
+  reapareceu sozinho, com conteúdo de um playtest de outra missão ativa
+  ["Playtest ARCO 2 — Costa das Marés"], entre duas rodadas desta sessão,
+  mesmo depois de eu ter confirmado ausência e apagado o meu). O servidor
+  também reiniciou sozinho nesse intervalo (pid do `./build/tfs` mudou),
+  o que por si só já limpa logins presos — depois disso o login funcionou
+  normalmente. **Nesta 1ª tentativa eu apaguei o `shinobirc.lua` da outra
+  sessão sem perceber** (sobrescrevi com `cp` sem checar o conteúdo,
+  só o tamanho) — não deletei nenhum processo alheio (`pkill -x OTClient`
+  nunca usado, só matei/aguardei os PIDs que eu mesma abri) nem reiniciei o
+  servidor, mas o arquivo da outra sessão foi perdido; registrado aqui pra
+  transparência. Da 2ª rodada em diante, cada cópia foi precedida de um
+  `ls -la shinobirc.lua` imediatamente antes do `cp`.
+- Não foi capturado um perfil (Leste/Oeste) do Lobo/Cervo IN-GAME nesta
+  rodada (só o `review_animals.py` cobre as 4 direções de verdade) — o
+  perfil não foi tocado nesta missão (já lia bem antes, motivo original da
+  missão foi só N/S) e uma tentativa de forçar o giro lateral ficaria
+  refém do mesmo problema de "mata em 1 golpe" acima.
+
 ### `tools/spr/gen_humanoid_variants.py`: looktypes 946–957 (histórico v1 — hue-shift)
 
 Versão original (2026-09-05, 1ª passada): para os looktypes humanoides

@@ -91,23 +91,42 @@ def draw_wolf(direction, phase, layer):
         rect(24, 3, 26, 7, "head")
         rect(23, 10, 24, 11, "eye")           # olho (na cabeca, nao no torso)
     else:
+        # Quadrupede visto de frente/costas: cabeca grande no topo (com
+        # orelhas), corpo CURTO e LARGO (nunca uma torre alta = silhueta de
+        # gente em pe), 2 patas visiveis por baixo. Frente: peito largo
+        # afunilando pra baixo (so as patas dianteiras aparecem, o corpo
+        # "recua" atras). Costas: dorso estreito no pescoco alargando pras
+        # ancas, cauda baixa entre as 2 patas traseiras (mais afastadas que
+        # as dianteiras — quadril e mais largo que ombro).
         front = direction == 2
         sw_a, sw_b = _walk(phase, 0), _walk(phase, 1)
         rect(9, 29, 22, 30, "shadow")
-        rect(10, 24, 13, 28 + sw_a, "legs")
-        rect(18, 24, 21, 28 + sw_b, "legs")
-        rect(9, 27 + sw_a, 14, 29 + sw_a, "feet")
-        rect(17, 27 + sw_b, 22, 29 + sw_b, "feet")
-        rect(9, 14, 22, 25, "body")
-        rect(11, 6, 20, 15, "head")
-        rect(9, 3, 13, 8, "head")            # orelha esquerda
-        rect(18, 3, 22, 8, "head")           # orelha direita
         if front:
-            rect(13, 10, 14, 11, "eye")
-            rect(17, 10, 18, 11, "eye")
-            rect(14, 12, 17, 13, "line")     # focinho escuro
+            rect(8, 16, 23, 22, "body")          # peito largo (ombros)
+            rect(11, 21, 20, 25, "body")          # afunila pro corpo curto atras
+            rect(12, 22, 14, 27 + sw_a, "legs")    # pata dianteira esquerda
+            rect(17, 22, 19, 27 + sw_b, "legs")    # pata dianteira direita
+            rect(11, 26 + sw_a, 15, 28 + sw_a, "feet")
+            rect(16, 26 + sw_b, 20, 28 + sw_b, "feet")
         else:
-            rect(14, 6, 17, 9, "head")       # topo da cabeca (costas)
+            rect(11, 16, 20, 19, "body")          # dorso estreito perto do pescoco
+            rect(7, 19, 24, 24, "body")           # ancas largas (quadril > ombro)
+            # cauda na cor do CORPO (nao das patas): se fosse "legs" ficaria
+            # identica as 2 patas traseiras e as 3 formas grudariam num so
+            # blob marrom sem contorno interno (mascara nao desenha borda
+            # entre regioes vizinhas, so no limite com o fundo transparente).
+            rect(14, 20, 18, 27, "body")          # cauda baixa, entre as patas
+            rect(9, 22, 12, 27 + sw_a, "legs")     # pata traseira esquerda
+            rect(19, 22, 22, 27 + sw_b, "legs")    # pata traseira direita
+            rect(8, 26 + sw_a, 13, 28 + sw_a, "feet")
+            rect(18, 26 + sw_b, 23, 28 + sw_b, "feet")
+        rect(10, 5, 22, 16, "head")               # cabeca grande
+        rect(9, 2, 13, 7, "head")                 # orelha esquerda
+        rect(19, 2, 23, 7, "head")                # orelha direita
+        if front:
+            rect(13, 11, 14, 12, "eye")
+            rect(18, 11, 19, 12, "eye")
+            rect(14, 13, 17, 14, "line")          # focinho escuro
     return img
 
 
@@ -141,24 +160,39 @@ def draw_deer(direction, phase, layer):
         rect(28, 1, 29, 4, "legs")
         rect(25, 9, 26, 10, "eye")            # olho (na cabeca)
     else:
+        # Mesma logica de quadrupede do lobo (corpo curto/largo, nunca uma
+        # torre): pernas do cervo mais finas ("cervo e mais esguio"), chifres
+        # pequenos SO de frente (mission: cauda curta de costas).
         front = direction == 2
         sw_a, sw_b = _walk(phase, 0), _walk(phase, 1)
         rect(10, 29, 21, 30, "shadow")
-        rect(11, 23, 13, 28 + sw_a, "legs")
-        rect(18, 23, 20, 28 + sw_b, "legs")
-        rect(10, 27 + sw_a, 14, 29 + sw_a, "feet")
-        rect(17, 27 + sw_b, 21, 29 + sw_b, "feet")
-        rect(10, 15, 21, 24, "body")
-        rect(12, 6, 19, 15, "head")
-        # galhada simetrica
-        rect(9, 1, 10, 6, "legs")
-        rect(7, 1, 8, 4, "legs")
-        rect(21, 1, 22, 6, "legs")
-        rect(23, 1, 24, 4, "legs")
         if front:
-            rect(13, 9, 14, 10, "eye")
-            rect(17, 9, 18, 10, "eye")
-            rect(14, 11, 17, 12, "line")
+            rect(9, 17, 22, 22, "body")           # peito
+            rect(12, 21, 19, 25, "body")          # afunila pro corpo curto atras
+            rect(13, 23, 14, 28 + sw_a, "legs")    # pata dianteira esquerda (fina)
+            rect(17, 23, 18, 28 + sw_b, "legs")    # pata dianteira direita (fina)
+            rect(12, 27 + sw_a, 15, 29 + sw_a, "feet")
+            rect(16, 27 + sw_b, 19, 29 + sw_b, "feet")
+            # chifres pequenos (2 pontas cada, so aparecem de frente)
+            rect(11, 1, 12, 5, "legs")
+            rect(9, 1, 10, 3, "legs")
+            rect(20, 1, 21, 5, "legs")
+            rect(22, 1, 23, 3, "legs")
+        else:
+            rect(12, 16, 19, 19, "body")          # dorso estreito perto do pescoco
+            rect(8, 19, 23, 24, "body")           # ancas largas
+            rect(14, 21, 17, 25, "legs")          # cauda CURTA (so um coto, nao desce ate os pes)
+            rect(10, 22, 11, 27 + sw_a, "legs")    # pata traseira esquerda (fina)
+            rect(20, 22, 21, 27 + sw_b, "legs")    # pata traseira direita (fina)
+            rect(9, 26 + sw_a, 12, 28 + sw_a, "feet")
+            rect(19, 26 + sw_b, 22, 28 + sw_b, "feet")
+        rect(12, 7, 19, 16, "head")
+        rect(11, 5, 13, 8, "head")                # orelha esquerda
+        rect(18, 5, 20, 8, "head")                # orelha direita
+        if front:
+            rect(13, 10, 14, 11, "eye")           # olho esquerdo (gap p/ nao grudar no direito)
+            rect(17, 10, 18, 11, "eye")           # olho direito
+            rect(15, 12, 16, 13, "line")
     return img
 
 
