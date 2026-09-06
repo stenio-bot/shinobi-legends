@@ -2,12 +2,12 @@
 <!-- GERADO por tools/map/build_valley.py. NAO EDITE A MAO. -->
 <spawns>
 	<spawn centerx="1012" centery="1012" centerz="7" radius="4">
-		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
-		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="30"/>
 	</spawn>
 	<spawn centerx="1050" centery="1010" centerz="7" radius="4">
-		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
-		<monster name="Lobo" x="2" y="-1" z="7" spawntime="60"/>
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
+		<monster name="Lobo" x="2" y="-1" z="7" spawntime="30"/>
 	</spawn>
 	<spawn centerx="1085" centery="1015" centerz="7" radius="4">
 		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="70"/>
@@ -19,12 +19,12 @@
 		<monster name="Bandido" x="-2" y="1" z="7" spawntime="80"/>
 	</spawn>
 	<spawn centerx="1070" centery="1040" centerz="7" radius="4">
-		<monster name="Cervo" x="0" y="0" z="7" spawntime="60"/>
-		<monster name="Cervo" x="2" y="-1" z="7" spawntime="60"/>
-		<monster name="Cervo" x="-2" y="1" z="7" spawntime="60"/>
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="45"/>
+		<monster name="Cervo" x="2" y="-1" z="7" spawntime="45"/>
+		<monster name="Cervo" x="-2" y="1" z="7" spawntime="45"/>
 	</spawn>
 	<spawn centerx="1105" centery="1045" centerz="7" radius="4">
-		<monster name="Lobo" x="0" y="0" z="7" spawntime="60"/>
+		<monster name="Lobo" x="0" y="0" z="7" spawntime="30"/>
 	</spawn>
 	<spawn centerx="1015" centery="1090" centerz="7" radius="4">
 		<monster name="Bandido" x="0" y="0" z="7" spawntime="80"/>

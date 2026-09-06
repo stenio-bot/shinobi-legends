@@ -277,6 +277,13 @@ tools/install_generated.sh                      # instala no servidor
 30 grupos, 64 monstros, 6 NPCs. Raio 2–4, `spawntime` 60–120 s para monstros comuns
 (120 s pros Rivais do Exame) e 3600 s para bosses.
 
+**Playtest r7 (P1, respawn de Lobo medido em >270s reais em jogo, bem acima do
+nominal):** `FOREST_SETS` em `build_valley.py` reduziu `spawntime` do Lobo de
+60 → **30** nos 3 pontos de Lobo (Trilha dos Lobos, Bosque Norte, Bosque
+Leste) e do Cervo de 60 → **45** (Clareira Central) — cobre a caçada L1 sem
+forçar o jogador a esperar minutos parado. Bandido/Bandido Arqueiro/Cobra da
+Floresta mantidos como estavam.
+
 | Monstro | Qtd |
 |---|---|
 | Lobo | 12 |
@@ -850,6 +857,72 @@ com symlinks para `data/` e `build/`, um `config.lua` próprio com `mapName = "v
 e portas diferentes (7271/7272), e rode `./build/tfs` de dentro dela — o TFS lê o
 `config.lua` do diretório atual.
 
+## Trilhas e anti-bolsão (Floresta da Vila)
+
+Playtest r7 (`docs/qa/playtest-l1-20-r7.md`, P0-1): pelo menos um bolsão de 2
+tiles isolado (~1044-1047,1020-1027) no corredor sem trilha entre a Vila da
+Folha e o Bosque Norte, sem NENHUMA saída válida (as 8 direções ao redor
+retornavam `RETURNVALUE_NOTENOUGHROOM`). Causa raiz: a floresta é semeada por
+`blob()` com densidade 0.45 em manchas de raio 3-7 (`build()`, passo 2),
+ANTES de qualquer trilha existir — por acaso, alguns tiles de grama ficam
+cercados de árvore nas 4 direções ortogonais, sem que o gerador percebesse.
+
+### Trilhas largas (2 tiles) — Portão Leste até os pontos de caça L1-10
+
+Não existe Portão Norte na muralha da vila (só Sul/principal e Leste/
+comercial — ver `GATE_X`/`GATE_E_X` em `build_valley.py`); por isso toda rota
+pedida usa o **Portão Leste** como origem (ele já liga direto ao anel de
+trilhas em x=1055, que por sua vez já é 2 tiles de largura em toda sua
+extensão — `b.path(..., width=2)`, passo 5 de `build()`). O que faltava era
+o RAMO final de cada clareira até esse anel, que `connect_clearings()` sempre
+desenhou com `width=1`. `WIDE_TRAIL_CLEARINGS` (`build_valley.py`) agora força
+`width=2` nos dois trechos do L (vertical clareira→anel, horizontal
+anel→eixo) só para as 6 clareiras pedidas:
+
+- **Bosque Norte** (1050,1010) e **Clareira do Riacho** (1085,1015) — rota
+  Portão Leste → anel leste (x=1055) → anel norte (y=1025) → ramo da
+  clareira.
+- **Trilha dos Lobos** (1012,1012) e **Mata Norte** (1005,1005) — mesma
+  rota do Portão Leste (não há Portão Norte), seguindo o anel norte até o
+  lado oeste (x=1005/1012).
+- **Clareira Central** (1070,1040) e **Bosque Leste** (1105,1045) — pontos de
+  caça L1-10, no mesmo anel norte, ramo mais longo (até 50 tiles) — antes o
+  trecho inteiro era `width=1`.
+
+`b.path()` já limpa itens (`clear_items`) em toda a largura do trecho, então
+nenhuma árvore/arbusto sobrevive na trilha alargada; `apply_borders()` roda
+depois e cobre a borda terra/grama automaticamente (mesmos ids de sempre,
+`border_grass_dirt_*`), sem tratamento especial.
+
+### Anti-bolsão: flood-fill ortogonal + selagem automática
+
+Depois de toda a floresta/decoração/regiões geradas (mata, `decor.py`,
+`build_regions.py`) e do passe de bordas (`apply_borders`), `main()` roda um
+laço de convergência (até 3 iterações, `build_valley.py`):
+
+1. **`seal_unreachable_pockets(b, types)`** — calcula o conjunto caminhável
+   real (mesmas regras do TFS) e um flood-fill 4-direções a partir do templo
+   (incluindo os teleportes de loja/arena como aresta extra, igual ao BFS de
+   `validate()`). Todo tile caminhável que sobra fora do alcance vira árvore
+   (`TREES`/mata a oeste, `DEAD_TREES`/pântano na Floresta da Morte,
+   `BUSHES` no caso raro de sobrar dentro da vila) — nunca fica ilha
+   caminhável solta no mapa.
+2. **`fix_forest_deadends(b, types, max_len=6)`** — no grafo caminhável
+   restrito à área externa (fora da vila, dos retângulos protegidos — torre,
+   hub, ponte, acampamento — e dos interiores x>=1300), acha toda cadeia que
+   começa num tile de grau 1 (ponta cega) e segue por tiles de grau 2 até uma
+   junção; cadeias com mais de 6 tiles têm a PONTA (lado mais distante da
+   junção) bloqueada com árvore, encurtando o beco pra no máximo 6 tiles sem
+   quebrar nenhuma conexão real (a cauda cortada nunca tinha outro vizinho).
+
+O laço para quando uma iteração não sela nem corrige nada (selar bolsão
+nunca desconecta área alcançável; encurtar beco só remove tiles sem outro
+vizinho — na prática converge na 1ª ou 2ª passada). Build de referência
+(2026-09-05, com o SEED fixo 1337): **2540 tiles selados** (bolsões) + **5
+becos corrigidos (9 tiles bloqueados)**, resultado final **100.0% dos tiles
+caminháveis alcançáveis do templo** (23259/23259) — confirmado por
+`tools/map/walk_audit.py` (seções 3 e 4, ambas 0).
+
 ## Auditoria de caminhabilidade
 
 Feedback recorrente de usuário: "tem vários lugares do mapa que eu vou caminhando e
@@ -889,6 +962,39 @@ pelo script são as portas de pedra fechadas do templo (1029,1046,7) e da
 torre da Floresta da Morte (1163,1060,7), que bloqueiam até serem abertas —
 comportamento correto do Tibia, não travamento. Nenhum id >= 30000 diverge
 entre `tiles.json`/`tiles_decor.json` e o OTB real (344 ids conferidos).
+
+**Seções novas (2026-09-05, playtest r7 P0-1 — bolsão sem saída perto de
+1044-1047,1020-1027):**
+
+- **3) Alcance ortogonal a partir do templo.** Faz DOIS flood-fills 4-direções
+  (o TFS/OTClient nunca deixam passar em diagonal entre duas árvores) sobre o
+  conjunto de tiles caminháveis (regra real do TFS, mesma do item 1): um
+  "estrito" (porta fechada bloqueia, igual ao jogo de verdade) e um
+  "relaxado" (toda porta é tratada como sempre passável). A diferença entre
+  os dois separa dois casos:
+  - **(a) bolsão real** = caminhável no relaxado mas inalcançável mesmo
+    abrindo toda porta do mapa — **meta 0, `exit 1` se > 0**. É exatamente o
+    tipo de tile do P0-1 (dois tiles que só se enxergavam um ao outro).
+  - **(a-extra) interior fechado por porta** = só fica inalcançável no
+    estrito, mas some quando a porta é tratada como aberta — são as casas,
+    a Torre do Hokage, a Torre do Sapo Ancião, a Prisão e a Taverna. Listado
+    à parte (não conta como bolsão) e cada cluster é comparado por
+    proximidade com uma lista de âncoras conhecidas de casa/torre; qualquer
+    cluster que não bata com nenhuma é impresso como "NÃO IDENTIFICADO" pra
+    revisão manual (não deveria existir).
+  - Rodagem em 2026-09-05, mapa pós-correção: **0 bolsões reais**; 1 cluster
+    fechado por porta (10 tiles, Torre do Sapo Ancião — identificado, ok).
+- **4) Becos sem saída (>6 tiles) na mata.** Mesmo grafo caminhável (4
+  vizinhos), restrito à área externa (fora da vila, fora dos retângulos
+  protegidos conhecidos — torre, hub, ponte, acampamento — e fora dos
+  interiores em x>=1300). Acha toda cadeia que começa num tile de grau 1
+  (ponta cega) e segue por tiles de grau 2 até uma junção (grau >= 3);
+  cadeias com mais de 6 tiles são reportadas — **meta 0**. Rodagem em
+  2026-09-05: **0 becos** (o gerador já corrige isso antes de gravar o
+  mapa, ver seção "Trilhas e anti-bolsão" abaixo).
+
+Ambas as checagens usam `import build_valley` só pelas CONSTANTES (posição
+do templo, retângulos protegidos, etc.) — nunca chama `build_valley.main()`.
 
 ### Auditoria dinâmica (`client-otc/tests/walk_audit_rc.lua`)
 

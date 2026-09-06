@@ -46,8 +46,11 @@ from collections import defaultdict
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "spr"))
 
+from collections import deque  # noqa: E402
+
 from otbm import OtbmMap  # noqa: E402
 import otb as otb_mod  # noqa: E402
+import build_valley as BV  # noqa: E402 (so' constantes: TEMPLE_POS, in_village, etc. — nao roda main())
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 DEFAULT_MAP = os.path.join(ROOT, "server", "tfs", "data", "world", "valley.otbm")
@@ -187,6 +190,125 @@ def flags_repr(f):
     return "+".join(n for n, b in FLAG_BITS if f & b) or "(none)"
 
 
+# --------------------------------------------------------------- alcance/becos
+#: âncoras conhecidas de interior fechado por porta (casa/torre/prisão/
+#: taverna) — usadas só pra rotular os clusters da seção 3.2, não pra
+#: decidir o que conta como bolsão (isso é 100% topológico, ver bfs_reach).
+_DOOR_INTERIOR_ANCHORS = [
+    ("Torre do Hokage", 1029, 1036),
+    ("Torre do Sapo Ancião", BV.TOWER[0] + 2, BV.TOWER[1] + 1),
+    ("Prisão da Vila", BV.PRISON_XY[0], BV.PRISON_XY[1]),
+    ("Taverna do Vale", BV.TAVERN_XY[0], BV.TAVERN_XY[1]),
+] + [("Casa (bairro residencial)", sx, sy)
+     for (sx, sy, _key) in BV.RESIDENTIAL_NORTH + BV.RESIDENTIAL_SOUTH]
+
+
+def _nearest_anchor(x, y, max_dist=10):
+    best = None
+    best_d = max_dist + 1
+    for (name, ax, ay) in _DOOR_INTERIOR_ANCHORS:
+        d = abs(x - ax) + abs(y - ay)
+        if d < best_d:
+            best_d = d
+            best = name
+    return best
+
+
+def bfs_reach(walk, start, teleports):
+    seen = {start}
+    q = deque([start])
+    while q:
+        x, y = q.popleft()
+        neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+        dest = teleports.get((x, y))
+        if dest is not None:
+            neighbors.append(dest)
+        for n in neighbors:
+            if n in walk and n not in seen:
+                seen.add(n)
+                q.append(n)
+    return seen
+
+
+def connected_components(positions, walk):
+    """Agrupa ``positions`` (subconjunto de ``walk``) em clusters conectados
+    (4 direções, dentro do próprio conjunto ``walk``) — só usado pra listar
+    amostras legíveis, não afeta a contagem."""
+    positions = set(positions)
+    clusters = []
+    seen = set()
+    for p in sorted(positions):
+        if p in seen:
+            continue
+        comp = []
+        q = deque([p])
+        seen.add(p)
+        while q:
+            cx, cy = q.popleft()
+            comp.append((cx, cy))
+            for n in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                if n in positions and n not in seen:
+                    seen.add(n)
+                    q.append(n)
+        clusters.append(comp)
+    return clusters
+
+
+def find_deadends(walk, max_len=6):
+    """Mesma lógica de `build_valley.fix_forest_deadends`, mas só de LEITURA
+    (audita o mapa já instalado — não modifica nada). Restringe a área
+    externa (fora da vila, fora dos retângulos protegidos conhecidos, fora
+    dos interiores em x>=1300) e devolve a lista de (tile_da_ponta, tamanho
+    da cadeia) para toda cadeia > ``max_len``."""
+    def in_scope(x, y):
+        if x >= 1300:
+            return False
+        if BV.in_village(x, y):
+            return False
+        # retângulos protegidos conhecidos (mesmos de build_valley.build):
+        # torre, hub de NPCs, ponte, acampamento.
+        if BV.TOWER[0] <= x <= BV.TOWER[2] and BV.TOWER[1] <= y <= BV.TOWER[3]:
+            return False
+        if (BV.HUB[0] - 1 <= x <= BV.HUB[2] + 1
+                and BV.HUB[1] - 1 <= y <= BV.HUB[3] + 1):
+            return False
+        if (BV.RIVER_X0 - 1 <= x <= BV.RIVER_X1 + 1
+                and BV.BRIDGE_Y0 - 1 <= y <= BV.BRIDGE_Y1 + 1):
+            return False
+        ccx, ccy = BV.CAMP_CENTER
+        if ccx - 5 <= x <= ccx + 5 and ccy - 5 <= y <= ccy + 5:
+            return False
+        return True
+
+    scope = {p for p in walk if in_scope(*p)}
+
+    def neighbors(p):
+        x, y = p
+        return ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+
+    def degree(p):
+        return sum(1 for n in neighbors(p) if n in scope)
+
+    visited = set()
+    found = []
+    for start in sorted(p for p in scope if degree(p) == 1):
+        if start in visited:
+            continue
+        chain = [start]
+        visited.add(start)
+        prev, current = None, start
+        while True:
+            nxt = [n for n in neighbors(current) if n in scope and n != prev]
+            if len(nxt) != 1 or nxt[0] in chain:
+                break
+            prev, current = current, nxt[0]
+            chain.append(current)
+            visited.add(current)
+        if len(chain) > max_len:
+            found.append((start, len(chain)))
+    return found
+
+
 # --------------------------------------------------------------------- main
 def main():
     map_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_MAP
@@ -241,6 +363,14 @@ def main():
     n_walkable_intent = 0
     n_diverge = 0
 
+    #: tiles caminhaveis (regra real do TFS) no andar do templo, pra auditoria
+    #: de alcance ortogonal (secao 3). "relaxed" trata porta como sempre
+    #: passavel (ignora blockSolid de item is_door_like) — usado pra separar
+    #: "interior fechado por porta" de bolsao de verdade (ver secao 3).
+    walk_strict = set()
+    walk_relaxed = set()
+    teleports = {}
+
     for (x, y, z), tile in m.tiles.items():
         n_tiles += 1
         ground = tile.ground
@@ -254,13 +384,27 @@ def main():
         stack = tile.items  # itens empilhados (sem contar o chão via attr_item)
         # TFS real: bloqueia se ground OU qualquer item da pilha tiver blockSolid
         tfs_blockers = []
+        relaxed_blockers = []
         if ground_blocks:
             tfs_blockers.append(ground.id)
+            relaxed_blockers.append(ground.id)
         for it in stack:
             it_type = otb_items.get(it.id)
             if it_type and (it_type["flags"] & FLAG_BLOCK_SOLID):
                 tfs_blockers.append(it.id)
+                if not is_door_like(it.id):
+                    relaxed_blockers.append(it.id)
         tfs_walkable = not tfs_blockers
+
+        if z == BV.FLOOR:
+            if not tfs_blockers:
+                walk_strict.add((x, y))
+            if not relaxed_blockers:
+                walk_relaxed.add((x, y))
+            for it in stack:
+                dest = it.tele_dest
+                if dest is not None:
+                    teleports[(x, y)] = (dest[0], dest[1])
 
         # intenção visual: chão comum (grupo ground, não bloqueante no manifesto
         # OU vanilla ground conhecido) + só itens "decoração caminhável"/porta
@@ -358,7 +502,67 @@ def main():
         print("  (nenhuma)")
     print()
 
-    return 0 if not divergences and not id_bugs else 1
+    # --------------------------------------------------- 3) alcance ortogonal do templo
+    start = (BV.TEMPLE_POS[0], BV.TEMPLE_POS[1])
+    print("-" * 78)
+    print("3) Alcance ortogonal (flood-fill 4-direções) a partir do templo")
+    print("-" * 78)
+    orphan_positions = []
+    door_gated_positions = []
+    if start not in walk_relaxed:
+        print("  ERRO: o próprio templo (%r) não é caminhável — auditoria de alcance pulada."
+              % (start,))
+    else:
+        reach_strict = bfs_reach(walk_strict, start, teleports)
+        reach_relaxed = bfs_reach(walk_relaxed, start, teleports)
+        orphan_positions = sorted(walk_relaxed - reach_relaxed)
+        door_gated_positions = sorted(reach_relaxed - reach_strict)
+
+        print("  Caminháveis (regra real, andar do templo): %d" % len(walk_strict))
+        print("  Alcançáveis SEM abrir porta nenhuma: %d" % len(reach_strict))
+        print("  Alcançáveis abrindo toda porta no caminho: %d" % len(reach_relaxed))
+        print()
+        print("  (a) Tiles caminháveis NÃO alcançáveis de jeito nenhum (bolsão real,"
+              " meta 0): %d" % len(orphan_positions))
+        for comp in connected_components(orphan_positions, walk_relaxed)[:15]:
+            sample = comp[:6]
+            print("      cluster de %d tile(s): %s%s"
+                  % (len(comp), ", ".join("(%d,%d)" % p for p in sample),
+                     " ..." if len(comp) > len(sample) else ""))
+        if not orphan_positions:
+            print("      (nenhum)")
+        print()
+        print("  (a-extra) Interiores só alcançáveis abrindo uma porta"
+              " (não contam como bolsão — listados à parte): %d tiles" % len(door_gated_positions))
+        unidentified = 0
+        for comp in connected_components(door_gated_positions, walk_relaxed):
+            cx = sum(p[0] for p in comp) // len(comp)
+            cy = sum(p[1] for p in comp) // len(comp)
+            name = _nearest_anchor(cx, cy)
+            if name is None:
+                unidentified += 1
+                name = "NÃO IDENTIFICADO (revisar — deveria ser só casa/torre/prisão/taverna)"
+            print("      cluster de %d tile(s) perto de (%d,%d): %s" % (len(comp), cx, cy, name))
+        if not door_gated_positions:
+            print("      (nenhum)")
+        elif unidentified:
+            print("  AVISO: %d cluster(es) fechado(s) por porta não bateram com nenhuma"
+                  " âncora conhecida de casa/torre/prisão/taverna." % unidentified)
+    print()
+
+    # --------------------------------------------------- 4) becos sem saída na mata
+    print("-" * 78)
+    print("4) Becos sem saída (>6 tiles) na mata (fora da vila/interiores)")
+    print("-" * 78)
+    deadends = find_deadends(walk_strict, max_len=6)
+    print("  Becos encontrados (meta 0): %d" % len(deadends))
+    for (tip, length) in deadends[:20]:
+        print("      ponta em (%d,%d), comprimento %d tiles" % (tip[0], tip[1], length))
+    if not deadends:
+        print("      (nenhum)")
+    print()
+
+    return 0 if not divergences and not id_bugs and not orphan_positions else 1
 
 
 if __name__ == "__main__":

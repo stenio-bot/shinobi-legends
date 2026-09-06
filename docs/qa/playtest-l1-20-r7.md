@@ -158,6 +158,22 @@ após o level up por restrição de tempo (ver "Metodologia").
 
 ### P0
 
+> **CORRIGIDO (mapa), 2026-09-05.** `tools/map/build_valley.py` ganhou um passe
+> `seal_unreachable_pockets()` que roda um flood-fill ORTOGONAL (4 direções) a
+> partir do templo depois de toda a floresta/decoração geradas — todo tile
+> caminhável não alcançado dessa forma vira árvore/arbusto, eliminando bolsões
+> como este por construção (não só neste par de tiles, em qualquer outro que a
+> geração procedural crie). Confirmado no build de referência: os tiles
+> `1046,1021`/`1047,1020` (reprodução #3 deste relatório) agora são árvore
+> (não-caminhável); `walk_audit.py` ganhou a checagem correspondente (seção 3,
+> "(a) bolsão real") — 0 no mapa instalado, e `exit 1` automaticamente se
+> algum bolsão futuro voltar a existir. `docs/sistemas/mapas.md#trilhas-e-anti-
+> bolsão-floresta-da-vila` documenta o mecanismo. Ver também `fix_forest_deadends()`
+> (mesmo build) pra becos >6 tiles, e as trilhas de 2 tiles de largura
+> Portão Leste → Bosque Norte/Riacho/Trilha dos Lobos/Mata Norte/Clareira
+> Central/Bosque Leste, que reduzem a chance de o jogador se afastar da
+> trilha e cair perto de árvores densas o suficiente.
+
 **P0-1 (novo, confirmado ao vivo 3x de forma independente, script). Existe pelo menos um
 "bolsão" de 2 tiles totalmente isolado no único corredor sem trilha entre a Vila da Folha
 e o Bosque Norte (área de caça de L1-5), nas coordenadas aproximadas (1044-1047, 1020-1027)
@@ -193,6 +209,19 @@ da mesma sessão — só esses tiles específicos ficaram 100% presos em todas a
   spawn — isso pegaria bolsões isolados como este antes de irem pro mapa instalado.
 
 ### P1
+
+> **CORRIGIDO PARCIALMENTE (mapa), 2026-09-05.** `FOREST_SETS` em
+> `tools/map/build_valley.py` reduziu `spawntime` do Lobo de 60 → **30** nos 3
+> pontos de Lobo (Trilha dos Lobos, Bosque Norte, Bosque Leste) e do Cervo de
+> 60 → 45 (Clareira Central). Isso ataca a divergência de fonte-da-verdade
+> apontada abaixo (`data/monsters/forest.json` pedia `respawn_s: 30`) e deve
+> reduzir a espera pós-kill. **Não corrigido**: a causa raiz apontada no
+> achado (o XML gerado por `build_valley.py` usa uma tabela própria,
+> `FOREST_SETS`, hardcoded — não lê `respawn_s` de `data/monsters/*.json`)
+> continua — alinhar isso é mudança em `tools/map/build_valley.py` +
+> `tools/export_tfs.py`/pipeline de dados, fora do escopo desta missão (só
+> mapa). Também não foi possível medir ao vivo se 270s reais viram algo mais
+> perto de 30-60s com o novo valor (precisa de outro playtest em jogo).
 
 **P1-1 (novo, confirmado ao vivo, script). O spawn de 2 Lobos em Bosque Norte (1050,1010)
 ficou mais de 270s (4,5 min) sem repovoar depois de mortos os 2 lobos, bem acima do

@@ -1105,15 +1105,30 @@ def carve_clearings(b):
                     b.ground(x, y, GRASS)
 
 
+#: playtest r7 (P0-1, bolsao sem saida perto de 1044-1047,1020-1027): o ramo
+#: de 1 tile de largura entre o anel e a clareira era estreito demais e
+#: coincidia com a faixa mais densa de arvores da floresta. Estas 6 clareiras
+#: (as duas rotas pedidas explicitamente - Portao Leste -> Bosque Norte/
+#: Riacho e Portao Leste, na falta de um Portao Norte -> Trilha dos Lobos/
+#: Mata Norte - mais os 2 pontos de caca L1-10 pelos quais a trilha
+#: continua) ganham ramo de 2 tiles de largura, igual ao anel principal.
+WIDE_TRAIL_CLEARINGS = {
+    "Bosque Norte", "Clareira do Riacho",
+    "Trilha dos Lobos", "Mata Norte",
+    "Clareira Central", "Bosque Leste",
+}
+
+
 def connect_clearings(b):
     """Liga cada clareira à trilha principal com um caminho em L."""
-    for (_, cx, cy, _) in CLEARINGS:
+    for (name, cx, cy, _) in CLEARINGS:
+        width = 2 if name in WIDE_TRAIL_CLEARINGS else 1
         # liga verticalmente ao anel (y=1025 ao norte, y=1075 ao sul) …
         ring_y = 1025 if cy < 1050 else 1075
-        b.path(cx, cy, cx, ring_y, DIRT, width=1)
+        b.path(cx, cy, cx, ring_y, DIRT, width=width)
         # … e horizontalmente até o eixo do anel mais próximo
         ring_x = 1005 if cx < 1030 else 1055
-        b.path(cx, ring_y, ring_x, ring_y, DIRT, width=1)
+        b.path(cx, ring_y, ring_x, ring_y, DIRT, width=width)
     for (_, cx, cy, _) in DEATH_CLEARINGS:
         # desvia da torre: usa y=1050 ao norte dela e y=1070 ao sul
         lane = 1050 if cy <= 1060 else 1070
@@ -1132,8 +1147,12 @@ FOREST_SETS = [
     # Playtest r5 (2026-09-05): a Clareira Central fica na rota natural Portao Leste -> lobos e
     # arqueiros (L6-10) matavam o Genin L1 em 15 s so' de passar. Clareira Central = cervos (passivos);
     # arqueiros ficam so' no Bosque Sudeste, longe da rota inicial.
-    ("Lobo", 2, 60), ("Lobo", 2, 60), ("Cobra da Floresta", 2, 70),
-    ("Bandido", 3, 80), ("Cervo", 3, 60), ("Lobo", 1, 60),
+    # Playtest r7 (P1, respawn de Lobo >270s medido em jogo): spawntime nominal
+    # (60) na pratica ficava bem mais alto pro jogador (fila de reposicao do
+    # grupo inteiro). Reduzido pra 30 nos 3 pontos de Lobo (e Cervo pra 45)
+    # pra cobrir a caçada L1 sem forçar o jogador a esperar minutos parado.
+    ("Lobo", 2, 30), ("Lobo", 2, 30), ("Cobra da Floresta", 2, 70),
+    ("Bandido", 3, 80), ("Cervo", 3, 45), ("Lobo", 1, 30),
     ("Bandido", 3, 80), ("Cobra da Floresta", 3, 70),
     ("Bandido Arqueiro", 3, 90), ("Cobra da Floresta", 2, 70),
 ]
@@ -1260,6 +1279,101 @@ def bfs(walk, start, teleports=None):
                 seen.add((nx, ny))
                 q.append((nx, ny))
     return seen
+
+
+def _blocker_for(x, y):
+    """Item de bloqueio coerente com a regiao, usado tanto pra selar bolsoes
+    quanto pra encurtar becos sem saida: arvore morta no pantano (Floresta da
+    Morte), arvore viva na floresta a oeste do rio, arbusto em qualquer outro
+    lugar (vila/estradas — nao deveria acontecer, mas fica discreto se acontecer)."""
+    if x >= DEATH_X0:
+        return DEAD_TREES
+    if in_village(x, y):
+        return BUSHES
+    return TREES
+
+
+def seal_unreachable_pockets(b, types):
+    """Playtest r7 (P0-1): bolsao de mapa isolado (1044-1047,1020-1027) sem
+    NENHUMA saida valida — dois tiles caminhaveis que só se enxergavam um ao
+    outro. Depois de toda a floresta/decoracao/regioes geradas, faz um
+    flood-fill ORTOGONAL (4 direcoes — o TFS/OTClient nao deixam passar em
+    diagonal entre duas arvores, ver Tile::queryAdd) a partir do templo sobre
+    tiles caminhaveis (respeitando teleportes, pra nao acusar falso positivo
+    em interiores/arena). Todo tile caminhavel NAO alcancado dessa forma vira
+    arvore/arbusto — nunca fica ilha caminhavel solta no mapa. Devolve quantos
+    tiles foram selados."""
+    walk = walkable_map(b, types)
+    start = (TEMPLE_POS[0], TEMPLE_POS[1])
+    if start not in walk:
+        return 0
+    teleports = teleport_edges(b)
+    reach = bfs(walk, start, teleports)
+    orphans = sorted(walk - reach)
+    for (x, y) in orphans:
+        b.clear_items(x, y)
+        b.put(x, y, _blocker_for(x, y))
+    return len(orphans)
+
+
+def fix_forest_deadends(b, types, max_len=6):
+    """Playtest r7 (P0 relacionado): becos de 1 tile de largura na mata
+    (corredores que a densidade de arvores deixa por acaso entre duas
+    manchas) que terminam sem saida frustram o jogador — ele entra achando
+    que leva a algum lugar e tem que voltar tudo. Acha, no grafo caminhavel
+    (4 vizinhos, restrito a area externa de floresta/pantano — fora da vila,
+    fora dos retangulos protegidos, fora dos interiores em x>=1300), toda
+    cadeia que comeca num tile de grau 1 (beco) e segue por tiles de grau 2
+    ate uma juncao (grau >= 3) ou o fim do mapa; se a cadeia tiver mais de
+    ``max_len`` tiles, bloqueia os tiles mais distantes da juncao (vira
+    arvore), deixando so os ultimos ``max_len`` tiles do beco — encurta sem
+    quebrar nenhuma conexao real (a cauda cortada nao tinha outro vizinho).
+    Devolve (quantos becos corrigidos, quantos tiles bloqueados)."""
+    walk = walkable_map(b, types)
+
+    def in_scope(x, y):
+        if x >= 1300:            # interiores/arena (apendice separado do mapa)
+            return False
+        if in_village(x, y):
+            return False
+        if b.is_protected(x, y):
+            return False
+        return True
+
+    scope = {p for p in walk if in_scope(*p)}
+
+    def neighbors(p):
+        x, y = p
+        return ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+
+    def degree(p):
+        return sum(1 for n in neighbors(p) if n in scope)
+
+    visited = set()
+    fixed = 0
+    blocked = 0
+    dead_ends = sorted(p for p in scope if degree(p) == 1)
+    for start in dead_ends:
+        if start in visited:
+            continue
+        chain = [start]
+        visited.add(start)
+        prev = None
+        current = start
+        while True:
+            nxt = [n for n in neighbors(current) if n in scope and n != prev]
+            if len(nxt) != 1 or nxt[0] in chain:
+                break
+            prev, current = current, nxt[0]
+            chain.append(current)
+            visited.add(current)
+        if len(chain) > max_len:
+            for (x, y) in chain[: len(chain) - max_len]:
+                b.clear_items(x, y)
+                b.put(x, y, _blocker_for(x, y))
+                blocked += 1
+            fixed += 1
+    return fixed, blocked
 
 
 def validate(b, types, sf, npcs):
@@ -1394,6 +1508,23 @@ def main():
     b.notes.extend(region_notes)
 
     borders_placed = apply_borders(b, sid)
+
+    # anti-bolsao / anti-beco (playtest r7, P0-1): roda ate convergir (no
+    # maximo umas poucas iteracoes — selar bolsoes nunca desconecta area
+    # alcancavel, e encurtar becos so' remove cauda sem outro vizinho, entao
+    # tende a zerar na 1a ou 2a passada; o loop e' so' por seguranca).
+    pockets_sealed = 0
+    deadends_fixed = 0
+    deadend_tiles_blocked = 0
+    for _ in range(3):
+        n_sealed = seal_unreachable_pockets(b, types)
+        n_deadends, n_blocked = fix_forest_deadends(b, types)
+        pockets_sealed += n_sealed
+        deadends_fixed += n_deadends
+        deadend_tiles_blocked += n_blocked
+        if n_sealed == 0 and n_deadends == 0:
+            break
+
     sf = build_spawns(b, npcs)
     add_region_spawns(sf)
 
@@ -1421,6 +1552,10 @@ def main():
     print("  itens totais ..... %d" % sum(m.item_count_by_id().values()))
     print("  caminhaveis ...... %d  alcancaveis do templo: %d (%.1f%%)"
           % (len(walk), len(reach), 100.0 * len(reach) / len(walk)))
+    print("  bolsoes selados (BFS ortogonal do templo) .... %d tiles viraram arvore/arbusto"
+          % pockets_sealed)
+    print("  becos sem saida >6 tiles corrigidos .......... %d becos, %d tiles bloqueados"
+          % (deadends_fixed, deadend_tiles_blocked))
     print("  bordas (autoborder) %d pecas" % borders_placed)
     print("  grupos de spawn .. %d" % len(sf.groups))
     print("  monstros ......... %d" % sf.monster_count())
