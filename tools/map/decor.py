@@ -200,7 +200,9 @@ def place_village_decor(b, ids):
             b.put(x, y, ids["street_torch"])
             n += 1
 
-    sign_x = (BV.GATE_X[0] + BV.GATE_X[1]) // 2
+    # Playtest arco 2 (2026-09-05): a placa ficava no centro da faixa de saida do Portao Sul
+    # ("Nao ha espaco suficiente" ao andar reto para o sul). Fica ao LADO da faixa.
+    sign_x = BV.GATE_X[1] + 2
     c = b.cells.get((sign_x, BV.GATE_Y + 2))
     if c is not None and not c.items:
         b.put(sign_x, BV.GATE_Y + 2, ids["signpost_trail"])
