@@ -8,7 +8,9 @@
     "type": "shop",
     "sells": [
       "kunai_iron",
+      "adaga_genin",
       "tanto_steel",
+      "gloves_taijutsu",
       "shuriken_iron",
       "vest_genin",
       "pants_ninja",
@@ -197,6 +199,7 @@
       "boots_swamp",
       "wakizashi_temperado",
       "katana_ronin",
+      "espadao_de_aco",
       "fuuma_shuriken"
     ],
     "buys_types": [

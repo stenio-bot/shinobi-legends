@@ -2,7 +2,7 @@
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Lobo" nameDescription="um lobo" race="blood" experience="25" speed="450" manacost="0">
 	<health now="60" max="60"/>
-	<look type="940" head="20" body="20" legs="115" feet="115" corpse="5968"/>
+	<look type="940" head="76" body="76" legs="115" feet="115" corpse="5968"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>
 		<flag summonable="0"/>

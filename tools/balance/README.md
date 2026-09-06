@@ -754,3 +754,86 @@ híbrido; os builds puros só precisam ser viáveis (≥70% do DPS híbrido em t
   orquestrador, não corrigido nesta rodada (risco de whack-a-mole nos jutsus de área doton).
 - **Kits (±15%) não reverificados numericamente** — confirmado que nenhum jutsu tocado é
   referenciado por `personal.json`/`neutral.json`, mas a proxy não foi rodada de novo.
+
+## Achados da rodada 10 (setembro de 2026) — ver `docs/sistemas/balanceamento-relatorio-v10.md`
+
+Tema: itens de arma e a curva do taijutsu puro em L5-40, executando a recomendação central da
+pendência #1 da rodada 9 ("buffar item de arma L5-40, não jutsu, não monstro").
+
+1. **Escada de arma melee L1-40 recalibrada**: 3 itens novos (`adaga_genin` req5,
+   `espadao_de_aco` req25, `katana_aprimorada` req30 — preenchem os 3 buracos reais da escada,
+   >7 níveis sem degrau) e `attack` maior em 6 itens já existentes (`tanto_steel`,
+   `gloves_taijutsu`, `wakizashi_temperado`, `katana_ronin`, `kodachi_ruins`, `puppet_blade`,
+   `adaga_sombria`) — ver a tabela completa com preço/vendedor em
+   `docs/sistemas/itens-e-equipamentos.md`. `gloves_taijutsu` também passou a ser vendida por
+   Ichiro — existia no catálogo desde sempre mas não estava em NENHUM NPC (gap real,
+   provavelmente não intencional, que a deixava sempre dominada pelo Tantō mesmo no seu próprio
+   nível de desbloqueio).
+2. **Metodologia**: pra cada degrau, `attack` foi buscado por busca binária maximizando a razão
+   TTK_híbrido/TTK_puro no PIOR nível dentro da janela de 5 níveis até o próximo degrau (não só
+   no nível de desbloqueio do item), sujeito a "burst do tier 1 continua ≥1,3× em toda a
+   janela" (checado via `weapon_max_damage()`/`jutsu_damage()` isolados, sem monstro — o burst é
+   uma métrica só do personagem) — mesma lógica de `estimate_weapon_dps`, só que sem Monte
+   Carlo pro burst (é conta fechada, não estocástica o bastante pra precisar).
+3. **Achado central (o mais importante desta rodada, não esperado)**: MESMO maximizando
+   `attack` até o limite seguro de burst, vários rungs (L5, L10, L15, L20, L35) têm um **teto de
+   viabilidade abaixo de 70% que nenhum `attack` maior ultrapassa** — testado com valores de
+   attack MUITO acima do que qualquer NPC venderia (até 500), a razão pura/híbrido PIORA (não
+   melhora) a partir de um certo ponto. Causa raiz: o monstro comum mais próximo de alguns
+   níveis (`mist_scout` L14-15, por HP baixo relativo ao level) morre tão rápido contra o
+   híbrido que o ÚNICO cast de tier 1 no início da luta (jutsu ignora armadura, arma não) já é a
+   maior parte do HP do monstro — nenhum `attack` de arma acelera o que já é quase instantâneo
+   pro lado do jutsu. Isso é uma tensão DIFERENTE da "burst vs. sustentado" já documentada nas
+   rodadas 5/9 (aquela é sobre o valor DE UM cast; esta é sobre a DURAÇÃO da luta ser curta
+   demais pra diluir esse cast) — refina a recomendação da rodada 9: buffar arma L5-40 ajuda,
+   mas não fecha 70% em TODO nível sozinho, mesmo dentro do orçamento de burst.
+4. **Achado colateral (bug introduzido e corrigido na própria sessão)**: o primeiro rascunho da
+   escada maximizava `attack` olhando só a janela de 5 níveis de CADA item isoladamente — mas
+   `adaga_sombria` (req40) na prática cobre 10 níveis (L40-49, não há degrau em L45; fora do
+   "L5-L40" da missão) até `tanto_jonin` (req50). `attack=78` (o valor "ótimo" pra L40-44) já
+   quebrava burst em L45-48 quando testado no range completo — corrigido pra `attack=70`
+   (worst-case burst 1,37× em L40-49, com folga). Acompanha um achado de MESMA classe nos 3
+   bosses de referência baixos: `attack` maximizado por janela empurrava o TTK híbrido de
+   `boss_bandit_chief`(L12)/`boss_mist_swordsman`(L19) pra 39,9s/51,9s (abaixo do piso de 60s) —
+   `tanto_steel`/`gloves_taijutsu`/`wakizashi_temperado` tiveram o `attack` reduzido do "ótimo de
+   viabilidade" pra um valor mais conservador (17/18/27, não 20/28/30) e os 3 bosses baixos
+   (`boss_bandit_chief`, `boss_mist_swordsman`, `boss_white_serpent`) receberam +15% de `hp`
+   (dentro do limite da missão) — ver relatório v10 §4 pros números completos da troca.
+5. **Resultado líquido (varredura própria, 1 nível de cada vez, não só `MATRIX_LEVELS`)**:
+   taijutsu puro abaixo de 70% caiu de **65 para 41 dos 96 níveis** (68%→43% de falha) — melhora
+   real, mas a meta "TODOS os níveis" não fecha (achado 3 acima prova que não fecharia com
+   NENHUM valor de `attack`, dentro do orçamento de burst). Os 6 bosses de referência: os 3
+   baixos (12/19/25) subiram de 61,8%/60,5%/62,8% pra 65,8%/68,9%/83,0% do DPS híbrido — bem
+   dentro da meta de ≥60%; os 3 altos (50/80/100), não tocados, continuam 75,9%/79,6%/82,3%
+   (inalterados). Burst e kits confirmados sem regressão (burst continua 96/100, o mesmo padrão
+   "aceito perder L78-80,100" de antes; nenhum jutsu/personagem tocado).
+6. **Ninjutsu puro (mesma varredura)**: 35 de 96 abaixo de 70% (melhor que taijutsu, já que cai
+   pro fallback de arma quando o jutsu não vale a pena) e **nenhum ponto de overshoot real sobre
+   o híbrido** (1 nível, L6, empata em 100,5% — ruído de Monte Carlo, ambos os builds caem pro
+   mesmo "só arma" nesse nível específico, não uma vitória de ninjutsu).
+
+## Pendências honestas da rodada 10 (ver relatório v10 §9 pros números)
+
+- **Viabilidade dos puros ≥70% ainda falha em 41 de 96 níveis** (era 65) — achado novo (item 3
+  acima) prova que boa parte disso é um teto estrutural que NENHUM valor de `attack` de arma
+  fecha (monstro morre rápido demais pro cast único de tier 1 do híbrido virar uma fração
+  pequena do dano total). Os rungs mais afetados por esse teto: L5, L10, L15, L20, L35
+  (`bandit_archer`/`leech`/`mist_scout`/`mist_guardian`/`exam_rival_stone`/`spectral_warrior`).
+  Recomendação pra rodada 11: só fecha com HP de monstro comum maior nesses pontos específicos
+  (fora do escopo "só itens" desta rodada) ou uma mudança de modelo (jutsu com dano reduzido
+  contra alvos que morreriam num único hit de qualquer forma — mudança de engine/simulador, não
+  de dado).
+- **L41-77 não tocado** (fora do "L5-L40" da missão) — continua com falhas parecidas às da
+  rodada 9 (`thunder_eagle`/`glacier_oni`/`storm_monk`/`magma_serpent`, L50-77), exceto L41-49
+  que melhorou como efeito colateral do buff em `adaga_sombria` (req40, cobre até L49).
+- **`boss_puppeteer` (L50) medido em 58,84s de TTK híbrido** (abaixo do piso de 60s) nesta
+  sessão — não é um item tocado nesta rodada (usa `tanto_jonin`, req50, intocado); parece uma
+  variação de medição (trials/seed) em relação aos 62,7-62,8s dos relatórios anteriores, não uma
+  regressão desta rodada. Sinalizado, não corrigido (fora do escopo declarado "só L5-40").
+- **`ruin_puppet` (grupo N=3) mudou de +22,5% pra -32,8%** (ninjutsu passou de vantagem pra
+  desvantagem sobre taijutsu) — efeito colateral direto de `espadao_de_aco` (req25, usado por
+  esse cenário L27) ter dado um salto grande de `attack` só pro lado taijutsu/híbrido; a meta de
+  grupo (+30-60%) não é uma meta explícita desta rodada, mas fica sinalizado pra quem for tocar
+  jutsu de área doton depois.
+- **Kits (±15%) não reverificados numericamente** — nenhum jutsu/personagem foi tocado nesta
+  rodada (só itens de arma + HP de 3 bosses), risco não quantificado mas confiança alta.

@@ -82,7 +82,7 @@ NarutoAchievements.gearSets = {
 	[1] = {head = {2480}, body = {2467}, legs = {2649}, feet = {2643}, accessory = {2126}, weapon = {2404, 7378}},
 	[10] = {feet = {2195}, head = {7458}, legs = {9928}, weapon = {2399, 2172}, accessory = {2210}},
 	[20] = {body = {2464}, head = {5917}, legs = {2648}, feet = {2642}, weapon = {2412}},
-	[30] = {weapon = {2410}, head = {2457}, body = {2465}, legs = {2478}, feet = {2645}, accessory = {2131}},
+	[30] = {weapon = {2397, 2410}, head = {2457}, body = {2465}, legs = {2478}, feet = {2645}, accessory = {2131}},
 	[40] = {head = {3967}, body = {8870}, legs = {15409}, feet = {11303}, weapon = {2402, 7366}, accessory = {2201}},
 	[50] = {head = {2497}, body = {2476}, legs = {2647}, feet = {6132}, weapon = {2406, 3965}, accessory = {2166}},
 	[60] = {weapon = {7367}, head = {2491}, body = {2492}, legs = {2477}, feet = {2646}, accessory = {2136}},

@@ -14,8 +14,10 @@
       "antidote",
       "shuriken_iron",
       "kunai_iron",
+      "adaga_genin",
       "vest_genin",
-      "wakizashi_temperado"
+      "wakizashi_temperado",
+      "espadao_de_aco"
     ],
     "buys_types": [
       "material",

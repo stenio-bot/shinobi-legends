@@ -94,11 +94,11 @@
       "looktype": 940,
       "corpse": 5968,
       "race": "blood",
-      "head": 20,
-      "body": 20,
+      "head": 76,
+      "body": 76,
       "legs": 115,
       "feet": 115,
-      "_note": "looktype 940 (procedural, tools/spr/gen_animals.py) — lobo de verdade: 4 direcoes, ciclo de andar, layers=2 (mascara de cor). Antes usava 21 (fera generica vanilla, sem parecer lobo nenhum)."
+      "_note": "looktype 940 (procedural, tools/spr/gen_animals.py) — lobo de verdade: 4 direcoes, ciclo de andar, layers=2 (mascara de cor). head/body=76 (cinza medio-escuro, tibia_colors.NAMED['wolf_gray_brown']); era 20 ((191,159,143) BEGE DE PELE — bug corrigido na missao de redesenho das poses N/S, ver docs/sistemas/arte-e-sprites.md). Antes usava 21 (fera generica vanilla, sem parecer lobo nenhum)."
     },
     "bandit": {
       "looktype": 956,
@@ -493,9 +493,12 @@
   "items": {
     "ryo": 2148,
     "kunai_iron": 2404,
+    "adaga_genin": 23801,
     "tanto_steel": 2379,
     "wakizashi_temperado": 2384,
     "katana_ronin": 2412,
+    "espadao_de_aco": 2413,
+    "katana_aprimorada": 2397,
     "shuriken_iron": 7378,
     "fuuma_shuriken": 7368,
     "gloves_taijutsu": 2172,

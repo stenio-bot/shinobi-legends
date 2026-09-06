@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Serpente Branca" nameDescription="a serpente branca" race="blood" experience="5600" speed="400" manacost="0">
-	<health now="4600" max="4600"/>
+	<health now="5290" max="5290"/>
 	<look type="916" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>

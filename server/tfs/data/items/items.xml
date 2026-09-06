@@ -3139,12 +3139,6 @@
 		<attribute key="elementIce" value="18" />
 		<attribute key="charges" value="1" />
 	</item>
-	<item id="2397" article="a" name="longsword">
-		<attribute key="weight" value="4200" />
-		<attribute key="defense" value="14" />
-		<attribute key="attack" value="17" />
-		<attribute key="weaponType" value="sword" />
-	</item>
 	<item id="2398" article="a" name="mace">
 		<attribute key="weight" value="3800" />
 		<attribute key="defense" value="11" />
@@ -3208,13 +3202,6 @@
 		<attribute key="attack" value="18" />
 		<attribute key="elementEarth" value="2" />
 		<attribute key="weaponType" value="sword" />
-	</item>
-	<item id="2413" article="a" name="broadsword">
-		<attribute key="weight" value="5250" />
-		<attribute key="defense" value="23" />
-		<attribute key="attack" value="26" />
-		<attribute key="weaponType" value="sword" />
-		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="2414" article="a" name="dragon lance">
 		<attribute key="description" value="The extraordinary sharp blade penetrates every armor." />
@@ -32791,9 +32778,6 @@
 	<item id="23800" article="a" name="wooden shield">
 		<attribute key="description" value="Sturdy and a little worn, but still in good shape." />
 	</item>
-	<item id="23801" article="a" name="simple dagger">
-		<attribute key="description" value="Many a knight has relied on this trusted weapon." />
-	</item>
 	<item id="23802" article="the" name="scorcher">
 		<attribute key="description" value="Ideal for young sorcerers to practise the ways of their magic." />
 	</item>
@@ -36885,7 +36869,15 @@
 <item id="2383" name="kodachi das ruínas">  
 	<attribute key="weight" value="400"/>
 	<attribute key="description" value="Lâmina curta recuperada de um túmulo do clã. Ainda corta."/>
-	<attribute key="attack" value="40"/>
+	<attribute key="attack" value="58"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2397" name="katana aprimorada">  
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Recozida e reafiada por um ferreiro das Ruínas — degrau novo entre a Kodachi (L28) e a Lâmina de Marionete (L35), fechando o buraco de 7 níveis da escada de arma (rodada 10)."/>
+	<attribute key="attack" value="66"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	
@@ -36893,7 +36885,7 @@
 <item id="7385" name="lâmina de marionete">  
 	<attribute key="weight" value="600"/>
 	<attribute key="description" value="Braço-lâmina arrancado de uma marionete de guerra."/>
-	<attribute key="attack" value="52"/>
+	<attribute key="attack" value="70"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<attribute key="skillSword" value="3"/>
@@ -37097,8 +37089,8 @@
 </item>
 <item id="2402" name="adaga sombria">  
 	<attribute key="weight" value="350"/>
-	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete."/>
-	<attribute key="attack" value="54"/>
+	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete. RODADA 10 (balanceamento): attack 54→70, último degrau da escada de arma L5-40."/>
+	<attribute key="attack" value="70"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	
@@ -37516,18 +37508,36 @@
 	<attribute key="slotType" value="hand"/>
 	
 </item>
-<item id="2379" name="tantō de aço">  
-	<attribute key="weight" value="300"/>
-	<attribute key="description" value="Lâmina curta e rápida."/>
-	<attribute key="attack" value="16"/>
+<item id="23801" name="adaga de genin">  
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Segunda arma do kit de academia — mais pesada que o kunai, ainda longe de um tantō de verdade. RODADA 10 (balanceamento): degrau novo entre o Kunai (L1) e o Tantō (L8), preenchendo o primeiro buraco da escada de arma L5-40 (docs/sistemas/balanceamento-relatorio-v9.md §4.3/§9)."/>
+	<attribute key="attack" value="18"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	
 </item>
+<item id="2379" name="tantō de aço">  
+	<attribute key="weight" value="300"/>
+	<attribute key="description" value="Lâmina curta e rápida. RODADA 10 (balanceamento): attack 16→17 — subida pequena de propósito; um valor maior (chegou a ser testado em 20) encurtava demais o TTK híbrido do Chefe dos Bandidos (boss L12), ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="17"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2172" name="luvas de combate">  
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Para quem prefere os punhos. RODADA 10: attack 14→18 e passou a ser vendida por Ichiro — antes existia no catálogo mas não era vendida em nenhum NPC (gap real, não intencional), o que a deixava sempre dominada pelo Tantō mesmo no seu próprio nível de desbloqueio. Um valor maior (chegou a ser testado em 28) encurtava demais o TTK híbrido do Chefe dos Bandidos (boss L12) — ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="18"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="3"/>
+	<attribute key="speed" value="50"/>
+	
+</item>
 <item id="2384" name="wakizashi temperado">  
 	<attribute key="weight" value="350"/>
-	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade."/>
-	<attribute key="attack" value="21"/>
+	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade. RODADA 10 (balanceamento): attack 21→27 — um valor maior (chegou a ser testado em 30) encurtava demais o TTK híbrido do Espadachim da Névoa (boss L19), ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="27"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	
@@ -37535,7 +37545,15 @@
 <item id="2412" name="katana do ronin">  
 	<attribute key="weight" value="500"/>
 	<attribute key="description" value="Encontrada em ninjas renegados."/>
-	<attribute key="attack" value="28"/>
+	<attribute key="attack" value="34"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	
+</item>
+<item id="2413" name="espadão de aço">  
+	<attribute key="weight" value="550"/>
+	<attribute key="description" value="Lâmina pesada de dois fios, forjada para golpes decisivos — degrau novo entre a Katana do Ronin (L20) e a Kodachi das Ruínas (L28), fechando o buraco de 8 níveis da escada de arma (rodada 10)."/>
+	<attribute key="attack" value="54"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	
@@ -37558,16 +37576,6 @@
 	<attribute key="weaponType" value="distance"/>
 	<attribute key="range" value="5"/>
 	<attribute key="slotType" value="hand"/>
-	
-</item>
-<item id="2172" name="luvas de combate">  
-	<attribute key="weight" value="100"/>
-	<attribute key="description" value="Para quem prefere os punhos."/>
-	<attribute key="attack" value="14"/>
-	<attribute key="weaponType" value="sword"/>
-	<attribute key="slotType" value="hand"/>
-	<attribute key="skillSword" value="3"/>
-	<attribute key="speed" value="50"/>
 	
 </item>
 

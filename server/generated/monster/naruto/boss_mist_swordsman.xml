@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- GERADO por tools/export_tfs.py a partir de data/*.json. NÃO EDITE À MÃO. -->
 <monster name="Espadachim da Névoa" nameDescription="o espadachim da névoa" race="blood" experience="1700" speed="440" manacost="0">
-	<health now="2380" max="2380"/>
+	<health now="2737" max="2737"/>
 	<look type="132" head="0" body="0" legs="0" feet="0" corpse="3058"/>
 	<targetchange interval="4000" chance="10"/>
 	<flags>

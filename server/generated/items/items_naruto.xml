@@ -355,15 +355,23 @@
 <item id="2383" name="kodachi das ruínas">  <!-- kodachi_ruins (uncommon) -->
 	<attribute key="weight" value="400"/>
 	<attribute key="description" value="Lâmina curta recuperada de um túmulo do clã. Ainda corta."/>
-	<attribute key="attack" value="40"/>
+	<attribute key="attack" value="58"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 28: aplicar via movements.xml (level) -->
 </item>
+<item id="2397" name="katana aprimorada">  <!-- katana_aprimorada (rare) -->
+	<attribute key="weight" value="500"/>
+	<attribute key="description" value="Recozida e reafiada por um ferreiro das Ruínas — degrau novo entre a Kodachi (L28) e a Lâmina de Marionete (L35), fechando o buraco de 7 níveis da escada de arma (rodada 10)."/>
+	<attribute key="attack" value="66"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 30: aplicar via movements.xml (level) -->
+</item>
 <item id="7385" name="lâmina de marionete">  <!-- puppet_blade (rare) -->
 	<attribute key="weight" value="600"/>
 	<attribute key="description" value="Braço-lâmina arrancado de uma marionete de guerra."/>
-	<attribute key="attack" value="52"/>
+	<attribute key="attack" value="70"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<attribute key="skillSword" value="3"/>
@@ -567,8 +575,8 @@
 </item>
 <item id="2402" name="adaga sombria">  <!-- adaga_sombria (rare) -->
 	<attribute key="weight" value="350"/>
-	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete."/>
-	<attribute key="attack" value="54"/>
+	<attribute key="description" value="Lâmina curta forjada com o mesmo metal das juntas de marionete. RODADA 10 (balanceamento): attack 54→70, último degrau da escada de arma L5-40."/>
+	<attribute key="attack" value="70"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 40: aplicar via movements.xml (level) -->
@@ -986,18 +994,36 @@
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 1: aplicar via movements.xml (level) -->
 </item>
+<item id="23801" name="adaga de genin">  <!-- adaga_genin (common) -->
+	<attribute key="weight" value="200"/>
+	<attribute key="description" value="Segunda arma do kit de academia — mais pesada que o kunai, ainda longe de um tantō de verdade. RODADA 10 (balanceamento): degrau novo entre o Kunai (L1) e o Tantō (L8), preenchendo o primeiro buraco da escada de arma L5-40 (docs/sistemas/balanceamento-relatorio-v9.md §4.3/§9)."/>
+	<attribute key="attack" value="18"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 5: aplicar via movements.xml (level) -->
+</item>
 <item id="2379" name="tantō de aço">  <!-- tanto_steel (common) -->
 	<attribute key="weight" value="300"/>
-	<attribute key="description" value="Lâmina curta e rápida."/>
-	<attribute key="attack" value="16"/>
+	<attribute key="description" value="Lâmina curta e rápida. RODADA 10 (balanceamento): attack 16→17 — subida pequena de propósito; um valor maior (chegou a ser testado em 20) encurtava demais o TTK híbrido do Chefe dos Bandidos (boss L12), ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="17"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 8: aplicar via movements.xml (level) -->
 </item>
+<item id="2172" name="luvas de combate">  <!-- gloves_taijutsu (uncommon) -->
+	<attribute key="weight" value="100"/>
+	<attribute key="description" value="Para quem prefere os punhos. RODADA 10: attack 14→18 e passou a ser vendida por Ichiro — antes existia no catálogo mas não era vendida em nenhum NPC (gap real, não intencional), o que a deixava sempre dominada pelo Tantō mesmo no seu próprio nível de desbloqueio. Um valor maior (chegou a ser testado em 28) encurtava demais o TTK híbrido do Chefe dos Bandidos (boss L12) — ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="18"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<attribute key="skillSword" value="3"/>
+	<attribute key="speed" value="50"/>
+	<!-- required_level 10: aplicar via movements.xml (level) -->
+</item>
 <item id="2384" name="wakizashi temperado">  <!-- wakizashi_temperado (uncommon) -->
 	<attribute key="weight" value="350"/>
-	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade."/>
-	<attribute key="attack" value="21"/>
+	<attribute key="description" value="Lâmina curta de segunda têmpera — ponte entre o tantō de treino e a katana de verdade. RODADA 10 (balanceamento): attack 21→27 — um valor maior (chegou a ser testado em 30) encurtava demais o TTK híbrido do Espadachim da Névoa (boss L19), ver balanceamento-relatorio-v10.md §4."/>
+	<attribute key="attack" value="27"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 15: aplicar via movements.xml (level) -->
@@ -1005,10 +1031,18 @@
 <item id="2412" name="katana do ronin">  <!-- katana_ronin (uncommon) -->
 	<attribute key="weight" value="500"/>
 	<attribute key="description" value="Encontrada em ninjas renegados."/>
-	<attribute key="attack" value="28"/>
+	<attribute key="attack" value="34"/>
 	<attribute key="weaponType" value="sword"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 20: aplicar via movements.xml (level) -->
+</item>
+<item id="2413" name="espadão de aço">  <!-- espadao_de_aco (rare) -->
+	<attribute key="weight" value="550"/>
+	<attribute key="description" value="Lâmina pesada de dois fios, forjada para golpes decisivos — degrau novo entre a Katana do Ronin (L20) e a Kodachi das Ruínas (L28), fechando o buraco de 8 níveis da escada de arma (rodada 10)."/>
+	<attribute key="attack" value="54"/>
+	<attribute key="weaponType" value="sword"/>
+	<attribute key="slotType" value="hand"/>
+	<!-- required_level 25: aplicar via movements.xml (level) -->
 </item>
 <item id="7378" name="shuriken de ferro">  <!-- shuriken_iron (common) -->
 	<attribute key="weight" value="20"/>
@@ -1029,14 +1063,4 @@
 	<attribute key="range" value="5"/>
 	<attribute key="slotType" value="hand"/>
 	<!-- required_level 25: aplicar via movements.xml (level) -->
-</item>
-<item id="2172" name="luvas de combate">  <!-- gloves_taijutsu (uncommon) -->
-	<attribute key="weight" value="100"/>
-	<attribute key="description" value="Para quem prefere os punhos."/>
-	<attribute key="attack" value="14"/>
-	<attribute key="weaponType" value="sword"/>
-	<attribute key="slotType" value="hand"/>
-	<attribute key="skillSword" value="3"/>
-	<attribute key="speed" value="50"/>
-	<!-- required_level 10: aplicar via movements.xml (level) -->
 </item>

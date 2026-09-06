@@ -37,7 +37,11 @@ híbrido. Os builds puros (só taijutsu, só ninjutsu) só precisam ser **viáve
 3. **Bosses**: TTK híbrido no level-alvo entre **60s e 180s**, `death_rate` ≤10% com poções
    (fúria de fase real considerada, rodada 8). 6 bosses de referência: `boss_bandit_chief`(12),
    `boss_mist_swordsman`(19), `boss_white_serpent`(25), `boss_puppeteer`(50),
-   `boss_ancestral_oni`(80), `boss_crimson_ancestor`(100).
+   `boss_ancestral_oni`(80), `boss_crimson_ancestor`(100). **Achado da rodada 10**: a escada de
+   arma nova (item 4 abaixo) encurtava o TTK híbrido dos 3 bosses baixos pra 39,9-51,9s (abaixo
+   do piso) — `hp` de `boss_bandit_chief`/`boss_mist_swordsman`/`boss_white_serpent` subiu +15%
+   (1500→1725, 2380→2737, 4600→5290) pra compensar, dentro do ±15% permitido pela missão; os 3
+   voltaram a 63,6-66,8s. Ver `balanceamento-relatorio-v10.md` §4.
 4. **Builds puros viáveis**: taijutsu puro e ninjutsu puro ≥70% do DPS híbrido em todo nível
    5-100, e ≥60% nos 6 bosses de referência. Ninjutsu puro nunca deve exceder o híbrido (se
    acontecer, o lever é o custo/dano fixo dos jutsus tier 2/3, não o tier 1). **Achado da
@@ -46,7 +50,14 @@ híbrido. Os builds puros (só taijutsu, só ninjutsu) só precisam ser **viáve
    de armadura reduz o dano de arma mas não o de jutsu elemental; qualquer nerf de tier 1 forte
    o bastante pra fechar 70% no pior caso quebra burst em dezenas de níveis extras abaixo de
    L78). Ver `balanceamento-relatorio-v9.md` §4.3 pra prova e recomendação (buffar item de arma
-   L5-40, não jutsu).
+   L5-40, não jutsu). **Achado da rodada 10**: a escada de arma L1-40 nova (ver
+   `itens-e-equipamentos.md`) reduziu as falhas de 65 pra 41 dos 96 níveis (63% → 43%) — melhora
+   real, mas **não fecha o 70% em todo L5-100** (não era o esperado: mesmo no maior `attack`
+   ainda seguro pro burst e pro TTK de boss, vários rungs têm um TETO de viabilidade abaixo de
+   70% que buffar arma NÃO ultrapassa — o monstro mais próximo de alguns níveis morre tão rápido
+   que o único cast de tier 1 do híbrido no início da luta já é a maior parte do dano total,
+   golpe de arma nenhum muda essa proporção). Ver `balanceamento-relatorio-v10.md` §3 pra prova
+   e os 96 níveis antes/depois.
 5. **Chakra**: com regen `2+floor(level/4)` a cada 2s, numa hunt híbrida de 30 min: % do tempo
    sem chakra pro tier 1 entre 10-35% (sem pílula) e ≤5% (com pílula); Genin L1 6-8 casts por
    pool cheio. **Achado da rodada 9**: casts/pool e a meta com pílula fecham; sem pílula o
@@ -197,6 +208,22 @@ boss L19) e na Velha Sumi. Um bug do simulador de balanceamento (`best_item_for_
 o item pelo maior `required_level`, não pelo maior `attack` — fazia `gloves_taijutsu`, req10 mas
 attack **14**, "substituir" o Tantō de attack 16 de L10 a L19) também foi corrigido — ver
 relatório v4 §3.
+
+**Escada de arma L5-40 recalibrada na rodada 10** (achado central: puros abaixo de 70% do DPS
+híbrido em 64/96 níveis, pior caso 46,3%, recomendação da rodada 9 era "buffar arma L5-40"):
+3 itens novos (`adaga_genin` req5, `espadao_de_aco` req25, `katana_aprimorada` req30) e attack
+maior em 6 já existentes (`tanto_steel`, `gloves_taijutsu` — que passou a ser vendida, era um
+item sem NPC —, `wakizashi_temperado`, `katana_ronin`, `kodachi_ruins`, `puppet_blade`,
+`adaga_sombria`). A fórmula `1.35 * required_level` deixou de valer sozinha nessa faixa — o
+attack precisou subir bem mais rápido que isso pra puxar taijutsu perto de 70% sem estourar o
+burst do tier 1 (`≥1,3×`); ver a tabela completa em `itens-e-equipamentos.md` e o processo em
+`balanceamento-relatorio-v10.md`. Resultado: 65→41 dos 96 níveis 5-100 abaixo de 70% — melhora
+real (43% de falha, era 68%), meta **não fechada por completo** (tensão estrutural nova: em
+vários níveis o monstro mais próximo morre tão rápido que o único cast de tier 1 do híbrido já
+domina o combate, e nenhum `attack` de arma muda essa proporção — ver relatório v10 §3).
+`tanto_steel`/`gloves_taijutsu`/`wakizashi_temperado` receberam um attack deliberadamente MENOR
+que o ótimo de viabilidade pura porque o valor ótimo encurtava demais o TTK híbrido dos bosses
+L12/L19 (ver item 3 das metas acima) — os 3 bosses afetados tiveram `hp` +15% para compensar.
 
 **Pergaminhos** (âncora de `economia.md`: t1 500 · t2 5.000 · t3 50.000):
 tier 1 = 500 · tier 2 = 5.000–9.000 · tier 3 = 20.000–45.000.

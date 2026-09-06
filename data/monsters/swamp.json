@@ -374,7 +374,7 @@
     "name": "Serpente Branca",
     "description": "Ninja renegado de pele pálida e olhos de réptil. Quando encurralado, abandona a forma humana. Guarda um Pergaminho da Terra — etapa 2 do Exame Chunin (docs/lore/progressao.md).",
     "level": 25,
-    "hp": 4600,
+    "hp": 5290,
     "attack": 48,
     "defense": 9,
     "speed": 4.0,
