@@ -168,7 +168,8 @@ Próximos (ordem de valor):
 - [ ] Polimento mapa v3: bordas neve↔rocha e gelo↔rocha ainda retas em vários trechos; textura de pedra rachada das Ruínas um pouco "ocupada"; antecâmaras do Covil com 1 tile
 - [ ] Vista de costas real para o personagem padrão (128) — hoje sintetizada; precisa de arte
 - [ ] Templos/vilas 2–4 no mapa (hoje só a Folha existe fisicamente)
-- [ ] Substituir os 13 looktypes MUGEN (900–926 em uso de produção) — risco legal de ADR-002, P0 de arte
+- [x] Substituir os 9 looktypes MUGEN de personagem jogável (900–909, exceto 906) por outfits procedurais coloríveis (`tools/spr/gen_players.py`, `player_art.py`) — commit pendente nesta sessão
+- [ ] Substituir os 18 looktypes MUGEN restantes (906, 910–926 — NPCs/bosses de endgame) — risco legal de ADR-002, P0 de arte
 - [ ] Party com XP compartilhada, clãs, PvP em arena
 
 ## Marco 5 — Pós-lançamento
@@ -180,5 +181,5 @@ Próximos (ordem de valor):
 - [x] Balanceamento r9 (`79d9b3d`) e r10 (`5029269`): híbrido como referência; escada de armas L5–40
 - [x] Mapa: trilhas de 2 tiles, sem bolsões, lobos 30 s (`f4e46a4`); templo com porta aberta (`384f657`)
 - [x] AAC polido com escolha de vila/personagem (`c9f4776`)
-- [x] AAC: trocar os retratos de personagem (PNG extraído do MUGEN, servido só localmente) por sprites renderizados do nosso `.spr` — `tools/spr/render_outfit.py` + `tools/aac/portraits/*.png` versionados; `aac.py` não lê mais `assets-src/import/` (segue aberto, à parte: os 9 looktypes ainda são pixel-a-pixel do import MUGEN por dentro do `.dat`, `layers=1` — ver linha "Substituir os 13 looktypes MUGEN" acima, pendência de ARTE, não do AAC)
+- [x] AAC: retratos renderizados do nosso `.spr` (`tools/spr/render_outfit.py` + `tools/aac/portraits/*.png` versionados; `aac.py` não lê mais `assets-src/import/`) — e agora os 9 looktypes de personagem também são arte própria (ver linha acima), sem nenhuma pendência de terceiro nesse fluxo
 - [ ] Balanceamento r11: teto estrutural do taijutsu puro em L5/10/15/20/35; L41–77; `boss_puppeteer` 59 s

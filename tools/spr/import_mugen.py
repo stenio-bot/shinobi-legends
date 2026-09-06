@@ -56,6 +56,17 @@ LOOKTYPES = "assets-src/sprites/mugen_looktypes.json"
 SRC_ROOT = "assets-src/import/mugen"
 OUT_ROOT = "assets-src/import/extracted/mugen"
 OVERRIDE = "assets-src/sprites/overrides/40_mugen.json"
+
+# Os 9 PERSONAGENS JOGAVEIS (data/characters.json) pararam de vir do MUGEN
+# nesta missao (ADR-002 — nada de sprite copiado de NTO/anime podia ficar em
+# looktype jogavel, bloqueava publicar o jogo): agora sao pixel-art procedural
+# propria via tools/spr/gen_players.py (overrides/62_players.json, layers=2,
+# coloriveis). A entrada continua em mugen_looktypes.json so como registro
+# historico (pasta/nome do rip) — nao mais processada aqui. O looktype 906
+# ("Kakashi") NAO esta nesta lista: e o NPC "Mestre Hayato"
+# (data/tfs_mapping.json.npc_outfits), nao um personagem jogavel, e continua
+# importado do MUGEN normalmente.
+PLAYER_LOOKTYPES = {900, 901, 902, 903, 904, 905, 907, 908, 909}
 FRAMES_DOC = "assets-src/sprites/mugen_frames.json"
 
 MAX_SIDE = 96          # acima disso nao e o personagem (telas, efeitos de fundo)
@@ -983,6 +994,10 @@ def main():
     for key in sorted(table, key=int):
         lt = int(key)
         if args.only and lt not in args.only:
+            continue
+        if lt in PLAYER_LOOKTYPES:
+            print("%3d %-20s PULADO: personagem jogavel, ver tools/spr/gen_players.py" %
+                  (lt, table[key]["name"][:20]))
             continue
         info = table[key]
         folder = os.path.join(ROOT, SRC_ROOT, info["folder"])

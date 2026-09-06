@@ -2192,9 +2192,69 @@ completo, exatamente como o cliente faz.
 personagem de `data/characters.json`, 128×128 = 32×32 em `--scale 4`) é
 gerado por esse comando e commitado — é obra nossa (arte compilada do nosso
 `.spr`, não redistribuição de PNG de terceiro). Regerar sempre que
-`build_assets.py` mudar os sprites 900–909. Pendência que continua em aberto,
-registrada em `docs/01-roadmap.md`: o **desenho** desses 9 looktypes ainda é
-`layers=1` importado pixel-a-pixel do MUGEN por dentro do `.dat` (ver
-"Personagens MUGEN" acima) — o retrato deixou de servir PNG bruto de
-terceiros, mas ainda não é arte 100% própria; isso é backlog de **arte**, não
-do AAC.
+`build_assets.py` mudar os sprites 900–909 (`tools/aac/portraits/regen.sh`
+não existe ainda — regerar chamando `render_outfit.py` para os 9 ids, ver
+seção seguinte). **Atualização 2026-09-06**: os 9 looktypes deixaram de vir
+do MUGEN — ver "Personagens jogáveis" abaixo.
+
+## Personagens jogáveis: outfits procedurais próprios (looktypes 900–909, 2026-09-06)
+
+### Situação anterior
+
+Os 9 personagens jogáveis (`data/characters.json`) usavam sprites `layers=1`
+extraídos de rips MUGEN de Naruto/Sasuke/etc. (`assets-src/import/mugen/`,
+gitignored, ADR-002) e compilados pixel-a-pixel dentro do nosso `.dat`/`.spr`
+por `tools/spr/import_mugen.py`. Isso bloqueava publicar o jogo: mesmo sem
+distribuir os PNGs originais, o **desenho** de terceiro continuava dentro do
+artefato final que o cliente carrega.
+
+### O que mudou
+
+`tools/spr/player_art.py` (reaproveita o boneco procedural de
+`tools/spr/humanoid_art.py` — cabeça 8-9px, 3 tons + contorno, 4 direções
+reais, 3 fases de andar) desenha os 9 personagens do zero, com 1-2 adereços
+fixos na base que distinguem cada um mesmo se as cores mudarem:
+
+| Looktype | Personagem | Adereço fixo |
+|---|---|---|
+| 900 | Genin Laranja | cabelo espetado + bandana azul + jaqueta de gola alta |
+| 901 | Genin Uchiha | franja lateral + colarinho alto com fecho + faixa no braço |
+| 902 | Kunoichi Rosa | cabelo médio + abertura no colo + luvas vermelhas |
+| 903 | Herdeira Hyuga | cabelo longo + casaco alargado + olhos claros (fixo na pele) |
+| 904 | Ninja Verde | corte de tigela + bandagens punho/tornozelo |
+| 905 | Kunoichi das Armas | coques duplos + colarinho chinês + pergaminho nas costas |
+| 907 | Sábio Loiro | cabelo espetado selvagem + pergaminho enorme nas costas |
+| 908 | Sábio Cerimonial | chapéu cônico de palha + selos no peito |
+| 909 | Ninja Abelha | óculos escuros + 2 lâminas cruzadas nas costas |
+
+(906 não é personagem jogável — é o NPC "Mestre Hayato" e continua importado
+do MUGEN normalmente.)
+
+`tools/spr/gen_players.py` gera as folhas `layers=2` (base + máscara
+head/body/legs/feet, mesma técnica de `gen_animals.py`) em
+`assets-src/sprites/creatures/look_90N_l{0,1}.png` e registra em
+`assets-src/sprites/overrides/62_players.json`. As cores DEFAULT de cada
+personagem (índice 0-132 da paleta de `tibia_colors.py`) ficam em
+`data/tfs_mapping.json` (`characters.<id>.{head,body,legs,feet}`);
+`tools/export_tfs.py` lê isso e grava `head/body/legs/feet` em
+`NarutoCharacters.list`, e `NarutoCharacters.apply` aplica via
+`player:setOutfit` no primeiro login/troca de personagem — sem isso o outfit
+sai branco (MULTIPLY neutro). `tools/spr/import_mugen.py` agora pula
+910-909 explicitamente (`PLAYER_LOOKTYPES`), mantendo a entrada em
+`mugen_looktypes.json` só como registro histórico do rip original.
+
+### Validação
+
+`build_assets.py` → `dump_dat.py` (0 divergências, inclusive `ordem_pilha`) →
+`test_otb_roundtrip.py` OK → `tools/export_tfs.py` OK (outfits aplicados em
+`character_switch.lua`). Revisão visual composta com as cores DEFAULT em
+`screenshots/players_v1_review.png` (9 × 4 direções × 3 fases) — todos os 9
+reconhecíveis e distintos de longe. Confirmado in-game (`slqa`, `/personagem`
+em 3 ids): `screenshots/player_{norte,sul,leste,oeste}_{parado,andando_a,andando_b}.png`.
+
+### Pendência
+
+Looktypes 910-926 (NPCs/bosses de endgame — Kakashi/Pain/Madara etc.,
+`mugen_looktypes.json`) continuam importados do MUGEN; não são personagens
+jogáveis, mas mesma classe de risco da ADR-002. Backlog para uma rodada
+futura.

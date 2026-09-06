@@ -117,6 +117,13 @@ function NarutoCharacters.apply(player, characterId, elementId, opts)
 
 	local outfit = player:getOutfit()
 	outfit.lookType = char.looktype
+	-- looktypes 900-909 sao layers=2 desde tools/spr/gen_players.py (mascara de cor,
+	-- ver docs/sistemas/arte-e-sprites.md "Personagens jogaveis") -- as cores DEFAULT
+	-- vem de data/tfs_mapping.json (characters.*), copiadas aqui por tools/export_tfs.py.
+	outfit.lookHead = char.head or 0
+	outfit.lookBody = char.body or 0
+	outfit.lookLegs = char.legs or 0
+	outfit.lookFeet = char.feet or 0
 	player:setOutfit(outfit)
 
 	player:setStorageValue(STORAGE_CHARACTER, char.looktype)
@@ -160,6 +167,9 @@ function NarutoCharacters.sendState(player, firstTime)
 				id = c.id, name = c.name, description = c.description, looktype = c.looktype,
 				village = c.village, default_element = c.default_element,
 				jutsus = jutsuListJson(c.jutsus),
+				-- cores default de outfit (looktypes 900-909, layers=2) para o card do
+				-- cliente mostrar o personagem com a cor certa (naruto_menu.lua).
+				head = c.head or 0, body = c.body or 0, legs = c.legs or 0, feet = c.feet or 0,
 			}
 		end
 	end

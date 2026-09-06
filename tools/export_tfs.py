@@ -1113,13 +1113,21 @@ chars_lua = [HEADER_LUA,
              "-- server/generated/scripts/naruto/character_switch.lua.",
              "NarutoCharacters = { list = {}, byLook = {}, byId = {}, byVillage = {}, allJutsuNames = {} }",
              "NarutoElements = { list = {}, byId = {}, order = {} }"]
+CHAR_COLORS = M.get("characters", {})
+
 for c in characters:
     ids = personal_jutsu_ids(c)
+    # Cores DEFAULT de outfit (looktypes 900-909, layers=2 desde tools/spr/gen_players.py
+    # — ver docs/sistemas/arte-e-sprites.md "Personagens jogaveis"). Falta no
+    # tfs_mapping.json = 0/0/0/0 (branco, MULTIPLY neutro).
+    col = CHAR_COLORS.get(c["id"], {})
     chars_lua.append(
         "table.insert(NarutoCharacters.list, {id = %s, name = %s, description = %s, looktype = %d, "
-        "village = %s, village_vocation = %d, default_element = %s, jutsus = %s})" % (
+        "village = %s, village_vocation = %d, default_element = %s, jutsus = %s, "
+        "head = %d, body = %d, legs = %d, feet = %d})" % (
             lua_q(c["id"]), lua_q(c["name"]), lua_q(c.get("description", "")), int(c["looktype"]),
-            lua_q(c["village"]), CHAR_VOC_ID[c["id"]], lua_q(default_element_of(c)), jutsu_list_lua(ids)))
+            lua_q(c["village"]), CHAR_VOC_ID[c["id"]], lua_q(default_element_of(c)), jutsu_list_lua(ids),
+            int(col.get("head", 0)), int(col.get("body", 0)), int(col.get("legs", 0)), int(col.get("feet", 0))))
 for es in element_sets:
     chars_lua.append("table.insert(NarutoElements.list, {id = %s, name = %s, jutsus = %s})" % (
         lua_q(es["id"]), lua_q(es["name"]), jutsu_list_lua(es["jutsus"])))
@@ -1273,6 +1281,13 @@ function NarutoCharacters.apply(player, characterId, elementId, opts)
 
 	local outfit = player:getOutfit()
 	outfit.lookType = char.looktype
+	-- looktypes 900-909 sao layers=2 desde tools/spr/gen_players.py (mascara de cor,
+	-- ver docs/sistemas/arte-e-sprites.md "Personagens jogaveis") -- as cores DEFAULT
+	-- vem de data/tfs_mapping.json (characters.*), copiadas aqui por tools/export_tfs.py.
+	outfit.lookHead = char.head or 0
+	outfit.lookBody = char.body or 0
+	outfit.lookLegs = char.legs or 0
+	outfit.lookFeet = char.feet or 0
 	player:setOutfit(outfit)
 
 	player:setStorageValue(STORAGE_CHARACTER, char.looktype)
@@ -1316,6 +1331,9 @@ function NarutoCharacters.sendState(player, firstTime)
 				id = c.id, name = c.name, description = c.description, looktype = c.looktype,
 				village = c.village, default_element = c.default_element,
 				jutsus = jutsuListJson(c.jutsus),
+				-- cores default de outfit (looktypes 900-909, layers=2) para o card do
+				-- cliente mostrar o personagem com a cor certa (naruto_menu.lua).
+				head = c.head or 0, body = c.body or 0, legs = c.legs or 0, feet = c.feet or 0,
 			}
 		end
 	end

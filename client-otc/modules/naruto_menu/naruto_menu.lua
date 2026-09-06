@@ -303,7 +303,10 @@ local function buildCharacterTab()
         box.preview:setOutfit({
             type = char.looktype or 0,
             auxType = 0,
-            head = 0, body = 0, legs = 0, feet = 0,
+            -- looktypes 900-909 sao layers=2 (mascara de cor, tools/spr/gen_players.py) —
+            -- as cores default vem do servidor (data/tfs_mapping.json.characters.*), nao
+            -- mais fixas em 0/0/0/0.
+            head = char.head or 0, body = char.body or 0, legs = char.legs or 0, feet = char.feet or 0,
             addons = 0, mount = 0,
         })
         box.preview:setCreatureSize(64)

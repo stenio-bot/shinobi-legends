@@ -967,14 +967,15 @@ substituir os 13 looktypes antes de qualquer lançamento público. A pasta `asse
 em si já está fora do controle de versão (git), como a regra exige; o problema é que os looktypes
 gerados a partir dela **já foram exportados para o jogo jogável**.
 
+**Atualização 2026-09-06:** os **9 personagens jogáveis** (looktypes 900–909, exceto o 906/Kakashi que é NPC) deixaram de vir do MUGEN — agora são outfits procedurais próprios e coloríveis (`tools/spr/gen_players.py`, ver §9). Os **13 lugares** de produção listados acima (mentores, Suzu, 6 bosses) continuam em looktype MUGEN (906, 910–926), 18 looktypes ao todo — ainda P0.
+
 ### Backlog de arte resumido
 
-*Fonte: `docs/backlog-sprites.md`.* Total estimado para zerar o backlog inteiro: **~900 horas de
-pixel artist** — 38 monstros (~340h), 21 NPCs (~135h), 9 personagens jogáveis (~126h), jutsus
+*Fonte: `docs/backlog-sprites.md`.* Total estimado para zerar o backlog inteiro (excluindo os 9 personagens jogáveis, já resolvidos em 2026-09-06): **~774 horas de
+pixel artist** — 38 monstros (~340h), 21 NPCs (~135h), jutsus
 (~87h, já quase todo resolvido via procedural), itens (~117h, destaque para os 44 quadros de
 armadura com variação visual no boneco — hoje nenhum set "veste" diferente do outro), tiles das 2
-regiões novas (~55h) e UI (~43h). Prioridade nº 1 recomendada: os 5 personagens jogáveis P0 + os 8
-NPCs/bosses em looktype MUGEN (risco legal + maior visibilidade simultânea).
+regiões novas (~55h) e UI (~43h). Prioridade nº 1 recomendada: os 18 NPCs/bosses restantes em looktype MUGEN (risco legal + maior visibilidade simultânea).
 
 ### Som: efeitos prontos, música pendente
 

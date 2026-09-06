@@ -490,6 +490,27 @@
       "_note": "NOVO (docs/lore/mundo.md, Covil da Nuvem Vermelha, boss 3/4): visual 911 (mugen 'Pain', liberado do Xamã da Maldição) — boss de endgame."
     }
   },
+  "_characters_doc": "Cores DEFAULT (indice 0..132 da paleta de outfit, tools/spr/tibia_colors.py) dos 9 personagens jogaveis (looktypes 900-909, exceto 906). So faz efeito porque tools/spr/gen_players.py gera esses looktypes como layers=2 (mascara de cor) — ver docs/sistemas/arte-e-sprites.md secao 'Personagens jogaveis'. Chave = characters[].id de data/characters.json. tools/export_tfs.py le isto para characters.lua/character_switch.lua aplicar outfit.lookHead/Body/Legs/Feet.",
+  "characters": {
+    "genin_laranja": {"head": 41, "body": 77, "legs": 126, "feet": 114,
+      "_note": "cabelo loiro-oliva (idx41), jaqueta laranja viva (idx77), calça azul-marinho (idx126), sandália quase preta (idx114) — tools/spr/tibia_colors.py px_genin_laranja_*"},
+    "genin_uchiha": {"head": 114, "body": 126, "legs": 0, "feet": 107,
+      "_note": "cabelo preto (idx114), camisa azul-marinho (idx126), shorts brancos (idx0), sandália azul (idx107) — px_genin_uchiha_*"},
+    "kunoichi_rosa": {"head": 54, "body": 113, "legs": 120, "feet": 107,
+      "_note": "cabelo rosa (idx54), vestido vermelho (idx113), shorts verde escuro (idx120), sandália azul (idx107) — px_kunoichi_rosa_*"},
+    "herdeira_hyuga": {"head": 126, "body": 13, "legs": 114, "feet": 107,
+      "_note": "cabelo azul-marinho escuro (idx126), casaco lavanda (idx13 — trocado do creme idx2, que ficava parecido demais com a pele), calça escura (idx114), sandália azul (idx107) — px_herdeira_hyuga_*"},
+    "ninja_verde": {"head": 114, "body": 101, "legs": 101, "feet": 78,
+      "_note": "cabelo preto (idx114), macacão verde (idx101, corpo e pernas iguais), bandagem/legwarmer laranja (idx78) — px_ninja_verde_*"},
+    "kunoichi_armas": {"head": 39, "body": 74, "legs": 120, "feet": 107,
+      "_note": "coques castanhos (idx39), blusa chinesa rosa-vermelha (idx74), calça verde escura (idx120), sandália azul (idx107) — px_kunoichi_armas_*"},
+    "sabio_loiro": {"head": 3, "body": 113, "legs": 118, "feet": 105,
+      "_note": "loiro claro selvagem (idx3), colete vermelho (idx113), calça verde-oliva (idx118), sandália azul-acinzentada (idx105) — px_sabio_loiro_*"},
+    "sabio_cerimonial": {"head": 38, "body": 0, "legs": 2, "feet": 116,
+      "_note": "cabelo grisalho (idx38), robe branco (idx0), robe creme nas pernas (idx2), sandália marrom (idx116) — px_sabio_cerimonial_*"},
+    "ninja_abelha": {"head": 114, "body": 97, "legs": 0, "feet": 78,
+      "_note": "cabelo escuro (idx114), colete dourado (idx97), calça branca (idx0), sandália dourada (idx78) — px_ninja_abelha_*"}
+  },
   "items": {
     "ryo": 2148,
     "kunai_iron": 2404,

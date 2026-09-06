@@ -136,6 +136,49 @@ RAW = {
     "mist_scout_teal": (70, 108, 112),
     "mist_guardian_steel": (92, 108, 128),
     "curse_partner_red": (150, 44, 40),
+    # personagens jogaveis (looktypes 900-909, tools/spr/player_art.py +
+    # gen_players.py) — cores DEFAULT de data/tfs_mapping.json.characters.
+    # RAW aqui e so documentacao (o alvo de lore); o indice de verdade que
+    # vai pro JSON e escolhido a mao em NAMED (ver bloco abaixo) direto na
+    # tabela dos 114 indices coloridos, exatamente como o lobo/aguia acima —
+    # varios destes tons (azul-marinho, verde-oliva) tambem colapsam pra
+    # cinza pelo nearest() euclidiano.
+    "px_genin_laranja_head": (224, 176, 64),      # loiro espetado
+    "px_genin_laranja_body": (255, 85, 0),        # jaqueta laranja viva
+    "px_genin_laranja_legs": (0, 0, 127),         # calca azul-marinho escura
+    "px_genin_laranja_feet": (36, 36, 36),        # sandalia quase preta
+    "px_genin_uchiha_head": (36, 36, 36),         # cabelo preto
+    "px_genin_uchiha_body": (0, 0, 127),          # camisa azul-marinho
+    "px_genin_uchiha_legs": (255, 255, 255),      # shorts brancos
+    "px_genin_uchiha_feet": (0, 0, 191),          # sandalia azul
+    "px_kunoichi_rosa_head": (191, 95, 159),       # cabelo rosa
+    "px_kunoichi_rosa_body": (191, 0, 0),          # vestido vermelho
+    "px_kunoichi_rosa_legs": (0, 127, 0),          # shorts verde escuro
+    "px_kunoichi_rosa_feet": (0, 0, 191),          # sandalia azul
+    "px_herdeira_hyuga_head": (0, 0, 127),         # cabelo escuro azulado
+    "px_herdeira_hyuga_body": (255, 233, 191),     # casaco creme
+    "px_herdeira_hyuga_legs": (36, 36, 36),        # calca escura
+    "px_herdeira_hyuga_feet": (0, 0, 191),         # sandalia azul
+    "px_ninja_verde_head": (36, 36, 36),           # cabelo preto (tigela)
+    "px_ninja_verde_body": (0, 191, 0),            # macacao verde
+    "px_ninja_verde_legs": (0, 191, 0),            # macacao verde (mesma peca)
+    "px_ninja_verde_feet": (255, 170, 0),          # bandagem/legwarmer laranja
+    "px_kunoichi_armas_head": (191, 127, 95),       # coques castanhos
+    "px_kunoichi_armas_body": (191, 63, 106),       # blusa chinesa rosa-vermelha
+    "px_kunoichi_armas_legs": (0, 127, 0),          # calca verde escura
+    "px_kunoichi_armas_feet": (0, 0, 191),          # sandalia azul
+    "px_sabio_loiro_head": (255, 255, 191),         # loiro claro selvagem
+    "px_sabio_loiro_body": (191, 0, 0),             # colete vermelho
+    "px_sabio_loiro_legs": (85, 127, 0),            # calca verde-oliva
+    "px_sabio_loiro_feet": (0, 127, 191),           # sandalia azul-acinzentada
+    "px_sabio_cerimonial_head": (182, 182, 182),    # cabelo grisalho
+    "px_sabio_cerimonial_body": (255, 255, 255),    # robe branco
+    "px_sabio_cerimonial_legs": (255, 233, 191),    # robe creme
+    "px_sabio_cerimonial_feet": (127, 85, 0),       # sandalia marrom
+    "px_ninja_abelha_head": (36, 36, 36),           # cabelo escuro
+    "px_ninja_abelha_body": (191, 127, 0),          # colete dourado
+    "px_ninja_abelha_legs": (255, 255, 255),        # calca branca
+    "px_ninja_abelha_feet": (255, 170, 0),          # sandalia dourada
 }
 
 NAMED = {name: nearest(rgb) for name, rgb in RAW.items()}
@@ -166,6 +209,46 @@ NAMED.update({
     "toad_swamp_green": 43,     # (127,191,95) verde medio
     "snake_forest_green": 63,   # (63,191,63) verde puro (distinto do venom_green)
     "leech_dark_purple": 128,   # (85,0,127) roxo escuro de verdade
+
+    # personagens jogaveis (900-909) — indices escolhidos a mao direto da
+    # tabela de 114 cores coloridas (mesmo motivo: azul-marinho/verde-oliva/
+    # creme colapsariam pra cinza pelo nearest() euclidiano puro).
+    "px_genin_laranja_head": 41,        # (191,191,95) loiro-oliva
+    "px_genin_laranja_body": 77,        # (255,85,0) laranja vivo
+    "px_genin_laranja_legs": 126,       # (0,0,127) azul-marinho escuro
+    "px_genin_laranja_feet": 114,       # (36,36,36) quase preto
+    "px_genin_uchiha_head": 114,        # (36,36,36) preto
+    "px_genin_uchiha_body": 126,        # (0,0,127) azul-marinho
+    "px_genin_uchiha_legs": 0,          # (255,255,255) branco
+    "px_genin_uchiha_feet": 107,        # (0,0,191) azul
+    "px_kunoichi_rosa_head": 54,        # (191,95,159) rosa
+    "px_kunoichi_rosa_body": 113,       # (191,0,0) vermelho
+    "px_kunoichi_rosa_legs": 120,       # (0,127,0) verde escuro
+    "px_kunoichi_rosa_feet": 107,       # (0,0,191) azul
+    "px_herdeira_hyuga_head": 126,      # (0,0,127) azul-marinho escuro (cabelo)
+    "px_herdeira_hyuga_body": 13,       # (212,191,255) lavanda (mais contraste com a pele que o creme idx2)
+    "px_herdeira_hyuga_legs": 114,      # (36,36,36) escuro
+    "px_herdeira_hyuga_feet": 107,      # (0,0,191) azul
+    "px_ninja_verde_head": 114,         # (36,36,36) preto
+    "px_ninja_verde_body": 101,         # (0,191,0) verde
+    "px_ninja_verde_legs": 101,         # (0,191,0) verde (mesma peca)
+    "px_ninja_verde_feet": 78,          # (255,170,0) laranja
+    "px_kunoichi_armas_head": 39,       # (191,127,95) castanho
+    "px_kunoichi_armas_body": 74,       # (191,63,106) rosa-vermelho
+    "px_kunoichi_armas_legs": 120,      # (0,127,0) verde escuro
+    "px_kunoichi_armas_feet": 107,      # (0,0,191) azul
+    "px_sabio_loiro_head": 3,           # (255,255,191) loiro claro
+    "px_sabio_loiro_body": 113,         # (191,0,0) vermelho
+    "px_sabio_loiro_legs": 118,         # (85,127,0) verde-oliva
+    "px_sabio_loiro_feet": 105,         # (0,127,191) azul-acinzentado
+    "px_sabio_cerimonial_head": 38,     # (182,182,182) grisalho
+    "px_sabio_cerimonial_body": 0,      # (255,255,255) branco
+    "px_sabio_cerimonial_legs": 2,      # (255,233,191) creme
+    "px_sabio_cerimonial_feet": 116,    # (127,85,0) marrom
+    "px_ninja_abelha_head": 114,        # (36,36,36) escuro
+    "px_ninja_abelha_body": 97,         # (191,127,0) dourado
+    "px_ninja_abelha_legs": 0,          # (255,255,255) branco
+    "px_ninja_abelha_feet": 78,         # (255,170,0) dourado
 })
 
 

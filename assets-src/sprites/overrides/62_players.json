@@ -1,0 +1,422 @@
+{
+  "format": 1,
+  "_doc": "Os 9 PERSONAGENS JOGAVEIS (looktypes 900-909, exceto 906) em pixel-art procedural PROPRIA (tools/spr/player_art.py, reaproveita a convencao de humanoid_art.py: 4 direcoes reais + 3 fases de andar), gerados por tools/spr/gen_players.py. Substitui os sprites MUGEN importados de overrides/40_mugen.json para estes 9 ids (ADR-002). Mesmo mecanismo de overrides/60_animals.json ('creature_sheets', aplicado por build_assets.py via imports.py:apply(), em ordem de nome de arquivo -- '62' ordena DEPOIS de '40_mugen.json' entao sobrescreve qualquer entrada residual), mas 'layers=2' (base clara + mascara de cor): ao contrario dos looktypes 946-957 (layers=1, cor gravada no pixel), aqui a cor de cabelo/roupa/calca/sandalia vem de data/tfs_mapping.json (characters.*, indice 0..132 da paleta real de outfit) -- coloriveis como um outfit de Tibia de verdade. Pele/olhos e os 1-2 adereços fixos de cada personagem (bandana, luvas, pergaminho, oculos escuros...) NAO sao coloriveis (fixos na base) para o personagem continuar reconhecivel em qualquer cor de outfit. Nao editar a mao: rode tools/spr/gen_players.py de novo.",
+  "root": "assets-src/sprites",
+  "build_dir": "assets-src/sprites/creatures",
+  "creature_sheets": [
+    {
+      "category": "creature",
+      "id": 900,
+      "name": "player_genin_laranja_900",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_900_l0.png",
+        "creatures/look_900_l1.png"
+      ],
+      "_doc": "Genin Laranja (genin_laranja) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.genin_laranja) escolhe head/body/legs/feet. Adereco fixo: cabelo espetado + bandana azul na testa + jaqueta de gola alta."
+    },
+    {
+      "category": "creature",
+      "id": 901,
+      "name": "player_genin_uchiha_901",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_901_l0.png",
+        "creatures/look_901_l1.png"
+      ],
+      "_doc": "Genin Uchiha (genin_uchiha) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.genin_uchiha) escolhe head/body/legs/feet. Adereco fixo: cabelo liso com franja lateral + colarinho alto com fecho + faixa branca no braço."
+    },
+    {
+      "category": "creature",
+      "id": 902,
+      "name": "player_kunoichi_rosa_902",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_902_l0.png",
+        "creatures/look_902_l1.png"
+      ],
+      "_doc": "Kunoichi Rosa (kunoichi_rosa) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.kunoichi_rosa) escolhe head/body/legs/feet. Adereco fixo: cabelo médio + abertura triangular no colo do vestido + luvas vermelhas."
+    },
+    {
+      "category": "creature",
+      "id": 903,
+      "name": "player_herdeira_hyuga_903",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_903_l0.png",
+        "creatures/look_903_l1.png"
+      ],
+      "_doc": "Herdeira Hyuga (herdeira_hyuga) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.herdeira_hyuga) escolhe head/body/legs/feet. Adereco fixo: cabelo longo escuro + casaco alargado nas laterais + olhos claros (fixo)."
+    },
+    {
+      "category": "creature",
+      "id": 904,
+      "name": "player_ninja_verde_904",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_904_l0.png",
+        "creatures/look_904_l1.png"
+      ],
+      "_doc": "Ninja Verde (ninja_verde) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.ninja_verde) escolhe head/body/legs/feet. Adereco fixo: corte de tigela (franja reta espessa) + bandagens brancas nos punhos/tornozelos."
+    },
+    {
+      "category": "creature",
+      "id": 905,
+      "name": "player_kunoichi_armas_905",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_905_l0.png",
+        "creatures/look_905_l1.png"
+      ],
+      "_doc": "Kunoichi das Armas (kunoichi_armas) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.kunoichi_armas) escolhe head/body/legs/feet. Adereco fixo: coques duplos + colarinho de blusa chinesa + pergaminho marrom nas costas."
+    },
+    {
+      "category": "creature",
+      "id": 907,
+      "name": "player_sabio_loiro_907",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_907_l0.png",
+        "creatures/look_907_l1.png"
+      ],
+      "_doc": "Sabio Loiro (sabio_loiro) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.sabio_loiro) escolhe head/body/legs/feet. Adereco fixo: cabelo espetado longo e selvagem + pergaminho enorme diagonal nas costas."
+    },
+    {
+      "category": "creature",
+      "id": 908,
+      "name": "player_sabio_cerimonial_908",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_908_l0.png",
+        "creatures/look_908_l1.png"
+      ],
+      "_doc": "Sabio Cerimonial (sabio_cerimonial) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.sabio_cerimonial) escolhe head/body/legs/feet. Adereco fixo: chapéu cônico de palha largo + selos vermelhos no peito."
+    },
+    {
+      "category": "creature",
+      "id": 909,
+      "name": "player_ninja_abelha_909",
+      "width": 1,
+      "height": 1,
+      "exact_size": 32,
+      "layers": 2,
+      "pattern_x": 4,
+      "pattern_y": 1,
+      "pattern_z": 1,
+      "frame_groups": [
+        {
+          "type": 0,
+          "phases": 1
+        },
+        {
+          "type": 1,
+          "phases": 3,
+          "animation": {
+            "async": false,
+            "loop_count": 0,
+            "start_phase": 0,
+            "durations": [
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ],
+              [
+                220,
+                220
+              ]
+            ]
+          }
+        }
+      ],
+      "sheets": [
+        "creatures/look_909_l0.png",
+        "creatures/look_909_l1.png"
+      ],
+      "_doc": "Ninja Abelha (ninja_abelha) — procedural, tools/spr/gen_players.py. layers=2: data/tfs_mapping.json (characters.ninja_abelha) escolhe head/body/legs/feet. Adereco fixo: óculos escuros cobrindo os olhos + 2 lâminas cruzadas em metal nas costas."
+    }
+  ]
+}

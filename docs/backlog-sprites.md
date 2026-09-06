@@ -142,23 +142,26 @@ Diferente de monstros/NPCs (que no Tibia normalmente giram só de forma cosméti
 personagens jogáveis **precisam** de 4 direções reais + 3 fases de andar cada, porque o
 jogador vê o próprio boneco a maior parte da sessão.
 
-| Personagem | Vila | Quadros (4 dir × 3 fases × equip. base) | Prioridade | Status atual | Fonte sugerida | Horas |
-|---|---|---|---|---|---|---|
-| Genin Laranja (`genin_laranja`) | Folha/leaf | 12 base + variações de equip. | P0 | importado lateral (128, compartilhado com vários NPCs/monstros — outfit "padrão" do jogo hoje) | encomenda urgente (é o personagem mais visto do jogo) | 14 |
-| Genin Uchiha (`genin_uchiha`) | Folha/leaf | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Kunoichi Rosa (`kunoichi_rosa`) | Folha/leaf | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Herdeira Hyuga (`herdeira_hyuga`) | Névoa/mist | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Kunoichi das Armas (`kunoichi_armas`) | Névoa/mist | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Ninja Verde (`ninja_verde`) | Nuvem/cloud | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Ninja Abelha (`ninja_abelha`) | Nuvem/cloud | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Sábio Loiro (`sabio_loiro`) | Areia/sand | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
-| Sábio Cerimonial (`sabio_cerimonial`) | Areia/sand | 12 | P0 | provável placeholder/import | encomenda urgente | 14 |
+**Concluído 2026-09-06** — os 9 looktypes (900–909, exceto 906/Kakashi que é NPC) eram de
+fato importados do MUGEN (a suspeita do parágrafo antigo estava certa: `genin_laranja`=900
+era "Naruto Kid", `genin_uchiha`=901 "Sasuke Kid" etc. — mesma violação de ADR-002 dos
+NPCs/bosses, só que pior, visível o tempo todo). Substituídos por outfits 100% procedurais
+e coloríveis via `tools/spr/gen_players.py`/`player_art.py` (reaproveita o boneco de
+`humanoid_art.py`), `layers=2` (base + máscara head/body/legs/feet), cores DEFAULT em
+`data/tfs_mapping.json`. Ver `docs/sistemas/arte-e-sprites.md` §"Personagens jogáveis".
 
-*Confirmar no início do trabalho:* `data/tfs_mapping.json` e `assets-src/sprites/mugen_looktypes.json`
-não citam looktypes específicos para os 9 personagens — checar se algum reaproveita
-looktype 900/901/902 (Naruto Kid/Sasuke Kid/Sakura Kid do MUGEN), o que seria a MESMA
-violação de ADR-002 dos NPCs/bosses acima, só que pior (o personagem jogável aparece
-o tempo todo).
+| Personagem | Vila | Status atual |
+|---|---|---|
+| Genin Laranja (`genin_laranja`) | Folha/leaf | **procedural (concluído)** — jaqueta laranja, bandana |
+| Genin Uchiha (`genin_uchiha`) | Folha/leaf | **procedural (concluído)** — colarinho alto, faixa no braço |
+| Kunoichi Rosa (`kunoichi_rosa`) | Folha/leaf | **procedural (concluído)** — vestido, luvas |
+| Herdeira Hyuga (`herdeira_hyuga`) | Névoa/mist | **procedural (concluído)** — casaco alargado, olhos claros |
+| Kunoichi das Armas (`kunoichi_armas`) | Névoa/mist | **procedural (concluído)** — coques duplos, pergaminho nas costas |
+| Ninja Verde (`ninja_verde`) | Nuvem/cloud | **procedural (concluído)** — corte de tigela, bandagens |
+| Ninja Abelha (`ninja_abelha`) | Nuvem/cloud | **procedural (concluído)** — óculos, lâminas cruzadas |
+| Sábio Loiro (`sabio_loiro`) | Areia/sand | **procedural (concluído)** — pergaminho enorme nas costas |
+| Sábio Cerimonial (`sabio_cerimonial`) | Areia/sand | **procedural (concluído)** — chapéu de palha, selos no peito |
+
 
 ## Jutsus — efeitos de área/projétil (54 em `data/jutsus/*.json`)
 
