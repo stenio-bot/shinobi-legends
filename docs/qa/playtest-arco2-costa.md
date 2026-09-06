@@ -273,6 +273,113 @@ conferir se a implementação server-side está tratando "slow" como uma paralis
 isso teria impacto real de dificuldade even sem o bug de duplicidade (um jogador real preso
 em paralisia quase contínua não consegue reagir).
 
+## Re-teste do boss (sessão dedicada, `client-otc/tests/boss_recheck_rc.lua`)
+
+**Resultado: REPRODUZIDO, mas a causa raiz NÃO é `boss_phases.lua` nem duplicidade de
+`/m` — é um bug (ou, mais precisamente, uma limitação de metodologia de teste) no
+próprio cliente OTClient.** Sessão isolada, `/arena` (fora da plataforma natural da
+Costa), `/lvl 19`, `/elemento fuuton`, `slqa`/`slqa123`, GM `/pvm` (acabou ficando
+`God` normal/invulnerável por causa de um estado herdado de sessão anterior — ver
+ressalva de metodologia abaixo).
+
+### O que foi verificado antes de lutar
+- **Antes do `/m`**: 0 criaturas casando "espadachim" na área — nenhum spawn natural
+  presente (o natural provavelmente já tinha sido morto ~13 min antes, na sessão
+  anterior; `respawn_s` de 7200 ainda não tinha decorrido). Havia porém **3× "Aprendiz
+  Mascarado" e 3× "Guardião Da Neblina" órfãos** já vivos na área, sobras de sessões de
+  playtest anteriores que nunca foram limpas.
+- **Logo após `/m Espadachim da Névoa`**: exatamente **1 criatura casando "espadachim"**
+  (id único, spawn único confirmado) — a suspeita 1 (dois bosses simultâneos via `/m`)
+  **não se confirmou nesta rodada**: só existia uma instância real do boss.
+
+### A luta e o travamento em 0%
+Com a instância única travada por `getId()`, a luta seguiu as 3 fases exatamente como
+documentado (falas batendo 100% com `data/monsters/coastal_tides.json`, summon do
+Aprendiz Mascarado a 60%, cura de 164 HP a 25% — bate exatamente com
+`floor(2737 * 0.6 * 0.10) = 164`, confirmando que a cura pontual da fase de fúria é
+**intencional e documentada** em `docs/sistemas/monstros-e-pvm.md`, não um bug). O boss
+morreu de verdade em ~10,5s: **`"Loot of o espadachim da névoa: ..."` apareceu no chat**,
+prova inequívoca de morte real no servidor.
+
+**Apesar disso, o polling do script (`m:getHealthPercent()` via `g_map.getCreatureById(bossId)`)
+continuou reportando `hp%=0` por mais de 230s até o timeout de 240s**, reproduzindo
+exatamente o sintoma original. Repeti com um monstro de controle **não-boss-final**
+(`Chefe dos Bandidos`, também tem fases em `boss_phases.lua`) na mesma área: **mesmo
+resultado** — `"Loot of..."` real, depois preso em `hp%=0` por 90s de timeout.
+
+### Causa raiz identificada (leitura de código, não só sintoma)
+1. `server/tfs/data/scripts/naruto/boss_phases.lua`: `onHealthChange` do monstro
+   devolve `primaryDamage`/`primaryType` inalterados; `CreatureEvent::executeHealthChange`
+   (`server/tfs/src/creatureevent.cpp:517-521`) **restaura o sinal correto** a partir de
+   `primaryType` antes de reaplicar o dano — não há nenhum caminho no script que
+   impeça a morte real. `NarutoBossReset.onDeath` limpa o estado corretamente. **Descartado
+   como causa.**
+2. **Causa real: `client-otc/src/client/map.cpp` `Map::getCreatureById` /
+   `m_knownCreatures`.** Esse mapa (id → creature) só é purgado num único lugar do
+   código-fonte (`client-otc/src/client/protocolgameparse.cpp:4090-4092`,
+   `g_map.removeCreatureById(removeId)`), que só dispara quando o SERVIDOR recicla um
+   slot de "known creature" pra apresentar uma criatura NOVA ao cliente (mecanismo de
+   cache do protocolo OTClient/TFS, não relacionado à morte). A remoção normal de uma
+   criatura morta (`Map::removeThing` → `Tile::removeThing`, `tile.cpp:380`) tira a
+   criatura da lista de coisas do tile (por isso ela **some visualmente da tela** — 
+   confirmado por screenshot, ver abaixo) mas **não** chama `removeCreatureById`. Ou
+   seja: depois que o boss morre de verdade, `g_map.getCreatureById(bossId)` continua
+   devolvendo o mesmo objeto Lua "fantasma", com o último `getHealthPercent()` conhecido
+   (0%) congelado pra sempre — até o servidor eventualmente reciclar aquele slot com
+   outra criatura. Uma tentativa de `g_game.attack(m)`/cast num alvo fantasma não gera
+   erro Lua (por isso a sessão original não viu nada em log), mas o **servidor rejeita**
+   corretamente (`"You can only use it on creatures"`, confirmado nos dois testes) porque
+   pra ele aquele id não existe mais.
+3. **Prova visual**: `screenshots/boss_recheck_bossfight_timeout.png` e
+   `boss_recheck_controle_bandidos_timeout.png` mostram a tela **sem nenhum nametag do
+   boss rastreado** (nem "Espadachim Da Névoa" nem "Chefe Dos Bandidos") — ele já tinha
+   sumido de verdade. O que sobra visível e crowded no mesmo tile são os **3-4 "Aprendiz
+   Mascarado" órfãos com nametags sobrepostos/ilegíveis** ("AprendAprendiz
+   MascAprendiz Mascarado") — plausivelmente a origem real do "duas nametags de
+   Espadachim" reportado na sessão original: um artefato de nametag sobreposto em vez de,
+   necessariamente, dois bosses reais.
+
+### Conclusão sobre as 2 suspeitas originais
+- **Suspeita 1 (dois bosses por `/m`)**: não reproduzida nesta rodada (spawn único
+  confirmado antes e depois do `/m`), mas **não totalmente descartada para a sessão
+  original** — permanece plausível como causa adicional do dano real sofrido lá (ver
+  ressalva abaixo).
+- **Suspeita 2 (bug em `boss_phases.lua`)**: **descartada**. Sinal de dano, cura de fase,
+  `onDeath`/limpeza de estado — tudo correto; a morte real acontece e o loot cai. **Não
+  há patch a propor em `tools/export_tfs.py` (seção `boss_phases.lua`, em torno da linha
+  3348)** porque o script gerado não é a causa.
+- **Causa real confirmada**: limitação do cliente OTClient (`m_knownCreatures` não
+  purgado em morte normal) que faz **qualquer script de QA/automação que rastreie um
+  monstro só por `getId()`/`getCreatureById` erroneamente concluir "travado" quando na
+  verdade a criatura já morreu e sumiu do mapa**. Não é um bug de gameplay que afete
+  jogadores reais (o jogo trata a morte corretamente; o hp%=0 "fantasma" só existe pro
+  lado do script Lua que ficou de posse do handle antigo) — é uma armadilha de
+  metodologia de teste, digna de registro em `CLAUDE.md` (seção "Armadilhas do TFS 1.4.2
+  já encontradas", que hoje só documenta armadilhas server-side): **scripts de RC devem
+  detectar morte por `creature:getStackPos() == -1` (setado por `Tile::removeThing`,
+  `tile.cpp:403`) ou pela ausência do nametag/objeto na posição conhecida, nunca só por
+  `g_map.getCreatureById(id) ~= nil`.**
+
+### Ressalva de metodologia desta rodada
+O `/pvm` herdou estado de uma sessão anterior e, ao ser chamado, **desligou** a
+vulnerabilidade (`"PvM desligado: monstros não vão te atacar"`) em vez de ligar — o
+jogador ficou no grupo `God` (invulnerável) a luta inteira (`HP 1650/1650 (100%)` sem
+variar em nenhum momento dos dois combates). Ou seja: **esta rodada não conseguiu
+reconfirmar ou descartar o segundo sintoma da sessão original** (jogador caindo a 1,6%
+HP por dano real contínuo de "espadachim da névoa" E "aprendiz mascarado" por 2+
+minutos) — isso exige uma 3ª verificação com `/pvm` confirmado ligado (checar a
+mensagem de retorno antes de prosseguir) e, idealmente, sem usar `/m` (chegando andando
+na plataforma natural), pra também resolver em definitivo a suspeita 1 residual. Os
+"Aprendiz Mascarado" órfãos observados (não limpos entre sessões de QA) devem ser
+considerados um fator de confound à parte em qualquer reteste futuro no mesmo local.
+
+Screenshots desta rodada: `screenshots/boss_recheck_00_arena.png`,
+`boss_recheck_01_boss_invocado.png`, `boss_recheck_bossfight_fase_hp50.png`,
+`boss_recheck_bossfight_fase_hp20.png`, `boss_recheck_bossfight_timeout.png`,
+`boss_recheck_02_pos_combate.png`, `boss_recheck_controle_bandidos_fase_hp58.png`,
+`boss_recheck_controle_bandidos_fase_hp18.png`,
+`boss_recheck_controle_bandidos_timeout.png`, `boss_recheck_03_controle_pos.png`.
+
 ## Loja: catálogo confirmado, `wakizashi_temperado` não visualmente confirmado
 
 A janela "Troca com NPC" do Mercador Itsuki abriu de verdade
@@ -361,11 +468,27 @@ antes do timeout do script.
 - **`/lvl N` não recalcula `maxHealth`/`maxMana` ao rebaixar nível** — pool de HP/chakra
   fica "grudado" no nível mais alto que o personagem já teve. Arquivo:
   `server/tfs/data/scripts/naruto/gm_tools.lua` (comando `/lvl`).
-- **Boss não terminou de forma limpa numa luta estendida** (getHealthPercent 0% sem
-  remover a criatura, jogador caindo a 1,6% HP) — a reconfirmar se é bug real ou artefato
-  de duplicidade de `/m`. Arquivos a investigar: script de fases do boss (provavelmente
-  `server/tfs/data/scripts/naruto/boss_phases.lua` ou lib `NarutoBossPhases`), e conferir
-  se a plataforma tem exatamente 1 spawn natural de `boss_mist_swordsman`.
+- **[RECONFIRMADO E EXPLICADO, ver "Re-teste do boss" acima] Boss morre de verdade
+  (loot cai) mas `getHealthPercent()` rastreado por `getId()` fica congelado em 0% pra
+  sempre** — causa raiz NÃO é `boss_phases.lua` (descartado por leitura de código +
+  reteste isolado com spawn único e com um monstro de controle, ambos com o mesmo
+  sintoma) e sim uma limitação do cliente OTClient: `Map::getCreatureById`
+  (`client-otc/src/client/map.cpp`) só é purgado por reciclagem de slot de "known
+  creature" (`client-otc/src/client/protocolgameparse.cpp:4090-4092`), nunca pela morte
+  normal de uma criatura (`Tile::removeThing`, que só tira do tile, não do índice por
+  id) — screenshots confirmam que o boss já tinha sumido visualmente da tela. Ação:
+  documentar em `CLAUDE.md` que scripts de RC devem checar `creature:getStackPos() == -1`
+  em vez de `getCreatureById(id) ~= nil` pra detectar morte. **Ainda em aberto** (não
+  reconfirmado nem descartado): o segundo sintoma da sessão original — jogador tomando
+  dano real contínuo por 2+ min e caindo a 1,6% HP — não foi reproduzido no reteste
+  porque o `/pvm` ficou sem querer no estado invulnerável (herdado de sessão anterior);
+  precisa de uma 3ª rodada com `/pvm` vulnerável confirmado, e idealmente sem `/m`
+  (chegando andando na plataforma natural), pra resolver de vez a suspeita de
+  duplo-spawn residual. "Aprendiz Mascarado" invocados em fase nunca são limpos se a
+  sessão de QA não os mata — ficam órfãos e se acumulam (3-4 encontrados nesta rodada,
+  de sessões anteriores), o que pode explicar visualmente o "duas nametags" da sessão
+  original (nametags sobrepostos, confirmado nos screenshots deste reteste) sem precisar
+  de um boss duplicado de verdade.
 - **Mojibake em toda fala acentuada** (reconfirmado, já documentado em rodadas anteriores
   como achado de maior prioridade recorrente) — não corrigido desde
   `docs/qa/playtest-historia-arcos1-3.md`.
@@ -390,3 +513,8 @@ antes do timeout do script.
   procedimento de build/export/instalação rodado, só client + screenshots (40, dentro do
   teto), todos copiados para `screenshots/arco2_*.png` e removidos do diretório de
   screenshots temporário do cliente.
+- **Re-teste do boss (sessão à parte, ver seção acima)**: `df -h /` → 12 GiB livres antes
+  e depois (49% usado), sem variação relevante — 10 screenshots (`boss_recheck_*.png`,
+  dentro do teto de 12), `client-otc/shinobirc.lua` confirmado ausente antes de usar e
+  removido ao final, cliente encerrado sozinho via `g_app.exit()` (nenhum `pkill` usado),
+  servidor (`./build/tfs`, pid pré-existente) nunca tocado/reiniciado.
