@@ -176,3 +176,9 @@ Próximos (ordem de valor):
 - [ ] Guerras de clã
 - [ ] Mercado
 - [ ] Eventos
+
+- [x] Balanceamento r9 (`79d9b3d`) e r10 (`5029269`): híbrido como referência; escada de armas L5–40
+- [x] Mapa: trilhas de 2 tiles, sem bolsões, lobos 30 s (`f4e46a4`); templo com porta aberta (`384f657`)
+- [x] AAC polido com escolha de vila/personagem (`c9f4776`)
+- [ ] AAC: trocar os retratos de personagem (PNG extraído do MUGEN, servido só localmente) por sprites renderizados do nosso `.spr` — ADR-002 antes de qualquer publicação
+- [ ] Balanceamento r11: teto estrutural do taijutsu puro em L5/10/15/20/35; L41–77; `boss_puppeteer` 59 s
