@@ -289,6 +289,52 @@ acento no chat, Menu Shinobi (aba Missões, nomes de missão acentuados) — scr
   matar qualquer monstro com nome acentuado que largue um item com nome acentuado, olhar o
   canal de chat onde a mensagem `MESSAGE_LOOT` aparece.
 
+## 6. AAC (site de criação de conta/personagem) — como a escolha chega ao 1º login
+
+*Missão posterior (engenheiro web, `tools/aac/aac.py`), documentada aqui porque fecha o mesmo
+fluxo de onboarding descrito nas seções 1-2 (Menu Shinobi no primeiro login).*
+
+O AAC (`tools/aac/`, servido em `http://127.0.0.1:8080/` por `tools/aac.sh`) deixou de só gravar
+o outfit **cosmético** do personagem escolhido (`players.looktype`) — agora também grava
+`player_storage` (`key=60001`, `STORAGE_CHARACTER`, a mesma constante usada por
+`character_switch.lua` gerado) com o `looktype` do personagem que o jogador escolheu na tela
+`/criar-personagem`. É essa storage que `NarutoCharacters.current(player)` lê antes de cair no
+`defaultFor()` (1º personagem cadastrado daquela vila) — sem ela, um jogador que escolhesse
+"Genin Uchiha" no site entraria no jogo como "Genin Laranja" (1º da Vila da Folha), porque
+`NarutoCharacters.apply()` (chamada no login com `characterId=nil`) resolvia sempre o mesmo
+personagem "padrão da vila", não o escolhido.
+
+**O que o AAC grava e o que ele deixa para o cliente decidir**:
+- **Grava** (`player_storage`, key `60001`): looktype do personagem escolhido.
+- **Não grava** a `60002` (`STORAGE_ELEMENT`): `NarutoCharacters.apply()`, sem essa storage,
+  cai sozinho em `NarutoElements.byId[char.default_element]` — o mesmo elemento padrão que
+  `data/characters.json` já associa a cada personagem. Uma storage a menos para manter em
+  sincronia com o gerador.
+- **Não toca** a `60000` (`STORAGE_ONBOARDED`) — de propósito, igual antes desta missão: é
+  isso que mantém `first_time = true` no primeiro login (`NarutoCharacterLogin.onLogin`),
+  abrindo o **Menu Shinobi** sozinho (seções 1-2 acima) para o jogador revisar (ou trocar)
+  personagem/elemento antes de sair caçando. A escolha do AAC vira o estado *inicial* que o
+  Menu Shinobi já mostra marcado, não uma trava.
+
+**Chakra inicial**: o `INSERT` em `players` agora grava `mana=manamax=110` direto (antes:
+60/60) — o mesmo piso de chakra que `character_switch.lua` (comentário `Reserva de chakra
+inicial`) aplicaria de qualquer forma no primeiro login se o personagem nascesse com menos;
+gravar já com 110 deixa o banco coerente mesmo antes do jogador logar pela 1ª vez (útil para
+QA/SELECT direto no banco).
+
+**Não precisou de mudança em `tools/export_tfs.py`**: as constantes de storage (`60000`/
+`60001`/`60002`) já existiam no gerador; o AAC só passou a escrever numa storage que o gerador
+já lê. Se um dia o AAC precisar também fixar o elemento (ex.: adicionar escolha de elemento na
+tela de criação), aí sim seria necessário decidir se a ordem de `NarutoElements.list` (hoje
+implícita — 1ª posição de cada entrada em `data/element_sets.json`, katon/suiton/raiton/doton/
+fuuton) deveria virar um mapeamento explícito e estável em `data/tfs_mapping.json`, para o AAC
+não depender da ordem de iteração do JSON continuar igual à do Lua gerado.
+
+Testado: `curl -X POST` ponta a ponta (conta + personagem "João Ninja", Genin Uchiha) + `SELECT`
+confirmando `looktype=901` em `players` **e** a linha `(key=60001, value=901)` em
+`player_storage`; UTF-8 do nome acentuado conferido por `HEX(name)` (bytes `C3 A3` = "ã", sem
+mojibake). Detalhes e mais casos em `tools/aac/README.md` ("Teste feito em 2026-09-05").
+
 ## Arquivos tocados
 
 **Servidor** (gerador + instalado): `tools/export_tfs.py` (ação `get_progress`, campo `rank`
@@ -304,6 +350,11 @@ Missões, rank em tela, hook de chat), `client-otc/modules/naruto_theme/{naruto_
 (crédito OTClient).
 
 **Docs**: este arquivo + `docs/sistemas/combate-e-jutsus.md` (protocolo opcode 210 atualizado).
+
+**AAC (missão posterior, seção "6")**: `tools/aac/aac.py` (tema visual, storage
+`STORAGE_CHARACTER`, chakra 110 direto no INSERT, `/trocar-senha`, lista de personagens com
+personagem/último login), `tools/aac/README.md`. Nenhum arquivo de `server/tfs/` ou
+`tools/export_tfs.py` alterado — só consumiu constantes de storage que já existiam.
 
 **Encoding de nomes no protocolo (missão posterior, seção "5")**: `client-otc/src/framework/
 net/inputmessage.cpp` (`InputMessage::getString`, conversão UTF-8→cp1252 na entrada do

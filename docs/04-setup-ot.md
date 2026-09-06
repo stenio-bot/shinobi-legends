@@ -578,22 +578,42 @@ tools/aac.sh stop                # derruba
 ```
 
 Precisa de `pymysql` no `.venv` do projeto (`.venv/bin/pip install pymysql`,
-já instalado neste checkout) — as credenciais do banco são lidas de
-`server/tfs/config.lua`, nunca hardcoded.
+já instalado neste checkout) — as credenciais do banco **e** o IP/porta do
+jogo (`ip`, `loginProtocolPort`) são lidos de `server/tfs/config.lua`, nunca
+hardcoded — a home do AAC sempre mostra o endereço real do servidor no ar.
 
-Páginas: `/` (instruções), `/criar-conta` (nome/senha/confirmação/e-mail
-opcional), `/criar-personagem` (escolhe vila → personagem inicial daquela
-vila, com preview do outfit → nome do personagem + sexo + login da conta),
-`/conta` (login → lista os personagens). Detalhes de cada coluna gravada em
-`players`/`accounts`, das validações e das pendências conhecidas (só a Vila da
-Folha tem templo de verdade no mapa atual — as outras 3 vilas nascem lá até
-terem mapa próprio) estão em `tools/aac/README.md`.
+Páginas: `/` (nome do jogo, uma frase da bíblia, dados de conexão, links),
+`/criar-conta` (nome/senha/confirmação/e-mail opcional), `/criar-personagem`
+(escolhe vila → personagem inicial daquela vila, com preview do outfit,
+elemento padrão e os 4 jutsus pessoais → nome do personagem + sexo + login da
+conta), `/conta` (login → lista os personagens com nível/vila/personagem/
+último login + formulário de troca de senha). Tema visual "pergaminho/pedra"
+(CSS embutido, sem frameworks/fontes/imagens externas — funciona 100%
+offline). Detalhes de cada coluna gravada em `players`/`accounts`, das
+validações e das pendências conhecidas (só a Vila da Folha tem templo de
+verdade no mapa atual — as outras 3 vilas nascem lá até terem mapa próprio)
+estão em `tools/aac/README.md`.
+
+**A escolha de personagem chega ao servidor de verdade**: ao criar o
+personagem, o AAC grava a storage `60001` (`STORAGE_CHARACTER`, a mesma lida
+por `NarutoCharacters.current()` em `character_switch.lua`, gerado) com o
+`looktype` do personagem escolhido — não só o cosmético (`players.looktype`),
+mas o dado que `NarutoCharacters.apply()` usa no primeiro login para decidir
+quais 4 jutsus pessoais aprender. O elemento não precisa de storage própria:
+sem a `60002`, `apply()` cai sozinho no `default_element` do personagem
+escolhido (mesmo campo de `data/characters.json`). A storage `60000`
+(`STORAGE_ONBOARDED`) continua intocada de propósito — é o que mantém
+`first_time=true` no primeiro login, abrindo o **Menu Shinobi** sozinho para o
+jogador revisar (ou trocar) personagem/elemento, sem que a escolha do AAC
+tenha ficado "para trás". Chakra inicial já sai 110/110 do próprio INSERT
+(piso documentado em `character_switch.lua`, rodada 5 do balanceamento), não
+depende mais só da compensação do login.
 
 Depois de criar a conta e o personagem no site, entre no cliente com
-servidor `127.0.0.1`, porta `7171`, protocolo `1098`, usando a conta e a
-senha criadas — o personagem nasce no templo da vila, level 1, com o outfit
-escolhido, e o **Menu Shinobi abre sozinho** na aba Personagem (primeira
-entrada em jogo, `first_time`).
+servidor `127.0.0.1`, porta `7171`, protocolo `10.98`, usando a conta e a
+senha criadas — o personagem nasce no templo da vila, level 1, com o outfit e
+os jutsus do personagem escolhido, e o **Menu Shinobi abre sozinho** na aba
+Personagem (primeira entrada em jogo, `first_time`) para revisão.
 
 Testado em 2026-09-04: conta + personagem criados via `curl -X POST`,
 conferidos no banco (`level=1`, `vocation`/`town_id`/`looktype` corretos,

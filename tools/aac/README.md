@@ -32,23 +32,30 @@ Porta alternativa: `AAC_PORT=8090 tools/aac.sh`.
 
 | Rota | Método | O que faz |
 |---|---|---|
-| `/` | GET | Home com instruções e links. |
+| `/` | GET | Home: nome do jogo, uma frase da bíblia, dados de conexão (IP/porta/protocolo, lidos de `config.lua`) e links. |
 | `/criar-conta` | GET/POST | Cria conta: nome (3-32 letras/números/`_`), senha (4-64), confirmação, e-mail opcional. |
-| `/criar-personagem` | GET/POST | Escolhe vila (Folha/Névoa/Nuvem/Areia) → personagem inicial daquela vila (com preview do outfit) → nome do personagem (3-20 letras/espaços) + sexo + login/senha da conta dona do personagem. |
-| `/conta` | GET/POST | Login (conta + senha) → lista os personagens dessa conta (nome, level, vila, sexo). |
+| `/criar-personagem` | GET/POST | Escolhe vila (Folha/Névoa/Nuvem/Areia, com elemento e bônus de skill) → personagem inicial daquela vila (9 cards: preview do outfit, elemento padrão, os 4 jutsus pessoais) → nome do personagem (3-20 letras/espaços) + sexo + login/senha da conta dona do personagem. |
+| `/conta` | GET/POST | Login (conta + senha) → lista os personagens dessa conta (nome, level, vila, personagem, último login) + formulário de troca de senha. |
+| `/trocar-senha` | POST | Só usado pelo formulário de `/conta`: troca a senha da conta (confere a senha atual antes). |
 | `/sprite/<looktype>.png` | GET | Preview PNG (frame parado) de um looktype de personagem inicial. Só serve os looktypes que aparecem em `data/characters.json` (whitelist) — não é um servidor de arquivos genérico. |
 
 ## De onde vêm os dados
 
 Lido só para leitura, nunca escrito por este script:
-- `data/villages.json` — nomes de exibição das vilas.
+- `data/villages.json` — nomes de exibição, elemento e skill-bônus de cada vila.
 - `data/tfs_mapping.json` (`villages`) — `vocation_id`/`town_id`/outfits de cada vila.
-- `data/characters.json` — personagens iniciais por vila (id, nome, descrição, `looktype`).
+- `data/characters.json` — personagens iniciais por vila (id, nome, descrição, `looktype`,
+  elemento padrão, ids dos 4 jutsus pessoais).
+- `data/element_sets.json` — nome em português de cada elemento (Katon → Fogo etc.).
+- `data/jutsus/personal.json` e `data/jutsus/neutral.json` — nome de exibição de cada
+  jutsu pessoal (alguns, como `kawarimi`/`punho_suave`/`fuuin_contencao`, são "universais"
+  e moram em `neutral.json`, não em `personal.json`, apesar de aparecerem em `characters.json`).
 - `assets-src/import/extracted/mugen/<looktype>/idle_*.png` (ou `front_*.png` se
   não houver `idle_*`) — preview do outfit na tela de criação de personagem.
   Diretório privado do projeto; o AAC só expõe os looktypes que já aparecem em
   `characters.json`.
-- `server/tfs/config.lua` — host/porta/usuário/senha/banco do MySQL.
+- `server/tfs/config.lua` — host/porta/usuário/senha/banco do MySQL, e também
+  `ip`/`loginProtocolPort` (dados de conexão mostrados na home).
 
 ## Regras aplicadas na criação de personagem
 
@@ -62,14 +69,28 @@ Lido só para leitura, nunca escrito por este script:
   `lookbody/lookhead/looklegs/lookfeet` (0 — os looktypes 900+ são fantasias
   fechadas, não usam cor de doll) e `looktype` (do personagem escolhido),
   `vocation` (= `vocation_id` da vila), `health/healthmax` (150/150),
-  `mana/manamax` (0/0), `cap` (400) — os valores base de nível 1 de qualquer
+  `mana/manamax` (**110/110** — piso de chakra da rodada 5 de balanceamento,
+  o mesmo valor que `character_switch.lua` aplicaria no primeiro login se o
+  personagem nascesse com menos; gravar direto deixa o banco já coerente
+  antes do 1º login), `cap` (400) — os valores base de nível 1 de qualquer
   vocação, já que o ganho por level das 4 vocações só começa a contar a partir
   do nível 2 (ver `gainhp`/`gainmana`/`gaincap` em `server/tfs/data/XML/vocations.xml`) —,
   `level=1`, `experience=0` e todos os `skill_*` em 10 / `skill_*_tries` em 0
   (os defaults "zerados" do TFS).
-- **Storage do onboarding não é tocado**: o AAC nunca escreve em
-  `player_storage`. Isso é proposital — `server/tfs/data/scripts/naruto/character_switch.lua`
-  considera `first_time = true` enquanto a storage 60000 (`STORAGE_ONBOARDED`)
+- **A escolha de personagem grava UMA storage, de propósito**: logo após o
+  `INSERT` em `players`, o AAC grava `player_storage` (`key=60001`,
+  `STORAGE_CHARACTER` — a mesma constante de `character_switch.lua`, gerado)
+  com o `looktype` do personagem escolhido. É essa storage que
+  `NarutoCharacters.current()` lê no primeiro login para saber qual dos 9
+  personagens (e portanto quais 4 jutsus pessoais) aplicar — sem ela, o jogo
+  cairia no primeiro personagem cadastrado daquela vila (`defaultFor()`),
+  ignorando a escolha feita aqui. **Não** grava a storage `60002`
+  (`STORAGE_ELEMENT`): sem ela, `NarutoCharacters.apply()` cai sozinho no
+  `default_element` do personagem escolhido (mesmo campo de
+  `characters.json`), que já é o elemento certo. **Também não** toca a
+  storage `60000` (`STORAGE_ONBOARDED`) — isso continua proposital:
+  `server/tfs/data/scripts/naruto/character_switch.lua` considera
+  `first_time = true` enquanto a storage 60000 (`STORAGE_ONBOARDED`)
   não existir, e é isso que faz o **Menu Shinobi abrir sozinho** no primeiro
   login (aba Personagem), confirmado no teste (ver screenshots).
 - **`town_id` é resolvido contra o banco, não copiado direto de `tfs_mapping.json`**:
@@ -96,10 +117,16 @@ Lido só para leitura, nunca escrito por este script:
   (`assets-src/import/extracted/mugen/<looktype>/idle_*.png`), não o sprite
   real do `.spr/.dat` do cliente — é só uma miniatura de referência na tela de
   criação, não afeta o outfit gravado no personagem (`looktype`).
-- Não há recuperação de senha nem confirmação de e-mail (fora de escopo:
-  ferramenta interna/local, não uma AAC pública).
+- Não há recuperação de senha (há troca de senha, em `/conta`) nem confirmação
+  de e-mail (fora de escopo: ferramenta interna/local, não uma AAC pública).
+- Nome de personagem só é validado por **formato** (3-20 letras/espaços, sem
+  espaço duplo/nas pontas) — não existe hoje um bloqueio de "nomes do anime"
+  em `docs/03-decisoes-tecnicas.md` (ADR-002 é sobre os nomes que o **jogo**
+  usa — vilas/personagens/jutsus próprios —, não sobre um filtro de nomes que
+  o jogador pode digitar). Decisão desta sessão: seguir só o formato, como
+  pedido, em vez de inventar uma lista própria sem lastro em decisão de design.
 
-## Teste feito nesta sessão
+## Teste feito em 2026-09-04 (criação original)
 
 1. Subiu o AAC (`tools/aac.sh`), criou conta via `curl -X POST /criar-conta` e
    personagem (Vila da Folha, "Genin Laranja") via `curl -X POST /criar-personagem`.
@@ -119,3 +146,39 @@ Lido só para leitura, nunca escrito por este script:
    `screenshots/aac_01_spawn_templo.png` e `screenshots/aac_02_hud.png`.
 5. Apagou a conta e o personagem de teste do banco ao final
    (`DELETE FROM players/accounts WHERE name = ...`).
+
+## Teste feito em 2026-09-05 (sessão de polimento: tema, storage, senha)
+
+1. `curl` em todas as rotas GET (`/`, `/criar-conta`, `/criar-personagem`,
+   `/conta`, `/sprite/900.png`) → 200; `/sprite/999.png` (looktype fora da
+   whitelist) e `/rota-inexistente` → 404.
+2. Fluxo completo via `curl -X POST`: criou conta `aactest01`, criou
+   personagem **"João Ninja"** (acento de propósito, ver item 3) escolhendo
+   **Genin Uchiha** (vila da Folha) — resposta confirmou "criado na Vila da
+   Folha como Genin Uchiha".
+3. **UTF-8 conferido por SQL**: `SELECT HEX(name) FROM players WHERE
+   name='João Ninja'` devolveu `4A6FC3A36F204E696E6A61` — os bytes
+   `C3 A3` são exatamente o "ã" em UTF-8 (não latin1/mojibake). Sem problema
+   de encoding no nome gravado (a conexão do AAC já usa `charset="utf8mb4"`
+   e a tabela `players` aceita esses bytes dentro do seu `utf8` de 3 bytes,
+   suficiente para acentos latinos).
+4. **Personagem escolhido chega ao servidor**: `SELECT` confirmou
+   `vocation=1`, `looktype=901` (Genin Uchiha, não o primeiro da vila) e
+   `mana=manamax=110`; `player_storage` tinha a linha `(player_id, key=60001,
+   value=901)` — exatamente o `STORAGE_CHARACTER` que
+   `character_switch.lua` lê no primeiro login.
+5. Testou erros: conta duplicada (400), personagem com nome duplicado (400),
+   senha de conta errada ao criar personagem (400, "Conta ou senha
+   inválidos."), nome de personagem inválido (400).
+6. `/conta`: login válido listou o personagem com **level, vila, personagem
+   (nome do personagem, não só a vila) e último login** ("nunca", campo
+   `lastlogin=0`); login com senha errada → mensagem de erro.
+7. `/trocar-senha`: trocou a senha da conta de teste, confirmou que a senha
+   **antiga** passou a ser rejeitada em `/conta` e a **nova** funciona.
+8. Apagou a conta e o personagem de teste do banco ao final.
+9. Screenshots das 3 páginas (Chrome headless, `--screenshot`, contra o AAC
+   já no ar): `screenshots/aac_01_home.png`, `screenshots/aac_02_criar_
+   personagem.png`, `screenshots/aac_03_conta.png`.
+10. Não editado e não reiniciado: `server/tfs/` (binário/processo do jogo),
+    `tools/export_tfs.py`, `client-otc/` — só `tools/aac/aac.py`,
+    `tools/aac/README.md` e os dois `docs/*.md` citados no relatório final.
