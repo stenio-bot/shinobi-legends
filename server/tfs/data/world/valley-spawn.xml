@@ -45,6 +45,15 @@
 		<monster name="Cobra da Floresta" x="0" y="0" z="7" spawntime="70"/>
 		<monster name="Cobra da Floresta" x="2" y="-1" z="7" spawntime="70"/>
 	</spawn>
+	<spawn centerx="1006" centery="1064" centerz="7" radius="4">
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="100"/>
+		<monster name="Cervo" x="2" y="-1" z="7" spawntime="100"/>
+		<monster name="Cervo" x="-2" y="1" z="7" spawntime="100"/>
+	</spawn>
+	<spawn centerx="1006" centery="1076" centerz="7" radius="4">
+		<monster name="Cervo" x="0" y="0" z="7" spawntime="110"/>
+		<monster name="Cervo" x="2" y="-1" z="7" spawntime="110"/>
+	</spawn>
 	<spawn centerx="1140" centery="1015" centerz="7" radius="4">
 		<monster name="Sanguessuga Gigante" x="0" y="0" z="7" spawntime="70"/>
 		<monster name="Sanguessuga Gigante" x="2" y="-1" z="7" spawntime="70"/>

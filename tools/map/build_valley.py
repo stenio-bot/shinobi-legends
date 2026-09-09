@@ -1062,6 +1062,24 @@ CLEARINGS = [
     ("Clareira dos Bandidos", 1060, 1105, 5),
     ("Bosque Sudeste", 1112, 1075, 5),
     ("Mata Norte", 1005, 1005, 4),
+    # Achado da auditoria de historia (validate_world.py, fora do escopo do
+    # Lote M): `forest_deer` (Cervo) so tinha os 2 pontos abaixo desenhados em
+    # data/maps/forest_valley.json (protótipo Godot abstrato, mapa 200x40),
+    # zona "Floresta da Vila" (rect [0,0,50,40] nesse JSON) — nunca portados
+    # pro mapa OTBM real. Mesma tecnica de conversao local->global do B2
+    # (Serpente Menor, ver DEATH_CLEARINGS acima): retangulo real equivalente
+    # a essa zona = tudo a oeste do inicio da Floresta da Morte, dentro do
+    # conteudo real (X0=1000,Y0=1000 .. DEATH_X0-1=1129,Y1=1119 => largura
+    # 129, altura 119); real = zona_origem + fracao_local * tamanho_real.
+    # Os 2 pontos originais ((18,20) e (14,22), locais a zona) convertem pra
+    # (1046,1060) e (1036,1065) — ambos caem DENTRO da muralha da vila
+    # (V_X0=1010,V_Y0=1030,V_X1=1049,V_Y1=1069), area construida sem espaco
+    # livre. Deslocados pro mesmo eixo x da "Campina Oeste" (1006, já fora da
+    # muralha a oeste) na faixa aberta entre ela e a "Trilha Sul", preservando
+    # a ordem norte->sul dos pontos de origem e a folga de ~5-7 tiles usada
+    # entre as outras clareiras.
+    ("Trilha do Cervo", 1006, 1064, 3),    # ~conversao de (18,20)
+    ("Capão do Cervo", 1006, 1076, 3),     # ~conversao de (14,22)
 ]
 
 DEATH_CLEARINGS = [
@@ -1155,6 +1173,8 @@ FOREST_SETS = [
     ("Bandido", 3, 80), ("Cervo", 3, 45), ("Lobo", 1, 30),
     ("Bandido", 3, 80), ("Cobra da Floresta", 3, 70),
     ("Bandido Arqueiro", 3, 90), ("Cobra da Floresta", 2, 70),
+    # zip 1:1 com as 2 novas CLEARINGS acima (Cervo, achado da auditoria).
+    ("Cervo", 3, 100), ("Cervo", 2, 110),
 ]
 
 DEATH_SETS = [
